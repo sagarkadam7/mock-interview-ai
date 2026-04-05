@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllInterviews, deleteInterview } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
+import { Sparkline } from "../components/Charts";
 
 function StatusBadge({ status }) {
   const map = { pending: ["Not started","badge-pending"], in_progress: ["In progress","badge-progress"], completed: ["Completed","badge-completed"] };
@@ -46,6 +47,9 @@ export default function DashboardPage() {
   };
 
   const completed = interviews.filter((i) => i.status === "completed");
+  const completedSorted = [...completed].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  const trend = completedSorted.map((i) => i.overallScore).filter((v) => typeof v === "number");
+  const trendLast = trend.slice(-8);
   const avgScore  = completed.filter((i) => i.overallScore !== null).length
     ? (completed.filter((i) => i.overallScore !== null).reduce((s,i) => s + i.overallScore, 0) / completed.filter((i) => i.overallScore !== null).length).toFixed(1)
     : null;
@@ -77,6 +81,24 @@ export default function DashboardPage() {
               <div className="label">{s.label}</div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Progress sparkline */}
+      {trendLast.length >= 2 && (
+        <div className="card" style={{ marginBottom: 36, padding: "18px 20px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
+            <div>
+              <div className="tag" style={{ marginBottom: 10 }}>PROGRESS</div>
+              <h3 style={{ marginBottom: 6, fontFamily: "'Syne',sans-serif" }}>Score trend</h3>
+              <p style={{ color: "var(--text3)", fontSize: 13, lineHeight: 1.6, marginBottom: 0 }}>
+                Last {trendLast.length} completed sessions
+              </p>
+            </div>
+            <div style={{ flex: 1, minWidth: 280 }}>
+              <Sparkline data={trendLast} stroke="var(--accent2)" fill="rgba(168,85,247,0.12)" />
+            </div>
+          </div>
         </div>
       )}
 

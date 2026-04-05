@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getInterview } from "../utils/api";
 import { generatePDFReport } from "../utils/pdfReport";
+import { RadarChart, Sparkline } from "../components/Charts";
 
 const scoreColor = (s) => s >= 7 ? "var(--green)" : s >= 4 ? "var(--amber)" : s !== null ? "var(--red)" : "var(--text3)";
 const eyeColor   = (p) => p > 70 ? "var(--green)" : p > 40 ? "var(--amber)" : "var(--red)";
@@ -183,6 +184,33 @@ export default function ReportPage() {
   const overall  = interview.overallScore;
   const overallColor = overall >= 7 ? "var(--green)" : overall >= 4 ? "var(--amber)" : "var(--red)";
 
+  const clamp01 = (n) => Math.max(0, Math.min(1, n));
+  const eyeN = interview.avgEyeContact !== null ? clamp01(interview.avgEyeContact / 100) : 0;
+  const confN = interview.avgConfidence !== null ? clamp01(interview.avgConfidence / 10) : 0;
+  const paceN = interview.avgPace ? clamp01(1 - Math.abs(interview.avgPace - 150) / 100) : 0;
+  const fillerN = interview.avgFillerWords !== null ? clamp01(1 - interview.avgFillerWords / 10) : 0;
+  const overallN = overall !== null ? clamp01(overall / 10) : 0;
+
+  const radarMetrics = [
+    { label: "Eye", normalized: eyeN },
+    { label: "Conf", normalized: confN },
+    { label: "Pace", normalized: paceN },
+    { label: "Fill", normalized: fillerN },
+    { label: "Overall", normalized: overallN },
+  ];
+
+  const coachingDims = [
+    { key: "Eye", value: eyeN, color: "var(--cyan2)", msg: "Focus on steady eye contact. Try pausing and resetting your gaze to the lens." },
+    { key: "Conf", value: confN, color: "var(--accent2)", msg: "Build confidence by structuring answers (STAR). Aim for clear, complete sentences." },
+    { key: "Pace", value: paceN, color: "var(--green)", msg: "Dial in your pace. Aiming for ~130–170 wpm often boosts clarity and confidence." },
+    { key: "Fill", value: fillerN, color: "var(--amber)", msg: "Reduce filler words. If you feel stuck, pause for 1 second before continuing." },
+  ];
+
+  const focusDim = coachingDims.reduce((min, d) => (d.value < min.value ? d : min), coachingDims[0]);
+
+  const questionScores = interview.questions.map((q) => q.score).filter((s) => typeof s === "number");
+  const eyeTrend = interview.questions.map((q) => q.eyeContactPct).filter((p) => typeof p === "number");
+
   return (
     <div className="page animate-fade">
       <div style={{ maxWidth:820, margin:"0 auto" }}>
@@ -215,6 +243,77 @@ export default function ReportPage() {
             <StatCard label="Avg confidence (ML)" value={interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : null} color="var(--accent2)" />
             <StatCard label="Avg speech pace" value={interview.avgPace ? `${interview.avgPace} wpm` : null} sub={interview.avgPace ? (interview.avgPace >= 100 && interview.avgPace <= 180 ? "good pace" : "needs adjustment") : null} color={interview.avgPace >= 100 && interview.avgPace <= 180 ? "var(--green)" : "var(--amber)"} />
             <StatCard label="Avg filler words / Q" value={interview.avgFillerWords !== null ? interview.avgFillerWords : null} color={interview.avgFillerWords <= 2 ? "var(--green)" : interview.avgFillerWords <= 5 ? "var(--amber)" : "var(--red)"} />
+          </div>
+
+          {/* Radar summary */}
+          <div className="card" style={{ marginBottom: 20, padding: "18px 18px 14px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap", marginBottom: 10 }}>
+              <div>
+                <div className="tag" style={{ marginBottom: 8 }}>METRIC RADAR</div>
+                <h3 style={{ marginBottom: 6, fontFamily: "'Syne',sans-serif" }}>Your coaching snapshot</h3>
+                <p style={{ color: "var(--text3)", fontSize: 13, lineHeight: 1.6, marginBottom: 0 }}>
+                  Larger shape = better performance for that dimension.
+                </p>
+              </div>
+              <div style={{ width: 220, minWidth: 220, textAlign: "right" }}>
+                <div style={{ fontSize: 12, color: "var(--text3)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>How to read</div>
+                <div style={{ fontSize: 13, color: "var(--text2)", lineHeight: 1.7 }}>
+                  Eye: higher is better<br />
+                  Conf: higher is better<br />
+                  Pace: closer to 130–170 wpm<br />
+                  Fillers: lower is better
+                </div>
+              </div>
+            </div>
+            <RadarChart metrics={radarMetrics} stroke="var(--accent2)" fill="rgba(168,85,247,0.10)" />
+
+            {/* Focus callout */}
+            <div style={{ marginTop: 14, background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.18)", borderRadius: 12, padding: "12px 14px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start", flexWrap: "wrap" }}>
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--accent2)", textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 700, marginBottom: 4 }}>
+                    Next focus
+                  </div>
+                  <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 18, color: focusDim.color, marginBottom: 4 }}>
+                    {focusDim.key}
+                  </div>
+                  <div style={{ color: "var(--text2)", fontSize: 13, lineHeight: 1.7 }}>
+                    {focusDim.msg}
+                  </div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: 11, color: "var(--text3)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
+                    Your score
+                  </div>
+                  <div style={{ fontSize: 28, fontWeight: 900, fontFamily: "'Syne',sans-serif", color: focusDim.color, lineHeight: 1 }}>
+                    {Math.round(focusDim.value * 10)}/10
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Trend charts */}
+          <div className="grid-2" style={{ gap:12, marginBottom: 24 }}>
+            <div className="card-sm" style={{ padding: 16 }}>
+              <div className="tag" style={{ marginBottom: 10 }}>TRENDS</div>
+              <h3 style={{ marginBottom: 6, fontFamily: "'Syne',sans-serif" }}>Question score</h3>
+              {questionScores.length >= 2 ? (
+                <Sparkline data={questionScores} stroke="var(--accent2)" fill="rgba(34,197,238,0.10)" />
+              ) : (
+                <div style={{ color: "var(--text3)", fontSize: 13 }}>No enough scores yet.</div>
+              )}
+            </div>
+
+            <div className="card-sm" style={{ padding: 16 }}>
+              <div className="tag" style={{ marginBottom: 10 }}>TRENDS</div>
+              <h3 style={{ marginBottom: 6, fontFamily: "'Syne',sans-serif" }}>Eye contact</h3>
+              {eyeTrend.length >= 2 ? (
+                <Sparkline data={eyeTrend} stroke="var(--green)" fill="rgba(16,185,129,0.10)" />
+              ) : (
+                <div style={{ color: "var(--text3)", fontSize: 13 }}>No eye contact data yet.</div>
+              )}
+            </div>
           </div>
 
           {/* Performance summary */}

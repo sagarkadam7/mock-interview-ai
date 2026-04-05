@@ -7,6 +7,9 @@ const FILLER_WORDS = [
   "you know","i mean","so","right","okay","hmm","er","ah"
 ];
 
+const FILLER_WORD_SET = new Set(FILLER_WORDS.map((w) => w.toLowerCase()));
+const FILLER_WORD_REGEX = new RegExp(`\\b(${FILLER_WORDS.join("|")})\\b`, "gi");
+
 const LEFT_IRIS  = [474, 475, 476, 477];
 const RIGHT_IRIS = [469, 470, 471, 472];
 const LEFT_EYE   = [33, 133];
@@ -47,6 +50,75 @@ function isLookingAtCamera(landmarks) {
   } catch {
     return true;
   }
+}
+
+function clamp01(n) {
+  return Math.max(0, Math.min(1, n));
+}
+
+function Dial({ label, value, pct, color }) {
+  const size = 56;
+  const r = 18;
+  const c = 2 * Math.PI * r;
+  const progress = clamp01(pct ?? 0);
+  const dashOffset = c * (1 - progress);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <svg width={size} height={size} viewBox="0 0 56 56" role="img" aria-label={`${label} gauge`}>
+        <circle cx="28" cy="28" r={r} stroke="rgba(255,255,255,0.10)" strokeWidth="5" fill="none" />
+        <circle
+          cx="28"
+          cy="28"
+          r={r}
+          stroke={color}
+          strokeWidth="5"
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={dashOffset}
+          style={{ transition: "stroke-dashoffset 0.35s ease" }}
+        />
+        <text x="28" y="30.5" textAnchor="middle" fontSize="11" fill="#e8eaf0" fontWeight="800">
+          {value ?? "—"}
+        </text>
+      </svg>
+      <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 74 }}>
+        <span style={{ fontSize: 11, color: "#9097b0", letterSpacing: "0.04em", textTransform: "uppercase" }}>{label}</span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: color }}>{typeof value === "number" && !Number.isNaN(value) ? value : value}</span>
+      </div>
+    </div>
+  );
+}
+
+function renderTranscriptWithFillerHighlights(text) {
+  if (!text) return null;
+  const parts = text.split(FILLER_WORD_REGEX);
+  return parts.map((part, idx) => {
+    const lower = String(part).toLowerCase();
+    const isFiller = FILLER_WORD_SET.has(lower);
+    if (!part) return <span key={idx} />;
+    if (isFiller) {
+      return (
+        <span
+          key={idx}
+          style={{
+            background: "rgba(244,63,94,0.16)",
+            border: "1px solid rgba(244,63,94,0.28)",
+            color: "#fca5a5",
+            padding: "1px 6px",
+            borderRadius: 999,
+            fontStyle: "normal",
+            fontWeight: 700,
+            margin: "0 1px",
+          }}
+        >
+          {part}
+        </span>
+      );
+    }
+    return <span key={idx}>{part}</span>;
+  });
 }
 
 export default function CameraRecorder({
@@ -290,6 +362,12 @@ export default function CameraRecorder({
   const fillerColor = fillerCount > 5 ? "#ef4444" : fillerCount > 2 ? "#f59e0b" : "#22c55e";
   const wpmColor    = wpm === 0 ? "#888" : wpm >= 100 && wpm <= 180 ? "#22c55e" : "#f59e0b";
 
+  const pacePct = wpm > 0 ? clamp01(1 - Math.abs(wpm - 150) / 120) : null;
+  const fillerPct = fillerCount > 0 ? clamp01(1 - fillerCount / 10) : 1;
+  const confidencePreview = transcript.trim() ? calcConfidenceScore({ eyeContactPct: eyePct, fillerCount, wpm, dominantEmotion: "neutral" }) : null;
+  const confidencePct = confidencePreview !== null ? clamp01(confidencePreview / 10) : null;
+  const confidenceColor = confidencePreview === null ? "#888" : confidencePreview >= 7 ? "#22c55e" : confidencePreview >= 4 ? "#f59e0b" : "#ef4444";
+
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
 
@@ -326,12 +404,41 @@ export default function CameraRecorder({
 
         {/* Live ML overlay */}
         {recording && (
-          <div style={{ position:"absolute", top:10, right:10, background:"rgba(0,0,0,0.80)", borderRadius:10, padding:"10px 14px", minWidth:172 }}>
-            <div style={{ fontSize:10, color:"#9097b0", marginBottom:8, letterSpacing:"0.06em", textTransform:"uppercase" }}>Live analysis</div>
-            <div style={{ display:"flex", flexDirection:"column", gap:7 }}>
-              <Row label="👁 Eye contact"  value={eyePct !== null ? `${eyePct}%` : "loading…"} color={eyeColor} />
-              <Row label="🗣 Filler words" value={String(fillerCount)} color={fillerColor} />
-              <Row label="📊 Pace"         value={wpm > 0 ? `${wpm} wpm` : "—"} color={wpmColor} />
+          <div style={{ position:"absolute", top:10, right:10, background:"rgba(0,0,0,0.80)", borderRadius:10, padding:"10px 12px", minWidth:248 }}>
+            <div style={{ fontSize:10, color:"#9097b0", marginBottom:8, letterSpacing:"0.06em", textTransform:"uppercase" }}>Live coaching</div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+              <div>
+                <Dial
+                  label="Eye"
+                  value={eyePct !== null ? `${eyePct}%` : "—"}
+                  pct={eyePct !== null ? eyePct / 100 : 0}
+                  color={eyeColor}
+                />
+              </div>
+              <div>
+                <Dial
+                  label="Fillers"
+                  value={String(fillerCount)}
+                  pct={fillerPct}
+                  color={fillerColor}
+                />
+              </div>
+              <div style={{ gridColumn: "1 / -1" }}>
+                <Dial
+                  label="Pace"
+                  value={wpm > 0 ? `${wpm}` : "—"}
+                  pct={pacePct}
+                  color={wpmColor}
+                />
+              </div>
+              <div style={{ gridColumn: "1 / -1" }}>
+                <Dial
+                  label="Confidence"
+                  value={confidencePreview !== null ? `${confidencePreview.toFixed(1)}` : "—"}
+                  pct={confidencePct}
+                  color={confidenceColor}
+                />
+              </div>
             </div>
           </div>
         )}
@@ -352,7 +459,7 @@ export default function CameraRecorder({
       <div>
         <label style={{ display:"block", fontSize:12, fontWeight:500, color:"#9097b0", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.04em" }}>Live transcript</label>
         <div style={{ background:"#1a1d28", border:"1px solid #2a2d3a", borderRadius:10, padding:14, minHeight:72, fontSize:14, color:"#9097b0", fontStyle:"italic", lineHeight:1.7 }}>
-          {transcript || "Start recording and speak — your words will appear here in real time…"}
+          {transcript ? renderTranscriptWithFillerHighlights(transcript) : "Start recording and speak — your words will appear here in real time…"}
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 
@@ -36,24 +36,27 @@ function PublicRoute({ children }) {
 
 // ── App shell ──────────────────────────────────────────────────
 function AppShell() {
+  const location = useLocation();
   return (
     <>
       <Navbar />
-      <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login"    element={<PublicRoute><LoginPage /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+      <div key={location.pathname} className="page-transition">
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+          <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
-        {/* Protected routes */}
-        <Route path="/dashboard"       element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-        <Route path="/interview/new"   element={<PrivateRoute><NewInterviewPage /></PrivateRoute>} />
-        <Route path="/interview/:id"   element={<PrivateRoute><InterviewPage /></PrivateRoute>} />
-        <Route path="/interview/:id/report" element={<PrivateRoute><ReportPage /></PrivateRoute>} />
+          {/* Protected routes */}
+          <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+          <Route path="/interview/new" element={<PrivateRoute><NewInterviewPage /></PrivateRoute>} />
+          <Route path="/interview/:id" element={<PrivateRoute><InterviewPage /></PrivateRoute>} />
+          <Route path="/interview/:id/report" element={<PrivateRoute><ReportPage /></PrivateRoute>} />
 
-        {/* Catch-all */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
     </>
   );
 }
