@@ -5,62 +5,97 @@ import { loginUser } from "../utils/api";
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const navigate  = useNavigate();
-  const [form,    setForm]    = useState({ email: "", password: "" });
-  const [error,   setError]   = useState("");
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const submit = async (e) => {
-    e.preventDefault(); setError(""); setLoading(true);
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
       const { data } = await loginUser(form);
-      login(data); navigate("/dashboard");
+      login(data);
+      navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Check your credentials.");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, position: "relative" }}>
-      {/* Background glow */}
-      <div style={{ position: "fixed", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
+    <div className="relative flex min-h-screen items-center justify-center overflow-x-hidden bg-black px-6 py-12">
+      <div className="pointer-events-none absolute left-1/2 top-[30%] h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-aura-coral/15 via-aura-violet/10 to-transparent blur-3xl" />
 
-      <div style={{ width: "100%", maxWidth: 420 }} className="animate-fade-up">
-        {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: "1.4rem", fontWeight: 800, color: "var(--text)", display: "inline-flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "linear-gradient(135deg,#6366f1,#22d3ee)", boxShadow: "0 0 12px rgba(99,102,241,0.8)" }} />
-              InterviewAI
-            </div>
+      <div className="relative z-10 w-full max-w-md animate-page-in">
+        <div className="mb-10 text-center">
+          <Link to="/" className="inline-flex flex-col items-center gap-2 no-underline">
+            <span className="text-[11px] font-semibold uppercase tracking-aura text-aura-muted">InterviewAI</span>
+            <span className="text-lg font-semibold tracking-tight text-white">Welcome back</span>
           </Link>
-          <p style={{ color: "var(--text3)", fontSize: 13, marginTop: 8 }}>Sign in to your account</p>
+          <p className="mt-3 text-sm text-aura-muted">Sign in to continue to your dashboard</p>
         </div>
 
-        <div className="card-glow">
-          {error && <div className="alert alert-error">{error}</div>}
+        <div className="glass-panel-lg p-8 md:p-10">
+          {error && (
+            <div className="mb-6 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+              {error}
+            </div>
+          )}
 
-          <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <form onSubmit={submit} className="flex flex-col gap-5">
             <div>
-              <label>Email address</label>
-              <input className="input" name="email" type="email" placeholder="you@example.com" value={form.email} onChange={handle} required />
+              <label htmlFor="email" className="label-field">
+                Email address
+              </label>
+              <input
+                id="email"
+                className="input-field"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={handle}
+                required
+              />
             </div>
             <div>
-              <label>Password</label>
-              <input className="input" name="password" type="password" placeholder="Your password" value={form.password} onChange={handle} required />
+              <label htmlFor="password" className="label-field">
+                Password
+              </label>
+              <input
+                id="password"
+                className="input-field"
+                name="password"
+                type="password"
+                placeholder="Your password"
+                value={form.password}
+                onChange={handle}
+                required
+              />
             </div>
 
-            <button className="btn btn-grad btn-full btn-lg" type="submit" disabled={loading} style={{ marginTop: 4 }}>
-              {loading ? <><span className="spinner" /> Signing in…</> : "Sign in →"}
+            <button type="submit" className="btn-cta mt-2 w-full" disabled={loading}>
+              {loading ? (
+                <>
+                  <span className="spinner h-5 w-5 !border-t-zinc-900 !border-zinc-300/30" /> Signing in…
+                </>
+              ) : (
+                "Sign in →"
+              )}
             </button>
           </form>
 
-          <div className="divider" />
-          <p style={{ textAlign: "center", fontSize: 13, color: "var(--text3)" }}>
+          <div className="my-8 h-px bg-white/[0.08]" />
+          <p className="text-center text-sm text-aura-muted">
             No account?{" "}
-            <Link to="/register" style={{ color: "var(--indigo2)", fontWeight: 500 }}>Create one free</Link>
+            <Link to="/register" className="font-medium text-white transition-colors hover:text-aura-coral">
+              Create one free
+            </Link>
           </p>
         </div>
       </div>

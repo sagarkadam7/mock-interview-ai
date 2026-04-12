@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { getAllInterviews, deleteInterview } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
+import { useConfirm } from "../context/ConfirmContext";
 import { Sparkline } from "../components/Charts";
 
 function StatusBadge({ status }) {
-  const map = { pending: ["Not started","badge-pending"], in_progress: ["In progress","badge-progress"], completed: ["Completed","badge-completed"] };
+  const map = {
+    pending: ["Not started", "border-amber-500/30 bg-amber-500/10 text-amber-300"],
+    in_progress: ["In progress", "border-aura-violet/35 bg-aura-violet/10 text-[#c9a3e0]"],
+    completed: ["Completed", "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"],
+  };
   const [label, cls] = map[status] || map.pending;
-  return <span className={`badge ${cls}`}>{label}</span>;
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold tracking-wide ${cls}`}>
+      {label}
+    </span>
+  );
 }
 
 function ScoreDisplay({ score }) {
-  if (score === null || score === undefined) return <span style={{ fontSize: 12, color: "var(--text3)" }}>—</span>;
-  const color = score >= 7 ? "var(--green)" : score >= 4 ? "var(--amber)" : "var(--red)";
+  if (score === null || score === undefined) {
+    return <span className="text-sm text-aura-muted">—</span>;
+  }
+  const color = score >= 7 ? "text-emerald-400" : score >= 4 ? "text-amber-400" : "text-rose-400";
   return (
-    <div style={{ textAlign: "center" }}>
-      <div style={{ fontFamily: "'Syne',sans-serif", fontSize: "1.6rem", fontWeight: 800, color, lineHeight: 1 }}>{score}</div>
-      <div style={{ fontSize: 10, color: "var(--text3)", marginTop: 2 }}>/10</div>
+    <div className="text-center">
+      <div className={`font-sans text-2xl font-extrabold leading-none tracking-tight ${color}`}>{score}</div>
+      <div className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-aura-muted">/10</div>
     </div>
   );
 }
@@ -24,9 +36,10 @@ function ScoreDisplay({ score }) {
 export default function DashboardPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { confirm } = useConfirm();
   const [interviews, setInterviews] = useState([]);
-  const [loading,    setLoading]    = useState(true);
-  const [deleting,   setDeleting]   = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(null);
 
   useEffect(() => {
     getAllInterviews()
@@ -36,144 +49,167 @@ export default function DashboardPage() {
   }, []);
 
   const handleDelete = async (id, e) => {
-    e.preventDefault(); e.stopPropagation();
-    if (!window.confirm("Delete this interview permanently?")) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const ok = await confirm("This interview and all answers will be removed. This cannot be undone.", {
+      title: "Delete interview?",
+      variant: "danger",
+      confirmLabel: "Delete",
+      cancelLabel: "Keep",
+    });
+    if (!ok) return;
     setDeleting(id);
     try {
       await deleteInterview(id);
       setInterviews((prev) => prev.filter((i) => i._id !== id));
-    } catch { alert("Failed to delete."); }
-    finally { setDeleting(null); }
+      toast.success("Interview deleted");
+    } catch {
+      toast.error("Couldn’t delete the interview. Try again.");
+    } finally {
+      setDeleting(null);
+    }
   };
 
   const completed = interviews.filter((i) => i.status === "completed");
   const completedSorted = [...completed].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   const trend = completedSorted.map((i) => i.overallScore).filter((v) => typeof v === "number");
   const trendLast = trend.slice(-8);
-  const avgScore  = completed.filter((i) => i.overallScore !== null).length
-    ? (completed.filter((i) => i.overallScore !== null).reduce((s,i) => s + i.overallScore, 0) / completed.filter((i) => i.overallScore !== null).length).toFixed(1)
-    : null;
+  const avgScore =
+    completed.filter((i) => i.overallScore !== null).length > 0
+      ? (
+          completed.filter((i) => i.overallScore !== null).reduce((s, i) => s + i.overallScore, 0) /
+          completed.filter((i) => i.overallScore !== null).length
+        ).toFixed(1)
+      : null;
 
   return (
-    <div className="page container animate-fade-up">
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40, flexWrap: "wrap", gap: 16 }}>
+    <div className="mx-auto min-h-screen w-full max-w-5xl px-6 py-12 md:px-8">
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p style={{ fontSize: 11, color: "var(--text3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Welcome back</p>
-          <h2 style={{ marginBottom: 4 }}>{user?.name}</h2>
-          <p style={{ color: "var(--text3)", fontSize: 14 }}>Track your interview practice progress</p>
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-aura-muted">Welcome back</p>
+          <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">{user?.name}</h1>
+          <p className="mt-1 text-sm text-aura-muted">Track your interview practice progress</p>
         </div>
         <Link to="/interview/new">
-          <button className="btn btn-grad">+ New interview</button>
+          <button type="button" className="btn-cta text-sm">
+            + New interview
+          </button>
         </Link>
       </div>
 
-      {/* Stats */}
       {interviews.length > 0 && (
-        <div className="grid-3" style={{ marginBottom: 40 }}>
+        <div className="mb-10 grid gap-4 sm:grid-cols-3">
           {[
-            { label: "Total interviews", value: interviews.length, color: "var(--indigo2)" },
-            { label: "Completed", value: completed.length, color: "var(--green)" },
-            { label: "Avg score", value: avgScore ?? "—", color: "var(--amber)" },
+            { label: "Total interviews", value: interviews.length, accent: "text-aura-violet" },
+            { label: "Completed", value: completed.length, accent: "text-emerald-400" },
+            { label: "Avg score", value: avgScore ?? "—", accent: "text-amber-400" },
           ].map((s) => (
-            <div key={s.label} className="stat-chip">
-              <div className="value" style={{ color: s.color }}>{s.value}</div>
-              <div className="label">{s.label}</div>
+            <div
+              key={s.label}
+              className="glass-panel flex flex-col items-center justify-center rounded-xl p-8 text-center transition-colors duration-200 hover:border-white/15"
+            >
+              <div className={`font-sans text-3xl font-extrabold tabular-nums tracking-tight ${s.accent}`}>{s.value}</div>
+              <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-aura-muted">{s.label}</div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Progress sparkline */}
       {trendLast.length >= 2 && (
-        <div className="card" style={{ marginBottom: 36, padding: "18px 20px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-            <div>
-              <div className="tag" style={{ marginBottom: 10 }}>PROGRESS</div>
-              <h3 style={{ marginBottom: 6, fontFamily: "'Syne',sans-serif" }}>Score trend</h3>
-              <p style={{ color: "var(--text3)", fontSize: 13, lineHeight: 1.6, marginBottom: 0 }}>
-                Last {trendLast.length} completed sessions
-              </p>
+        <div className="glass-panel-lg mb-10 min-w-0 p-6 md:p-8">
+          <div className="mb-6 flex min-w-0 flex-wrap items-start justify-between gap-6">
+            <div className="min-w-0">
+              <span className="section-eyebrow mb-3">Progress</span>
+              <h2 className="text-xl font-bold tracking-tight text-white">Score trend</h2>
+              <p className="mt-1 text-sm text-aura-muted">Last {trendLast.length} completed sessions</p>
             </div>
-            <div style={{ flex: 1, minWidth: 280 }}>
-              <Sparkline data={trendLast} stroke="var(--accent2)" fill="rgba(168,85,247,0.12)" />
+            <div className="min-w-0 flex-1">
+              <Sparkline data={trendLast} stroke="#9D50BB" fill="rgba(157,80,187,0.14)" />
             </div>
           </div>
         </div>
       )}
 
-      {/* Interview list */}
       {loading ? (
-        <div style={{ textAlign: "center", padding: 80 }}>
-          <span className="spinner" style={{ width: 36, height: 36 }} />
-          <p style={{ marginTop: 16, color: "var(--text3)", fontSize: 14 }}>Loading interviews…</p>
+        <div className="py-20 text-center">
+          <span className="spinner h-9 w-9" />
+          <p className="mt-4 text-sm text-aura-muted">Loading interviews…</p>
         </div>
       ) : interviews.length === 0 ? (
-        <div className="card" style={{ textAlign: "center", padding: "80px 40px" }}>
-          <div style={{ fontSize: 48, marginBottom: 20, opacity: 0.3 }}>◎</div>
-          <h3 style={{ fontFamily: "'Syne',sans-serif", marginBottom: 12 }}>No interviews yet</h3>
-          <p style={{ color: "var(--text3)", marginBottom: 28, fontSize: 14 }}>Start your first mock interview to see results here.</p>
+        <div className="glass-panel-lg py-20 text-center md:py-24">
+          <div className="mb-5 text-5xl opacity-30">◎</div>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-white">No interviews yet</h2>
+          <p className="mb-8 text-aura-muted">Start your first mock interview to see results here.</p>
           <Link to="/interview/new">
-            <button className="btn btn-grad">Start your first interview</button>
+            <button type="button" className="btn-cta">
+              Start your first interview
+            </button>
           </Link>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className="flex flex-col gap-4">
           {interviews.map((iv, i) => {
             const answered = iv.questions?.filter((q) => q.score !== null).length || 0;
-            const total    = iv.questions?.length || 0;
-            const pct      = total > 0 ? (answered / total) * 100 : 0;
+            const total = iv.questions?.length || 0;
+            const pct = total > 0 ? (answered / total) * 100 : 0;
 
             return (
               <div
                 key={iv._id}
+                role="button"
+                tabIndex={0}
                 onClick={() => navigate(iv.status === "completed" ? `/interview/${iv._id}/report` : `/interview/${iv._id}`)}
-                className="card animate-fade-up"
-                style={{
-                  display: "flex", alignItems: "center", gap: 20,
-                  flexWrap: "wrap", cursor: "pointer",
-                  animationDelay: `${i * 0.05}s`,
-                  transition: "border-color 0.2s, transform 0.2s, box-shadow 0.2s",
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    navigate(iv.status === "completed" ? `/interview/${iv._id}/report` : `/interview/${iv._id}`);
+                  }
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--border2)"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 16px 48px rgba(0,0,0,0.5)"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = ""; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
+                className="glass-panel group flex cursor-pointer flex-wrap items-center gap-5 rounded-xl p-6 transition-colors duration-200 hover:border-white/12 hover:bg-zinc-950/90 md:flex-nowrap md:gap-6 md:p-8"
+                style={{ animationDelay: `${i * 0.05}s` }}
               >
-                {/* Score */}
-                <div style={{ width: 56, flexShrink: 0, textAlign: "center" }}>
+                <div className="w-14 shrink-0 text-center md:w-16">
                   <ScoreDisplay score={iv.overallScore} />
                 </div>
 
-                {/* Info */}
-                <div style={{ flex: 1, minWidth: 180 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                    <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 600, fontSize: "1rem" }}>{iv.jobRole}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <span className="font-semibold tracking-tight text-white">{iv.jobRole}</span>
                     <StatusBadge status={iv.status} />
                   </div>
-                  <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 10 }}>
+                  <p className="mb-3 text-xs text-aura-muted">
                     {new Date(iv.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                    {" · "}{answered}/{total} questions
-                  </div>
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: `${pct}%` }} />
+                    {" · "}
+                    {answered}/{total} questions
+                  </p>
+                  <div className="progress-track">
+                    <div className="progress-fill-bar" style={{ width: `${pct}%` }} />
                   </div>
                 </div>
 
-                {/* ML badges */}
                 {iv.avgEyeContact !== null && (
-                  <div style={{ fontSize: 12, color: "var(--text3)", display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-                    <span style={{ color: iv.avgEyeContact > 70 ? "var(--green)" : "var(--amber)", fontWeight: 600 }}>{iv.avgEyeContact}%</span>
-                    <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.05em" }}>eye</span>
+                  <div className="flex min-w-[4.5rem] shrink-0 flex-col items-center justify-center gap-1 text-center">
+                    <span
+                      className={`text-lg font-bold tabular-nums leading-none ${
+                        iv.avgEyeContact > 70 ? "text-emerald-400" : "text-amber-400"
+                      }`}
+                    >
+                      {iv.avgEyeContact}
+                      <span className="text-sm font-semibold">%</span>
+                    </span>
+                    <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.12em] text-aura-muted">
+                      Eye
+                    </span>
                   </div>
                 )}
 
-                {/* Delete */}
                 <button
-                  className="btn btn-danger"
-                  style={{ padding: "7px 14px", fontSize: 12, flexShrink: 0 }}
+                  type="button"
+                  className="btn-danger shrink-0"
                   onClick={(e) => handleDelete(iv._id, e)}
                   disabled={deleting === iv._id}
                 >
-                  {deleting === iv._id ? <span className="spinner" /> : "Delete"}
+                  {deleting === iv._id ? <span className="spinner h-4 w-4" /> : "Delete"}
                 </button>
               </div>
             );

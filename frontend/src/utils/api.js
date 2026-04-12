@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// Using CRA proxy: requests to /api/... go to localhost:5000
+// Using CRA proxy: requests to /api/... go to localhost:5001
 const api = axios.create({ baseURL: "/api" });
 
 // Attach token automatically on every request
@@ -13,18 +13,18 @@ api.interceptors.request.use((config) => {
 });
 
 // ── Auth ──────────────────────────────────────────────────────
-export const registerUser = (data)  => api.post("/auth/register", data);
-export const loginUser    = (data)  => api.post("/auth/login", data);
+export const registerUser = (data) => api.post("/auth/register", data);
+export const loginUser = (data) => api.post("/auth/login", data);
 
 // ── Interviews ────────────────────────────────────────────────
-export const createInterview   = (formData) =>
+export const createInterview = (formData) =>
   api.post("/interview/create", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 
-export const getInterview      = (id)        => api.get(`/interview/${id}`);
-export const getAllInterviews   = ()          => api.get("/interview");
-export const submitAnswer      = (id, data)  => api.post(`/interview/${id}/answer`, data);
-export const deleteInterview   = (id)        => api.delete(`/interview/${id}`);
+export const getInterview = (id) => api.get(`/interview/${id}`);
+export const getAllInterviews = () => api.get("/interview");
+export const submitAnswer = (id, data) => api.post(`/interview/${id}/answer`, data);
+export const deleteInterview = (id) => api.delete(`/interview/${id}`);
 
 export default api;

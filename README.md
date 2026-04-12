@@ -98,7 +98,7 @@ cp .env.example .env
 
 Now open `.env` in any text editor and fill in:
 ```
-PORT=5000
+PORT=5001
 MONGO_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/mockinterview
 JWT_SECRET=make_up_any_long_random_string_here_like_abc123xyz456
 ANTHROPIC_API_KEY=sk-ant-your-actual-key-here
@@ -112,7 +112,7 @@ npm run dev
 You should see:
 ```
 ✅ MongoDB connected
-✅ Server running on port 5000
+✅ Server running on port 5001
 ```
 
 ### Step 3: Set up the Frontend
@@ -166,7 +166,7 @@ Browser will open at http://localhost:3000
 → Click the camera icon in your browser address bar → Allow
 
 **"CORS error" in browser console**
-→ Make sure backend is running on port 5000 and frontend has `"proxy": "http://localhost:5000"` in package.json
+→ Make sure backend is running on port 5001 and frontend has `"proxy": "http://localhost:5001"` in package.json
 
 **"MongoDB connection error"**
 → Check your MONGO_URI in .env — make sure username/password is correct and "Allow Access from Anywhere" is set in Atlas

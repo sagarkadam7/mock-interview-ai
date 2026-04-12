@@ -91,7 +91,7 @@ function Dial({ label, value, pct, color }) {
   );
 }
 
-function renderTranscriptWithFillerHighlights(text) {
+export function renderTranscriptWithFillerHighlights(text) {
   if (!text) return null;
   const parts = text.split(FILLER_WORD_REGEX);
   return parts.map((part, idx) => {
@@ -126,6 +126,10 @@ export default function CameraRecorder({
   onRecordingComplete,
   onMLData,
   disabled,
+  /** Hide built-in transcript (e.g. when parent shows it in a main column) */
+  showTranscript = true,
+  /** "overlay" = metrics on video; "below" = metrics stacked under video (sidebar layout) */
+  metricsLayout = "overlay",
 }) {
   const videoRef      = useRef(null);
   const canvasRef     = useRef(null);
@@ -369,44 +373,42 @@ export default function CameraRecorder({
   const confidenceColor = confidencePreview === null ? "#888" : confidencePreview >= 7 ? "#22c55e" : confidencePreview >= 4 ? "#f59e0b" : "#ef4444";
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+    <div className="flex flex-col gap-4">
 
-      <div style={{ position:"relative", background:"#000", borderRadius:12, overflow:"hidden", aspectRatio:"16/9" }}>
-        <video ref={videoRef} autoPlay muted playsInline
-          style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
-        <canvas ref={canvasRef}
-          style={{ position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none" }} />
+      <div className="relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black shadow-glass">
+        <video ref={videoRef} autoPlay muted playsInline className="block h-full w-full object-cover" />
+        <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" />
 
         {/* Face status */}
-        <div style={{ position:"absolute", bottom:10, left:10, background:"rgba(0,0,0,0.65)", borderRadius:8, padding:"4px 10px", fontSize:11, color: faceFound ? "#22c55e" : "#f59e0b" }}>
+        <div className={`absolute bottom-3 left-3 rounded-lg px-2.5 py-1 text-[11px] font-medium backdrop-blur-md ${faceFound ? "bg-black/60 text-emerald-400" : "bg-black/60 text-amber-400"}`}>
           {faceFound ? "✓ Face detected" : "⚠ No face detected"}
         </div>
 
         {/* MediaPipe status */}
         {!mpReady && (
-          <div style={{ position:"absolute", bottom:10, right:10, background:"rgba(0,0,0,0.65)", borderRadius:8, padding:"4px 10px", fontSize:11, color:"#f59e0b" }}>
+          <div className="absolute bottom-3 right-3 rounded-lg bg-black/60 px-2.5 py-1 text-[11px] text-amber-400 backdrop-blur-md">
             ⏳ Loading MediaPipe…
           </div>
         )}
         {mpReady && !recording && (
-          <div style={{ position:"absolute", bottom:10, right:10, background:"rgba(0,0,0,0.65)", borderRadius:8, padding:"4px 10px", fontSize:11, color:"#22c55e" }}>
+          <div className="absolute bottom-3 right-3 rounded-lg bg-black/60 px-2.5 py-1 text-[11px] text-emerald-400 backdrop-blur-md">
             ✓ MediaPipe ready
           </div>
         )}
 
         {/* REC badge */}
         {recording && (
-          <div style={{ position:"absolute", top:10, left:10, background:"rgba(0,0,0,0.72)", borderRadius:99, padding:"5px 14px", display:"flex", alignItems:"center", gap:8 }}>
-            <span style={{ width:8, height:8, borderRadius:"50%", background:"#ef4444", display:"inline-block", animation:"pulse 1s ease-in-out infinite" }} />
-            <span style={{ fontSize:12, color:"#fff", fontWeight:600 }}>REC {fmt(timer)}</span>
+          <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-black/75 px-3.5 py-1.5 backdrop-blur-md">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-rose-500" />
+            <span className="text-xs font-semibold text-white">REC {fmt(timer)}</span>
           </div>
         )}
 
-        {/* Live ML overlay */}
-        {recording && (
-          <div style={{ position:"absolute", top:10, right:10, background:"rgba(0,0,0,0.80)", borderRadius:10, padding:"10px 12px", minWidth:248 }}>
-            <div style={{ fontSize:10, color:"#9097b0", marginBottom:8, letterSpacing:"0.06em", textTransform:"uppercase" }}>Live coaching</div>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+        {/* Live ML overlay (default) — hidden in sidebar "below" layout */}
+        {recording && metricsLayout === "overlay" && (
+          <div className="absolute right-3 top-3 min-w-[248px] rounded-xl border border-white/10 bg-black/80 p-3 backdrop-blur-md">
+            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-aura-muted">Live coaching</div>
+            <div className="grid grid-cols-2 gap-2.5">
               <div>
                 <Dial
                   label="Eye"
@@ -423,7 +425,7 @@ export default function CameraRecorder({
                   color={fillerColor}
                 />
               </div>
-              <div style={{ gridColumn: "1 / -1" }}>
+              <div className="col-span-2">
                 <Dial
                   label="Pace"
                   value={wpm > 0 ? `${wpm}` : "—"}
@@ -431,7 +433,7 @@ export default function CameraRecorder({
                   color={wpmColor}
                 />
               </div>
-              <div style={{ gridColumn: "1 / -1" }}>
+              <div className="col-span-2">
                 <Dial
                   label="Confidence"
                   value={confidencePreview !== null ? `${confidencePreview.toFixed(1)}` : "—"}
@@ -444,39 +446,89 @@ export default function CameraRecorder({
         )}
 
         {!cameraReady && !error && (
-          <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"#000", color:"#9097b0", fontSize:14 }}>
+          <div className="absolute inset-0 flex items-center justify-center bg-black text-sm text-aura-muted">
             Starting camera…
           </div>
         )}
       </div>
 
+      {/* Live coaching below video (sidebar layout — no overlap on feed) */}
+      {recording && metricsLayout === "below" && (
+        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-md">
+          <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-aura-muted">Live coaching</div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Dial
+              label="Eye"
+              value={eyePct !== null ? `${eyePct}%` : "—"}
+              pct={eyePct !== null ? eyePct / 100 : 0}
+              color={eyeColor}
+            />
+            <Dial
+              label="Fillers"
+              value={String(fillerCount)}
+              pct={fillerPct}
+              color={fillerColor}
+            />
+            <div className="sm:col-span-2">
+              <Dial
+                label="Pace"
+                value={wpm > 0 ? `${wpm}` : "—"}
+                pct={pacePct}
+                color={wpmColor}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <Dial
+                label="Confidence"
+                value={confidencePreview !== null ? `${confidencePreview.toFixed(1)}` : "—"}
+                pct={confidencePct}
+                color={confidenceColor}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {error && (
-        <div style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.3)", borderRadius:10, padding:"12px 16px", fontSize:14, color:"#fca5a5" }}>
+        <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
           {error}
         </div>
       )}
 
-      <div>
-        <label style={{ display:"block", fontSize:12, fontWeight:500, color:"#9097b0", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.04em" }}>Live transcript</label>
-        <div style={{ background:"#1a1d28", border:"1px solid #2a2d3a", borderRadius:10, padding:14, minHeight:72, fontSize:14, color:"#9097b0", fontStyle:"italic", lineHeight:1.7 }}>
-          {transcript ? renderTranscriptWithFillerHighlights(transcript) : "Start recording and speak — your words will appear here in real time…"}
+      {showTranscript && (
+        <div>
+          <label className="label-field">Live transcript</label>
+          <div className="min-h-[72px] rounded-xl border border-white/10 bg-white/[0.04] p-4 text-sm italic leading-relaxed text-aura-muted">
+            {transcript ? renderTranscriptWithFillerHighlights(transcript) : "Start recording and speak — your words will appear here in real time…"}
+          </div>
         </div>
-      </div>
+      )}
 
       {!recording ? (
-        <button onClick={startRecording} disabled={!cameraReady || disabled}
-          style={{ width:"100%", padding:13, borderRadius:10, border:"none", background:(!cameraReady||disabled) ? "#2a2d3a" : "#6c63ff", color:(!cameraReady||disabled) ? "#5d6480" : "#fff", fontSize:15, fontWeight:500, cursor:(!cameraReady||disabled) ? "not-allowed" : "pointer", fontFamily:"inherit" }}>
+        <button
+          type="button"
+          onClick={startRecording}
+          disabled={!cameraReady || disabled}
+          className={`w-full rounded-full py-3.5 text-[15px] font-bold transition-all duration-300 ${
+            !cameraReady || disabled
+              ? "cursor-not-allowed bg-white/5 text-aura-muted"
+              : "border-0 bg-gradient-to-r from-aura-coral to-aura-violet text-white shadow-lg shadow-aura-violet/25 hover:scale-[1.01]"
+          }`}
+        >
           🎙 Start Recording
         </button>
       ) : (
-        <button onClick={stopRecording}
-          style={{ width:"100%", padding:13, borderRadius:10, border:"1px solid rgba(239,68,68,0.35)", background:"rgba(239,68,68,0.15)", color:"#ef4444", fontSize:15, fontWeight:500, cursor:"pointer", fontFamily:"inherit" }}>
+        <button
+          type="button"
+          onClick={stopRecording}
+          className="w-full rounded-xl border border-rose-500/35 bg-rose-500/10 py-3.5 text-[15px] font-medium text-rose-300 transition-all duration-300 hover:border-rose-400/50 hover:bg-rose-500/20"
+        >
           ⏹ Stop Recording
         </button>
       )}
 
       {recording && (
-        <p style={{ fontSize:12, color:"#5d6480", textAlign:"center", margin:0 }}>
+        <p className="m-0 text-center text-xs text-aura-muted">
           MediaPipe is tracking your iris for eye contact. Speak naturally!
         </p>
       )}
@@ -487,8 +539,8 @@ export default function CameraRecorder({
 function Row({ label, value, color }) {
   return (
     <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:10 }}>
-      <span style={{ fontSize:11, color:"#9097b0" }}>{label}</span>
-      <span style={{ fontSize:12, fontWeight:600, color: color||"#e8eaf0" }}>{value}</span>
+      <span style={{ fontSize:11, color:"#888888" }}>{label}</span>
+      <span style={{ fontSize:12, fontWeight:600, color: color||"#ffffff" }}>{value}</span>
     </div>
   );
 }
