@@ -66,7 +66,7 @@ function Dial({ label, value, pct, color }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
       <svg width={size} height={size} viewBox="0 0 56 56" role="img" aria-label={`${label} gauge`}>
-        <circle cx="28" cy="28" r={r} stroke="rgba(255,255,255,0.10)" strokeWidth="5" fill="none" />
+        <circle cx="28" cy="28" r={r} stroke="rgba(15,23,42,0.1)" strokeWidth="5" fill="none" />
         <circle
           cx="28"
           cy="28"
@@ -79,12 +79,12 @@ function Dial({ label, value, pct, color }) {
           strokeDashoffset={dashOffset}
           style={{ transition: "stroke-dashoffset 0.35s ease" }}
         />
-        <text x="28" y="30.5" textAnchor="middle" fontSize="11" fill="#e8eaf0" fontWeight="800">
+        <text x="28" y="30.5" textAnchor="middle" fontSize="11" fill="#0f172a" fontWeight="800">
           {value ?? "—"}
         </text>
       </svg>
       <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 74 }}>
-        <span style={{ fontSize: 11, color: "#9097b0", letterSpacing: "0.04em", textTransform: "uppercase" }}>{label}</span>
+        <span style={{ fontSize: 11, color: "#64748b", letterSpacing: "0.04em", textTransform: "uppercase" }}>{label}</span>
         <span style={{ fontSize: 12, fontWeight: 700, color: color }}>{typeof value === "number" && !Number.isNaN(value) ? value : value}</span>
       </div>
     </div>
@@ -375,7 +375,7 @@ export default function CameraRecorder({
   return (
     <div className="flex flex-col gap-4">
 
-      <div className="relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black shadow-glass">
+      <div className="relative aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-zinc-900 shadow-md">
         <video ref={videoRef} autoPlay muted playsInline className="block h-full w-full object-cover" />
         <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" />
 
@@ -454,7 +454,7 @@ export default function CameraRecorder({
 
       {/* Live coaching below video (sidebar layout — no overlap on feed) */}
       {recording && metricsLayout === "below" && (
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-md">
+        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm backdrop-blur-md">
           <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-aura-muted">Live coaching</div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Dial
@@ -490,7 +490,7 @@ export default function CameraRecorder({
       )}
 
       {error && (
-        <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+        <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
           {error}
         </div>
       )}
@@ -498,7 +498,7 @@ export default function CameraRecorder({
       {showTranscript && (
         <div>
           <label className="label-field">Live transcript</label>
-          <div className="min-h-[72px] rounded-xl border border-white/10 bg-white/[0.04] p-4 text-sm italic leading-relaxed text-aura-muted">
+          <div className="min-h-[72px] rounded-xl border border-slate-200 bg-slate-50/90 p-4 text-sm italic leading-relaxed text-aura-muted">
             {transcript ? renderTranscriptWithFillerHighlights(transcript) : "Start recording and speak — your words will appear here in real time…"}
           </div>
         </div>
@@ -511,7 +511,7 @@ export default function CameraRecorder({
           disabled={!cameraReady || disabled}
           className={`w-full rounded-full py-3.5 text-[15px] font-bold transition-all duration-300 ${
             !cameraReady || disabled
-              ? "cursor-not-allowed bg-white/5 text-aura-muted"
+              ? "cursor-not-allowed bg-slate-100 text-aura-muted"
               : "border-0 bg-gradient-to-r from-aura-coral to-aura-violet text-white shadow-lg shadow-aura-violet/25 hover:scale-[1.01]"
           }`}
         >
@@ -521,7 +521,7 @@ export default function CameraRecorder({
         <button
           type="button"
           onClick={stopRecording}
-          className="w-full rounded-xl border border-rose-500/35 bg-rose-500/10 py-3.5 text-[15px] font-medium text-rose-300 transition-all duration-300 hover:border-rose-400/50 hover:bg-rose-500/20"
+          className="w-full rounded-xl border border-rose-200 bg-rose-50 py-3.5 text-[15px] font-medium text-rose-800 transition-all duration-300 hover:border-rose-300 hover:bg-rose-100"
         >
           ⏹ Stop Recording
         </button>
@@ -540,7 +540,7 @@ function Row({ label, value, color }) {
   return (
     <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:10 }}>
       <span style={{ fontSize:11, color:"#888888" }}>{label}</span>
-      <span style={{ fontSize:12, fontWeight:600, color: color||"#ffffff" }}>{value}</span>
+      <span style={{ fontSize:12, fontWeight:600, color: color||"#0f172a" }}>{value}</span>
     </div>
   );
 }

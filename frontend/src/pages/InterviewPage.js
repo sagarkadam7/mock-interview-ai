@@ -143,8 +143,8 @@ export default function InterviewPage() {
                       ? "border-amber-500/40 bg-amber-500/15 text-amber-400"
                       : "border-rose-500/40 bg-rose-500/15 text-rose-400"
                   : i === currentIndex
-                    ? "border-aura-coral/60 bg-aura-violet/15 text-white"
-                    : "border-white/10 bg-white/[0.04] text-aura-muted"
+                    ? "border-aura-coral/50 bg-violet-50 text-aura-ink ring-1 ring-aura-violet/15"
+                    : "border-slate-200 bg-slate-50 text-aura-muted"
               }`}
             >
               {i + 1}
@@ -154,23 +154,23 @@ export default function InterviewPage() {
       </div>
 
       {error && (
-        <div className="mb-6 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">{error}</div>
+        <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">{error}</div>
       )}
 
       {/* Main + sidebar: left = copy & transcript, right = camera & coaching (sticky on xl) */}
       <div className="flex flex-col gap-8 xl:flex-row xl:items-start xl:gap-10">
         {/* Left: primary content (~8/12) */}
         <div className="min-w-0 flex-1 space-y-5">
-          <div className="glass-panel-lg border-white/10 p-6 md:p-8">
+          <div className="glass-panel-lg border-slate-200/90 p-6 md:p-8">
             <div className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-aura-muted">
               Question {currentIndex + 1} of {totalQ}
             </div>
-            <p className="text-lg font-medium leading-relaxed tracking-tight text-white">{currentQ.text}</p>
+            <p className="text-lg font-medium leading-relaxed tracking-tight text-aura-ink">{currentQ.text}</p>
           </div>
 
           {!feedback && (
             <div className="glass-panel rounded-2xl p-5 text-sm text-aura-muted md:p-6">
-              <strong className="mb-2 block font-semibold text-white">💡 Tips</strong>
+              <strong className="mb-2 block font-semibold text-aura-ink">💡 Tips</strong>
               <ul className="list-disc space-y-1 pl-5 leading-relaxed">
                 <li>Use the STAR method: Situation, Task, Action, Result</li>
                 <li>Look directly at the camera for eye contact</li>
@@ -181,9 +181,9 @@ export default function InterviewPage() {
           )}
 
           {feedback && (
-            <div className="glass-panel-lg animate-page-in border-white/10 p-6 md:p-8">
+            <div className="glass-panel-lg animate-page-in border-slate-200/90 p-6 md:p-8">
               <div className="mb-4 flex items-center justify-between gap-4">
-                <h3 className="text-lg font-bold tracking-tight text-white">AI Feedback</h3>
+                <h3 className="text-lg font-bold tracking-tight text-aura-ink">AI Feedback</h3>
                 <span className={`font-sans text-3xl font-bold ${scoreColor(feedback.score)}`}>
                   {feedback.score}
                   <span className="text-sm font-normal text-aura-muted">/10</span>
@@ -200,7 +200,7 @@ export default function InterviewPage() {
               {feedback.mlData && (
                 <div className="mb-4 grid grid-cols-2 gap-2.5">
                   {feedback.mlData.eyeContactPct !== null && (
-                    <div className="rounded-xl bg-white/[0.04] p-3">
+                    <div className="rounded-xl bg-slate-50 p-3">
                       <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">👁 Eye</div>
                       <div className={`text-lg font-bold ${eyeColor(feedback.mlData.eyeContactPct)}`}>
                         {feedback.mlData.eyeContactPct}%
@@ -208,7 +208,7 @@ export default function InterviewPage() {
                     </div>
                   )}
                   {feedback.mlData.wordsPerMinute > 0 && (
-                    <div className="rounded-xl bg-white/[0.04] p-3">
+                    <div className="rounded-xl bg-slate-50 p-3">
                       <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">📊 Pace</div>
                       <div className={`text-base font-bold ${paceColor(feedback.mlData.paceLabel)}`}>
                         {feedback.mlData.wordsPerMinute} wpm
@@ -217,7 +217,7 @@ export default function InterviewPage() {
                     </div>
                   )}
                   {feedback.mlData.fillerWordCount !== null && (
-                    <div className="rounded-xl bg-white/[0.04] p-3">
+                    <div className="rounded-xl bg-slate-50 p-3">
                       <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">🗣 Fillers</div>
                       <div
                         className={`text-lg font-bold ${
@@ -233,15 +233,15 @@ export default function InterviewPage() {
                     </div>
                   )}
                   {feedback.mlData.dominantEmotion && (
-                    <div className="rounded-xl bg-white/[0.04] p-3">
+                    <div className="rounded-xl bg-slate-50 p-3">
                       <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">Expression</div>
-                      <div className="text-base font-semibold capitalize text-white">{feedback.mlData.dominantEmotion}</div>
+                      <div className="text-base font-semibold capitalize text-aura-ink">{feedback.mlData.dominantEmotion}</div>
                     </div>
                   )}
                   {feedback.mlData.confidenceScore !== null && (
                     <div className="col-span-2 rounded-xl border border-aura-violet/30 bg-aura-violet/10 p-3">
                       <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-coral">⭐ Confidence (ML)</div>
-                      <div className="text-2xl font-bold text-white">{feedback.mlData.confidenceScore}/10</div>
+                      <div className="text-2xl font-bold text-aura-ink">{feedback.mlData.confidenceScore}/10</div>
                     </div>
                   )}
                 </div>
@@ -268,7 +268,7 @@ export default function InterviewPage() {
           {!feedback && (
             <div className="glass-panel rounded-2xl p-5 md:p-6">
               <label className="label-field">Live transcript</label>
-              <div className="max-h-48 min-h-[100px] overflow-y-auto rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm italic leading-relaxed text-aura-muted md:max-h-64">
+              <div className="max-h-48 min-h-[100px] overflow-y-auto rounded-xl border border-slate-200 bg-slate-50/80 p-4 text-sm italic leading-relaxed text-aura-muted md:max-h-64">
                 {transcript ? (
                   renderTranscriptWithFillerHighlights(transcript)
                 ) : (
@@ -281,7 +281,7 @@ export default function InterviewPage() {
 
         {/* Right: fixed-width sidebar — camera, coaching, record controls */}
         <aside className="w-full shrink-0 space-y-4 xl:sticky xl:top-24 xl:w-[400px] xl:self-start">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 backdrop-blur-sm">
+          <div className="rounded-2xl border border-slate-200/90 bg-white/90 p-4 shadow-sm backdrop-blur-sm">
             <p className="mb-3 text-center text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Camera & coaching</p>
             <CameraRecorder
               key={currentIndex}

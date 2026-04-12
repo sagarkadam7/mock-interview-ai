@@ -95,12 +95,12 @@ export function RadarChart({
   return (
     <svg width="100%" viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Radar chart">
       {ringPolys.map((poly, idx) => (
-        <polygon key={idx} points={poly} fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
+        <polygon key={idx} points={poly} fill="none" stroke="rgba(15,23,42,0.08)" strokeWidth="1" />
       ))}
 
       {axes.map((m, i) => {
         const p = pointFor(i, 1);
-        return <line key={m.label} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />;
+        return <line key={m.label} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="rgba(15,23,42,0.06)" strokeWidth="1" />;
       })}
 
       <polygon points={valuePoly} fill={fill} stroke={stroke} strokeWidth="2.1" />

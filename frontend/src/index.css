@@ -10,8 +10,9 @@
     --green: #34d399;
     --amber: #fbbf24;
     --red: #f87171;
-    --text2: #888888;
-    --text3: #666666;
+    --text2: #64748b;
+    --text3: #94a3b8;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
@@ -34,7 +35,7 @@
   }
 
   body {
-    @apply bg-black font-sans text-[15px] leading-relaxed text-white antialiased;
+    @apply bg-aura-page font-sans text-[15px] leading-relaxed text-aura-ink antialiased;
     overflow-x: hidden;
     overscroll-behavior-x: none;
   }
@@ -48,7 +49,7 @@
     position: relative;
   }
 
-  /* Dot grid + soft center glow — single layer so it stays behind app content */
+  /* Soft mesh + dot texture (light, premium SaaS) */
   #root::before {
     content: "";
     pointer-events: none;
@@ -56,66 +57,163 @@
     inset: 0;
     z-index: 0;
     opacity: 1;
-    background-image: radial-gradient(ellipse 70% 55% at 50% 42%, rgba(255, 126, 95, 0.07) 0%, transparent 45%),
-      radial-gradient(ellipse 50% 40% at 50% 48%, rgba(157, 80, 187, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.035) 0%, transparent 62%),
-      radial-gradient(rgba(255, 255, 255, 0.11) 1px, transparent 1px);
-    background-size: auto, auto, auto, 44px 44px;
+    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 126, 95, 0.09) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(157, 80, 187, 0.07) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(157, 80, 187, 0.05) 0%, transparent 45%),
+      radial-gradient(rgba(15, 23, 42, 0.055) 1px, transparent 1px);
+    background-size: auto, auto, auto, 40px 40px;
     background-repeat: no-repeat, no-repeat, no-repeat, repeat;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 23, 42, 0.12) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.2);
 }
 
 @layer components {
   .aura-frame {
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
   }
 
   .glass-panel {
-    @apply rounded-xl border border-white/[0.08] bg-zinc-950/60 shadow-enterprise backdrop-blur-sm;
+    @apply rounded-xl border border-aura-line/90 bg-white/[0.92] shadow-enterprise backdrop-blur-md;
+    @apply transition-[border-color,box-shadow,background-color] duration-350 ease-out-expo;
   }
   .glass-panel-lg {
-    @apply rounded-2xl border border-white/[0.08] bg-zinc-950/70 shadow-enterprise backdrop-blur-md;
+    @apply rounded-2xl border border-aura-line/90 bg-white/[0.94] shadow-enterprise backdrop-blur-xl;
+    @apply transition-[border-color,box-shadow,background-color] duration-350 ease-out-expo;
+  }
+
+  .glass-panel:hover,
+  .glass-panel-lg:hover {
+    @apply border-slate-300/90 bg-white;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 16px 40px -12px rgba(15, 23, 42, 0.12);
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/[0.15] bg-white/[0.06] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:border-white/[0.25] hover:bg-white/[0.1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/[0.3] disabled:cursor-not-allowed disabled:opacity-45;
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-aura-ink shadow-sm;
+    @apply transition-[transform,background-color,border-color,box-shadow] duration-250 ease-out-expo;
+    @apply hover:border-slate-300 hover:bg-slate-50 hover:shadow-md;
+    @apply active:scale-[0.98];
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/35 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page;
+    @apply disabled:pointer-events-none disabled:opacity-40 disabled:active:scale-100;
   }
+
   .btn-cta {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border-0 bg-aura-cta px-8 py-3.5 text-base font-bold text-zinc-900 shadow-md transition-all duration-200 hover:bg-white hover:shadow-glow-violet focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/[0.4] disabled:cursor-not-allowed disabled:opacity-45;
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border-0 bg-aura-ink px-8 py-3.5 text-base font-bold text-white;
+    @apply shadow-[0_2px_8px_-2px_rgba(15,23,42,0.25),0_0_0_1px_rgba(255,255,255,0.08)_inset];
+    @apply transition-[transform,background-color,box-shadow] duration-250 ease-out-expo;
+    @apply hover:bg-zinc-800 hover:shadow-[0_12px_32px_-8px_rgba(157,80,187,0.28)];
+    @apply active:scale-[0.98];
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/40 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page;
+    @apply disabled:pointer-events-none disabled:opacity-45 disabled:active:scale-100;
   }
+
+  .btn-cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 60%
+    );
+    background-size: 200% 100%;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .btn-cta:hover:not(:disabled)::after {
+    opacity: 1;
+    animation: shimmer-cta-sweep 0.9s ease-out;
+  }
+  @keyframes shimmer-cta-sweep {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/[0.15] bg-transparent px-5 py-2.5 text-sm font-medium text-aura-muted transition-all duration-200 hover:border-white/[0.25] hover:bg-white/[0.05] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/[0.25] disabled:cursor-not-allowed disabled:opacity-45;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/60 px-5 py-2.5 text-sm font-medium text-aura-muted backdrop-blur-sm;
+    @apply transition-[transform,background-color,border-color,color] duration-250 ease-out-expo;
+    @apply hover:border-slate-300 hover:bg-white hover:text-aura-ink;
+    @apply active:scale-[0.98];
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/30 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page;
+    @apply disabled:pointer-events-none disabled:opacity-40 disabled:active:scale-100;
   }
+
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-rose-900/50 bg-rose-950/35 px-4 py-2 text-xs font-medium text-rose-200 transition-colors duration-200 hover:border-rose-700 hover:bg-rose-950/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-medium text-rose-800;
+    @apply transition-[transform,background-color,border-color] duration-250 ease-out-expo;
+    @apply hover:border-rose-300 hover:bg-rose-100;
+    @apply active:scale-[0.98];
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-8 py-3.5 text-[15px] font-semibold text-aura-muted backdrop-blur-sm;
+    @apply transition-[transform,border-color,background-color,color] duration-250 ease-out-expo;
+    @apply hover:border-slate-300 hover:bg-white hover:text-aura-ink;
+    @apply active:scale-[0.98];
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/30 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page;
   }
 
   .input-field {
-    @apply w-full rounded-xl border border-white/[0.1] bg-black/40 px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-aura-muted/80 focus:border-aura-violet/50 focus:ring-1 focus:ring-aura-violet/25;
+    @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-aura-ink outline-none shadow-sm;
+    @apply transition-[border-color,box-shadow,background-color] duration-250 ease-out-expo;
+    @apply placeholder:text-slate-400;
+    @apply hover:border-slate-300;
+    @apply focus:border-aura-violet/45 focus:ring-2 focus:ring-aura-violet/15;
   }
+
   .label-field {
     @apply mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-aura-muted;
   }
 
   .progress-track {
-    @apply h-1.5 w-full overflow-hidden rounded-full bg-white/[0.08];
+    @apply h-1.5 w-full overflow-hidden rounded-full bg-slate-200/90;
   }
   .progress-fill-bar {
-    @apply h-full rounded-full bg-gradient-progress transition-[width] duration-500 ease-out;
-    box-shadow: 0 0 14px rgba(157, 80, 187, 0.35);
+    @apply h-full rounded-full bg-gradient-progress transition-[width] duration-500 ease-out-expo;
+    box-shadow: 0 0 12px rgba(157, 80, 187, 0.25);
   }
 
   .spinner {
-    @apply inline-block h-[18px] w-[18px] shrink-0 animate-spin rounded-full border-2 border-white/[0.15] border-t-aura-violet;
+    @apply inline-block h-[18px] w-[18px] shrink-0 animate-spin rounded-full border-2 border-slate-200 border-t-aura-violet;
   }
 
   .animate-page-in {
-    animation: pageFadeSlide 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: pageFadeSlide 0.45s var(--ease-out-expo) both;
   }
   @keyframes pageFadeSlide {
     from {
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(14px);
     }
     to {
       opacity: 1;
@@ -127,14 +225,56 @@
     @apply bg-gradient-to-r from-aura-coral to-aura-violet bg-clip-text text-transparent;
   }
   .text-gradient-2 {
-    @apply bg-gradient-to-r from-white to-aura-muted bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-aura-ink to-aura-muted bg-clip-text text-transparent;
   }
 
   .surface-card {
-    @apply rounded-xl border border-white/[0.08] bg-zinc-950/50 p-8 shadow-sm transition-all duration-200 hover:border-white/[0.15] hover:bg-zinc-950/80;
+    @apply rounded-xl border border-aura-line/90 bg-white/90 p-8 shadow-sm transition-all duration-350 ease-out-expo;
+    @apply hover:border-slate-300/90 hover:bg-white hover:shadow-md;
   }
 
   .section-eyebrow {
-    @apply mb-4 inline-flex items-center rounded-full border border-white/[0.12] bg-white/[0.04] px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-white;
+    @apply mb-4 inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-aura-ink shadow-sm;
+    @apply transition-[border-color,background-color] duration-250 ease-out-expo;
+  }
+
+  .alert-error {
+    @apply flex gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900 shadow-sm;
+    animation: alert-in 0.35s var(--ease-out-expo) both;
+  }
+  .alert-success {
+    @apply flex gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 shadow-sm;
+    animation: alert-in 0.35s var(--ease-out-expo) both;
+  }
+  @keyframes alert-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .interactive-lift {
+    @apply transition-[transform,box-shadow,border-color] duration-350 ease-out-expo;
+  }
+  .interactive-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px -14px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  }
+  .interactive-lift:active {
+    transform: translateY(0);
+    transition-duration: 120ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .interactive-lift:hover {
+      transform: none;
+    }
+    .btn-cta::after {
+      display: none;
+    }
   }
 }

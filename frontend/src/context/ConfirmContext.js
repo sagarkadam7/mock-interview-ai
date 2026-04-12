@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const ConfirmContext = createContext(null);
 
@@ -35,55 +36,70 @@ export function ConfirmProvider({ children }) {
       if (e.key === "Escape") close(false);
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
   }, [state, close]);
 
   return (
     <ConfirmContext.Provider value={{ confirm }}>
       {children}
-      {state && (
-        <div
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="confirm-dialog-title"
-        >
-          <button
-            type="button"
-            className="absolute inset-0 cursor-default bg-black/80 backdrop-blur-sm"
-            onClick={() => close(false)}
-            aria-label="Close dialog"
-          />
-          <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-zinc-950 shadow-enterprise">
-            <div className="border-b border-white/[0.08] px-6 py-4">
-              <h2 id="confirm-dialog-title" className="text-base font-semibold text-white">
-                {state.title}
-              </h2>
-            </div>
-            <p className="px-6 py-4 text-sm leading-relaxed text-aura-muted">{state.message}</p>
-            <div className="flex justify-end gap-3 border-t border-white/[0.08] bg-black/40 px-6 py-4">
-              <button
-                type="button"
-                onClick={() => close(false)}
-                className="btn-outline px-5 py-2.5 text-sm"
-              >
-                {state.cancelLabel}
-              </button>
-              <button
-                type="button"
-                onClick={() => close(true)}
-                className={
-                  state.variant === "danger"
-                    ? "inline-flex items-center justify-center rounded-lg border border-rose-900/50 bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-rose-500"
-                    : "btn-primary px-5 py-2.5 text-sm"
-                }
-              >
-                {state.confirmLabel}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {state && (
+          <motion.div
+            key="confirm-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="confirm-dialog-title"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <button
+              type="button"
+              className="absolute inset-0 cursor-default bg-slate-900/25 backdrop-blur-sm"
+              onClick={() => close(false)}
+              aria-label="Close dialog"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 14 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 10 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-[0_32px_64px_-16px_rgba(15,23,42,0.18),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xl"
+            >
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent" />
+              <div className="border-b border-slate-100 px-6 py-5">
+                <h2 id="confirm-dialog-title" className="text-lg font-semibold tracking-tight text-aura-ink">
+                  {state.title}
+                </h2>
+              </div>
+              <p className="px-6 py-5 text-[15px] leading-relaxed text-aura-muted">{state.message}</p>
+              <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/80 px-5 py-4 sm:flex-row sm:justify-end sm:gap-3">
+                <button type="button" onClick={() => close(false)} className="btn-outline w-full px-6 py-3 text-sm sm:w-auto">
+                  {state.cancelLabel}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => close(true)}
+                  className={
+                    state.variant === "danger"
+                      ? "inline-flex w-full items-center justify-center rounded-full border border-rose-600 bg-rose-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition-[transform,background-color,box-shadow] duration-250 ease-out-expo hover:bg-rose-500 active:scale-[0.98] sm:w-auto"
+                      : "btn-primary w-full px-6 py-3 text-sm sm:w-auto"
+                  }
+                >
+                  {state.confirmLabel}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </ConfirmContext.Provider>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { getAllInterviews, deleteInterview } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
@@ -87,10 +88,10 @@ export default function DashboardPage() {
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-aura-muted">Welcome back</p>
-          <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">{user?.name}</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-aura-ink md:text-4xl">{user?.name}</h1>
           <p className="mt-1 text-sm text-aura-muted">Track your interview practice progress</p>
         </div>
-        <Link to="/interview/new">
+        <Link to="/interview/new" className="no-underline">
           <button type="button" className="btn-cta text-sm">
             + New interview
           </button>
@@ -106,7 +107,7 @@ export default function DashboardPage() {
           ].map((s) => (
             <div
               key={s.label}
-              className="glass-panel flex flex-col items-center justify-center rounded-xl p-8 text-center transition-colors duration-200 hover:border-white/15"
+              className="glass-panel interactive-lift flex flex-col items-center justify-center rounded-xl p-8 text-center"
             >
               <div className={`font-sans text-3xl font-extrabold tabular-nums tracking-tight ${s.accent}`}>{s.value}</div>
               <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-aura-muted">{s.label}</div>
@@ -120,7 +121,7 @@ export default function DashboardPage() {
           <div className="mb-6 flex min-w-0 flex-wrap items-start justify-between gap-6">
             <div className="min-w-0">
               <span className="section-eyebrow mb-3">Progress</span>
-              <h2 className="text-xl font-bold tracking-tight text-white">Score trend</h2>
+              <h2 className="text-xl font-bold tracking-tight text-aura-ink">Score trend</h2>
               <p className="mt-1 text-sm text-aura-muted">Last {trendLast.length} completed sessions</p>
             </div>
             <div className="min-w-0 flex-1">
@@ -138,26 +139,40 @@ export default function DashboardPage() {
       ) : interviews.length === 0 ? (
         <div className="glass-panel-lg py-20 text-center md:py-24">
           <div className="mb-5 text-5xl opacity-30">◎</div>
-          <h2 className="mb-3 text-2xl font-bold tracking-tight text-white">No interviews yet</h2>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-aura-ink">No interviews yet</h2>
           <p className="mb-8 text-aura-muted">Start your first mock interview to see results here.</p>
-          <Link to="/interview/new">
+          <Link to="/interview/new" className="no-underline">
             <button type="button" className="btn-cta">
               Start your first interview
             </button>
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
-          {interviews.map((iv, i) => {
+        <motion.div
+          className="flex flex-col gap-4"
+          initial="hidden"
+          animate="show"
+          variants={{
+            hidden: {},
+            show: {
+              transition: { staggerChildren: 0.07, delayChildren: 0.04 },
+            },
+          }}
+        >
+          {interviews.map((iv) => {
             const answered = iv.questions?.filter((q) => q.score !== null).length || 0;
             const total = iv.questions?.length || 0;
             const pct = total > 0 ? (answered / total) * 100 : 0;
 
             return (
-              <div
+              <motion.div
                 key={iv._id}
                 role="button"
                 tabIndex={0}
+                variants={{
+                  hidden: { opacity: 0, y: 14 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.38, ease: [0.16, 1, 0.3, 1] } },
+                }}
                 onClick={() => navigate(iv.status === "completed" ? `/interview/${iv._id}/report` : `/interview/${iv._id}`)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
@@ -165,8 +180,7 @@ export default function DashboardPage() {
                     navigate(iv.status === "completed" ? `/interview/${iv._id}/report` : `/interview/${iv._id}`);
                   }
                 }}
-                className="glass-panel group flex cursor-pointer flex-wrap items-center gap-5 rounded-xl p-6 transition-colors duration-200 hover:border-white/12 hover:bg-zinc-950/90 md:flex-nowrap md:gap-6 md:p-8"
-                style={{ animationDelay: `${i * 0.05}s` }}
+                className="glass-panel interactive-lift group flex cursor-pointer flex-wrap items-center gap-5 rounded-xl p-6 md:flex-nowrap md:gap-6 md:p-8"
               >
                 <div className="w-14 shrink-0 text-center md:w-16">
                   <ScoreDisplay score={iv.overallScore} />
@@ -174,7 +188,7 @@ export default function DashboardPage() {
 
                 <div className="min-w-0 flex-1">
                   <div className="mb-2 flex flex-wrap items-center gap-2">
-                    <span className="font-semibold tracking-tight text-white">{iv.jobRole}</span>
+                    <span className="font-semibold tracking-tight text-aura-ink">{iv.jobRole}</span>
                     <StatusBadge status={iv.status} />
                   </div>
                   <p className="mb-3 text-xs text-aura-muted">
@@ -211,10 +225,10 @@ export default function DashboardPage() {
                 >
                   {deleting === iv._id ? <span className="spinner h-4 w-4" /> : "Delete"}
                 </button>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
     </div>
   );

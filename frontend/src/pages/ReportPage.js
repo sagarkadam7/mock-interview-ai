@@ -24,7 +24,7 @@ function StatCard({ label, value, sub, colorClass }) {
 function MiniBar({ value, max, barClass }) {
   const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
   return (
-    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200">
       <div className={`h-full rounded-full transition-all duration-500 ${barClass || "bg-aura-violet"}`} style={{ width: `${pct}%` }} />
     </div>
   );
@@ -63,17 +63,17 @@ function QuestionCard({ question, index }) {
   const [open, setOpen] = useState(index === 0);
 
   return (
-    <div className="glass-panel overflow-hidden rounded-3xl transition-all duration-300 hover:border-white/12">
+    <div className="glass-panel overflow-hidden rounded-3xl transition-all duration-300 hover:border-slate-300">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-start justify-between gap-4 border-none bg-transparent p-6 text-left transition-all duration-300 hover:bg-white/[0.02] md:p-8"
+        className="flex w-full items-start justify-between gap-4 border-none bg-transparent p-6 text-left transition-all duration-300 hover:bg-slate-50/80 md:p-8"
       >
         <div className="flex min-w-0 flex-1 items-start gap-3.5">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-xs font-bold text-aura-muted">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-xs font-bold text-aura-muted">
             {index + 1}
           </div>
-          <p className="text-[15px] font-medium leading-snug tracking-tight text-white">{question.text}</p>
+          <p className="text-[15px] font-medium leading-snug tracking-tight text-aura-ink">{question.text}</p>
         </div>
         <div className="flex shrink-0 items-center gap-4">
           {question.score !== null && (
@@ -90,27 +90,27 @@ function QuestionCard({ question, index }) {
       </button>
 
       {open && (
-        <div className="flex flex-col gap-4 border-t border-white/10 px-6 pb-6 pt-2 md:px-8 md:pb-8">
+        <div className="flex flex-col gap-4 border-t border-slate-100 px-6 pb-6 pt-2 md:px-8 md:pb-8">
           {(question.eyeContactPct !== null ||
             question.wordsPerMinute > 0 ||
             question.fillerWordCount !== null ||
             question.confidenceScore !== null) && (
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {question.eyeContactPct !== null && (
-                <div className="rounded-xl bg-white/[0.04] p-3 text-center">
+                <div className="rounded-xl bg-slate-50 p-3 text-center">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">👁 Eye</div>
                   <div className={`text-lg font-bold ${eyeColor(question.eyeContactPct)}`}>{question.eyeContactPct}%</div>
                 </div>
               )}
               {question.wordsPerMinute > 0 && (
-                <div className="rounded-xl bg-white/[0.04] p-3 text-center">
+                <div className="rounded-xl bg-slate-50 p-3 text-center">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">📊 Pace</div>
                   <div className={`text-sm font-bold ${paceColor(question.paceLabel)}`}>{question.wordsPerMinute} wpm</div>
                   <div className="text-[10px] capitalize text-aura-muted">{question.paceLabel}</div>
                 </div>
               )}
               {question.fillerWordCount !== null && (
-                <div className="rounded-xl bg-white/[0.04] p-3 text-center">
+                <div className="rounded-xl bg-slate-50 p-3 text-center">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">🗣 Fillers</div>
                   <div
                     className={`text-lg font-bold ${
@@ -124,7 +124,7 @@ function QuestionCard({ question, index }) {
               {question.confidenceScore !== null && (
                 <div className="rounded-xl border border-aura-violet/30 bg-aura-violet/10 p-3 text-center">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-coral">⭐ Conf</div>
-                  <div className="text-base font-bold text-white">{question.confidenceScore}/10</div>
+                  <div className="text-base font-bold text-aura-ink">{question.confidenceScore}/10</div>
                 </div>
               )}
             </div>
@@ -140,7 +140,7 @@ function QuestionCard({ question, index }) {
           {question.answer ? (
             <div>
               <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Your answer</div>
-              <p className="text-sm italic leading-relaxed text-white/90">&quot;{question.answer}&quot;</p>
+              <p className="text-sm italic leading-relaxed text-slate-700">&quot;{question.answer}&quot;</p>
               {question.fillerWords?.length > 0 && (
                 <p className="mt-2 text-xs text-aura-muted">
                   Filler words detected: {question.fillerWords.map((w) => `"${w}"`).join(", ")}
@@ -151,12 +151,12 @@ function QuestionCard({ question, index }) {
             <p className="text-sm italic text-aura-muted">No answer recorded.</p>
           )}
 
-          <div className="h-px bg-white/10" />
+          <div className="h-px bg-slate-100" />
 
           {question.feedback && (
             <div>
               <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-coral">AI Feedback</div>
-              <p className="text-sm leading-relaxed text-white/90">{question.feedback}</p>
+              <p className="text-sm leading-relaxed text-slate-700">{question.feedback}</p>
             </div>
           )}
 
@@ -164,13 +164,13 @@ function QuestionCard({ question, index }) {
             {question.strengths && (
               <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-4">
                 <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-400">✓ Strengths</div>
-                <p className="text-sm leading-relaxed text-white/90">{question.strengths}</p>
+                <p className="text-sm leading-relaxed text-slate-700">{question.strengths}</p>
               </div>
             )}
             {question.improvements && (
               <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4">
                 <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-400">↑ Improvements</div>
-                <p className="text-sm leading-relaxed text-white/90">{question.improvements}</p>
+                <p className="text-sm leading-relaxed text-slate-700">{question.improvements}</p>
               </div>
             )}
           </div>
@@ -247,7 +247,7 @@ export default function ReportPage() {
         <div className="mb-8 flex flex-wrap items-start justify-between gap-6">
           <div>
             <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Interview report</div>
-            <h1 className="text-3xl font-bold tracking-tight text-white">{interview.jobRole}</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-aura-ink">{interview.jobRole}</h1>
             <p className="mt-1 text-sm text-aura-muted">
               {new Date(interview.createdAt).toLocaleDateString("en-IN", {
                 weekday: "long",
@@ -302,10 +302,10 @@ export default function ReportPage() {
         <div className="glass-panel mb-8 rounded-3xl p-6 md:p-8">
           <div className="mb-6 flex flex-wrap items-start justify-between gap-6">
             <div>
-              <span className="mb-3 inline-block rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+              <span className="mb-3 inline-block rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
                 Metric radar
               </span>
-              <h2 className="text-xl font-bold tracking-tight text-white">Your coaching snapshot</h2>
+              <h2 className="text-xl font-bold tracking-tight text-aura-ink">Your coaching snapshot</h2>
               <p className="mt-1 text-sm text-aura-muted">Larger shape = better performance for that dimension.</p>
             </div>
             <div className="max-w-[220px] text-right text-sm text-aura-muted">
@@ -315,7 +315,7 @@ export default function ReportPage() {
           </div>
           <RadarChart metrics={radarMetrics} stroke="#FF7E5F" fill="rgba(157,80,187,0.14)" />
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/90 p-5">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-aura-coral">Next focus</div>
@@ -333,7 +333,7 @@ export default function ReportPage() {
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
           <div className="glass-panel rounded-2xl p-6">
             <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
-            <h3 className="mb-3 text-lg font-bold tracking-tight text-white">Question score</h3>
+            <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Question score</h3>
             {questionScores.length >= 2 ? (
               <Sparkline data={questionScores} stroke="#9D50BB" fill="rgba(157,80,187,0.12)" />
             ) : (
@@ -342,7 +342,7 @@ export default function ReportPage() {
           </div>
           <div className="glass-panel rounded-2xl p-6">
             <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
-            <h3 className="mb-3 text-lg font-bold tracking-tight text-white">Eye contact</h3>
+            <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Eye contact</h3>
             {eyeTrend.length >= 2 ? (
               <Sparkline data={eyeTrend} stroke="#34d399" fill="rgba(16,185,129,0.10)" />
             ) : (
@@ -352,7 +352,7 @@ export default function ReportPage() {
         </div>
 
         {overall !== null && (
-          <div className="mb-8 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 text-[15px] leading-relaxed text-white/90">
+          <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50/90 px-5 py-4 text-[15px] leading-relaxed text-slate-700">
             {overall >= 8
               ? "🌟 Outstanding performance! You're interview-ready."
               : overall >= 6
@@ -387,7 +387,7 @@ export default function ReportPage() {
         </div>
       </div>
 
-      <h2 className="mb-4 text-xl font-bold tracking-tight text-white">Question-by-question breakdown</h2>
+      <h2 className="mb-4 text-xl font-bold tracking-tight text-aura-ink">Question-by-question breakdown</h2>
       <div className="flex flex-col gap-4">
         {interview.questions.map((q, i) => (
           <QuestionCard key={q._id} question={q} index={i} />
