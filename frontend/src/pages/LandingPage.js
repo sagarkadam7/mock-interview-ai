@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Tilt from "react-parallax-tilt";
 
 const features = [
@@ -31,6 +31,8 @@ const features = [
   },
 ];
 
+const TRUST_MARKS = ["IIT", "NIT", "SPPU", "VIT", "BITS", "IIIT"];
+
 const CardPattern = () => (
   <div
     className="absolute inset-0 z-0 opacity-[0.35]"
@@ -44,6 +46,7 @@ const CardPattern = () => (
 export default function LandingPage() {
   const { user } = useAuth();
   const heroRef = useRef(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -108,38 +111,103 @@ export default function LandingPage() {
             )}
           </div>
         </motion.div>
+      </section>
 
-        <div className="pointer-events-none absolute bottom-6 left-6 hidden text-[10px] font-semibold uppercase tracking-aura text-aura-muted sm:block">
-          © {new Date().getFullYear()} all rights reserved
-        </div>
-        <div className="pointer-events-none absolute bottom-6 right-6 hidden text-[10px] font-semibold uppercase tracking-aura text-aura-muted sm:block">
-          01 of 12
-        </div>
-        <div className="absolute bottom-0 left-1/2 z-10 -translate-x-1/2 translate-y-1/2 rounded-t-lg border border-b-0 border-slate-200/90 bg-white px-5 py-2 shadow-md backdrop-blur-sm">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-aura-muted">Scroll to explore</p>
+      <section
+        aria-labelledby="trust-heading"
+        className="relative z-10 overflow-hidden border-y border-slate-200/70 bg-gradient-to-b from-[#fff8f5] via-white to-slate-50/80 py-0 backdrop-blur-md"
+      >
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-200/90 to-transparent" aria-hidden />
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="flex items-center justify-between gap-4 py-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+            <span className="min-w-0 truncate">© {new Date().getFullYear()} all rights reserved</span>
+            <span className="shrink-0 tabular-nums text-slate-400">01 — 12</span>
+          </div>
+
+          <div className="relative h-px w-full bg-slate-200/80" aria-hidden>
+            <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-white to-transparent" />
+          </div>
+          <div className="relative z-[1] -mt-[18px] mb-2 flex justify-center">
+            <a
+              href="#trusted-marquee"
+              className="inline-flex items-center rounded-full border border-slate-200/95 bg-white/95 px-5 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-600 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_8px_24px_-12px_rgba(15,23,42,0.12)] backdrop-blur-sm transition-[color,box-shadow,border-color] duration-300 hover:border-slate-300 hover:text-slate-800 hover:shadow-[0_1px_0_rgba(255,255,255,1)_inset,0_12px_32px_-14px_rgba(15,23,42,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white no-underline"
+            >
+              Scroll to explore
+            </a>
+          </div>
+
+          <div id="trusted-marquee" className="scroll-mt-24 pt-6 pb-8 text-center sm:pt-8 sm:pb-10">
+            <p
+              id="trust-heading"
+              className="mb-8 text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-500 sm:mb-10 sm:text-[10px] sm:tracking-[0.32em]"
+            >
+              Trusted by students from
+            </p>
+            <div className="group/marquee relative -mx-5 overflow-hidden sm:-mx-8">
+              <div
+                className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-16 bg-gradient-to-r from-[#fffdfb] to-transparent sm:w-24"
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute inset-y-0 right-0 z-[1] w-16 bg-gradient-to-l from-slate-50 to-transparent sm:w-24"
+                aria-hidden
+              />
+              <div
+                className={
+                  reduceMotion
+                    ? ""
+                    : "[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+                }
+              >
+                {reduceMotion ? (
+                  <div className="flex flex-wrap items-baseline justify-center gap-x-10 gap-y-3 sm:gap-x-14 md:gap-x-16">
+                    {TRUST_MARKS.map((uni) => (
+                      <span
+                        key={uni}
+                        className="select-none font-display text-2xl font-semibold uppercase tracking-[0.14em] text-slate-400 sm:text-3xl md:text-[2.125rem] md:tracking-[0.16em]"
+                      >
+                        {uni}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <motion.div
+                    animate={{ x: ["0%", "-50%"] }}
+                    transition={{ repeat: Infinity, ease: "linear", duration: 28, repeatType: "loop" }}
+                    className="flex w-max flex-nowrap items-baseline gap-x-14 gap-y-4 pr-14 sm:gap-x-20 md:gap-x-24"
+                  >
+                    {[...TRUST_MARKS, ...TRUST_MARKS].map((uni, i) => (
+                      <span
+                        key={`${uni}-${i}`}
+                        className="select-none font-display text-2xl font-semibold uppercase tracking-[0.14em] text-slate-300 transition-colors duration-300 group-hover/marquee:text-slate-400 sm:text-3xl md:text-[2.125rem] md:tracking-[0.16em]"
+                      >
+                        {uni}
+                      </span>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="relative pb-10 pt-2 sm:pb-12">
+            <div className="h-px w-full bg-slate-200/80" aria-hidden />
+            <div className="relative z-[1] -mt-[18px] flex justify-center">
+              <a
+                href="#core-architecture"
+                className="inline-flex items-center rounded-full border border-slate-200/95 bg-white/95 px-4 py-1.5 text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-500 shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] backdrop-blur-sm transition-[color,border-color,box-shadow] duration-300 hover:border-slate-300 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white no-underline"
+              >
+                Core architecture
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="border-y border-slate-200/80 bg-white/40 py-10 backdrop-blur-sm">
-        <p className="mb-6 text-center text-[10px] font-semibold uppercase tracking-aura text-aura-muted">
-          Trusted by students from
-        </p>
-        <div className="relative mx-auto flex max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,rgba(15,23,42,1)_12%,rgba(15,23,42,1)_88%,transparent)]">
-          <motion.div
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ repeat: Infinity, ease: "linear", duration: 22 }}
-            className="flex flex-nowrap items-center gap-16 pr-16 text-lg font-bold uppercase tracking-aura text-slate-300 sm:text-xl"
-          >
-            {["IIT", "NIT", "SPPU", "VIT", "BITS", "IIIT", "IIT", "NIT", "SPPU", "VIT", "BITS", "IIIT"].map((uni, i) => (
-              <span key={i} className="transition-colors hover:text-slate-500">
-                {uni}
-              </span>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="relative z-10 border-b border-slate-200/80 bg-white/50 py-24 backdrop-blur-sm">
+      <section
+        id="core-architecture"
+        className="relative z-10 scroll-mt-24 border-b border-slate-200/80 bg-white/50 py-24 backdrop-blur-sm"
+      >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-16 text-center">
             <div className="section-eyebrow mx-auto mb-4">Core architecture</div>

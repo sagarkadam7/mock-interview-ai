@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// Using CRA proxy: requests to /api/... go to localhost:5001
+// Dev: setupProxy.js forwards /api to the backend (port 5001).
 const api = axios.create({ baseURL: "/api" });
 
 // Attach token automatically on every request
