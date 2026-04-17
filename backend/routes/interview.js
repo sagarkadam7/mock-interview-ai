@@ -2,14 +2,31 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const mongoose = require("mongoose");
 const pdfParse = require("pdf-parse");
+const rateLimit = require("express-rate-limit");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Interview = require("../models/Interview");
 const { protect } = require("../middleware/auth");
+const { validateMongoId } = require("../middleware/validateMongoId");
+const { parseJsonFromAi } = require("../utils/parseAiJson");
 
 const router = express.Router();
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+const createInterviewLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: Number(process.env.CREATE_INTERVIEW_RATE_LIMIT_MAX) || 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many interview sessions created. Try again later." },
+});
+
+function getGeminiModel() {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("GEMINI_API_KEY is not configured.");
+  const genAI = new GoogleGenerativeAI(key);
+  return genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || "gemini-2.0-flash" });
+}
 
 // ─── Multer config (PDF uploads) ─────────────────────────────
 const storage = multer.diskStorage({
@@ -59,10 +76,12 @@ Return ONLY a valid JSON array. No markdown, no explanation, no backticks, just 
   }
 ]`;
 
+  const model = getGeminiModel();
   const result = await model.generateContent(prompt);
   const raw = result.response.text();
-  const clean = raw.replace(/```json|```/g, "").trim();
-  return JSON.parse(clean);
+  const parsed = parseJsonFromAi(raw);
+  if (!Array.isArray(parsed)) throw new Error("AI did not return a question list.");
+  return parsed;
 }
 
 // ─── Helper: Get AI feedback for an answer ───────────────────
@@ -82,10 +101,14 @@ Return ONLY valid JSON with no markdown or backticks:
   "improvements": "<1-2 sentences on how to improve>"
 }`;
 
+  const model = getGeminiModel();
   const result = await model.generateContent(prompt);
   const raw = result.response.text();
-  const clean = raw.replace(/```json|```/g, "").trim();
-  return JSON.parse(clean);
+  const parsed = parseJsonFromAi(raw);
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    throw new Error("AI did not return feedback object.");
+  }
+  return parsed;
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -94,7 +117,7 @@ Return ONLY valid JSON with no markdown or backticks:
 // Body: { jobRole, jdText } + optional file (resume PDF)
 // OR Body: { jobRole, resumeText, jdText } for plain text
 // ════════════════════════════════════════════════════════════════
-router.post("/create", protect, upload.single("resume"), async (req, res) => {
+router.post("/create", protect, createInterviewLimiter, upload.single("resume"), async (req, res) => {
   try {
     const { jobRole, jdText, resumeText: bodyResumeText } = req.body;
 
@@ -114,7 +137,6 @@ router.post("/create", protect, upload.single("resume"), async (req, res) => {
       return res.status(400).json({ message: "Resume text is too short. Please upload a valid resume." });
     }
 
-    // Generate questions with Claude
     console.log("🤖 Generating questions with Gemini...");
     const questions = await generateQuestions(resumeText, jdText || "", jobRole);
 
@@ -122,7 +144,6 @@ router.post("/create", protect, upload.single("resume"), async (req, res) => {
       return res.status(500).json({ message: "Failed to generate questions. Try again." });
     }
 
-    // Save interview to MongoDB
     const interview = await Interview.create({
       userId: req.user._id,
       jobRole,
@@ -130,8 +151,8 @@ router.post("/create", protect, upload.single("resume"), async (req, res) => {
       jdText: jdText || "",
       status: "pending",
       questions: questions.map((q, i) => ({
-        text: q.text,
-        hint: q.hint,
+        text: (q.text && String(q.text).trim()) || `Question ${i + 1}`,
+        hint: (q.hint && String(q.hint).trim()) || "Give a clear example and quantify impact where possible.",
         orderIndex: i,
       })),
     });
@@ -145,10 +166,26 @@ router.post("/create", protect, upload.single("resume"), async (req, res) => {
 });
 
 // ════════════════════════════════════════════════════════════════
-// ROUTE 2: Get a single interview (with all questions)
+// ROUTE 2: List interviews (must be before "/:id")
+// GET /api/interview
+// ════════════════════════════════════════════════════════════════
+router.get("/", protect, async (req, res) => {
+  try {
+    const interviews = await Interview.find({ userId: req.user._id })
+      .select("jobRole status overallScore createdAt questions")
+      .sort("-createdAt");
+
+    res.json(interviews);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// ROUTE 3: Get a single interview (with all questions)
 // GET /api/interview/:id
 // ════════════════════════════════════════════════════════════════
-router.get("/:id", protect, async (req, res) => {
+router.get("/:id", protect, validateMongoId("id"), async (req, res) => {
   try {
     const interview = await Interview.findById(req.params.id);
 
@@ -164,13 +201,17 @@ router.get("/:id", protect, async (req, res) => {
 });
 
 // ════════════════════════════════════════════════════════════════
-// ROUTE 3: Submit answer for one question
+// ROUTE 4: Submit answer for one question
 // POST /api/interview/:id/answer
 // Body: { questionId, answer }
 // ════════════════════════════════════════════════════════════════
-router.post("/:id/answer", protect, async (req, res) => {
+router.post("/:id/answer", protect, validateMongoId("id"), async (req, res) => {
   try {
     const { questionId, answer, eyeContactPct, fillerWordCount, fillerWords, wordsPerMinute, paceLabel, dominantEmotion, emotionScores, confidenceScore } = req.body;
+
+    if (!questionId || !mongoose.Types.ObjectId.isValid(questionId)) {
+      return res.status(400).json({ message: "Valid questionId is required." });
+    }
 
     const interview = await Interview.findById(req.params.id);
     if (!interview) return res.status(404).json({ message: "Interview not found." });
@@ -191,7 +232,8 @@ router.post("/:id/answer", protect, async (req, res) => {
     question.feedback = feedback.feedback || "";
     question.strengths = feedback.strengths || "";
     question.improvements = feedback.improvements || "";
-    question.score = typeof feedback.score === "number" ? feedback.score : 5;
+    const rawScore = typeof feedback.score === "number" ? feedback.score : 5;
+    question.score = Math.max(0, Math.min(10, Math.round(rawScore)));
     question.answeredAt = new Date();
     if (eyeContactPct !== undefined)   question.eyeContactPct   = eyeContactPct;
     if (fillerWordCount !== undefined) question.fillerWordCount = fillerWordCount;
@@ -221,26 +263,10 @@ router.post("/:id/answer", protect, async (req, res) => {
 });
 
 // ════════════════════════════════════════════════════════════════
-// ROUTE 4: Get all interviews for the logged-in user
-// GET /api/interview
-// ════════════════════════════════════════════════════════════════
-router.get("/", protect, async (req, res) => {
-  try {
-    const interviews = await Interview.find({ userId: req.user._id })
-      .select("jobRole status overallScore createdAt questions")
-      .sort("-createdAt");
-
-    res.json(interviews);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// ════════════════════════════════════════════════════════════════
 // ROUTE 5: Delete an interview
 // DELETE /api/interview/:id
 // ════════════════════════════════════════════════════════════════
-router.delete("/:id", protect, async (req, res) => {
+router.delete("/:id", protect, validateMongoId("id"), async (req, res) => {
   try {
     const interview = await Interview.findById(req.params.id);
     if (!interview) return res.status(404).json({ message: "Interview not found." });

@@ -1,0 +1,40 @@
+import React from "react";
+
+export default class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, info) {
+    console.error("App error:", error, info.componentStack);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-aura-page px-6 py-16 text-center">
+          <p className="font-display text-2xl font-semibold text-aura-ink">Something went wrong</p>
+          <p className="max-w-md text-sm text-aura-muted">
+            Try refreshing the page. If this keeps happening, clear site data for this origin and sign in again.
+          </p>
+          <button
+            type="button"
+            className="btn-cta"
+            onClick={() => {
+              this.setState({ hasError: false, error: null });
+              window.location.assign("/");
+            }}
+          >
+            Back to home
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}

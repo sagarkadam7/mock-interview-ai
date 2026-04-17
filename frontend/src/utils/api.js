@@ -1,16 +1,38 @@
 import axios from "axios";
+import { notifySessionExpired } from "./authSession";
 
 // Dev: setupProxy.js forwards /api to the backend (port 5001).
-const api = axios.create({ baseURL: "/api" });
+const api = axios.create({ baseURL: "/api", timeout: 120000 });
 
-// Attach token automatically on every request
 api.interceptors.request.use((config) => {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  if (user?.token) {
-    config.headers.Authorization = `Bearer ${user.token}`;
+  try {
+    const raw = localStorage.getItem("user");
+    const user = raw ? JSON.parse(raw) : null;
+    if (user?.token) {
+      config.headers.Authorization = `Bearer ${user.token}`;
+    }
+  } catch {
+    /* ignore */
   }
   return config;
 });
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    const status = err.response?.status;
+    const reqUrl = String(err.config?.url || "");
+    const isAuthAttempt = reqUrl.includes("/auth/login") || reqUrl.includes("/auth/register");
+    if (status === 401 && !isAuthAttempt) {
+      notifySessionExpired();
+      const path = window.location?.pathname || "";
+      if (!path.startsWith("/login") && !path.startsWith("/register")) {
+        window.location.assign("/login");
+      }
+    }
+    return Promise.reject(err);
+  }
+);
 
 // ── Auth ──────────────────────────────────────────────────────
 export const registerUser = (data) => api.post("/auth/register", data);

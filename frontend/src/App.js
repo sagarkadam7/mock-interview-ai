@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ConfirmProvider } from "./context/ConfirmContext";
 import AppToaster from "./components/AppToaster";
 import Navbar from "./components/Navbar";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -120,13 +121,15 @@ function AppShell() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <ConfirmProvider>
-          <AppShell />
-          <AppToaster />
-        </ConfirmProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <ConfirmProvider>
+            <AppShell />
+            <AppToaster />
+          </ConfirmProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

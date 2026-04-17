@@ -1,35 +1,44 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { AUTH_SESSION_EXPIRED } from "../utils/authSession";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser]       = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // On app load, restore user from localStorage
+  const logout = useCallback(() => {
+    localStorage.removeItem("user");
+    delete axios.defaults.headers.common["Authorization"];
+    setUser(null);
+  }, []);
+
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (stored) {
-      const parsed = JSON.parse(stored);
-      setUser(parsed);
-      // Set default auth header for all requests
-      axios.defaults.headers.common["Authorization"] = `Bearer ${parsed.token}`;
+      try {
+        const parsed = JSON.parse(stored);
+        setUser(parsed);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${parsed.token}`;
+      } catch {
+        localStorage.removeItem("user");
+      }
     }
     setLoading(false);
   }, []);
 
-  const login = (userData) => {
+  useEffect(() => {
+    const onSessionExpired = () => logout();
+    window.addEventListener(AUTH_SESSION_EXPIRED, onSessionExpired);
+    return () => window.removeEventListener(AUTH_SESSION_EXPIRED, onSessionExpired);
+  }, [logout]);
+
+  const login = useCallback((userData) => {
     localStorage.setItem("user", JSON.stringify(userData));
     axios.defaults.headers.common["Authorization"] = `Bearer ${userData.token}`;
     setUser(userData);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("user");
-    delete axios.defaults.headers.common["Authorization"];
-    setUser(null);
-  };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout, loading }}>
@@ -38,7 +47,7 @@ export function AuthProvider({ children }) {
   );
 }
 
-// Custom hook — use this everywhere instead of useContext(AuthContext)
 export function useAuth() {
   return useContext(AuthContext);
 }
+
