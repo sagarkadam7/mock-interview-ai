@@ -62,7 +62,7 @@ export function ConfirmProvider({ children }) {
           >
             <button
               type="button"
-              className="absolute inset-0 cursor-default bg-slate-900/25 backdrop-blur-sm"
+              className="absolute inset-0 cursor-default bg-slate-900/40 backdrop-blur-[2px]"
               onClick={() => close(false)}
               aria-label="Close dialog"
             />
@@ -71,7 +71,7 @@ export function ConfirmProvider({ children }) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 10 }}
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-[0_32px_64px_-16px_rgba(15,23,42,0.18),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xl"
+              className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/90 bg-white/98 shadow-lux-lg ring-1 ring-white/80 backdrop-blur-xl"
             >
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent" />
               <div className="border-b border-slate-100 px-6 py-5">

@@ -1,8 +1,16 @@
 import React, { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion, useReducedMotion } from "framer-motion";
 import Tilt from "react-parallax-tilt";
+import SiteFooter from "../components/SiteFooter";
+import HowItWorksSection from "../components/landing/HowItWorksSection";
+import ComparisonSection from "../components/landing/ComparisonSection";
+import PersonasSection from "../components/landing/PersonasSection";
+import TestimonialsSection from "../components/landing/TestimonialsSection";
+import PricingTeaserSection from "../components/landing/PricingTeaserSection";
+import SecuritySection from "../components/landing/SecuritySection";
+import FAQSection from "../components/landing/FAQSection";
 
 const features = [
   {
@@ -47,6 +55,14 @@ export default function LandingPage() {
   const { user } = useAuth();
   const heroRef = useRef(null);
   const reduceMotion = useReducedMotion();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location.hash) return;
+    const id = location.hash.replace("#", "");
+    const el = document.getElementById(id);
+    if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }));
+  }, [location.hash, reduceMotion]);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -66,12 +82,19 @@ export default function LandingPage() {
     <div className="relative min-h-screen overflow-x-hidden bg-aura-page text-aura-ink selection:bg-aura-violet/15">
       <section
         ref={heroRef}
-        className="relative flex min-h-[calc(100vh-3.5rem)] flex-col items-center justify-center px-6 pb-28 pt-24 text-center sm:pb-32"
+        className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-6 pb-24 pt-20 text-center sm:pb-32 sm:pt-28"
       >
         <div
           className="pointer-events-none absolute inset-0 transition-opacity duration-300"
           style={{
-            background: `radial-gradient(circle 720px at var(--mx,50%) var(--my,50%), rgba(255,126,95,0.12), transparent 65%)`,
+            background: `radial-gradient(circle 720px at var(--mx,50%) var(--my,50%), rgba(255,126,95,0.14), transparent 62%)`,
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.4]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(15,23,42,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.03) 1px, transparent 1px)`,
+            backgroundSize: "64px 64px",
           }}
         />
 
@@ -81,34 +104,47 @@ export default function LandingPage() {
           transition={{ duration: 0.75 }}
           className="relative z-10 max-w-4xl"
         >
-          <div className="mb-8 inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 font-mono text-[10px] font-medium uppercase tracking-widest text-aura-ink shadow-sm">
-            New release · Practice stack v1
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-slate-200/95 bg-white/90 px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-600 shadow-lux backdrop-blur-sm">
+            <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" aria-hidden />
+            Live · Gemini-powered coaching
           </div>
 
-          <h1 className="font-sans text-4xl font-bold leading-[1.08] tracking-tight text-aura-ink sm:text-5xl md:text-6xl lg:text-[3.35rem]">
+          <h1 className="font-sans text-[2.5rem] font-bold leading-[1.05] tracking-tight text-aura-ink sm:text-5xl md:text-6xl lg:text-[3.5rem]">
             Craft your
             <br />
-            <span className="font-display text-[1.12em] font-semibold italic text-gradient sm:text-[1.08em]">
+            <span className="font-display text-[1.08em] font-semibold italic text-gradient sm:text-[1.08em]">
               interview edge
             </span>
           </h1>
 
-          <p className="mx-auto mt-8 max-w-lg text-sm leading-relaxed text-aura-muted sm:text-base">
-            The first mock interview stack built for serious candidates. Structured feedback, camera analytics, and
-            questions grounded in your real resume.
+          <p className="mx-auto mt-8 max-w-xl text-[15px] leading-relaxed text-slate-600 sm:text-lg">
+            The mock interview stack for candidates who want signal, not scripts — structured AI scoring, camera-aware coaching, and questions grounded in your real experience.
           </p>
 
-          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
             <Link to={user ? "/dashboard" : "/register"} className="w-full no-underline sm:w-auto">
-              <span className="btn-cta w-full justify-center px-10 py-3.5 text-[15px] sm:w-auto">
-                Get early access <span aria-hidden>→</span>
+              <span className="btn-cta w-full justify-center px-10 py-4 text-[15px] shadow-[0_12px_40px_-8px_rgba(157,80,187,0.35)] sm:w-auto">
+                {user ? "Go to dashboard" : "Start free"} <span aria-hidden>→</span>
               </span>
             </Link>
             {!user && (
               <Link to="/login" className="w-full no-underline sm:w-auto">
-                <span className="btn-secondary w-full justify-center sm:inline-flex sm:w-auto">Sign in</span>
+                <span className="btn-secondary w-full justify-center py-4 sm:inline-flex sm:w-auto">Sign in</span>
               </Link>
             )}
+          </div>
+
+          <div className="mx-auto mt-14 grid max-w-2xl grid-cols-3 gap-6 border-t border-slate-200/80 pt-10 text-center sm:gap-10">
+            {[
+              { v: "7", l: "Tailored Qs" },
+              { v: "Live", l: "Speech + gaze" },
+              { v: "PDF", l: "Export reports" },
+            ].map((row) => (
+              <div key={row.l}>
+                <div className="font-display text-xl font-semibold text-aura-ink sm:text-2xl">{row.v}</div>
+                <div className="mt-1 text-[11px] font-medium uppercase tracking-wider text-slate-500">{row.l}</div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </section>
@@ -204,6 +240,8 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <HowItWorksSection />
+
       <section
         id="core-architecture"
         className="relative z-10 scroll-mt-24 border-b border-slate-200/80 bg-white/50 py-24 backdrop-blur-sm"
@@ -268,6 +306,8 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <ComparisonSection />
+
       <section className="relative z-10 mx-auto max-w-7xl px-6 py-28">
         <div className="mb-20 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-aura-ink md:text-5xl">
@@ -303,6 +343,16 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
+      <PersonasSection />
+
+      <TestimonialsSection />
+
+      <PricingTeaserSection />
+
+      <SecuritySection />
+
+      <FAQSection limit={4} />
+
       <section className="relative flex justify-center overflow-hidden px-6 py-28">
         <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[min(90vw,720px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-aura-coral/15 to-aura-violet/15 blur-[100px]" />
 
@@ -333,9 +383,7 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      <footer className="border-t border-slate-200/80 py-8 text-center text-[10px] font-semibold uppercase tracking-aura text-aura-muted sm:hidden">
-        © {new Date().getFullYear()} all rights reserved
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

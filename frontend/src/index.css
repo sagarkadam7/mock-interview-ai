@@ -97,18 +97,29 @@
   }
 
   .glass-panel {
-    @apply rounded-xl border border-aura-line/90 bg-white/[0.92] shadow-enterprise backdrop-blur-md;
+    @apply rounded-xl border border-slate-200/90 bg-white/[0.92] shadow-lux backdrop-blur-md;
+    @apply ring-1 ring-white/60;
     @apply transition-[border-color,box-shadow,background-color] duration-350 ease-out-expo;
   }
   .glass-panel-lg {
-    @apply rounded-2xl border border-aura-line/90 bg-white/[0.94] shadow-enterprise backdrop-blur-xl;
+    @apply rounded-2xl border border-slate-200/90 bg-white/[0.96] shadow-lux-lg backdrop-blur-xl;
+    @apply ring-1 ring-white/70;
     @apply transition-[border-color,box-shadow,background-color] duration-350 ease-out-expo;
   }
 
   .glass-panel:hover,
   .glass-panel-lg:hover {
     @apply border-slate-300/90 bg-white;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 16px 40px -12px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.95) inset, 0 1px 3px rgba(15, 23, 42, 0.06),
+      0 24px 48px -12px rgba(15, 23, 42, 0.14);
+  }
+
+  .page-shell {
+    @apply mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-12 md:px-10;
+  }
+
+  .auth-form-shell {
+    @apply relative w-full max-w-[440px];
   }
 
   .btn-primary {
@@ -234,8 +245,8 @@
   }
 
   .section-eyebrow {
-    @apply mb-4 inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-aura-ink shadow-sm;
-    @apply transition-[border-color,background-color] duration-250 ease-out-expo;
+    @apply mb-4 inline-flex items-center rounded-full border border-slate-200/95 bg-white/95 px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600 shadow-sm;
+    @apply ring-1 ring-white/80 transition-[border-color,background-color] duration-250 ease-out-expo;
   }
 
   .alert-error {

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../utils/api";
+import AuthBrandPanel from "../components/AuthBrandPanel";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -29,95 +30,110 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-x-hidden bg-aura-page px-6 py-12">
-      <div className="pointer-events-none absolute left-1/2 top-[30%] h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-aura-coral/20 via-aura-violet/12 to-transparent blur-3xl" />
+    <div className="grid min-h-screen bg-aura-page lg:grid-cols-2">
+      <AuthBrandPanel />
 
-      <motion.div
-        className="relative z-10 w-full max-w-md"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="mb-10 text-center">
-          <Link to="/" className="inline-flex flex-col items-center gap-2 no-underline transition-opacity hover:opacity-90">
-            <span className="text-[11px] font-semibold uppercase tracking-aura text-aura-muted">InterviewAI</span>
-            <span className="text-lg font-semibold tracking-tight text-aura-ink">Welcome back</span>
-          </Link>
-          <p className="mt-3 text-sm text-aura-muted">Sign in to continue to your dashboard</p>
-        </div>
+      <div className="relative flex items-center justify-center px-6 py-14 sm:px-10 lg:py-20">
+        <div className="pointer-events-none absolute right-0 top-0 h-[min(60%,420px)] w-[420px] translate-x-1/4 -translate-y-1/4 rounded-full bg-gradient-to-bl from-aura-violet/12 to-transparent blur-3xl" />
 
-        <div className="glass-panel-lg p-8 md:p-10">
-          <AnimatePresence>
-            {error && (
-              <motion.div
-                key={error}
-                role="alert"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                className="alert-error mb-6"
-              >
-                <span className="mt-0.5 shrink-0 text-base leading-none" aria-hidden>
-                  ⚠
-                </span>
-                <span>{error}</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <form onSubmit={submit} className="flex flex-col gap-5">
-            <div>
-              <label htmlFor="email" className="label-field">
-                Email address
-              </label>
-              <input
-                id="email"
-                className="input-field"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                value={form.email}
-                onChange={handle}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="label-field">
-                Password
-              </label>
-              <input
-                id="password"
-                className="input-field"
-                name="password"
-                type="password"
-                placeholder="Your password"
-                value={form.password}
-                onChange={handle}
-                required
-              />
-            </div>
-
-            <button type="submit" className="btn-cta mt-2 w-full" disabled={loading}>
-              {loading ? (
-                <>
-                  <span className="spinner h-5 w-5 !border-white/25 !border-t-white" /> Signing in…
-                </>
-              ) : (
-                "Sign in →"
-              )}
-            </button>
-          </form>
-
-          <div className="my-8 h-px bg-slate-200" />
-          <p className="text-center text-sm text-aura-muted">
-            No account?{" "}
-            <Link to="/register" className="font-medium text-aura-ink transition-colors hover:text-aura-violet">
-              Create one free
+        <motion.div
+          className="auth-form-shell relative z-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="mb-10 lg:hidden">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-aura-muted no-underline"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-aura-coral to-aura-violet text-xs font-black text-white shadow-md">
+                IA
+              </span>
+              InterviewAI
             </Link>
-          </p>
-        </div>
-      </motion.div>
+          </div>
+
+          <div className="mb-8 text-center lg:text-left">
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink sm:text-[2rem]">Welcome back</h1>
+            <p className="mt-3 text-[15px] leading-relaxed text-aura-muted">Sign in to continue to your practice workspace.</p>
+          </div>
+
+          <div className="glass-panel-lg p-8 sm:p-10">
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  key={error}
+                  role="alert"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  className="alert-error mb-6"
+                >
+                  <span className="mt-0.5 shrink-0 text-base leading-none" aria-hidden>
+                    ⚠
+                  </span>
+                  <span>{error}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <form onSubmit={submit} className="flex flex-col gap-5">
+              <div>
+                <label htmlFor="email" className="label-field">
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  className="input-field"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  value={form.email}
+                  onChange={handle}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="label-field">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  className="input-field"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  value={form.password}
+                  onChange={handle}
+                  required
+                />
+              </div>
+
+              <button type="submit" className="btn-cta mt-2 w-full" disabled={loading}>
+                {loading ? (
+                  <>
+                    <span className="spinner h-5 w-5 !border-white/25 !border-t-white" /> Signing in…
+                  </>
+                ) : (
+                  "Sign in →"
+                )}
+              </button>
+            </form>
+
+            <div className="my-8 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+            <p className="text-center text-sm text-aura-muted">
+              No account?{" "}
+              <Link to="/register" className="font-semibold text-aura-ink underline decoration-slate-300 underline-offset-4 transition-colors hover:text-aura-violet hover:decoration-aura-violet/40">
+                Create one free
+              </Link>
+            </p>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

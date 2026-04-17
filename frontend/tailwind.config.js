@@ -35,6 +35,10 @@ module.exports = {
       boxShadow: {
         glass: "0 1px 0 0 rgba(255,255,255,0.9) inset, 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -8px rgba(15,23,42,0.08)",
         enterprise: "0 1px 2px rgba(15,23,42,0.06), 0 8px 28px -6px rgba(15,23,42,0.1)",
+        lux: "0 1px 0 0 rgba(255,255,255,0.88) inset, 0 1px 2px rgba(15,23,42,0.04), 0 24px 48px -16px rgba(15,23,42,0.09)",
+        "lux-lg":
+          "0 1px 0 0 rgba(255,255,255,0.92) inset, 0 4px 12px rgba(15,23,42,0.04), 0 32px 64px -20px rgba(15,23,42,0.12), 0 0 0 1px rgba(15,23,42,0.04)",
+        "lux-nav": "0 8px 32px -8px rgba(15,23,42,0.08), 0 0 0 1px rgba(15,23,42,0.04)",
         "glow-coral": "0 0 40px -6px rgba(255, 126, 95, 0.25)",
         "glow-violet": "0 0 40px -6px rgba(157, 80, 187, 0.22)",
       },

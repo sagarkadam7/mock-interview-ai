@@ -5,9 +5,9 @@ import { getInterview, submitAnswer } from "../utils/api";
 import { useConfirm } from "../context/ConfirmContext";
 import CameraRecorder, { renderTranscriptWithFillerHighlights } from "../components/CameraRecorder";
 
-const scoreColor = (s) => (s >= 7 ? "text-emerald-400" : s >= 4 ? "text-amber-400" : "text-rose-400");
-const eyeColor = (p) => (p > 70 ? "text-emerald-400" : p > 40 ? "text-amber-400" : "text-rose-400");
-const paceColor = (l) => (l === "good" ? "text-emerald-400" : "text-amber-400");
+const scoreColor = (s) => (s >= 7 ? "text-emerald-600" : s >= 4 ? "text-amber-600" : "text-rose-600");
+const eyeColor = (p) => (p > 70 ? "text-emerald-600" : p > 40 ? "text-amber-600" : "text-rose-600");
+const paceColor = (l) => (l === "good" ? "text-emerald-600" : "text-amber-600");
 
 export default function InterviewPage() {
   const { id } = useParams();
@@ -115,16 +115,18 @@ export default function InterviewPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 py-10 md:px-8">
-      <div className="mb-8">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+    <div className="page-shell max-w-7xl">
+      <div className="mb-10">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-3">
             <button type="button" className="btn-outline py-2 text-xs" onClick={() => navigate("/dashboard")}>
               ← Exit
             </button>
-            <span className="text-sm font-medium text-aura-muted">{interview.jobRole}</span>
+            <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
+              {interview.jobRole}
+            </span>
           </div>
-          <span className="text-sm font-medium text-aura-muted">
+          <span className="text-sm font-semibold text-slate-500">
             {answeredCount}/{totalQ} answered
           </span>
         </div>
@@ -138,10 +140,10 @@ export default function InterviewPage() {
               className={`flex h-7 w-7 items-center justify-center rounded-full border-2 text-[11px] font-semibold transition-all duration-300 ${
                 q.score !== null
                   ? q.score >= 7
-                    ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-400"
+                    ? "border-emerald-300 bg-emerald-50 text-emerald-700"
                     : q.score >= 4
-                      ? "border-amber-500/40 bg-amber-500/15 text-amber-400"
-                      : "border-rose-500/40 bg-rose-500/15 text-rose-400"
+                      ? "border-amber-300 bg-amber-50 text-amber-800"
+                      : "border-rose-300 bg-rose-50 text-rose-700"
                   : i === currentIndex
                     ? "border-aura-coral/50 bg-violet-50 text-aura-ink ring-1 ring-aura-violet/15"
                     : "border-slate-200 bg-slate-50 text-aura-muted"

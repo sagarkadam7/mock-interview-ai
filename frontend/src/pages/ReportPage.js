@@ -6,17 +6,17 @@ import { generatePDFReport } from "../utils/pdfReport";
 import { RadarChart, Sparkline } from "../components/Charts";
 
 const scoreColor = (s) =>
-  s >= 7 ? "text-emerald-400" : s >= 4 ? "text-amber-400" : s !== null ? "text-rose-400" : "text-aura-muted";
-const eyeColor = (p) => (p > 70 ? "text-emerald-400" : p > 40 ? "text-amber-400" : "text-rose-400");
-const paceColor = (l) => (l === "good" ? "text-emerald-400" : "text-amber-400");
+  s >= 7 ? "text-emerald-600" : s >= 4 ? "text-amber-600" : s !== null ? "text-rose-600" : "text-slate-400";
+const eyeColor = (p) => (p > 70 ? "text-emerald-600" : p > 40 ? "text-amber-600" : "text-rose-600");
+const paceColor = (l) => (l === "good" ? "text-emerald-600" : "text-amber-600");
 const emotionEmoji = { happy: "😊", neutral: "😐", sad: "😔", fearful: "😰", angry: "😠", disgusted: "🤢", surprised: "😲" };
 
 function StatCard({ label, value, sub, colorClass }) {
   return (
-    <div className="glass-panel rounded-2xl p-6 text-center">
-      <div className={`mb-1 font-sans text-3xl font-bold tracking-tight ${colorClass || "text-aura-violet"}`}>{value ?? "—"}</div>
-      <div className="text-xs text-aura-muted">{label}</div>
-      {sub && <div className="mt-1 text-[11px] text-aura-muted">{sub}</div>}
+    <div className="glass-panel rounded-2xl p-6 text-center ring-1 ring-white/40">
+      <div className={`mb-1 font-sans text-3xl font-bold tracking-tight ${colorClass || "text-violet-600"}`}>{value ?? "—"}</div>
+      <div className="text-xs font-medium text-slate-500">{label}</div>
+      {sub && <div className="mt-1 text-[11px] text-slate-500">{sub}</div>}
     </div>
   );
 }
@@ -70,7 +70,7 @@ function QuestionCard({ question, index }) {
         className="flex w-full items-start justify-between gap-4 border-none bg-transparent p-6 text-left transition-all duration-300 hover:bg-slate-50/80 md:p-8"
       >
         <div className="flex min-w-0 flex-1 items-start gap-3.5">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-xs font-bold text-aura-muted">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-600 shadow-sm">
             {index + 1}
           </div>
           <p className="text-[15px] font-medium leading-snug tracking-tight text-aura-ink">{question.text}</p>
@@ -114,7 +114,7 @@ function QuestionCard({ question, index }) {
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">🗣 Fillers</div>
                   <div
                     className={`text-lg font-bold ${
-                      question.fillerWordCount > 5 ? "text-rose-400" : question.fillerWordCount > 2 ? "text-amber-400" : "text-emerald-400"
+                      question.fillerWordCount > 5 ? "text-rose-600" : question.fillerWordCount > 2 ? "text-amber-600" : "text-emerald-600"
                     }`}
                   >
                     {question.fillerWordCount}
@@ -208,11 +208,11 @@ export default function ReportPage() {
   const overall = interview.overallScore;
   const overallRing =
     overall >= 7
-      ? "border-emerald-400 bg-emerald-500/15"
+      ? "border-emerald-400 bg-emerald-50"
       : overall >= 4
-        ? "border-amber-400 bg-amber-500/15"
-        : "border-rose-400 bg-rose-500/15";
-  const overallText = overall >= 7 ? "text-emerald-400" : overall >= 4 ? "text-amber-400" : "text-rose-400";
+        ? "border-amber-400 bg-amber-50"
+        : "border-rose-400 bg-rose-50";
+  const overallText = overall >= 7 ? "text-emerald-700" : overall >= 4 ? "text-amber-700" : "text-rose-700";
 
   const clamp01 = (n) => Math.max(0, Math.min(1, n));
   const eyeN = interview.avgEyeContact !== null ? clamp01(interview.avgEyeContact / 100) : 0;
@@ -230,10 +230,10 @@ export default function ReportPage() {
   ];
 
   const coachingDims = [
-    { key: "Eye", value: eyeN, accentClass: "text-emerald-300", msg: "Focus on steady eye contact. Try pausing and resetting your gaze to the lens." },
-    { key: "Conf", value: confN, accentClass: "text-aura-violet", msg: "Build confidence by structuring answers (STAR). Aim for clear, complete sentences." },
-    { key: "Pace", value: paceN, accentClass: "text-emerald-300", msg: "Dial in your pace. Aiming for ~130–170 wpm often boosts clarity and confidence." },
-    { key: "Fill", value: fillerN, accentClass: "text-amber-300", msg: "Reduce filler words. If you feel stuck, pause for 1 second before continuing." },
+    { key: "Eye", value: eyeN, accentClass: "text-emerald-600", msg: "Focus on steady eye contact. Try pausing and resetting your gaze to the lens." },
+    { key: "Conf", value: confN, accentClass: "text-violet-600", msg: "Build confidence by structuring answers (STAR). Aim for clear, complete sentences." },
+    { key: "Pace", value: paceN, accentClass: "text-emerald-600", msg: "Dial in your pace. Aiming for ~130–170 wpm often boosts clarity and confidence." },
+    { key: "Fill", value: fillerN, accentClass: "text-amber-600", msg: "Reduce filler words. If you feel stuck, pause for 1 second before continuing." },
   ];
 
   const focusDim = coachingDims.reduce((min, d) => (d.value < min.value ? d : min), coachingDims[0]);
@@ -242,12 +242,13 @@ export default function ReportPage() {
   const eyeTrend = interview.questions.map((q) => q.eyeContactPct).filter((p) => typeof p === "number");
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-5xl px-6 py-10 md:px-8">
-      <div className="glass-panel-lg mb-8 p-6 md:p-8">
-        <div className="mb-8 flex flex-wrap items-start justify-between gap-6">
+    <div className="page-shell min-h-screen max-w-6xl">
+      <div className="glass-panel-lg relative mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/50 via-transparent to-orange-50/30 opacity-90" aria-hidden />
+        <div className="relative mb-10 flex flex-wrap items-start justify-between gap-8">
           <div>
-            <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Interview report</div>
-            <h1 className="text-3xl font-bold tracking-tight text-aura-ink">{interview.jobRole}</h1>
+            <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Session report</div>
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">{interview.jobRole}</h1>
             <p className="mt-1 text-sm text-aura-muted">
               {new Date(interview.createdAt).toLocaleDateString("en-IN", {
                 weekday: "long",
@@ -276,25 +277,25 @@ export default function ReportPage() {
             label="Avg eye contact"
             value={interview.avgEyeContact !== null ? `${interview.avgEyeContact}%` : null}
             colorClass={
-              interview.avgEyeContact > 70 ? "text-emerald-400" : interview.avgEyeContact > 40 ? "text-amber-400" : "text-rose-400"
+              interview.avgEyeContact > 70 ? "text-emerald-600" : interview.avgEyeContact > 40 ? "text-amber-600" : "text-rose-600"
             }
           />
           <StatCard
             label="Avg confidence (ML)"
             value={interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : null}
-            colorClass="text-aura-coral"
+            colorClass="text-violet-600"
           />
           <StatCard
             label="Avg speech pace"
             value={interview.avgPace ? `${interview.avgPace} wpm` : null}
             sub={interview.avgPace ? (interview.avgPace >= 100 && interview.avgPace <= 180 ? "good pace" : "needs adjustment") : null}
-            colorClass={interview.avgPace >= 100 && interview.avgPace <= 180 ? "text-emerald-400" : "text-amber-400"}
+            colorClass={interview.avgPace >= 100 && interview.avgPace <= 180 ? "text-emerald-600" : "text-amber-600"}
           />
           <StatCard
             label="Avg filler words / Q"
             value={interview.avgFillerWords !== null ? interview.avgFillerWords : null}
             colorClass={
-              interview.avgFillerWords <= 2 ? "text-emerald-400" : interview.avgFillerWords <= 5 ? "text-amber-400" : "text-rose-400"
+              interview.avgFillerWords <= 2 ? "text-emerald-600" : interview.avgFillerWords <= 5 ? "text-amber-600" : "text-rose-600"
             }
           />
         </div>
