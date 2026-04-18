@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { getAllInterviews, deleteInterview } from "../utils/api";
@@ -34,6 +34,25 @@ function ScoreDisplay({ score }) {
   );
 }
 
+function DashboardSkeleton() {
+  return (
+    <div className="flex flex-col gap-4" aria-busy="true" aria-label="Loading interviews">
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="skeleton-row flex flex-wrap items-center gap-5 md:flex-nowrap md:gap-6">
+          <div className="h-14 w-14 shrink-0 rounded-xl skeleton-line md:w-16" />
+          <div className="min-w-0 flex-1 space-y-3 py-1">
+            <div className="h-4 w-3/4 max-w-[200px] skeleton-line" />
+            <div className="h-3 w-1/2 max-w-[140px] skeleton-line" />
+            <div className="h-2 w-full max-w-md skeleton-line opacity-80" />
+          </div>
+          <div className="h-10 w-20 shrink-0 rounded-full skeleton-line" />
+        </div>
+      ))}
+      <p className="text-center text-sm font-medium text-slate-500">Syncing your workspace…</p>
+    </div>
+  );
+}
+
 const statMeta = [
   { label: "Total interviews", key: "total", accent: "text-violet-600", icon: "◇" },
   { label: "Completed", key: "done", accent: "text-emerald-600", icon: "✓" },
@@ -42,7 +61,6 @@ const statMeta = [
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const { confirm } = useConfirm();
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -106,9 +124,7 @@ export default function DashboardPage() {
           <p className="mt-2 max-w-md text-[15px] leading-relaxed text-slate-600">Track sessions, scores, and momentum across every mock round.</p>
         </div>
         <Link to="/interview/new" className="no-underline">
-          <button type="button" className="btn-cta whitespace-nowrap text-sm shadow-[0_8px_28px_-6px_rgba(157,80,187,0.35)]">
-            + New interview
-          </button>
+          <span className="btn-cta inline-flex whitespace-nowrap text-sm shadow-[0_8px_28px_-6px_rgba(157,80,187,0.35)]">+ New interview</span>
         </Link>
       </div>
 
@@ -145,10 +161,7 @@ export default function DashboardPage() {
       )}
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-24">
-          <span className="spinner h-10 w-10 border-t-aura-violet" />
-          <p className="mt-5 text-sm font-medium text-slate-500">Loading your interviews…</p>
-        </div>
+        <DashboardSkeleton />
       ) : interviews.length === 0 ? (
         <div className="glass-panel-lg relative overflow-hidden py-20 text-center md:py-28">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/80 via-transparent to-orange-50/50" />
@@ -161,9 +174,7 @@ export default function DashboardPage() {
               Start your first mock session — we’ll tailor questions to your resume and measure what recruiters actually care about.
             </p>
             <Link to="/interview/new" className="no-underline">
-              <button type="button" className="btn-cta px-10">
-                Start your first interview
-              </button>
+              <span className="btn-cta inline-flex px-10">Start your first interview</span>
             </Link>
           </div>
         </div>
@@ -183,68 +194,66 @@ export default function DashboardPage() {
             const answered = iv.questions?.filter((q) => q.score !== null).length || 0;
             const total = iv.questions?.length || 0;
             const pct = total > 0 ? (answered / total) * 100 : 0;
+            const to = iv.status === "completed" ? `/interview/${iv._id}/report` : `/interview/${iv._id}`;
 
             return (
               <motion.div
                 key={iv._id}
-                role="button"
-                tabIndex={0}
                 variants={{
                   hidden: { opacity: 0, y: 14 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.38, ease: [0.16, 1, 0.3, 1] } },
                 }}
-                onClick={() => navigate(iv.status === "completed" ? `/interview/${iv._id}/report` : `/interview/${iv._id}`)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    navigate(iv.status === "completed" ? `/interview/${iv._id}/report` : `/interview/${iv._id}`);
-                  }
-                }}
-                className="glass-panel interactive-lift group flex cursor-pointer flex-wrap items-center gap-5 rounded-2xl p-6 md:flex-nowrap md:gap-6 md:p-8"
+                className="glass-panel interactive-lift flex flex-col gap-4 rounded-2xl p-6 md:flex-row md:items-center md:gap-6 md:p-8"
               >
-                <div className="w-14 shrink-0 text-center md:w-16">
-                  <ScoreDisplay score={iv.overallScore} />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="mb-2 flex flex-wrap items-center gap-2">
-                    <span className="text-base font-semibold tracking-tight text-aura-ink">{iv.jobRole}</span>
-                    <StatusBadge status={iv.status} />
-                  </div>
-                  <p className="mb-3 text-xs font-medium text-slate-500">
-                    {new Date(iv.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                    {" · "}
-                    {answered}/{total} questions
-                  </p>
-                  <div className="progress-track">
-                    <div className="progress-fill-bar" style={{ width: `${pct}%` }} />
-                  </div>
-                </div>
-
-                {iv.avgEyeContact !== null && (
-                  <div className="flex min-w-[4.5rem] shrink-0 flex-col items-center justify-center gap-1 text-center">
-                    <span
-                      className={`text-lg font-bold tabular-nums leading-none ${
-                        iv.avgEyeContact > 70 ? "text-emerald-600" : "text-amber-600"
-                      }`}
-                    >
-                      {iv.avgEyeContact}
-                      <span className="text-sm font-semibold">%</span>
-                    </span>
-                    <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
-                      Eye
-                    </span>
-                  </div>
-                )}
-
-                <button
-                  type="button"
-                  className="btn-danger shrink-0"
-                  onClick={(e) => handleDelete(iv._id, e)}
-                  disabled={deleting === iv._id}
+                <Link
+                  to={to}
+                  className="group flex min-w-0 flex-1 flex-wrap items-center gap-5 text-inherit no-underline md:flex-nowrap md:gap-6"
                 >
-                  {deleting === iv._id ? <span className="spinner h-4 w-4" /> : "Delete"}
-                </button>
+                  <div className="w-14 shrink-0 text-center md:w-16">
+                    <ScoreDisplay score={iv.overallScore} />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <span className="text-base font-semibold tracking-tight text-aura-ink group-hover:text-violet-900">{iv.jobRole}</span>
+                      <StatusBadge status={iv.status} />
+                    </div>
+                    <p className="mb-3 text-xs font-medium text-slate-500">
+                      {new Date(iv.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                      {" · "}
+                      {answered}/{total} questions
+                    </p>
+                    <div className="progress-track">
+                      <div className="progress-fill-bar" style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+
+                  {iv.avgEyeContact !== null && (
+                    <div className="flex min-w-[4.5rem] shrink-0 flex-col items-center justify-center gap-1 text-center">
+                      <span
+                        className={`text-lg font-bold tabular-nums leading-none ${
+                          iv.avgEyeContact > 70 ? "text-emerald-600" : "text-amber-600"
+                        }`}
+                      >
+                        {iv.avgEyeContact}
+                        <span className="text-sm font-semibold">%</span>
+                      </span>
+                      <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                        Eye
+                      </span>
+                    </div>
+                  )}
+                </Link>
+                <div className="flex shrink-0 justify-end border-t border-slate-100 pt-3 md:border-t-0 md:border-l md:pl-6 md:pt-0">
+                  <button
+                    type="button"
+                    className="btn-danger shadow-sm"
+                    onClick={(e) => handleDelete(iv._id, e)}
+                    disabled={deleting === iv._id}
+                  >
+                    {deleting === iv._id ? <span className="spinner h-4 w-4" /> : "Delete"}
+                  </button>
+                </div>
               </motion.div>
             );
           })}

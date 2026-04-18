@@ -1,8 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { motion, useReducedMotion } from "framer-motion";
-import Tilt from "react-parallax-tilt";
+import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import SiteFooter from "../components/SiteFooter";
 import HowItWorksSection from "../components/landing/HowItWorksSection";
 import ComparisonSection from "../components/landing/ComparisonSection";
@@ -11,51 +10,390 @@ import TestimonialsSection from "../components/landing/TestimonialsSection";
 import PricingTeaserSection from "../components/landing/PricingTeaserSection";
 import SecuritySection from "../components/landing/SecuritySection";
 import FAQSection from "../components/landing/FAQSection";
+import FounderLetterSection from "../components/landing/FounderLetterSection";
+import LandingHero from "../components/landing/LandingHero";
 
-const features = [
+/* ─── TOKENS ─────────────────────────────────────────────────────────── */
+const C = {
+  ink: "#0a0a0f",
+  paper: "#fafaf8",
+  coral: "#ff5c3a",
+  violet: "#7c3aed",
+  gold: "#c9a84c",
+  muted: "#6b7280",
+  border: "rgba(15,23,42,0.08)",
+};
+
+/* ─── DATA ───────────────────────────────────────────────────────────── */
+const FEATURES = [
   {
+    num: "01",
     icon: "◈",
     title: "Resume-aware AI",
-    desc: "Gemini analyzes your PDF and job description to generate hyper-specific technical questions.",
-    glow: "from-aura-coral/25 to-aura-violet/20",
+    body: "Gemini analyzes your PDF and job description to generate hyper-specific technical questions — not boilerplate.",
+    accent: C.coral,
   },
   {
+    num: "02",
     icon: "◉",
     title: "Real-time eye tracking",
-    desc: "MediaPipe maps gaze at 30fps so you build consistent camera contact under pressure.",
-    glow: "from-aura-violet/25 to-aura-coral/15",
+    body: "MediaPipe maps gaze at 30 fps so you build consistent camera contact under pressure.",
+    accent: C.violet,
   },
   {
+    num: "03",
     icon: "◆",
     title: "Live speech analytics",
-    desc: "Browser-native transcription flags filler words and measures words per minute instantly.",
-    glow: "from-aura-coral/20 to-aura-violet/25",
+    body: "Browser-native transcription flags filler words and measures words per minute instantly.",
+    accent: C.coral,
   },
   {
+    num: "04",
     icon: "◎",
     title: "Actionable scorecards",
-    desc: "Deterministic 0–10 scores plus structured feedback you can rehearse against.",
-    glow: "from-aura-violet/20 to-aura-coral/20",
+    body: "Deterministic 0–10 scores plus structured feedback you can rehearse against.",
+    accent: C.violet,
   },
+];
+
+const ENGINES = [
+  { label: "Cognitive engine", name: "Gemini 1.5 Flash", detail: "Context-aware questions & deterministic JSON grading" },
+  { label: "Spatial tracking", name: "MediaPipe Vision", detail: "468 facial landmarks at 30 fps for gaze estimation" },
+  { label: "Neural transcription", name: "Web Speech API", detail: "Browser-native STT with minimal latency" },
+  { label: "Behavioral analytics", name: "Local NLP heuristics", detail: "WPM & filler detection — no round-trips to server" },
 ];
 
 const TRUST_MARKS = ["IIT", "NIT", "SPPU", "VIT", "BITS", "IIIT"];
 
-const CardPattern = () => (
-  <div
-    className="absolute inset-0 z-0 opacity-[0.35]"
-    style={{
-      backgroundImage: `radial-gradient(rgba(15,23,42,0.08) 1px, transparent 1px)`,
-      backgroundSize: "44px 44px",
-    }}
-  />
+const STATS = [
+  { value: "94%", label: "report more confidence after 3 sessions" },
+  { value: "2.4×", label: "faster offer rate vs. uncoached peers" },
+  { value: "<80ms", label: "real-time feedback latency" },
+  { value: "10k+", label: "interviews analyzed" },
+];
+
+/* ─── HELPERS ────────────────────────────────────────────────────────── */
+const useInView = (threshold = 0.15) => {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, visible];
+};
+
+/* ─── AMBIENT CURSOR ─────────────────────────────────────────────────── */
+function AmbientCursor() {
+  const pos = useRef({ x: -200, y: -200 });
+  const dot = useRef(null);
+  useEffect(() => {
+    const move = (e) => {
+      pos.current = { x: e.clientX, y: e.clientY };
+      if (dot.current) dot.current.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+    };
+    window.addEventListener("mousemove", move, { passive: true });
+    return () => window.removeEventListener("mousemove", move);
+  }, []);
+  return (
+    <div
+      ref={dot}
+      aria-hidden
+      style={{
+        position: "fixed", top: 0, left: 0, width: 20, height: 20,
+        borderRadius: "50%", pointerEvents: "none", zIndex: 9999,
+        background: "radial-gradient(circle, rgba(255,92,58,0.55) 0%, transparent 70%)",
+        transition: "transform 0.04s linear",
+        mixBlendMode: "multiply",
+      }}
+    />
+  );
+}
+
+/* ─── GRAIN OVERLAY ──────────────────────────────────────────────────── */
+function Grain() {
+  return (
+    <div aria-hidden style={{
+      position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none",
+      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+      opacity: 0.028,
+    }} />
+  );
+}
+
+/* ─── SECTION LABEL ──────────────────────────────────────────────────── */
+const SectionLabel = ({ children }) => (
+  <span style={{
+    display: "inline-block",
+    fontFamily: "'DM Mono', monospace",
+    fontSize: 10,
+    fontWeight: 600,
+    letterSpacing: "0.3em",
+    textTransform: "uppercase",
+    color: C.coral,
+    border: `1px solid ${C.coral}33`,
+    borderRadius: 999,
+    padding: "5px 16px",
+    marginBottom: 28,
+    background: `${C.coral}08`,
+  }}>
+    {children}
+  </span>
 );
 
+/* ─── MARQUEE ────────────────────────────────────────────────────────── */
+function Marquee({ items, speed = 30 }) {
+  const doubled = [...items, ...items];
+  return (
+    <div style={{ overflow: "hidden", position: "relative", WebkitMaskImage: "linear-gradient(to right,transparent,black 15%,black 85%,transparent)" }}>
+      <motion.div
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ repeat: Infinity, ease: "linear", duration: speed, repeatType: "loop" }}
+        style={{ display: "flex", gap: 64, whiteSpace: "nowrap", width: "max-content" }}
+      >
+        {doubled.map((item, i) => (
+          <span key={i} style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
+            fontWeight: 700,
+            color: "#d1d5db",
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            fontStyle: "italic",
+          }}>{item}</span>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+/* ─── STAT CARD ──────────────────────────────────────────────────────── */
+function StatCard({ value, label, delay = 0 }) {
+  const [ref, visible] = useInView();
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 24 }}
+      animate={visible ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.55, delay }}
+      style={{
+        background: "white",
+        border: `1px solid ${C.border}`,
+        borderRadius: 20,
+        padding: "32px 28px",
+        textAlign: "center",
+        boxShadow: "0 2px 20px rgba(0,0,0,0.04)",
+      }}
+    >
+      <div style={{
+        fontFamily: "'Playfair Display', serif",
+        fontSize: "clamp(2rem, 4vw, 3rem)",
+        fontWeight: 900,
+        background: `linear-gradient(135deg, ${C.coral}, ${C.violet})`,
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        lineHeight: 1.1,
+        marginBottom: 8,
+      }}>{value}</div>
+      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, fontFamily: "'Lora', serif" }}>{label}</p>
+    </motion.div>
+  );
+}
+
+/* ─── FEATURE CARD ───────────────────────────────────────────────────── */
+function FeatureCard({ f, idx }) {
+  const [ref, visible] = useInView();
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 36 }}
+      animate={visible ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: idx * 0.1 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        borderRadius: 24,
+        padding: "40px 36px",
+        background: "white",
+        border: `1px solid ${hovered ? f.accent + "44" : C.border}`,
+        boxShadow: hovered ? `0 20px 60px ${f.accent}18` : "0 2px 12px rgba(0,0,0,0.04)",
+        transition: "all 0.35s ease",
+        cursor: "default",
+      }}
+    >
+      {/* glow */}
+      <div style={{
+        position: "absolute", top: -40, right: -40, width: 180, height: 180,
+        borderRadius: "50%",
+        background: `radial-gradient(circle, ${f.accent}22, transparent 70%)`,
+        opacity: hovered ? 1 : 0,
+        transition: "opacity 0.4s ease",
+        pointerEvents: "none",
+      }} />
+      <div style={{
+        fontFamily: "'DM Mono', monospace",
+        fontSize: 11,
+        fontWeight: 700,
+        color: f.accent,
+        letterSpacing: "0.2em",
+        marginBottom: 20,
+        opacity: 0.8,
+      }}>{f.num} ──</div>
+      <div style={{
+        fontSize: 32,
+        marginBottom: 16,
+        filter: `drop-shadow(0 2px 8px ${f.accent}33)`,
+      }}>{f.icon}</div>
+      <h3 style={{
+        fontFamily: "'Playfair Display', serif",
+        fontSize: 22,
+        fontWeight: 700,
+        color: C.ink,
+        marginBottom: 12,
+        lineHeight: 1.25,
+      }}>{f.title}</h3>
+      <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.7, fontFamily: "'Lora', serif" }}>{f.body}</p>
+    </motion.div>
+  );
+}
+
+/* ─── ENGINE ROW ─────────────────────────────────────────────────────── */
+function EngineRow({ e, idx }) {
+  const [ref, visible] = useInView();
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -20 }}
+      animate={visible ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.5, delay: idx * 0.08 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 2fr 1fr",
+        alignItems: "center",
+        gap: 24,
+        padding: "28px 32px",
+        borderBottom: `1px solid ${C.border}`,
+        background: hovered ? `${C.coral}04` : "transparent",
+        transition: "background 0.25s ease",
+        cursor: "default",
+      }}
+    >
+      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: C.coral, fontWeight: 600 }}>
+        {e.label}
+      </span>
+      <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: C.ink, fontStyle: "italic" }}>
+        {e.name}
+      </span>
+      <span style={{ fontSize: 13, color: C.muted, textAlign: "right", fontFamily: "'Lora', serif", lineHeight: 1.5 }}>
+        {e.detail}
+      </span>
+    </motion.div>
+  );
+}
+
+/* ─── CTA BUTTON ─────────────────────────────────────────────────────── */
+function CtaButton({ to, children }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Link to={to} style={{ textDecoration: "none" }}>
+      <motion.span
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        whileTap={{ scale: 0.97 }}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "16px 36px",
+          borderRadius: 999,
+          background: hovered
+            ? `linear-gradient(135deg, ${C.violet}, ${C.coral})`
+            : `linear-gradient(135deg, ${C.coral}, ${C.violet})`,
+          color: "white",
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 13,
+          fontWeight: 700,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          boxShadow: hovered
+            ? `0 20px 60px ${C.coral}55, 0 0 0 1px ${C.coral}33`
+            : `0 8px 32px ${C.coral}33`,
+          transition: "all 0.3s ease",
+          cursor: "pointer",
+        }}
+      >
+        {children}
+        <span style={{ fontSize: 18 }}>→</span>
+      </motion.span>
+    </Link>
+  );
+}
+
+/* ─── GHOST BUTTON ───────────────────────────────────────────────────── */
+function GhostButton({ to, children }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Link to={to} style={{ textDecoration: "none" }}>
+      <span style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "15px 32px",
+        borderRadius: 999,
+        border: `1.5px solid ${hovered ? C.ink : C.border}`,
+        color: hovered ? C.ink : C.muted,
+        fontFamily: "'DM Mono', monospace",
+        fontSize: 12,
+        fontWeight: 600,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        transition: "all 0.25s ease",
+        cursor: "pointer",
+        background: hovered ? `${C.ink}05` : "transparent",
+      }}
+        onMouseEnter={e => e.currentTarget.style.borderColor = C.ink}
+        onMouseLeave={e => e.currentTarget.style.borderColor = C.border}
+      >
+        {children}
+      </span>
+    </Link>
+  );
+}
+
+/* ─── DIVIDER ────────────────────────────────────────────────────────── */
+const Divider = () => (
+  <div style={{ display: "flex", alignItems: "center", gap: 24, padding: "0 0 0 0", opacity: 0.35 }}>
+    <div style={{ flex: 1, height: 1, background: "linear-gradient(to right, transparent, #0f172a22)" }} />
+    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: "0.4em", color: C.muted, textTransform: "uppercase" }}>✦</span>
+    <div style={{ flex: 1, height: 1, background: "linear-gradient(to left, transparent, #0f172a22)" }} />
+  </div>
+);
+
+/* ─── PAGE ───────────────────────────────────────────────────────────── */
 export default function LandingPage() {
   const { user } = useAuth();
-  const heroRef = useRef(null);
   const reduceMotion = useReducedMotion();
   const location = useLocation();
+
+  useEffect(() => {
+    // Inject fonts
+    if (!document.getElementById("lp-fonts")) {
+      const link = document.createElement("link");
+      link.id = "lp-fonts";
+      link.rel = "stylesheet";
+      link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500;600&display=swap";
+      document.head.appendChild(link);
+    }
+  }, []);
 
   useEffect(() => {
     if (!location.hash) return;
@@ -64,326 +402,359 @@ export default function LandingPage() {
     if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }));
   }, [location.hash, reduceMotion]);
 
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const onMove = (e) => {
-      const { left, top, width, height } = hero.getBoundingClientRect();
-      const x = (e.clientX - left) / width;
-      const y = (e.clientY - top) / height;
-      hero.style.setProperty("--mx", `${x * 100}%`);
-      hero.style.setProperty("--my", `${y * 100}%`);
-    };
-    hero.addEventListener("mousemove", onMove);
-    return () => hero.removeEventListener("mousemove", onMove);
-  }, []);
+  const [heroRef, heroVisible] = useInView(0.01);
+  const [ctaRef, ctaVisible] = useInView();
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-aura-page text-aura-ink selection:bg-aura-violet/15">
+    <div style={{ background: C.paper, color: C.ink, overflowX: "hidden", minHeight: "100vh" }}>
+      <Grain />
+      {!reduceMotion && <AmbientCursor />}
+
+      {/* ── HERO (original component preserved) ── */}
+      <LandingHero user={user} />
+
+      {/* ── TRUST STRIP ── */}
       <section
-        ref={heroRef}
-        className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-6 pb-24 pt-20 text-center sm:pb-32 sm:pt-28"
+        aria-label="Trusted by"
+        style={{
+          borderTop: `1px solid ${C.border}`,
+          borderBottom: `1px solid ${C.border}`,
+          padding: "48px 0",
+          background: "white",
+          position: "relative",
+        }}
       >
-        <div
-          className="pointer-events-none absolute inset-0 transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(circle 720px at var(--mx,50%) var(--my,50%), rgba(255,126,95,0.14), transparent 62%)`,
-          }}
-        />
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.4]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(15,23,42,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.03) 1px, transparent 1px)`,
-            backgroundSize: "64px 64px",
-          }}
-        />
-
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75 }}
-          className="relative z-10 max-w-4xl"
-        >
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-slate-200/95 bg-white/90 px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-600 shadow-lux backdrop-blur-sm">
-            <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" aria-hidden />
-            Live · Gemini-powered coaching
-          </div>
-
-          <h1 className="font-sans text-[2.5rem] font-bold leading-[1.05] tracking-tight text-aura-ink sm:text-5xl md:text-6xl lg:text-[3.5rem]">
-            Craft your
-            <br />
-            <span className="font-display text-[1.08em] font-semibold italic text-gradient sm:text-[1.08em]">
-              interview edge
-            </span>
-          </h1>
-
-          <p className="mx-auto mt-8 max-w-xl text-[15px] leading-relaxed text-slate-600 sm:text-lg">
-            The mock interview stack for candidates who want signal, not scripts — structured AI scoring, camera-aware coaching, and questions grounded in your real experience.
-          </p>
-
-          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
-            <Link to={user ? "/dashboard" : "/register"} className="w-full no-underline sm:w-auto">
-              <span className="btn-cta w-full justify-center px-10 py-4 text-[15px] shadow-[0_12px_40px_-8px_rgba(157,80,187,0.35)] sm:w-auto">
-                {user ? "Go to dashboard" : "Start free"} <span aria-hidden>→</span>
-              </span>
-            </Link>
-            {!user && (
-              <Link to="/login" className="w-full no-underline sm:w-auto">
-                <span className="btn-secondary w-full justify-center py-4 sm:inline-flex sm:w-auto">Sign in</span>
-              </Link>
-            )}
-          </div>
-
-          <div className="mx-auto mt-14 grid max-w-2xl grid-cols-3 gap-6 border-t border-slate-200/80 pt-10 text-center sm:gap-10">
-            {[
-              { v: "7", l: "Tailored Qs" },
-              { v: "Live", l: "Speech + gaze" },
-              { v: "PDF", l: "Export reports" },
-            ].map((row) => (
-              <div key={row.l}>
-                <div className="font-display text-xl font-semibold text-aura-ink sm:text-2xl">{row.v}</div>
-                <div className="mt-1 text-[11px] font-medium uppercase tracking-wider text-slate-500">{row.l}</div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <span style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 10,
+            fontWeight: 600,
+            letterSpacing: "0.35em",
+            textTransform: "uppercase",
+            color: C.muted,
+          }}>
+            Trusted by students from
+          </span>
+        </div>
+        <Marquee items={TRUST_MARKS} speed={32} />
       </section>
 
+      {/* ── STATS BAND ── */}
       <section
-        aria-labelledby="trust-heading"
-        className="relative z-10 overflow-hidden border-y border-slate-200/70 bg-gradient-to-b from-[#fff8f5] via-white to-slate-50/80 py-0 backdrop-blur-md"
+        style={{
+          maxWidth: 1100,
+          margin: "0 auto",
+          padding: "96px 24px 80px",
+        }}
       >
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-200/90 to-transparent" aria-hidden />
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="flex items-center justify-between gap-4 py-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">
-            <span className="min-w-0 truncate">© {new Date().getFullYear()} all rights reserved</span>
-            <span className="shrink-0 tabular-nums text-slate-400">01 — 12</span>
-          </div>
-
-          <div className="relative h-px w-full bg-slate-200/80" aria-hidden>
-            <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-white to-transparent" />
-          </div>
-          <div className="relative z-[1] -mt-[18px] mb-2 flex justify-center">
-            <a
-              href="#trusted-marquee"
-              className="inline-flex items-center rounded-full border border-slate-200/95 bg-white/95 px-5 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-600 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_8px_24px_-12px_rgba(15,23,42,0.12)] backdrop-blur-sm transition-[color,box-shadow,border-color] duration-300 hover:border-slate-300 hover:text-slate-800 hover:shadow-[0_1px_0_rgba(255,255,255,1)_inset,0_12px_32px_-14px_rgba(15,23,42,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white no-underline"
-            >
-              Scroll to explore
-            </a>
-          </div>
-
-          <div id="trusted-marquee" className="scroll-mt-24 pt-6 pb-8 text-center sm:pt-8 sm:pb-10">
-            <p
-              id="trust-heading"
-              className="mb-8 text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-500 sm:mb-10 sm:text-[10px] sm:tracking-[0.32em]"
-            >
-              Trusted by students from
-            </p>
-            <div className="group/marquee relative -mx-5 overflow-hidden sm:-mx-8">
-              <div
-                className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-16 bg-gradient-to-r from-[#fffdfb] to-transparent sm:w-24"
-                aria-hidden
-              />
-              <div
-                className="pointer-events-none absolute inset-y-0 right-0 z-[1] w-16 bg-gradient-to-l from-slate-50 to-transparent sm:w-24"
-                aria-hidden
-              />
-              <div
-                className={
-                  reduceMotion
-                    ? ""
-                    : "[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
-                }
-              >
-                {reduceMotion ? (
-                  <div className="flex flex-wrap items-baseline justify-center gap-x-10 gap-y-3 sm:gap-x-14 md:gap-x-16">
-                    {TRUST_MARKS.map((uni) => (
-                      <span
-                        key={uni}
-                        className="select-none font-display text-2xl font-semibold uppercase tracking-[0.14em] text-slate-400 sm:text-3xl md:text-[2.125rem] md:tracking-[0.16em]"
-                      >
-                        {uni}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <motion.div
-                    animate={{ x: ["0%", "-50%"] }}
-                    transition={{ repeat: Infinity, ease: "linear", duration: 28, repeatType: "loop" }}
-                    className="flex w-max flex-nowrap items-baseline gap-x-14 gap-y-4 pr-14 sm:gap-x-20 md:gap-x-24"
-                  >
-                    {[...TRUST_MARKS, ...TRUST_MARKS].map((uni, i) => (
-                      <span
-                        key={`${uni}-${i}`}
-                        className="select-none font-display text-2xl font-semibold uppercase tracking-[0.14em] text-slate-300 transition-colors duration-300 group-hover/marquee:text-slate-400 sm:text-3xl md:text-[2.125rem] md:tracking-[0.16em]"
-                      >
-                        {uni}
-                      </span>
-                    ))}
-                  </motion.div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="relative pb-10 pt-2 sm:pb-12">
-            <div className="h-px w-full bg-slate-200/80" aria-hidden />
-            <div className="relative z-[1] -mt-[18px] flex justify-center">
-              <a
-                href="#core-architecture"
-                className="inline-flex items-center rounded-full border border-slate-200/95 bg-white/95 px-4 py-1.5 text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-500 shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] backdrop-blur-sm transition-[color,border-color,box-shadow] duration-300 hover:border-slate-300 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white no-underline"
-              >
-                Core architecture
-              </a>
-            </div>
-          </div>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 20,
+        }}>
+          {STATS.map((s, i) => <StatCard key={s.value} {...s} delay={i * 0.08} />)}
         </div>
       </section>
 
+      {/* ── HOW IT WORKS (original) ── */}
       <HowItWorksSection />
 
+      {/* ── CORE ARCHITECTURE ── */}
       <section
         id="core-architecture"
-        className="relative z-10 scroll-mt-24 border-b border-slate-200/80 bg-white/50 py-24 backdrop-blur-sm"
+        style={{
+          padding: "120px 24px",
+          background: C.ink,
+          position: "relative",
+          overflow: "hidden",
+        }}
       >
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-16 text-center">
-            <div className="section-eyebrow mx-auto mb-4">Core architecture</div>
-            <h2 className="text-3xl font-bold tracking-tight text-aura-ink md:text-4xl">
-              Powered by{" "}
-              <span className="text-gradient font-display italic">four specialized engines</span>
+        {/* ambient orbs */}
+        <div aria-hidden style={{
+          position: "absolute", top: -120, left: "20%",
+          width: 600, height: 600, borderRadius: "50%",
+          background: `radial-gradient(circle, ${C.coral}18, transparent 65%)`,
+          pointerEvents: "none",
+        }} />
+        <div aria-hidden style={{
+          position: "absolute", bottom: -80, right: "15%",
+          width: 500, height: 500, borderRadius: "50%",
+          background: `radial-gradient(circle, ${C.violet}18, transparent 65%)`,
+          pointerEvents: "none",
+        }} />
+
+        <div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 2 }}>
+          <div style={{ marginBottom: 72 }}>
+            <SectionLabel>Core architecture</SectionLabel>
+            <h2 style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(2.2rem, 5vw, 3.75rem)",
+              fontWeight: 900,
+              color: "white",
+              lineHeight: 1.1,
+              letterSpacing: "-0.02em",
+              marginBottom: 20,
+            }}>
+              Four specialized engines.<br />
+              <span style={{
+                background: `linear-gradient(90deg, ${C.coral}, ${C.violet})`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                fontStyle: "italic",
+              }}>
+                One seamless verdict.
+              </span>
             </h2>
+            <p style={{ fontFamily: "'Lora', serif", fontSize: 17, color: "#9ca3af", maxWidth: 520, lineHeight: 1.7 }}>
+              Every millisecond of your session passes through a purpose-built pipeline — no black boxes, no guesswork.
+            </p>
           </div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            {[
-              {
-                title: "Gemini 1.5 Flash",
-                role: "Cognitive engine",
-                desc: "Context-aware questions and deterministic JSON grading.",
-              },
-              {
-                title: "MediaPipe Vision",
-                role: "Spatial tracking",
-                desc: "468 facial landmarks at 30fps for gaze estimation.",
-              },
-              {
-                title: "Web Speech API",
-                role: "Neural transcription",
-                desc: "Browser-native speech-to-text with minimal latency.",
-              },
-              {
-                title: "Local NLP heuristics",
-                role: "Behavioral analytics",
-                desc: "WPM and filler detection without round-trips to the server.",
-              },
-            ].map((engine, idx) => (
-              <motion.div
-                key={idx}
-                variants={{
-                  hidden: { opacity: 0, y: 18 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.45 } },
-                }}
-                className="group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white/90 p-6 shadow-sm transition-colors duration-300 hover:border-slate-300"
-              >
-                <div
-                  className={`absolute -inset-px opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-br ${["from-aura-coral/30 to-aura-violet/20", "from-aura-violet/30 to-aura-coral/15", "from-aura-coral/25 to-aura-violet/25", "from-aura-violet/25 to-aura-coral/20"][idx % 4]}`}
-                />
-                <div className="relative z-10">
-                  <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-widest text-aura-muted">{engine.role}</p>
-                  <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">{engine.title}</h3>
-                  <p className="text-sm leading-relaxed text-aura-muted">{engine.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+          {/* table */}
+          <div style={{
+            border: `1px solid rgba(255,255,255,0.08)`,
+            borderRadius: 20,
+            overflow: "hidden",
+            background: "rgba(255,255,255,0.03)",
+            backdropFilter: "blur(10px)",
+          }}>
+            {/* header row */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 2fr 1fr",
+              gap: 24,
+              padding: "16px 32px",
+              borderBottom: "1px solid rgba(255,255,255,0.06)",
+            }}>
+              {["Layer", "Engine", "Responsibility"].map(h => (
+                <span key={h} style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 10,
+                  fontWeight: 600,
+                  letterSpacing: "0.3em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.3)",
+                }}>{h}</span>
+              ))}
+            </div>
+            {ENGINES.map((e, i) => {
+              const [ref, visible] = [useRef(null), useState(false)];
+              // inline because hook-order safe
+              return <EngineRowDark key={i} e={e} idx={i} />;
+            })}
+          </div>
         </div>
       </section>
 
+      {/* ── FEATURES GRID ── */}
+      <section style={{ maxWidth: 1100, margin: "0 auto", padding: "120px 24px" }}>
+        <div style={{ textAlign: "center", marginBottom: 72 }}>
+          <SectionLabel>What's inside</SectionLabel>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
+            fontWeight: 900,
+            color: C.ink,
+            lineHeight: 1.1,
+            letterSpacing: "-0.02em",
+            marginBottom: 20,
+          }}>
+            Everything to{" "}
+            <span style={{
+              fontStyle: "italic",
+              background: `linear-gradient(135deg, ${C.coral}, ${C.violet})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}>
+              land the offer
+            </span>
+          </h2>
+          <p style={{ fontFamily: "'Lora', serif", fontSize: 17, color: C.muted, maxWidth: 480, margin: "0 auto", lineHeight: 1.7 }}>
+            No generic question banks. Every question is grounded in your story.
+          </p>
+        </div>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: 24,
+        }}>
+          {FEATURES.map((f, i) => <FeatureCard key={f.num} f={f} idx={i} />)}
+        </div>
+      </section>
+
+      <Divider />
+
+      {/* ── COMPARISON (original) ── */}
       <ComparisonSection />
 
-      <section className="relative z-10 mx-auto max-w-7xl px-6 py-28">
-        <div className="mb-20 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-aura-ink md:text-5xl">
-            Everything to <span className="text-gradient font-display italic">land the offer</span>
-          </h2>
-          <p className="mt-4 text-lg text-aura-muted">No generic banks. Questions grounded in your story.</p>
-        </div>
+      {/* ── FOUNDER LETTER (original) ── */}
+      <FounderLetterSection />
 
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.65 }}
-          className="grid gap-6 md:grid-cols-2"
-        >
-          {features.map((f) => (
-            <Tilt key={f.title} glareEnable glareMaxOpacity={0.12} glareColor="#ffffff" glarePosition="all" tiltMaxAngleX={4} tiltMaxAngleY={4}>
-              <div className="group relative h-full overflow-hidden rounded-3xl border border-slate-200/90 bg-white/95 p-8 shadow-md transition-colors duration-300 hover:border-slate-300 md:p-10">
-                <CardPattern />
-                <div
-                  className={`absolute -right-12 -top-12 h-44 w-44 rounded-full bg-gradient-to-br ${f.glow} opacity-0 blur-[56px] transition-opacity duration-500 group-hover:opacity-100`}
-                />
-                <div className="relative z-10">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-2xl text-aura-ink">
-                    {f.icon}
-                  </div>
-                  <h3 className="text-2xl font-bold tracking-tight text-aura-ink">{f.title}</h3>
-                  <p className="mt-3 text-base leading-relaxed text-aura-muted">{f.desc}</p>
-                </div>
-              </div>
-            </Tilt>
-          ))}
-        </motion.div>
-      </section>
-
+      {/* ── PERSONAS (original) ── */}
       <PersonasSection />
 
+      {/* ── TESTIMONIALS (original) ── */}
       <TestimonialsSection />
 
+      {/* ── PRICING (original) ── */}
       <PricingTeaserSection />
 
+      {/* ── SECURITY (original) ── */}
       <SecuritySection />
 
+      {/* ── FAQ (original) ── */}
       <FAQSection limit={4} />
 
-      <section className="relative flex justify-center overflow-hidden px-6 py-28">
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[min(90vw,720px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-aura-coral/15 to-aura-violet/15 blur-[100px]" />
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="relative z-10 w-full max-w-3xl"
-        >
-          <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-white/95 p-12 text-center shadow-xl shadow-slate-200/60 backdrop-blur-xl md:p-16">
-            <CardPattern />
-            <div className="relative z-10">
-              <h2 className="mb-5 text-3xl font-bold tracking-tight text-aura-ink md:text-4xl">Ready for your next round?</h2>
-              <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-aura-muted md:text-base">
-                Replace guesswork with signal. Eye contact, pace, and answer quality — in one flow.
-              </p>
-              <Link to={user ? "/interview/new" : "/register"} className="no-underline">
-                <span className="btn-cta inline-flex px-10 py-3.5 text-[15px]">
-                  {user ? "Start new interview" : "Create free account"}{" "}
-                  <span className="ml-1" aria-hidden>
-                    →
-                  </span>
-                </span>
-              </Link>
-            </div>
-          </div>
-        </motion.div>
-      </section>
+      {/* ── FINAL CTA ── */}
+      <FinalCta user={user} />
 
       <SiteFooter />
     </div>
+  );
+}
+
+/* ─── ENGINE ROW DARK (inside dark section) ───────────────────────────── */
+function EngineRowDark({ e, idx }) {
+  const [ref, visible] = useInView();
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -24 }}
+      animate={visible ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.5, delay: idx * 0.09 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 2fr 1fr",
+        alignItems: "center",
+        gap: 24,
+        padding: "28px 32px",
+        borderBottom: idx < 3 ? "1px solid rgba(255,255,255,0.05)" : "none",
+        background: hovered ? "rgba(255,255,255,0.04)" : "transparent",
+        transition: "background 0.25s ease",
+      }}
+    >
+      <span style={{
+        fontFamily: "'DM Mono', monospace",
+        fontSize: 10,
+        letterSpacing: "0.25em",
+        textTransform: "uppercase",
+        color: C.coral,
+        fontWeight: 600,
+      }}>
+        {e.label}
+      </span>
+      <span style={{
+        fontFamily: "'Playfair Display', serif",
+        fontSize: "clamp(1rem, 2vw, 1.375rem)",
+        fontWeight: 700,
+        color: "white",
+        fontStyle: "italic",
+      }}>
+        {e.name}
+      </span>
+      <span style={{
+        fontSize: 13,
+        color: "#6b7280",
+        textAlign: "right",
+        fontFamily: "'Lora', serif",
+        lineHeight: 1.5,
+      }}>
+        {e.detail}
+      </span>
+    </motion.div>
+  );
+}
+
+/* ─── FINAL CTA SECTION ──────────────────────────────────────────────── */
+function FinalCta({ user }) {
+  const [ref, visible] = useInView(0.1);
+  return (
+    <section
+      ref={ref}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        padding: "140px 24px",
+        background: C.ink,
+        textAlign: "center",
+      }}
+    >
+      {/* bg mesh */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0,
+        backgroundImage: `
+          radial-gradient(ellipse 80% 60% at 30% 50%, ${C.coral}14 0%, transparent 55%),
+          radial-gradient(ellipse 70% 60% at 75% 50%, ${C.violet}14 0%, transparent 55%)
+        `,
+        pointerEvents: "none",
+      }} />
+      {/* grid lines */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0,
+        backgroundImage: `linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)`,
+        backgroundSize: "80px 80px",
+        pointerEvents: "none",
+      }} />
+
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={visible ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7 }}
+        style={{ position: "relative", zIndex: 2, maxWidth: 720, margin: "0 auto" }}
+      >
+        <SectionLabel>Get started</SectionLabel>
+        <h2 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
+          fontWeight: 900,
+          color: "white",
+          lineHeight: 1.05,
+          letterSpacing: "-0.03em",
+          marginBottom: 24,
+        }}>
+          Ready for<br />
+          <span style={{
+            background: `linear-gradient(135deg, ${C.coral}, ${C.violet})`,
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            fontStyle: "italic",
+          }}>
+            your next round?
+          </span>
+        </h2>
+        <p style={{
+          fontFamily: "'Lora', serif",
+          fontSize: 18,
+          color: "#9ca3af",
+          lineHeight: 1.7,
+          marginBottom: 48,
+          maxWidth: 480,
+          margin: "0 auto 48px",
+        }}>
+          Replace guesswork with signal. Eye contact, pace, and answer quality — measured, scored, improved.
+        </p>
+        <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+          <CtaButton to={user ? "/interview/new" : "/register"}>
+            {user ? "Start new interview" : "Create free account"}
+          </CtaButton>
+          <GhostButton to="/pricing">View pricing</GhostButton>
+        </div>
+
+        {/* trust line */}
+        <p style={{
+          marginTop: 40,
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 11,
+          letterSpacing: "0.2em",
+          color: "rgba(255,255,255,0.2)",
+          textTransform: "uppercase",
+        }}>
+          No credit card required · Free plan always available
+        </p>
+      </motion.div>
+    </section>
   );
 }

@@ -62,9 +62,14 @@ module.exports = {
           "0%": { opacity: "0", transform: "translateY(-12px) scale(0.96)" },
           "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
         },
+        "hero-breathe": {
+          "0%, 100%": { opacity: "0.35", transform: "scale(1)" },
+          "50%": { opacity: "0.55", transform: "scale(1.04)" },
+        },
       },
       animation: {
         "toast-in": "toast-in 0.42s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "hero-breathe": "hero-breathe 14s ease-in-out infinite",
       },
     },
   },

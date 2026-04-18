@@ -288,4 +288,55 @@
       display: none;
     }
   }
+
+  /* Skip link — Stripe / gov.uk pattern */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 50%;
+    z-index: 9999;
+    padding: 0.65rem 1.1rem;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #fff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 8px 24px -6px rgba(15, 23, 42, 0.35);
+    transform: translate(-50%, -160%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.28s var(--ease-out-expo), opacity 0.2s ease;
+  }
+  .skip-link:focus {
+    transform: translate(-50%, 0);
+    opacity: 1;
+    pointer-events: auto;
+    outline: none;
+    box-shadow: 0 0 0 2px #f4f4f7, 0 0 0 4px rgba(157, 80, 187, 0.45), 0 12px 32px -8px rgba(15, 23, 42, 0.25);
+  }
+
+  .skeleton-row {
+    @apply overflow-hidden rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-sm;
+  }
+  .skeleton-line {
+    @apply h-4 rounded-md bg-slate-200/90;
+    background: linear-gradient(90deg, rgba(226, 232, 240, 0.9) 0%, rgba(241, 245, 249, 0.95) 45%, rgba(226, 232, 240, 0.9) 90%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.35s ease-in-out infinite;
+  }
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-line {
+      animation: none;
+      background: #e2e8f0;
+    }
+  }
 }
