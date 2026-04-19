@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema({
+  questionType: { type: String, enum: ["primary", "follow_up"], default: "primary" },
+  parentQuestionId: { type: mongoose.Schema.Types.ObjectId, default: null },
   text:         { type: String, required: true },
   hint:         { type: String, default: "" },
   answer:       { type: String, default: "" },

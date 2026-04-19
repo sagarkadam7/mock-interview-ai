@@ -73,7 +73,14 @@ function QuestionCard({ question, index }) {
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-600 shadow-sm">
             {index + 1}
           </div>
-          <p className="text-[15px] font-medium leading-snug tracking-tight text-aura-ink">{question.text}</p>
+          <div className="min-w-0 flex-1 space-y-2">
+            {question.questionType === "follow_up" && (
+              <span className="inline-block rounded-md border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-violet-700">
+                Adaptive follow-up
+              </span>
+            )}
+            <p className="text-[15px] font-medium leading-snug tracking-tight text-aura-ink">{question.text}</p>
+          </div>
         </div>
         <div className="flex shrink-0 items-center gap-4">
           {question.score !== null && (

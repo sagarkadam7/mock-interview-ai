@@ -111,6 +111,79 @@ Return ONLY valid JSON with no markdown or backticks:
   return parsed;
 }
 
+function buildDeliverySummary(body) {
+  const parts = [];
+  if (body.eyeContactPct != null && body.eyeContactPct !== "") {
+    parts.push(`Eye contact toward camera (approx.): ${body.eyeContactPct}%`);
+  }
+  if (typeof body.wordsPerMinute === "number" && body.wordsPerMinute > 0) {
+    parts.push(`Pace: ${body.wordsPerMinute} wpm (${body.paceLabel || "n/a"})`);
+  }
+  if (body.fillerWordCount != null && body.fillerWordCount !== "") {
+    parts.push(`Filler words counted: ${body.fillerWordCount}`);
+  }
+  if (body.dominantEmotion) {
+    parts.push(`Dominant affect: ${body.dominantEmotion}`);
+  }
+  if (body.confidenceScore != null && body.confidenceScore !== "") {
+    parts.push(`Delivery confidence (model estimate): ${body.confidenceScore}/10`);
+  }
+  return parts.length ? parts.join("\n") : "No delivery metrics were provided.";
+}
+
+// Primary questions: score + feedback + optional ONE follow-up question to drill deeper.
+async function getAIFeedbackWithOptionalFollowUp(questionText, userAnswer, hint, jobRole, jdSnippet, deliverySummary) {
+  const prompt = `You are a senior hiring manager and interview coach.
+
+Job role: ${jobRole}
+Job description (excerpt): ${jdSnippet}
+
+Original interview question: ${questionText}
+What a strong answer should include: ${hint}
+
+Candidate's answer (transcript): ${userAnswer || "(No answer provided)"}
+
+Delivery / presence signals from video analysis (may be incomplete):
+${deliverySummary}
+
+Tasks:
+1) Score the answer 0–10 and give concise coaching (same rubric as a real loop).
+2) Decide if ONE short follow-up question would meaningfully deepen signal (e.g. missing metrics, unclear ownership, hand-wavy tradeoffs, weak STAR result, contradictions). If the answer is already strong and specific, or too empty to probe, set followUp to null.
+3) If you add followUp, it must be a single focused question (one sentence), not a multi-part exam. It should reference specifics from their answer when possible.
+
+Return ONLY valid JSON with no markdown or backticks:
+{
+  "score": <integer 0-10>,
+  "feedback": "<2-3 sentence overall assessment>",
+  "strengths": "<1-2 sentences>",
+  "improvements": "<1-2 sentences>",
+  "followUp": null | { "text": "<follow-up question ending with ?>", "hint": "<1-2 sentences what a strong follow-up should include>" }
+}`;
+
+  const model = getGeminiModel();
+  const result = await model.generateContent(prompt);
+  const raw = result.response.text();
+  const parsed = parseJsonFromAi(raw);
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    throw new Error("AI did not return feedback object.");
+  }
+  let followUp = null;
+  if (parsed.followUp && typeof parsed.followUp === "object" && !Array.isArray(parsed.followUp)) {
+    const t = String(parsed.followUp.text || "").trim();
+    const h = String(parsed.followUp.hint || "").trim();
+    if (t.length > 15 && t.includes("?") && h.length > 10) {
+      followUp = { text: t.slice(0, 500), hint: h.slice(0, 600) };
+    }
+  }
+  return {
+    score: parsed.score,
+    feedback: parsed.feedback,
+    strengths: parsed.strengths,
+    improvements: parsed.improvements,
+    followUp,
+  };
+}
+
 // ════════════════════════════════════════════════════════════════
 // ROUTE 1: Create a new interview (upload resume + JD)
 // POST /api/interview/create
@@ -151,6 +224,7 @@ router.post("/create", protect, createInterviewLimiter, upload.single("resume"),
       jdText: jdText || "",
       status: "pending",
       questions: questions.map((q, i) => ({
+        questionType: "primary",
         text: (q.text && String(q.text).trim()) || `Question ${i + 1}`,
         hint: (q.hint && String(q.hint).trim()) || "Give a clear example and quantify impact where possible.",
         orderIndex: i,
@@ -223,9 +297,30 @@ router.post("/:id/answer", protect, validateMongoId("id"), async (req, res) => {
     const question = interview.questions.id(questionId);
     if (!question) return res.status(404).json({ message: "Question not found." });
 
-    // Get AI feedback
+    const trimmedAnswer = (answer || "").trim();
+    const alreadyHasFollowUp = interview.questions.some(
+      (q) => q.parentQuestionId && q.parentQuestionId.toString() === question._id.toString()
+    );
+    const qType = question.questionType || "primary";
+    const allowAdaptiveFollowUp =
+      qType === "primary" &&
+      !alreadyHasFollowUp &&
+      trimmedAnswer.length >= 40;
+
     console.log(`🤖 Getting Gemini feedback for question ${question.orderIndex + 1}...`);
-    const feedback = await getAIFeedback(question.text, answer, question.hint);
+    let feedback;
+    if (allowAdaptiveFollowUp) {
+      feedback = await getAIFeedbackWithOptionalFollowUp(
+        question.text,
+        answer,
+        question.hint,
+        interview.jobRole,
+        (interview.jdText || "").slice(0, 2000),
+        buildDeliverySummary(req.body)
+      );
+    } else {
+      feedback = { ...(await getAIFeedback(question.text, answer, question.hint)), followUp: null };
+    }
 
     // Update the question
     question.answer = answer || "";
@@ -244,6 +339,25 @@ router.post("/:id/answer", protect, validateMongoId("id"), async (req, res) => {
     if (emotionScores)                 question.emotionScores   = emotionScores;
     if (confidenceScore !== undefined) question.confidenceScore = confidenceScore;
 
+    let followUpInserted = false;
+    if (allowAdaptiveFollowUp && feedback.followUp) {
+      const idx = interview.questions.findIndex((q) => q._id.equals(question._id));
+      if (idx !== -1) {
+        interview.questions.splice(idx + 1, 0, {
+          questionType: "follow_up",
+          parentQuestionId: question._id,
+          text: feedback.followUp.text,
+          hint: feedback.followUp.hint,
+          orderIndex: idx + 1,
+        });
+        interview.questions.forEach((q, i) => {
+          q.orderIndex = i;
+        });
+        interview.markModified("questions");
+        followUpInserted = true;
+      }
+    }
+
     // Update interview status
     const allAnswered = interview.questions.every((q) => q.score !== null);
     interview.status = allAnswered ? "completed" : "in_progress";
@@ -255,6 +369,8 @@ router.post("/:id/answer", protect, validateMongoId("id"), async (req, res) => {
       feedback: question.feedback,
       strengths: question.strengths,
       improvements: question.improvements,
+      followUpInserted,
+      questions: interview.questions,
     });
   } catch (err) {
     console.error("Submit answer error:", err.message);

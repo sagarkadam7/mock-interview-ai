@@ -54,6 +54,13 @@ const FEATURES = [
     body: "Deterministic 0–10 scores plus structured feedback you can rehearse against.",
     accent: C.violet,
   },
+  {
+    num: "05",
+    icon: "⎈",
+    title: "Adaptive follow-ups",
+    body: "When your answer has room to go deeper, Gemini may insert one sharp follow-up per primary question—probing metrics, ownership, or tradeoffs like a real loop.",
+    accent: C.coral,
+  },
 ];
 
 const ENGINES = [
