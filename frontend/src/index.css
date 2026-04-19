@@ -91,6 +91,17 @@
       radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   }
 
+  /* Baseline keyboard focus for native controls (component classes can override in @layer components). */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  summary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(124, 58, 237, 0.45);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;

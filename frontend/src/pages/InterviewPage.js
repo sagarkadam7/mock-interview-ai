@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getInterview, submitAnswer } from "../utils/api";
+import { getApiErrorMessage } from "../utils/apiError";
 import { useConfirm } from "../context/ConfirmContext";
 import CameraRecorder, { renderTranscriptWithFillerHighlights } from "../components/CameraRecorder";
 
@@ -81,7 +82,11 @@ export default function InterviewPage() {
         setInterview(data);
         setCurrentIndex(first === -1 ? 0 : first);
       })
-      .catch(() => setError("Failed to load interview."))
+      .catch((err) => {
+        const msg = getApiErrorMessage(err, "Failed to load interview.");
+        setError(msg);
+        toast.error(msg);
+      })
       .finally(() => setLoading(false));
   }, [id]);
 

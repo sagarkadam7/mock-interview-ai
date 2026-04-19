@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ConfirmProvider } from "./context/ConfirmContext";
 import AppToaster from "./components/AppToaster";
@@ -19,6 +19,7 @@ import PricingPage from "./pages/PricingPage";
 import FAQPage from "./pages/FAQPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -62,78 +63,81 @@ function AppShell() {
   const location = useLocation();
   const reduceMotion = useReducedMotion();
   const enterY = reduceMotion ? 0 : 10;
-  const enterDur = reduceMotion ? 0.01 : 0.38;
+  const enterDur = reduceMotion ? 0.01 : 0.32;
 
   return (
     <div className="relative z-10 flex min-h-screen w-full min-w-0 flex-col aura-frame">
       <SkipLink />
       <Navbar />
-      <motion.main
-        id="main-content"
-        tabIndex={-1}
-        key={location.pathname}
-        initial={{ opacity: reduceMotion ? 1 : 0, y: enterY }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: enterDur, ease: [0.16, 1, 0.3, 1] }}
-        className="min-w-0 w-full flex-1 outline-none focus:outline-none"
-      >
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/faq" element={<FAQPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <LoginPage />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <RegisterPage />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <DashboardPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/interview/new"
-            element={
-              <PrivateRoute>
-                <NewInterviewPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/interview/:id"
-            element={
-              <PrivateRoute>
-                <InterviewPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/interview/:id/report"
-            element={
-              <PrivateRoute>
-                <ReportPage />
-              </PrivateRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </motion.main>
+      <main id="main-content" tabIndex={-1} className="min-w-0 w-full flex-1 outline-none focus:outline-none">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: reduceMotion ? 1 : 0, y: enterY }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : -8 }}
+            transition={{ duration: enterDur, ease: [0.16, 1, 0.3, 1] }}
+            className="min-h-0 min-w-0"
+          >
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/faq" element={<FAQPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route
+                path="/login"
+                element={
+                  <PublicRoute>
+                    <LoginPage />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <PublicRoute>
+                    <RegisterPage />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <DashboardPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/interview/new"
+                element={
+                  <PrivateRoute>
+                    <NewInterviewPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/interview/:id"
+                element={
+                  <PrivateRoute>
+                    <InterviewPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/interview/:id/report"
+                element={
+                  <PrivateRoute>
+                    <ReportPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </motion.div>
+        </AnimatePresence>
+      </main>
     </div>
   );
 }

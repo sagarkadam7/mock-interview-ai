@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 import { createInterview } from "../utils/api";
+import { getApiErrorMessage } from "../utils/apiError";
 
 export default function NewInterviewPage() {
   const navigate = useNavigate();
@@ -44,7 +46,9 @@ export default function NewInterviewPage() {
       const { data } = await createInterview(fd);
       navigate(`/interview/${data.interviewId}`);
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+      const msg = getApiErrorMessage(err);
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

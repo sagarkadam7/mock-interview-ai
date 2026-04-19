@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { getAllInterviews, deleteInterview } from "../utils/api";
+import { getApiErrorMessage } from "../utils/apiError";
 import { useAuth } from "../context/AuthContext";
 import { useConfirm } from "../context/ConfirmContext";
 import { Sparkline } from "../components/Charts";
@@ -41,8 +42,8 @@ function DashboardSkeleton() {
         <div key={i} className="skeleton-row flex flex-wrap items-center gap-5 md:flex-nowrap md:gap-6">
           <div className="h-14 w-14 shrink-0 rounded-xl skeleton-line md:w-16" />
           <div className="min-w-0 flex-1 space-y-3 py-1">
-            <div className="h-4 w-3/4 max-w-[200px] skeleton-line" />
-            <div className="h-3 w-1/2 max-w-[140px] skeleton-line" />
+            <div className="h-4 w-[75%] max-w-[200px] skeleton-line" />
+            <div className="h-3 w-[50%] max-w-[140px] skeleton-line" />
             <div className="h-2 w-full max-w-md skeleton-line opacity-80" />
           </div>
           <div className="h-10 w-20 shrink-0 rounded-full skeleton-line" />
@@ -69,7 +70,9 @@ export default function DashboardPage() {
   useEffect(() => {
     getAllInterviews()
       .then(({ data }) => setInterviews(data))
-      .catch(console.error)
+      .catch((err) => {
+        toast.error(getApiErrorMessage(err, "Couldn’t load your interviews."));
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -163,10 +166,10 @@ export default function DashboardPage() {
       {loading ? (
         <DashboardSkeleton />
       ) : interviews.length === 0 ? (
-        <div className="glass-panel-lg relative overflow-hidden py-20 text-center md:py-28">
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/80 via-transparent to-orange-50/50" />
+        <div className="glass-panel-lg relative min-h-[22rem] overflow-hidden py-20 text-center md:min-h-[24rem] md:py-28">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/80 via-transparent to-orange-50/50 dark:from-violet-950/30 dark:to-orange-950/20" />
           <div className="relative z-10 px-4">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-3xl shadow-inner ring-1 ring-white/80">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-3xl shadow-inner ring-1 ring-white/80 dark:ring-slate-700/60">
               ◎
             </div>
             <h2 className="mb-3 font-display text-2xl font-semibold tracking-tight text-aura-ink">No interviews yet</h2>
@@ -250,6 +253,8 @@ export default function DashboardPage() {
                     className="btn-danger shadow-sm"
                     onClick={(e) => handleDelete(iv._id, e)}
                     disabled={deleting === iv._id}
+                    aria-busy={deleting === iv._id}
+                    aria-label={deleting === iv._id ? "Deleting interview" : `Delete interview for ${iv.jobRole}`}
                   >
                     {deleting === iv._id ? <span className="spinner h-4 w-4" /> : "Delete"}
                   </button>

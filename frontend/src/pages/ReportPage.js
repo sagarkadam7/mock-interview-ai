@@ -2,8 +2,39 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getInterview } from "../utils/api";
+import { getApiErrorMessage } from "../utils/apiError";
 import { generatePDFReport } from "../utils/pdfReport";
 import { RadarChart, Sparkline } from "../components/Charts";
+
+function ReportPageSkeleton() {
+  return (
+    <div className="page-shell min-h-screen max-w-6xl" aria-busy="true" aria-label="Loading report">
+      <div className="glass-panel-lg mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
+        <div className="mb-10 flex flex-wrap items-start justify-between gap-8">
+          <div className="min-w-0 flex-1 space-y-4">
+            <div className="h-3 w-24 skeleton-line" />
+            <div className="h-9 w-[66%] max-w-md skeleton-line" />
+            <div className="h-3 w-48 skeleton-line" />
+            <div className="h-3 w-40 skeleton-line" />
+          </div>
+          <div className="h-24 w-24 shrink-0 rounded-full skeleton-line" />
+        </div>
+        <div className="mb-8 grid gap-3 sm:grid-cols-2">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-28 rounded-2xl skeleton-line" />
+          ))}
+        </div>
+        <div className="mb-8 h-72 w-full max-w-2xl rounded-3xl skeleton-line mx-auto" />
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-36 w-full rounded-3xl skeleton-line" />
+          ))}
+        </div>
+      </div>
+      <p className="text-center text-sm font-medium text-slate-500 dark:text-slate-400">Preparing your report…</p>
+    </div>
+  );
+}
 
 const scoreColor = (s) =>
   s >= 7 ? "text-emerald-600" : s >= 4 ? "text-amber-600" : s !== null ? "text-rose-600" : "text-slate-400";
@@ -194,19 +225,28 @@ export default function ReportPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
     getInterview(id)
-      .then(({ data }) => setInterview(data))
-      .catch(() => navigate("/dashboard"))
-      .finally(() => setLoading(false));
+      .then(({ data }) => {
+        if (!cancelled) setInterview(data);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          toast.error(getApiErrorMessage(err, "Couldn’t load this report."));
+          navigate("/dashboard", { replace: true });
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id, navigate]);
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6 py-20">
-        <span className="spinner h-10 w-10" />
-        <p className="mt-5 text-sm text-aura-muted">Loading your report...</p>
-      </div>
-    );
+    return <ReportPageSkeleton />;
   }
 
   if (!interview) return null;

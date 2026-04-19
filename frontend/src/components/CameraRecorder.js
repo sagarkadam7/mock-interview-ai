@@ -134,6 +134,7 @@ export default function CameraRecorder({
   const videoRef      = useRef(null);
   const canvasRef     = useRef(null);
   const mediaRecorder = useRef(null);
+  const stopRequestedRef = useRef(false);
   const chunks        = useRef([]);
   const recognitionRef= useRef(null);
   const faceMeshRef   = useRef(null);
@@ -282,6 +283,7 @@ export default function CameraRecorder({
   // ── Start recording ──────────────────────────────────────────
   const startRecording = () => {
     if (!cameraReady || !streamRef.current) return;
+    stopRequestedRef.current = false;
     chunks.current       = [];
     eyeFrames.current    = [];
     startTimeRef.current = Date.now();
@@ -325,6 +327,8 @@ export default function CameraRecorder({
 
   // ── Stop recording + collect ML data ─────────────────────────
   const stopRecording = () => {
+    if (stopRequestedRef.current) return;
+    stopRequestedRef.current = true;
     recordingRef.current = false;
     mediaRecorder.current?.stop();
     recognitionRef.current?.stop();
@@ -521,9 +525,10 @@ export default function CameraRecorder({
         <button
           type="button"
           onClick={stopRecording}
-          className="w-full rounded-xl border border-rose-200 bg-rose-50 py-3.5 text-[15px] font-medium text-rose-800 transition-all duration-300 hover:border-rose-300 hover:bg-rose-100"
+          disabled={disabled}
+          className="w-full rounded-xl border border-rose-200 bg-rose-50 py-3.5 text-[15px] font-medium text-rose-800 transition-all duration-300 hover:border-rose-300 hover:bg-rose-100 disabled:pointer-events-none disabled:opacity-45 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-200"
         >
-          ⏹ Stop Recording
+          ⏹ Stop recording
         </button>
       )}
 
