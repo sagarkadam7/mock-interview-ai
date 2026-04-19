@@ -26,37 +26,37 @@ function HeroShowcase({ reduceMotion }) {
         }
         aria-hidden
       />
-      <div className="relative rounded-[1.75rem] border border-slate-200/90 bg-white/70 p-1 shadow-lux-lg backdrop-blur-xl">
-        <div className="overflow-hidden rounded-2xl bg-gradient-to-b from-slate-50/90 to-white ring-1 ring-slate-900/[0.04]">
-          <div className="flex items-center gap-2 border-b border-slate-200/80 bg-slate-50/80 px-4 py-3">
+      <div className="relative rounded-[1.75rem] border border-slate-200/90 bg-white/70 p-1 shadow-lux-lg backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-900/60">
+        <div className="overflow-hidden rounded-2xl bg-gradient-to-b from-slate-50/90 to-white ring-1 ring-slate-900/[0.04] dark:from-slate-800/90 dark:to-slate-900 dark:ring-white/[0.06]">
+          <div className="flex items-center gap-2 border-b border-slate-200/80 bg-slate-50/80 px-4 py-3 dark:border-slate-700/80 dark:bg-slate-800/80">
             <div className="flex gap-1.5" aria-hidden>
               <span className="h-2.5 w-2.5 rounded-full bg-slate-300/90" />
               <span className="h-2.5 w-2.5 rounded-full bg-slate-300/70" />
               <span className="h-2.5 w-2.5 rounded-full bg-slate-300/50" />
             </div>
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Live session preview</span>
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Live session preview</span>
           </div>
 
           <div className="space-y-6 p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Composite signal</p>
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Composite signal</p>
                 <p className="mt-1 text-sm font-semibold text-aura-ink">Answer quality · pace · gaze</p>
               </div>
               <div className="rounded-full bg-gradient-to-br from-aura-coral via-aura-violet to-aura-coral p-[2.5px] shadow-md shadow-aura-violet/15">
-                <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-white font-display text-2xl font-semibold tabular-nums tracking-tight text-aura-ink">
+                <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-white font-display text-2xl font-semibold tabular-nums tracking-tight text-aura-ink dark:bg-slate-900">
                   8.6
                 </div>
               </div>
             </div>
 
             <div>
-              <div className="mb-2 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+              <div className="mb-2 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                 <span>Transcript energy</span>
                 <span className="text-emerald-600/90">Streaming</span>
               </div>
               <div
-                className="flex h-20 items-end justify-between gap-0.5 rounded-xl border border-slate-200/80 bg-slate-50/50 px-2 pb-2 pt-4"
+                className="flex h-20 items-end justify-between gap-0.5 rounded-xl border border-slate-200/80 bg-slate-50/50 px-2 pb-2 pt-4 dark:border-slate-600/80 dark:bg-slate-800/50"
                 role="img"
                 aria-label="Abstract waveform visualization"
               >
@@ -78,10 +78,10 @@ function HeroShowcase({ reduceMotion }) {
               ].map((chip) => (
                 <span
                   key={chip.t}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/90 px-3 py-1.5 text-[11px] font-medium text-slate-700 shadow-sm"
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/90 px-3 py-1.5 text-[11px] font-medium text-slate-700 shadow-sm dark:border-slate-600/80 dark:bg-slate-800/90 dark:text-slate-200"
                 >
-                  <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-slate-400">{chip.t}</span>
-                  <span className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-aura-ink">{chip.s}</span>
+                  <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{chip.t}</span>
+                  <span className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-aura-ink dark:bg-slate-700 dark:text-slate-100">{chip.s}</span>
                 </span>
               ))}
             </div>
@@ -92,7 +92,7 @@ function HeroShowcase({ reduceMotion }) {
       {!reduceMotion && (
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute -right-6 top-1/4 hidden h-24 w-24 rounded-2xl border border-slate-200/60 bg-white/40 shadow-lux backdrop-blur-md lg:block"
+          className="pointer-events-none absolute -right-6 top-1/4 hidden h-24 w-24 rounded-2xl border border-slate-200/60 bg-white/40 shadow-lux backdrop-blur-md dark:border-slate-600/50 dark:bg-slate-900/40 lg:block"
           animate={{ y: [0, -10, 0], rotate: [0, 2, 0] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -160,7 +160,7 @@ export default function LandingHero({ user }) {
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_65%_at_50%_100%,rgba(255,255,255,0.92),transparent_55%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_65%_at_50%_100%,rgba(255,255,255,0.92),transparent_55%)] dark:bg-[radial-gradient(ellipse_85%_65%_at_50%_100%,rgba(15,23,42,0.5),transparent_55%)]"
         aria-hidden
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-aura-page to-transparent" aria-hidden />
@@ -174,7 +174,7 @@ export default function LandingHero({ user }) {
         >
           <motion.div variants={item} className="mb-6 inline-flex items-center gap-2.5">
             <span
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/90 px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.26em] text-slate-600 shadow-[0_1px_0_rgba(255,255,255,1)_inset,0_12px_32px_-14px_rgba(15,23,42,0.1)] backdrop-blur-md ring-1 ring-white/80"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/90 px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.26em] text-slate-600 shadow-[0_1px_0_rgba(255,255,255,1)_inset,0_12px_32px_-14px_rgba(15,23,42,0.1)] backdrop-blur-md ring-1 ring-white/80 dark:border-slate-600/80 dark:bg-slate-900/80 dark:text-slate-300 dark:shadow-none dark:ring-slate-700/60"
               role="status"
             >
               <span className="relative flex h-2 w-2" aria-hidden>
@@ -187,7 +187,7 @@ export default function LandingHero({ user }) {
 
           <motion.p
             variants={item}
-            className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.35em] text-slate-400 sm:text-[11px] sm:tracking-[0.38em]"
+            className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.35em] text-slate-400 dark:text-slate-500 sm:text-[11px] sm:tracking-[0.38em]"
           >
             Interview intelligence
           </motion.p>
@@ -205,9 +205,9 @@ export default function LandingHero({ user }) {
 
           <motion.p
             variants={item}
-            className="mx-auto mt-8 max-w-lg text-[15px] leading-[1.65] text-slate-600 sm:text-lg sm:leading-relaxed lg:mx-0 lg:max-w-xl"
+            className="mx-auto mt-8 max-w-lg text-[15px] leading-[1.65] text-slate-600 dark:text-slate-400 sm:text-lg sm:leading-relaxed lg:mx-0 lg:max-w-xl"
           >
-            The mock interview stack for candidates who want <span className="font-medium text-slate-800">signal, not scripts</span> —
+            The mock interview stack for candidates who want <span className="font-medium text-slate-800 dark:text-slate-200">signal, not scripts</span> —
             structured AI scoring, camera-aware coaching, and questions grounded in your real experience.
           </motion.p>
 
@@ -233,11 +233,11 @@ export default function LandingHero({ user }) {
             variants={item}
             className="mt-14 w-full max-w-xl sm:mt-16 lg:max-w-none"
           >
-            <div className="grid grid-cols-3 divide-x divide-slate-200/80 rounded-2xl border border-slate-200/80 bg-white/55 py-5 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset] backdrop-blur-md ring-1 ring-white/60 sm:py-6">
+            <div className="grid grid-cols-3 divide-x divide-slate-200/80 rounded-2xl border border-slate-200/80 bg-white/55 py-5 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset] backdrop-blur-md ring-1 ring-white/60 dark:divide-slate-700 dark:border-slate-700/80 dark:bg-slate-900/50 dark:shadow-none dark:ring-slate-700/50 sm:py-6">
               {statRows.map((row) => (
                 <div key={row.l} className="flex flex-col items-center px-1 sm:px-2">
                   <div className="font-display text-2xl font-semibold tabular-nums text-aura-ink sm:text-3xl">{row.v}</div>
-                  <div className="mt-2 max-w-[6.5rem] text-[9px] font-semibold uppercase leading-snug tracking-[0.2em] text-slate-500 sm:max-w-[10rem] sm:text-[10px] sm:tracking-[0.24em]">
+                  <div className="mt-2 max-w-[6.5rem] text-[9px] font-semibold uppercase leading-snug tracking-[0.2em] text-slate-500 dark:text-slate-400 sm:max-w-[10rem] sm:text-[10px] sm:tracking-[0.24em]">
                     {row.l}
                   </div>
                 </div>

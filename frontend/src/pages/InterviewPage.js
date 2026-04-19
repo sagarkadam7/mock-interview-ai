@@ -12,9 +12,9 @@ const paceColor = (l) => (l === "good" ? "text-emerald-600" : "text-amber-600");
 function MetricTile({ label, children, className = "" }) {
   return (
     <div
-      className={`rounded-xl border border-slate-200/85 bg-gradient-to-b from-white/95 to-slate-50/80 p-3.5 shadow-sm ring-1 ring-white/60 backdrop-blur-sm ${className}`}
+      className={`rounded-xl border border-slate-200/85 bg-gradient-to-b from-white/95 to-slate-50/80 p-3.5 shadow-sm ring-1 ring-white/60 backdrop-blur-sm dark:border-slate-600/50 dark:from-slate-800/90 dark:to-slate-900/70 dark:ring-slate-700/40 ${className}`}
     >
-      <div className="mb-1 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">{label}</div>
+      <div className="mb-1 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{label}</div>
       <div className="tabular-nums">{children}</div>
     </div>
   );
@@ -54,7 +54,7 @@ function InterviewLoadingSkeleton() {
           <div className="skeleton-line min-h-[320px] w-full rounded-2xl xl:min-h-[380px]" />
         </div>
       </div>
-      <p className="relative mt-10 text-center text-sm font-medium text-slate-500">Loading your session…</p>
+      <p className="relative mt-10 text-center text-sm font-medium text-slate-500 dark:text-slate-400">Loading your session…</p>
     </div>
   );
 }
@@ -190,21 +190,21 @@ export default function InterviewPage() {
         aria-hidden
       />
 
-      <header className="relative mb-10 border-b border-slate-200/80 pb-8">
+      <header className="relative mb-10 border-b border-slate-200/80 pb-8 dark:border-slate-700/70">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <button type="button" className="btn-outline py-2 text-xs font-semibold" onClick={() => navigate("/dashboard")}>
               ← Exit
             </button>
-            <span className="inline-flex items-center rounded-full border border-slate-200/90 bg-white/90 px-4 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 shadow-sm ring-1 ring-white/80 backdrop-blur-sm">
+            <span className="inline-flex items-center rounded-full border border-slate-200/90 bg-white/90 px-4 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 shadow-sm ring-1 ring-white/80 backdrop-blur-sm dark:border-slate-600/80 dark:bg-slate-900/80 dark:text-slate-300 dark:ring-slate-700/60">
               {interview.jobRole}
             </span>
           </div>
           <div className="text-right">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Progress</p>
-            <p className="mt-0.5 text-sm font-semibold tabular-nums text-slate-700">
-              {answeredCount} <span className="font-normal text-slate-400">/</span> {totalQ}{" "}
-              <span className="font-normal text-slate-500">answered</span>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Progress</p>
+            <p className="mt-0.5 text-sm font-semibold tabular-nums text-slate-700 dark:text-slate-200">
+              {answeredCount} <span className="font-normal text-slate-400 dark:text-slate-500">/</span> {totalQ}{" "}
+              <span className="font-normal text-slate-500 dark:text-slate-400">answered</span>
             </p>
           </div>
         </div>
@@ -226,8 +226,8 @@ export default function InterviewPage() {
                       ? "border-amber-300/90 bg-amber-50 text-amber-900 shadow-sm"
                       : "border-rose-300/90 bg-rose-50 text-rose-800 shadow-sm"
                   : i === currentIndex
-                    ? "border-aura-violet/40 bg-white text-aura-ink shadow-[0_0_0_3px_rgba(157,80,187,0.12),0_8px_20px_-8px_rgba(15,23,42,0.12)] ring-1 ring-aura-violet/20"
-                    : "border-slate-200/90 bg-slate-50/90 text-slate-500"
+                    ? "border-aura-violet/40 bg-white text-aura-ink shadow-[0_0_0_3px_rgba(157,80,187,0.12),0_8px_20px_-8px_rgba(15,23,42,0.12)] ring-1 ring-aura-violet/20 dark:bg-slate-900 dark:shadow-[0_0_0_3px_rgba(157,80,187,0.2),0_8px_20px_-8px_rgba(0,0,0,0.35)]"
+                    : "border-slate-200/90 bg-slate-50/90 text-slate-500 dark:border-slate-600/80 dark:bg-slate-800/70 dark:text-slate-400"
               }`}
             >
               {i + 1}
@@ -254,7 +254,7 @@ export default function InterviewPage() {
             />
             <div className="relative">
               <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
                   Question {String(currentIndex + 1).padStart(2, "0")} — {String(totalQ).padStart(2, "0")}
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
@@ -263,7 +263,7 @@ export default function InterviewPage() {
                       Adaptive follow-up
                     </span>
                   )}
-                  <span className="rounded-md bg-slate-100/90 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                  <span className="rounded-md bg-slate-100/90 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:bg-slate-800/90 dark:text-slate-400">
                     Live session
                   </span>
                 </div>
@@ -277,7 +277,7 @@ export default function InterviewPage() {
               <div className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-gradient-to-b from-aura-coral to-aura-violet" aria-hidden />
               <div className="pl-4">
                 <span className="section-eyebrow mb-3 inline-flex">Coaching brief</span>
-                <ul className="space-y-2.5 text-sm leading-relaxed text-slate-600">
+                <ul className="space-y-2.5 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                   <li className="flex gap-2">
                     <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-aura-violet/60" aria-hidden />
                     <span>Use STAR: situation, task, action, result — keep the arc tight.</span>
@@ -301,14 +301,14 @@ export default function InterviewPage() {
                 className="pointer-events-none absolute -left-16 bottom-0 h-40 w-40 rounded-full bg-gradient-to-tr from-aura-violet/12 to-transparent blur-3xl"
                 aria-hidden
               />
-              <div className="relative mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-slate-200/70 pb-5">
+              <div className="relative mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-slate-200/70 pb-5 dark:border-slate-700/70">
                 <div>
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Model feedback</p>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Model feedback</p>
                   <h3 className="mt-1 text-xl font-bold tracking-tight text-aura-ink md:text-2xl">Answer score</h3>
                 </div>
                 <div className="flex items-baseline gap-1">
                   <span className={`font-display text-4xl font-semibold tabular-nums md:text-5xl ${scoreColor(feedback.score)}`}>{feedback.score}</span>
-                  <span className="text-base font-medium text-slate-400">/10</span>
+                  <span className="text-base font-medium text-slate-400 dark:text-slate-500">/10</span>
                 </div>
               </div>
               <div className="progress-track mb-6 h-2 shadow-inner ring-1 ring-slate-900/[0.03]">
@@ -317,12 +317,12 @@ export default function InterviewPage() {
                   style={{ width: `${feedback.score * 10}%`, boxShadow: "0 0 16px rgba(157, 80, 187, 0.28)" }}
                 />
               </div>
-              <p className="mb-6 text-sm leading-relaxed text-slate-600 md:text-[15px]">{feedback.feedback}</p>
+              <p className="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-[15px]">{feedback.feedback}</p>
 
               {feedback.followUpInserted && (
                 <div className="mb-6 rounded-2xl border border-aura-violet/20 bg-gradient-to-br from-aura-violet/[0.07] to-white/90 p-4 ring-1 ring-aura-violet/10">
                   <div className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-aura-violet">Adaptive interviewer</div>
-                  <p className="text-sm leading-relaxed text-slate-700">
+                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                     Based on your answer, the session added a targeted follow-up question next. Continue to drill deeper, then move on when you are ready.
                   </p>
                 </div>
@@ -330,7 +330,7 @@ export default function InterviewPage() {
 
               {feedback.mlData && (
                 <div className="mb-6">
-                  <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Signal breakdown</p>
+                  <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Signal breakdown</p>
                   <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-2">
                     {feedback.mlData.eyeContactPct !== null && (
                       <MetricTile label="Eye contact">
@@ -341,8 +341,8 @@ export default function InterviewPage() {
                       <MetricTile label="Pace">
                         <div className={`text-base font-bold ${paceColor(feedback.mlData.paceLabel)}`}>
                           {feedback.mlData.wordsPerMinute}{" "}
-                          <span className="text-xs font-semibold normal-case text-slate-500">wpm</span>
-                          <span className="mt-0.5 block text-[11px] font-medium capitalize text-slate-500">{feedback.mlData.paceLabel}</span>
+                          <span className="text-xs font-semibold normal-case text-slate-500 dark:text-slate-400">wpm</span>
+                          <span className="mt-0.5 block text-[11px] font-medium capitalize text-slate-500 dark:text-slate-400">{feedback.mlData.paceLabel}</span>
                         </div>
                       </MetricTile>
                     )}
@@ -378,11 +378,11 @@ export default function InterviewPage() {
               <div className="mb-6 flex flex-col gap-3">
                 <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4 ring-1 ring-emerald-500/10">
                   <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">Strengths</div>
-                  <p className="text-sm leading-relaxed text-slate-700">{feedback.strengths}</p>
+                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{feedback.strengths}</p>
                 </div>
                 <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.06] p-4 ring-1 ring-amber-500/10">
                   <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-amber-800">Improvements</div>
-                  <p className="text-sm leading-relaxed text-slate-700">{feedback.improvements}</p>
+                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{feedback.improvements}</p>
                 </div>
               </div>
 
@@ -396,11 +396,11 @@ export default function InterviewPage() {
           {!feedback && (
             <div className="glass-panel rounded-2xl border-slate-200/90 p-5 shadow-sm md:p-6">
               <label className="label-field">Live transcript</label>
-              <div className="max-h-48 min-h-[108px] overflow-y-auto rounded-xl border border-slate-200/90 bg-slate-50/90 p-4 text-sm leading-relaxed text-slate-600 ring-1 ring-white/60 md:max-h-64">
+              <div className="max-h-48 min-h-[108px] overflow-y-auto rounded-xl border border-slate-200/90 bg-slate-50/90 p-4 text-sm leading-relaxed text-slate-600 ring-1 ring-white/60 dark:border-slate-600/80 dark:bg-slate-800/60 dark:text-slate-300 dark:ring-slate-700/50 md:max-h-64">
                 {transcript ? (
-                  <div className="italic text-slate-700">{renderTranscriptWithFillerHighlights(transcript)}</div>
+                  <div className="italic text-slate-700 dark:text-slate-200">{renderTranscriptWithFillerHighlights(transcript)}</div>
                 ) : (
-                  <span className="italic text-slate-400">Start recording — your words appear here in real time.</span>
+                  <span className="italic text-slate-400 dark:text-slate-500">Start recording — your words appear here in real time.</span>
                 )}
               </div>
             </div>
@@ -408,9 +408,9 @@ export default function InterviewPage() {
         </div>
 
         <aside className="w-full shrink-0 space-y-4 xl:sticky xl:top-24 xl:w-[400px] xl:self-start">
-          <div className="rounded-2xl border border-slate-200/90 bg-white/85 p-1 shadow-lux-lg ring-1 ring-white/70 backdrop-blur-xl">
-            <div className="rounded-xl bg-slate-50/80 px-4 py-2.5 text-center">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Camera & coaching</p>
+          <div className="rounded-2xl border border-slate-200/90 bg-white/85 p-1 shadow-lux-lg ring-1 ring-white/70 backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-900/70 dark:ring-slate-700/50">
+            <div className="rounded-xl bg-slate-50/80 px-4 py-2.5 text-center dark:bg-slate-800/60">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Camera & coaching</p>
             </div>
             <div className="p-3 sm:p-4">
               <CameraRecorder

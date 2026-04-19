@@ -13,6 +13,25 @@
     --text2: #64748b;
     --text3: #94a3b8;
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --aura-page: #f4f4f7;
+    --aura-page-deep: #ececf0;
+    --aura-ink: #0f172a;
+    --aura-card: #ffffff;
+    --aura-line: #e4e4e9;
+    --aura-muted: #64748b;
+    --aura-cta: #121217;
+    --aura-frame: rgba(15, 23, 42, 0.06);
+  }
+
+  html.dark {
+    --aura-page: #0a0b10;
+    --aura-page-deep: #12141c;
+    --aura-ink: #e8eaf0;
+    --aura-card: rgba(22, 26, 36, 0.92);
+    --aura-line: rgba(148, 163, 184, 0.16);
+    --aura-muted: #94a3b8;
+    --aura-cta: #f1f5f9;
+    --aura-frame: rgba(255, 255, 255, 0.06);
   }
 }
 
@@ -65,6 +84,13 @@
     background-repeat: no-repeat, no-repeat, no-repeat, repeat;
   }
 
+  html.dark #root::before {
+    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 126, 95, 0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(157, 80, 187, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 45%),
+      radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -75,6 +101,9 @@
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(15, 23, 42, 0.12) transparent;
+}
+html.dark * {
+  scrollbar-color: rgba(148, 163, 184, 0.22) transparent;
 }
 ::-webkit-scrollbar {
   width: 8px;
@@ -89,6 +118,12 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(15, 23, 42, 0.2);
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.22);
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.35);
 }
 
 @layer components {
@@ -337,6 +372,78 @@
     .skeleton-line {
       animation: none;
       background: #e2e8f0;
+    }
+  }
+
+  html.dark .glass-panel {
+    @apply border-slate-700/55 bg-slate-900/50 ring-slate-800/30;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset, 0 1px 2px rgba(0, 0, 0, 0.2), 0 20px 40px -16px rgba(0, 0, 0, 0.45);
+  }
+  html.dark .glass-panel-lg {
+    @apply border-slate-700/55 bg-slate-900/55 ring-slate-800/35;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.05) inset, 0 4px 12px rgba(0, 0, 0, 0.25), 0 32px 64px -20px rgba(0, 0, 0, 0.55);
+  }
+  html.dark .glass-panel:hover,
+  html.dark .glass-panel-lg:hover {
+    @apply border-slate-600/70 bg-slate-900/70;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset, 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  html.dark .btn-primary {
+    @apply border-slate-600/80 bg-slate-800/90 text-slate-100 hover:border-slate-500 hover:bg-slate-800 hover:text-white;
+  }
+  html.dark .btn-cta {
+    @apply bg-slate-100 text-aura-ink shadow-none hover:bg-white hover:shadow-[0_12px_32px_-8px_rgba(157,80,187,0.35)];
+  }
+  html.dark .btn-outline {
+    @apply border-slate-600/80 bg-slate-900/40 text-slate-300 hover:border-slate-500 hover:bg-slate-800 hover:text-white;
+  }
+  html.dark .btn-secondary {
+    @apply border-slate-600/80 bg-slate-900/50 text-slate-300 hover:border-slate-500 hover:bg-slate-800 hover:text-white;
+  }
+  html.dark .btn-danger {
+    @apply border-rose-500/40 bg-rose-950/50 text-rose-200 hover:border-rose-400/50 hover:bg-rose-950/80;
+  }
+
+  html.dark .input-field {
+    @apply border-slate-600/80 bg-slate-900/60 text-slate-100 placeholder:text-slate-500 hover:border-slate-500;
+    @apply focus:border-aura-violet/55 focus:ring-aura-violet/20;
+  }
+  html.dark .label-field {
+    @apply text-slate-400;
+  }
+  html.dark .progress-track {
+    @apply bg-slate-700/80;
+  }
+  html.dark .spinner {
+    @apply border-slate-600 border-t-violet-400;
+  }
+  html.dark .surface-card {
+    @apply border-slate-700/60 bg-slate-900/45 hover:border-slate-600 hover:bg-slate-900/65;
+  }
+  html.dark .section-eyebrow {
+    @apply border-slate-600/80 bg-slate-900/70 text-slate-300 ring-slate-700/50;
+  }
+  html.dark .alert-error {
+    @apply border-rose-500/35 bg-rose-950/40 text-rose-100;
+  }
+  html.dark .alert-success {
+    @apply border-emerald-500/35 bg-emerald-950/35 text-emerald-100;
+  }
+  html.dark .interactive-lift:hover {
+    box-shadow: 0 16px 40px -14px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  html.dark .skeleton-row {
+    @apply border-slate-700/60 bg-slate-900/40;
+  }
+  html.dark .skeleton-line {
+    @apply bg-slate-700/80;
+    background: linear-gradient(90deg, rgba(51, 65, 85, 0.9) 0%, rgba(71, 85, 105, 0.5) 45%, rgba(51, 65, 85, 0.9) 90%);
+    background-size: 200% 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.dark .skeleton-line {
+      background: #334155;
     }
   }
 }

@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import SiteFooter from "../components/SiteFooter";
 import HowItWorksSection from "../components/landing/HowItWorksSection";
@@ -13,17 +14,6 @@ import FAQSection from "../components/landing/FAQSection";
 import FounderLetterSection from "../components/landing/FounderLetterSection";
 import LandingHero from "../components/landing/LandingHero";
 
-/* ─── TOKENS ─────────────────────────────────────────────────────────── */
-const C = {
-  ink: "#0a0a0f",
-  paper: "#fafaf8",
-  coral: "#ff5c3a",
-  violet: "#7c3aed",
-  gold: "#c9a84c",
-  muted: "#6b7280",
-  border: "rgba(15,23,42,0.08)",
-};
-
 /* ─── DATA ───────────────────────────────────────────────────────────── */
 const FEATURES = [
   {
@@ -31,35 +21,35 @@ const FEATURES = [
     icon: "◈",
     title: "Resume-aware AI",
     body: "Gemini analyzes your PDF and job description to generate hyper-specific technical questions — not boilerplate.",
-    accent: C.coral,
+    accent: "#ff5c3a",
   },
   {
     num: "02",
     icon: "◉",
     title: "Real-time eye tracking",
     body: "MediaPipe maps gaze at 30 fps so you build consistent camera contact under pressure.",
-    accent: C.violet,
+    accent: "#7c3aed",
   },
   {
     num: "03",
     icon: "◆",
     title: "Live speech analytics",
     body: "Browser-native transcription flags filler words and measures words per minute instantly.",
-    accent: C.coral,
+    accent: "#ff5c3a",
   },
   {
     num: "04",
     icon: "◎",
     title: "Actionable scorecards",
     body: "Deterministic 0–10 scores plus structured feedback you can rehearse against.",
-    accent: C.violet,
+    accent: "#7c3aed",
   },
   {
     num: "05",
     icon: "⎈",
     title: "Adaptive follow-ups",
     body: "When your answer has room to go deeper, Gemini may insert one sharp follow-up per primary question—probing metrics, ownership, or tradeoffs like a real loop.",
-    accent: C.coral,
+    accent: "#ff5c3a",
   },
 ];
 
@@ -93,31 +83,20 @@ const useInView = (threshold = 0.15) => {
   return [ref, visible];
 };
 
-/* ─── AMBIENT CURSOR ─────────────────────────────────────────────────── */
-function AmbientCursor() {
-  const pos = useRef({ x: -200, y: -200 });
-  const dot = useRef(null);
-  useEffect(() => {
-    const move = (e) => {
-      pos.current = { x: e.clientX, y: e.clientY };
-      if (dot.current) dot.current.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
-    };
-    window.addEventListener("mousemove", move, { passive: true });
-    return () => window.removeEventListener("mousemove", move);
-  }, []);
-  return (
-    <div
-      ref={dot}
-      aria-hidden
-      style={{
-        position: "fixed", top: 0, left: 0, width: 20, height: 20,
-        borderRadius: "50%", pointerEvents: "none", zIndex: 9999,
-        background: "radial-gradient(circle, rgba(255,92,58,0.55) 0%, transparent 70%)",
-        transition: "transform 0.04s linear",
-        mixBlendMode: "multiply",
-      }}
-    />
-  );
+/** Gradient-filled text — needs standard `backgroundClip` + `backgroundImage` or some browsers paint a solid bar. */
+function gradientTextStyle(coral, violet, { angle = "135deg", fontStyle } = {}) {
+  return {
+    display: "inline-block",
+    maxWidth: "100%",
+    backgroundImage: `linear-gradient(${angle}, ${coral}, ${violet})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "100% 100%",
+    WebkitBackgroundClip: "text",
+    backgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    color: "transparent",
+    ...(fontStyle ? { fontStyle } : {}),
+  };
 }
 
 /* ─── GRAIN OVERLAY ──────────────────────────────────────────────────── */
@@ -132,27 +111,31 @@ function Grain() {
 }
 
 /* ─── SECTION LABEL ──────────────────────────────────────────────────── */
-const SectionLabel = ({ children }) => (
-  <span style={{
-    display: "inline-block",
-    fontFamily: "'DM Mono', monospace",
-    fontSize: 10,
-    fontWeight: 600,
-    letterSpacing: "0.3em",
-    textTransform: "uppercase",
-    color: C.coral,
-    border: `1px solid ${C.coral}33`,
-    borderRadius: 999,
-    padding: "5px 16px",
-    marginBottom: 28,
-    background: `${C.coral}08`,
-  }}>
-    {children}
-  </span>
-);
+function SectionLabel({ children }) {
+  const { palette: C } = useTheme();
+  return (
+    <span style={{
+      display: "inline-block",
+      fontFamily: "'DM Mono', monospace",
+      fontSize: 10,
+      fontWeight: 600,
+      letterSpacing: "0.3em",
+      textTransform: "uppercase",
+      color: C.coral,
+      border: `1px solid ${C.coral}33`,
+      borderRadius: 999,
+      padding: "5px 16px",
+      marginBottom: 28,
+      background: `${C.coral}14`,
+    }}>
+      {children}
+    </span>
+  );
+}
 
 /* ─── MARQUEE ────────────────────────────────────────────────────────── */
 function Marquee({ items, speed = 30 }) {
+  const { palette: C } = useTheme();
   const doubled = [...items, ...items];
   return (
     <div style={{ overflow: "hidden", position: "relative", WebkitMaskImage: "linear-gradient(to right,transparent,black 15%,black 85%,transparent)" }}>
@@ -166,7 +149,7 @@ function Marquee({ items, speed = 30 }) {
             fontFamily: "'Playfair Display', serif",
             fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 700,
-            color: "#d1d5db",
+            color: C.marqueeText,
             letterSpacing: "0.1em",
             textTransform: "uppercase",
             fontStyle: "italic",
@@ -179,6 +162,7 @@ function Marquee({ items, speed = 30 }) {
 
 /* ─── STAT CARD ──────────────────────────────────────────────────────── */
 function StatCard({ value, label, delay = 0 }) {
+  const { palette: C } = useTheme();
   const [ref, visible] = useInView();
   return (
     <motion.div
@@ -187,24 +171,26 @@ function StatCard({ value, label, delay = 0 }) {
       animate={visible ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, delay }}
       style={{
-        background: "white",
+        background: C.card,
         border: `1px solid ${C.border}`,
         borderRadius: 20,
         padding: "32px 28px",
         textAlign: "center",
-        boxShadow: "0 2px 20px rgba(0,0,0,0.04)",
+        boxShadow: C.cardShadow,
       }}
     >
-      <div style={{
-        fontFamily: "'Playfair Display', serif",
-        fontSize: "clamp(2rem, 4vw, 3rem)",
-        fontWeight: 900,
-        background: `linear-gradient(135deg, ${C.coral}, ${C.violet})`,
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
-        lineHeight: 1.1,
-        marginBottom: 8,
-      }}>{value}</div>
+      <div
+        style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: "clamp(2rem, 4vw, 3rem)",
+          fontWeight: 900,
+          lineHeight: 1.1,
+          marginBottom: 8,
+          ...gradientTextStyle(C.coral, C.violet),
+        }}
+      >
+        {value}
+      </div>
       <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, fontFamily: "'Lora', serif" }}>{label}</p>
     </motion.div>
   );
@@ -212,6 +198,7 @@ function StatCard({ value, label, delay = 0 }) {
 
 /* ─── FEATURE CARD ───────────────────────────────────────────────────── */
 function FeatureCard({ f, idx }) {
+  const { palette: C } = useTheme();
   const [ref, visible] = useInView();
   const [hovered, setHovered] = useState(false);
   return (
@@ -227,9 +214,9 @@ function FeatureCard({ f, idx }) {
         overflow: "hidden",
         borderRadius: 24,
         padding: "40px 36px",
-        background: "white",
+        background: C.card,
         border: `1px solid ${hovered ? f.accent + "44" : C.border}`,
-        boxShadow: hovered ? `0 20px 60px ${f.accent}18` : "0 2px 12px rgba(0,0,0,0.04)",
+        boxShadow: hovered ? `0 20px 60px ${f.accent}18` : C.cardShadow,
         transition: "all 0.35s ease",
         cursor: "default",
       }}
@@ -272,6 +259,7 @@ function FeatureCard({ f, idx }) {
 
 /* ─── ENGINE ROW ─────────────────────────────────────────────────────── */
 function EngineRow({ e, idx }) {
+  const { palette: C } = useTheme();
   const [ref, visible] = useInView();
   const [hovered, setHovered] = useState(false);
   return (
@@ -309,6 +297,7 @@ function EngineRow({ e, idx }) {
 
 /* ─── CTA BUTTON ─────────────────────────────────────────────────────── */
 function CtaButton({ to, children }) {
+  const { palette: C } = useTheme();
   const [hovered, setHovered] = useState(false);
   return (
     <Link to={to} style={{ textDecoration: "none" }}>
@@ -347,6 +336,7 @@ function CtaButton({ to, children }) {
 
 /* ─── GHOST BUTTON ───────────────────────────────────────────────────── */
 function GhostButton({ to, children }) {
+  const { palette: C } = useTheme();
   const [hovered, setHovered] = useState(false);
   return (
     <Link to={to} style={{ textDecoration: "none" }}>
@@ -377,17 +367,21 @@ function GhostButton({ to, children }) {
 }
 
 /* ─── DIVIDER ────────────────────────────────────────────────────────── */
-const Divider = () => (
-  <div style={{ display: "flex", alignItems: "center", gap: 24, padding: "0 0 0 0", opacity: 0.35 }}>
-    <div style={{ flex: 1, height: 1, background: "linear-gradient(to right, transparent, #0f172a22)" }} />
-    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: "0.4em", color: C.muted, textTransform: "uppercase" }}>✦</span>
-    <div style={{ flex: 1, height: 1, background: "linear-gradient(to left, transparent, #0f172a22)" }} />
-  </div>
-);
+function Divider() {
+  const { palette: C } = useTheme();
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 24, padding: "0 0 0 0", opacity: 0.35 }}>
+      <div style={{ flex: 1, height: 1, background: `linear-gradient(to right, transparent, ${C.dividerLine})` }} />
+      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: "0.4em", color: C.muted, textTransform: "uppercase" }}>✦</span>
+      <div style={{ flex: 1, height: 1, background: `linear-gradient(to left, transparent, ${C.dividerLine})` }} />
+    </div>
+  );
+}
 
 /* ─── PAGE ───────────────────────────────────────────────────────────── */
 export default function LandingPage() {
   const { user } = useAuth();
+  const { palette: C } = useTheme();
   const reduceMotion = useReducedMotion();
   const location = useLocation();
 
@@ -415,7 +409,6 @@ export default function LandingPage() {
   return (
     <div style={{ background: C.paper, color: C.ink, overflowX: "hidden", minHeight: "100vh" }}>
       <Grain />
-      {!reduceMotion && <AmbientCursor />}
 
       {/* ── HERO (original component preserved) ── */}
       <LandingHero user={user} />
@@ -427,7 +420,7 @@ export default function LandingPage() {
           borderTop: `1px solid ${C.border}`,
           borderBottom: `1px solid ${C.border}`,
           padding: "48px 0",
-          background: "white",
+          background: C.card,
           position: "relative",
         }}
       >
@@ -471,7 +464,7 @@ export default function LandingPage() {
         id="core-architecture"
         style={{
           padding: "120px 24px",
-          background: C.ink,
+          background: C.band,
           position: "relative",
           overflow: "hidden",
         }}
@@ -503,12 +496,7 @@ export default function LandingPage() {
               marginBottom: 20,
             }}>
               Four specialized engines.<br />
-              <span style={{
-                background: `linear-gradient(90deg, ${C.coral}, ${C.violet})`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                fontStyle: "italic",
-              }}>
+              <span style={gradientTextStyle(C.coral, C.violet, { angle: "90deg", fontStyle: "italic" })}>
                 One seamless verdict.
               </span>
             </h2>
@@ -567,12 +555,7 @@ export default function LandingPage() {
             marginBottom: 20,
           }}>
             Everything to{" "}
-            <span style={{
-              fontStyle: "italic",
-              background: `linear-gradient(135deg, ${C.coral}, ${C.violet})`,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}>
+            <span style={{ fontStyle: "italic", ...gradientTextStyle(C.coral, C.violet) }}>
               land the offer
             </span>
           </h2>
@@ -622,6 +605,7 @@ export default function LandingPage() {
 
 /* ─── ENGINE ROW DARK (inside dark section) ───────────────────────────── */
 function EngineRowDark({ e, idx }) {
+  const { palette: C } = useTheme();
   const [ref, visible] = useInView();
   const [hovered, setHovered] = useState(false);
   return (
@@ -677,6 +661,7 @@ function EngineRowDark({ e, idx }) {
 
 /* ─── FINAL CTA SECTION ──────────────────────────────────────────────── */
 function FinalCta({ user }) {
+  const { palette: C } = useTheme();
   const [ref, visible] = useInView(0.1);
   return (
     <section
@@ -685,7 +670,7 @@ function FinalCta({ user }) {
         position: "relative",
         overflow: "hidden",
         padding: "140px 24px",
-        background: C.ink,
+        background: C.band,
         textAlign: "center",
       }}
     >
@@ -723,12 +708,7 @@ function FinalCta({ user }) {
           marginBottom: 24,
         }}>
           Ready for<br />
-          <span style={{
-            background: `linear-gradient(135deg, ${C.coral}, ${C.violet})`,
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            fontStyle: "italic",
-          }}>
+          <span style={{ fontStyle: "italic", ...gradientTextStyle(C.coral, C.violet) }}>
             your next round?
           </span>
         </h2>

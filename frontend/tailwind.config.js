@@ -1,20 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
     extend: {
       colors: {
         aura: {
-          page: "#f4f4f7",
-          "page-deep": "#ececf0",
-          ink: "#0f172a",
-          card: "#ffffff",
-          line: "#e4e4e9",
+          page: "var(--aura-page)",
+          "page-deep": "var(--aura-page-deep)",
+          ink: "var(--aura-ink)",
+          card: "var(--aura-card)",
+          line: "var(--aura-line)",
           coral: "#FF7E5F",
           violet: "#9D50BB",
-          muted: "#64748b",
-          cta: "#121217",
-          frame: "rgba(15, 23, 42, 0.06)",
+          muted: "var(--aura-muted)",
+          cta: "var(--aura-cta)",
+          frame: "var(--aura-frame)",
         },
       },
       fontFamily: {

@@ -2,23 +2,25 @@ import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
+import ThemeToggle from "./ThemeToggle";
 
 const navMutedLink =
-  "inline-flex rounded-full px-3 py-2 text-[12px] font-semibold text-slate-500 no-underline transition-colors hover:bg-slate-100 hover:text-aura-ink";
+  "inline-flex rounded-full px-3 py-2 text-[12px] font-semibold text-slate-500 no-underline transition-colors hover:bg-slate-100 hover:text-aura-ink dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100";
 
 const navGhostBtn =
-  "inline-flex items-center justify-center rounded-full border border-slate-200/90 bg-white/85 px-4 py-2 text-[13px] font-medium text-slate-600 shadow-sm backdrop-blur-md transition-[transform,background-color,border-color,color,box-shadow] duration-250 ease-out-expo hover:border-slate-300 hover:bg-white hover:text-aura-ink hover:shadow-md active:scale-[0.97] no-underline";
+  "inline-flex items-center justify-center rounded-full border border-slate-200/90 bg-white/85 px-4 py-2 text-[13px] font-medium text-slate-600 shadow-sm backdrop-blur-md transition-[transform,background-color,border-color,color,box-shadow] duration-250 ease-out-expo hover:border-slate-300 hover:bg-white hover:text-aura-ink hover:shadow-md active:scale-[0.97] no-underline dark:border-slate-600/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800 dark:hover:text-white";
 
-const navGhostActive = "!border-slate-300 !bg-white !text-aura-ink shadow-lux";
+const navGhostActive =
+  "!border-slate-300 !bg-white !text-aura-ink shadow-lux dark:!border-slate-500 dark:!bg-slate-800 dark:!text-white";
 
 const navCtaBtn =
-  "inline-flex items-center justify-center rounded-full border-0 bg-aura-ink px-5 py-2 text-[13px] font-bold text-white no-underline shadow-[0_2px_12px_-2px_rgba(15,23,42,0.35)] transition-[transform,background-color,box-shadow] duration-250 ease-out-expo hover:bg-zinc-800 hover:shadow-lg active:scale-[0.97]";
+  "inline-flex items-center justify-center rounded-full border-0 bg-aura-ink px-5 py-2 text-[13px] font-bold text-white no-underline shadow-[0_2px_12px_-2px_rgba(15,23,42,0.35)] transition-[transform,background-color,box-shadow] duration-250 ease-out-expo hover:bg-zinc-800 hover:shadow-lg active:scale-[0.97] dark:bg-slate-100 dark:text-slate-900 dark:shadow-[0_2px_12px_-2px_rgba(0,0,0,0.4)] dark:hover:bg-white";
 
 const profilePill =
-  "mr-0.5 hidden items-center gap-2.5 rounded-full border border-slate-200/90 bg-white/95 py-1.5 pl-1.5 pr-4 shadow-sm backdrop-blur-sm transition-colors duration-250 sm:flex";
+  "mr-0.5 hidden items-center gap-2.5 rounded-full border border-slate-200/90 bg-white/95 py-1.5 pl-1.5 pr-4 shadow-sm backdrop-blur-sm transition-colors duration-250 dark:border-slate-600/80 dark:bg-slate-900/80 sm:flex";
 
 const mobileNavLinkClass =
-  "flex items-center rounded-xl px-4 py-3 text-[15px] font-semibold text-aura-ink no-underline transition-colors hover:bg-slate-50";
+  "flex items-center rounded-xl px-4 py-3 text-[15px] font-semibold text-aura-ink no-underline transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/80";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -68,8 +70,8 @@ export default function Navbar() {
       aria-label="Primary"
       className={`sticky top-0 z-[100] border-b transition-[border-color,background-color,box-shadow,backdrop-filter] duration-350 ease-out-expo ${
         scrolled
-          ? "border-slate-200/90 bg-white/95 shadow-lux-nav backdrop-blur-xl"
-          : "border-slate-200/50 bg-white/80 backdrop-blur-lg"
+          ? "border-slate-200/90 bg-white/95 shadow-lux-nav backdrop-blur-xl dark:border-slate-800/90 dark:bg-slate-950/92 dark:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]"
+          : "border-slate-200/50 bg-white/80 backdrop-blur-lg dark:border-slate-800/50 dark:bg-slate-950/85"
       }`}
     >
       <div className="relative mx-auto flex h-[3.75rem] max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-10">
@@ -81,25 +83,29 @@ export default function Navbar() {
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-aura-coral to-aura-violet text-xs font-black text-white shadow-lg shadow-aura-violet/25 ring-2 ring-white/50 transition-transform duration-300 group-hover:scale-[1.03]">
               IA
             </span>
-            <span className="truncate text-[13px] font-bold tracking-tight text-aura-ink sm:text-sm">InterviewAI</span>
+            <span className="truncate text-[13px] font-bold tracking-tight text-aura-ink sm:text-sm dark:text-slate-100">InterviewAI</span>
             <span className="absolute -bottom-1 left-11 h-px w-0 bg-gradient-to-r from-aura-coral to-aura-violet transition-[width] duration-350 ease-out-expo group-hover:w-[calc(100%-2.75rem)]" />
           </NavLink>
 
           <div className="hidden min-w-0 items-center gap-0.5 lg:flex">
-            <NavLink to="/pricing" className={({ isActive }) => `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink" : ""}`}>
+            <NavLink
+              to="/pricing"
+              className={({ isActive }) => `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink dark:bg-slate-800 dark:text-slate-100" : ""}`}
+            >
               Pricing
             </NavLink>
-            <NavLink to="/faq" className={({ isActive }) => `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink" : ""}`}>
+            <NavLink to="/faq" className={({ isActive }) => `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink dark:bg-slate-800 dark:text-slate-100" : ""}`}>
               FAQ
             </NavLink>
           </div>
         </div>
 
         <div className="flex flex-shrink-0 items-center gap-1.5 sm:gap-2.5">
+          <ThemeToggle className="hidden sm:inline-flex" />
           <button
             ref={btnRef}
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200/90 bg-white/90 text-slate-700 shadow-sm transition-colors hover:bg-slate-50 lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200/90 bg-white/90 text-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:border-slate-600/80 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800 lg:hidden"
             aria-expanded={menuOpen}
             aria-controls="mobile-nav-panel"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -116,7 +122,7 @@ export default function Navbar() {
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral to-aura-violet text-sm font-bold text-white ring-2 ring-white/60">
                   {user.name?.[0]?.toUpperCase()}
                 </div>
-                <span className="max-w-[88px] truncate text-sm font-medium text-slate-600 md:max-w-[140px]">
+                <span className="max-w-[88px] truncate text-sm font-medium text-slate-600 dark:text-slate-300 md:max-w-[140px]">
                   {user.name.split(" ")[0]}
                 </span>
               </div>
@@ -153,7 +159,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[98] bg-slate-900/20 backdrop-blur-[2px] lg:hidden"
+              className="fixed inset-0 z-[98] bg-slate-900/30 backdrop-blur-[2px] dark:bg-black/50 lg:hidden"
               aria-label="Close menu"
               onClick={() => setMenuOpen(false)}
             />
@@ -168,9 +174,14 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute left-0 right-0 top-full z-[99] border-b border-slate-200/90 bg-white/98 px-4 py-4 shadow-lux-lg backdrop-blur-xl lg:hidden"
+              className="absolute left-0 right-0 top-full z-[99] border-b border-slate-200/90 bg-white/98 px-4 py-4 shadow-lux-lg backdrop-blur-xl dark:border-slate-800/90 dark:bg-slate-950/98 lg:hidden"
             >
               <div className="mx-auto flex max-w-7xl flex-col gap-1">
+                <div className="flex items-center justify-between px-4 pb-2 pt-1 sm:hidden">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Theme</span>
+                  <ThemeToggle />
+                </div>
+                <div className="mx-4 mb-2 h-px bg-slate-200/90 dark:bg-slate-700/80 sm:hidden" />
                 <NavLink to="/pricing" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   Pricing
                 </NavLink>
