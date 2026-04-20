@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getInterview, createShareToken } from "../utils/api";
+import { getSharedReport } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
-import { generatePDFReport } from "../utils/pdfReport";
 import { RadarChart, Sparkline } from "../components/Charts";
 
 function ReportPageSkeleton() {
   return (
-    <div className="page-shell min-h-screen max-w-6xl" aria-busy="true" aria-label="Loading report">
+    <div className="page-shell min-h-screen max-w-6xl" aria-busy="true" aria-label="Loading shared report">
       <div className="glass-panel-lg mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
         <div className="mb-10 flex flex-wrap items-start justify-between gap-8">
           <div className="min-w-0 flex-1 space-y-4">
-            <div className="h-3 w-24 skeleton-line" />
+            <div className="h-3 w-28 skeleton-line" />
             <div className="h-9 w-[66%] max-w-md skeleton-line" />
-            <div className="h-3 w-48 skeleton-line" />
-            <div className="h-3 w-40 skeleton-line" />
+            <div className="h-3 w-56 skeleton-line" />
           </div>
           <div className="h-24 w-24 shrink-0 rounded-full skeleton-line" />
         </div>
@@ -31,7 +29,7 @@ function ReportPageSkeleton() {
           ))}
         </div>
       </div>
-      <p className="text-center text-sm font-medium text-slate-500 dark:text-slate-400">Preparing your report…</p>
+      <p className="text-center text-sm font-medium text-slate-500 dark:text-slate-400">Preparing report…</p>
     </div>
   );
 }
@@ -177,13 +175,8 @@ function QuestionCard({ question, index }) {
 
           {question.answer ? (
             <div>
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Your answer</div>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Candidate answer</div>
               <p className="text-sm italic leading-relaxed text-slate-700">&quot;{question.answer}&quot;</p>
-              {question.fillerWords?.length > 0 && (
-                <p className="mt-2 text-xs text-aura-muted">
-                  Filler words detected: {question.fillerWords.map((w) => `"${w}"`).join(", ")}
-                </p>
-              )}
             </div>
           ) : (
             <p className="text-sm italic text-aura-muted">No answer recorded.</p>
@@ -218,24 +211,23 @@ function QuestionCard({ question, index }) {
   );
 }
 
-export default function ReportPage() {
-  const { id } = useParams();
+export default function SharedReportPage() {
+  const { token } = useParams();
   const navigate = useNavigate();
   const [interview, setInterview] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [sharing, setSharing] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    getInterview(id)
+    getSharedReport(token)
       .then(({ data }) => {
         if (!cancelled) setInterview(data);
       })
       .catch((err) => {
         if (!cancelled) {
-          toast.error(getApiErrorMessage(err, "Couldn’t load this report."));
-          navigate("/dashboard", { replace: true });
+          toast.error(getApiErrorMessage(err, "Couldn’t load this shared report."));
+          navigate("/", { replace: true });
         }
       })
       .finally(() => {
@@ -244,23 +236,13 @@ export default function ReportPage() {
     return () => {
       cancelled = true;
     };
-  }, [id, navigate]);
+  }, [token, navigate]);
 
-  if (loading) {
-    return <ReportPageSkeleton />;
-  }
-
+  if (loading) return <ReportPageSkeleton />;
   if (!interview) return null;
 
-  const answered = interview.questions.filter((q) => q.score !== null);
+  const answered = interview.questions?.filter((q) => q.score !== null) || [];
   const overall = interview.overallScore;
-  const overallRing =
-    overall >= 7
-      ? "border-emerald-400 bg-emerald-50"
-      : overall >= 4
-        ? "border-amber-400 bg-amber-50"
-        : "border-rose-400 bg-rose-50";
-  const overallText = overall >= 7 ? "text-emerald-700" : overall >= 4 ? "text-amber-700" : "text-rose-700";
 
   const clamp01 = (n) => Math.max(0, Math.min(1, n));
   const eyeN = interview.avgEyeContact !== null ? clamp01(interview.avgEyeContact / 100) : 0;
@@ -277,17 +259,8 @@ export default function ReportPage() {
     { label: "Overall", normalized: overallN },
   ];
 
-  const coachingDims = [
-    { key: "Eye", value: eyeN, accentClass: "text-emerald-600", msg: "Focus on steady eye contact. Try pausing and resetting your gaze to the lens." },
-    { key: "Conf", value: confN, accentClass: "text-violet-600", msg: "Build confidence by structuring answers (STAR). Aim for clear, complete sentences." },
-    { key: "Pace", value: paceN, accentClass: "text-emerald-600", msg: "Dial in your pace. Aiming for ~130–170 wpm often boosts clarity and confidence." },
-    { key: "Fill", value: fillerN, accentClass: "text-amber-600", msg: "Reduce filler words. If you feel stuck, pause for 1 second before continuing." },
-  ];
-
-  const focusDim = coachingDims.reduce((min, d) => (d.value < min.value ? d : min), coachingDims[0]);
-
-  const questionScores = interview.questions.map((q) => q.score).filter((s) => typeof s === "number");
-  const eyeTrend = interview.questions.map((q) => q.eyeContactPct).filter((p) => typeof p === "number");
+  const questionScores = (interview.questions || []).map((q) => q.score).filter((s) => typeof s === "number");
+  const eyeTrend = (interview.questions || []).map((q) => q.eyeContactPct).filter((p) => typeof p === "number");
 
   return (
     <div className="page-shell min-h-screen max-w-6xl">
@@ -295,24 +268,19 @@ export default function ReportPage() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/50 via-transparent to-orange-50/30 opacity-90" aria-hidden />
         <div className="relative mb-10 flex flex-wrap items-start justify-between gap-8">
           <div>
-            <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Session report</div>
+            <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Shared report</div>
             <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">{interview.jobRole}</h1>
             <p className="mt-1 text-sm text-aura-muted">
-              {new Date(interview.createdAt).toLocaleDateString("en-IN", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
+              {new Date(interview.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
             </p>
             <p className="mt-1 text-sm text-aura-muted">
-              {answered.length}/{interview.questions.length} questions answered
+              {answered.length}/{interview.questions?.length || 0} questions answered
             </p>
           </div>
           {overall !== null && (
             <div className="text-center">
-              <div className={`mx-auto flex h-24 w-24 flex-col items-center justify-center rounded-full border-[3px] ${overallRing}`}>
-                <span className={`font-sans text-3xl font-bold leading-none ${overallText}`}>{overall}</span>
+              <div className="mx-auto flex h-24 w-24 flex-col items-center justify-center rounded-full border-[3px] border-slate-200 bg-white/80">
+                <span className={`font-sans text-3xl font-bold leading-none ${scoreColor(overall)}`}>{overall}</span>
                 <span className="text-[10px] text-aura-muted">/10</span>
               </div>
               <p className="mt-2 text-[11px] text-aura-muted">AI content score</p>
@@ -324,15 +292,9 @@ export default function ReportPage() {
           <StatCard
             label="Avg eye contact"
             value={interview.avgEyeContact !== null ? `${interview.avgEyeContact}%` : null}
-            colorClass={
-              interview.avgEyeContact > 70 ? "text-emerald-600" : interview.avgEyeContact > 40 ? "text-amber-600" : "text-rose-600"
-            }
+            colorClass={interview.avgEyeContact > 70 ? "text-emerald-600" : interview.avgEyeContact > 40 ? "text-amber-600" : "text-rose-600"}
           />
-          <StatCard
-            label="Avg confidence (ML)"
-            value={interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : null}
-            colorClass="text-violet-600"
-          />
+          <StatCard label="Avg confidence (ML)" value={interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : null} colorClass="text-violet-600" />
           <StatCard
             label="Avg speech pace"
             value={interview.avgPace ? `${interview.avgPace} wpm` : null}
@@ -342,9 +304,7 @@ export default function ReportPage() {
           <StatCard
             label="Avg filler words / Q"
             value={interview.avgFillerWords !== null ? interview.avgFillerWords : null}
-            colorClass={
-              interview.avgFillerWords <= 2 ? "text-emerald-600" : interview.avgFillerWords <= 5 ? "text-amber-600" : "text-rose-600"
-            }
+            colorClass={interview.avgFillerWords <= 2 ? "text-emerald-600" : interview.avgFillerWords <= 5 ? "text-amber-600" : "text-rose-600"}
           />
         </div>
 
@@ -354,114 +314,31 @@ export default function ReportPage() {
               <span className="mb-3 inline-block rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
                 Metric radar
               </span>
-              <h2 className="text-xl font-bold tracking-tight text-aura-ink">Your coaching snapshot</h2>
+              <h2 className="text-xl font-bold tracking-tight text-aura-ink">Coaching snapshot</h2>
               <p className="mt-1 text-sm text-aura-muted">Larger shape = better performance for that dimension.</p>
-            </div>
-            <div className="max-w-[220px] text-right text-sm text-aura-muted">
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">How to read</div>
-              Eye: higher · Conf: higher · Pace: 130–170 wpm · Fillers: lower
             </div>
           </div>
           <RadarChart metrics={radarMetrics} stroke="#FF7E5F" fill="rgba(157,80,187,0.14)" />
-
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/90 p-5">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-aura-coral">Next focus</div>
-                <div className={`mb-1 font-sans text-xl font-extrabold ${focusDim.accentClass}`}>{focusDim.key}</div>
-                <p className="max-w-md text-sm leading-relaxed text-aura-muted">{focusDim.msg}</p>
-              </div>
-              <div className="text-right">
-                <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Your score</div>
-                <div className={`font-sans text-3xl font-black ${focusDim.accentClass}`}>{Math.round(focusDim.value * 10)}/10</div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
           <div className="glass-panel rounded-2xl p-6">
             <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
             <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Question score</h3>
-            {questionScores.length >= 2 ? (
-              <Sparkline data={questionScores} stroke="#9D50BB" fill="rgba(157,80,187,0.12)" />
-            ) : (
-              <p className="text-sm text-aura-muted">Not enough scores yet.</p>
-            )}
+            {questionScores.length >= 2 ? <Sparkline data={questionScores} stroke="#9D50BB" fill="rgba(157,80,187,0.12)" /> : <p className="text-sm text-aura-muted">Not enough scores yet.</p>}
           </div>
           <div className="glass-panel rounded-2xl p-6">
             <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
             <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Eye contact</h3>
-            {eyeTrend.length >= 2 ? (
-              <Sparkline data={eyeTrend} stroke="#34d399" fill="rgba(16,185,129,0.10)" />
-            ) : (
-              <p className="text-sm text-aura-muted">No eye contact data yet.</p>
-            )}
+            {eyeTrend.length >= 2 ? <Sparkline data={eyeTrend} stroke="#34d399" fill="rgba(16,185,129,0.10)" /> : <p className="text-sm text-aura-muted">No eye contact data yet.</p>}
           </div>
         </div>
 
-        {overall !== null && (
-          <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50/90 px-5 py-4 text-[15px] leading-relaxed text-slate-700">
-            {overall >= 8
-              ? "🌟 Outstanding performance! You're interview-ready."
-              : overall >= 6
-                ? "👍 Good job overall! Focus on the improvement areas below."
-                : overall >= 4
-                  ? "📈 You're on the right track. Review the feedback carefully."
-                  : "💪 Keep practicing! Every session makes you better."}
-          </div>
-        )}
-
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            className="btn-primary"
-            onClick={() => {
-              generatePDFReport(interview);
-              toast.success("PDF saved to your downloads");
-            }}
-          >
-            ↓ Download PDF Report
-          </button>
-          <button
-            type="button"
-            className="btn-outline"
-            disabled={sharing}
-            aria-busy={sharing}
-            onClick={async () => {
-              try {
-                setSharing(true);
-                const { data } = await createShareToken(interview._id);
-                const url = `${window.location.origin}/share/${data.token}`;
-                if (navigator.clipboard?.writeText) {
-                  await navigator.clipboard.writeText(url);
-                  toast.success("Share link copied");
-                } else {
-                  window.prompt("Copy this link:", url);
-                }
-              } catch (err) {
-                toast.error(getApiErrorMessage(err, "Couldn’t create a share link."));
-              } finally {
-                setSharing(false);
-              }
-            }}
-          >
-            {sharing ? (
-              <>
-                <span className="spinner h-4 w-4" /> Creating link…
-              </>
-            ) : (
-              "↗ Share report"
-            )}
-          </button>
-          <Link to="/interview/new">
-            <button type="button" className="btn-outline">
-              + New Interview
-            </button>
-          </Link>
-          <Link to="/dashboard">
-            <button type="button" className="btn-outline">
-              ← Dashboard
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-aura-muted">Want your own sessions, reports, and practice history?</p>
+          <Link to="/register">
+            <button type="button" className="btn-primary">
+              Create free account →
             </button>
           </Link>
         </div>
@@ -469,18 +346,11 @@ export default function ReportPage() {
 
       <h2 className="mb-4 text-xl font-bold tracking-tight text-aura-ink">Question-by-question breakdown</h2>
       <div className="flex flex-col gap-4">
-        {interview.questions.map((q, i) => (
-          <QuestionCard key={q._id} question={q} index={i} />
+        {(interview.questions || []).map((q, i) => (
+          <QuestionCard key={q._id || i} question={q} index={i} />
         ))}
-      </div>
-
-      <div className="py-12 text-center">
-        <Link to="/interview/new">
-          <button type="button" className="btn-primary px-8 py-3 text-[15px]">
-            Start Another Interview →
-          </button>
-        </Link>
       </div>
     </div>
   );
 }
+

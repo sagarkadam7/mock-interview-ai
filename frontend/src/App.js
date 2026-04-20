@@ -15,6 +15,7 @@ import DashboardPage from "./pages/DashboardPage";
 import NewInterviewPage from "./pages/NewInterviewPage";
 import InterviewPage from "./pages/InterviewPage";
 import ReportPage from "./pages/ReportPage";
+import SharedReportPage from "./pages/SharedReportPage";
 import PricingPage from "./pages/PricingPage";
 import FAQPage from "./pages/FAQPage";
 import PrivacyPage from "./pages/PrivacyPage";
@@ -85,6 +86,7 @@ function AppShell() {
               <Route path="/faq" element={<FAQPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />
+              <Route path="/share/:token" element={<SharedReportPage />} />
               <Route
                 path="/login"
                 element={

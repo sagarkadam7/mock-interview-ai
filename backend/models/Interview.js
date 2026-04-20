@@ -37,6 +37,8 @@ const interviewSchema = new mongoose.Schema(
     resumeText:   { type: String, required: true },
     jdText:       { type: String, default: "" },
     status:       { type: String, enum: ["pending", "in_progress", "completed"], default: "pending" },
+    shareToken:   { type: String, default: "", index: true },
+    sharedAt:     { type: Date, default: null },
     overallScore: { type: Number, default: null },
     avgEyeContact:  { type: Number, default: null },
     avgFillerWords: { type: Number, default: null },

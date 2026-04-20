@@ -1,19 +1,40 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import SiteFooter from "../components/SiteFooter";
+import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
+import { upgradePlan } from "../utils/api";
+import { getApiErrorMessage } from "../utils/apiError";
 
 const free = [
-  "Unlimited mock sessions (fair use)",
+  "3 mock sessions / month (free plan cap)",
   "7 tailored questions per interview",
   "Gemini-powered feedback & scores",
   "Camera + speech analytics",
   "Dashboard trends & PDF export",
 ];
 
+const pro = [
+  "Unlimited mock sessions",
+  "Shareable report links (send to mentors)",
+  "Priority AI queue (future)",
+  "Early access to new analytics",
+];
+
 const soon = ["Team / cohort dashboards", "ATS integrations", "Custom rubrics per company"];
 
 export default function PricingPage() {
+  const { user, login } = useAuth();
+  const [upgrading, setUpgrading] = useState(false);
+  const plan = (user?.plan || "free").toLowerCase();
+  const isPro = plan === "pro" || plan === "team";
+  const ctaLabel = useMemo(() => {
+    if (!user) return "Create free account →";
+    if (isPro) return "You’re on Pro";
+    return "Upgrade to Pro (dev) →";
+  }, [user, isPro]);
+
   return (
     <div className="min-h-screen">
     <div className="page-shell max-w-5xl pb-20">
@@ -21,7 +42,7 @@ export default function PricingPage() {
         <div className="section-eyebrow mb-4">Pricing</div>
         <h1 className="font-display text-4xl font-semibold tracking-tight text-aura-ink md:text-5xl">Simple today. Ambitious tomorrow.</h1>
         <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600">
-          We’re shipping depth over tiers — one full-access experience while we validate the hardest parts of interview prep (signal, delivery, and iteration speed).
+          Start free, then upgrade when you want unlimited sessions and shareable reports for mentors and referrals.
         </p>
       </div>
 
@@ -49,25 +70,79 @@ export default function PricingPage() {
               </li>
             ))}
           </ul>
-          <Link to="/register" className="mt-10 block no-underline">
-            <span className="btn-cta flex w-full justify-center py-4">Create free account →</span>
-          </Link>
+          {!user ? (
+            <Link to="/register" className="mt-10 block no-underline">
+              <span className="btn-cta flex w-full justify-center py-4">Create free account →</span>
+            </Link>
+          ) : (
+            <div className="mt-10 rounded-2xl border border-slate-200 bg-white/80 px-5 py-4 text-sm text-slate-600">
+              You’re currently on <strong className="font-semibold text-aura-ink">{plan.toUpperCase()}</strong>.
+            </div>
+          )}
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.06 }}
-          className="rounded-3xl border border-dashed border-slate-300 bg-slate-50/80 p-8 md:p-10"
+          className="glass-panel-lg relative overflow-hidden rounded-3xl p-8 md:p-10"
         >
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-slate-500">Roadmap</p>
-          <h2 className="mt-2 font-display text-2xl font-semibold text-aura-ink">Enterprise & campus</h2>
-          <p className="mt-3 text-sm leading-relaxed text-slate-600">
-            If you’re a university career center or hiring team evaluating structured mock interviews at scale, we’d love to learn your workflow — these capabilities are on our near-term roadmap.
-          </p>
+          <div className="pointer-events-none absolute -left-24 -bottom-24 h-56 w-56 rounded-full bg-gradient-to-tr from-orange-200/35 to-transparent blur-3xl" aria-hidden />
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-aura-coral">Pro</p>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-display text-5xl font-bold text-aura-ink">$12</span>
+            <span className="text-slate-500">/ month</span>
+          </div>
+          <p className="mt-4 text-sm text-slate-600">Unlimited practice + shareable signal. Built for serious prep loops.</p>
           <ul className="mt-8 space-y-3">
+            {pro.map((x) => (
+              <li key={x} className="flex gap-3 text-sm text-slate-700">
+                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs text-violet-700 ring-1 ring-violet-200/80">
+                  ✦
+                </span>
+                {x}
+              </li>
+            ))}
+          </ul>
+          {!user ? (
+            <Link to="/register" className="mt-10 block no-underline">
+              <span className="btn-cta flex w-full justify-center py-4">Start free →</span>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className="btn-cta mt-10 flex w-full justify-center py-4 disabled:opacity-70"
+              disabled={upgrading || isPro}
+              aria-busy={upgrading}
+              onClick={async () => {
+                try {
+                  setUpgrading(true);
+                  const { data } = await upgradePlan("pro");
+                  const nextUser = { ...user, ...data.user };
+                  login(nextUser);
+                  toast.success("Upgraded to Pro");
+                } catch (err) {
+                  toast.error(getApiErrorMessage(err, "Upgrade failed."));
+                } finally {
+                  setUpgrading(false);
+                }
+              }}
+            >
+              {upgrading ? "Upgrading…" : ctaLabel}
+            </button>
+          )}
+        </motion.div>
+      </div>
+
+      <div className="mt-12 grid gap-6 md:grid-cols-2">
+        <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-sm leading-relaxed text-slate-600 shadow-sm md:p-8">
+          <strong className="font-semibold text-aura-ink">Fair use:</strong> automated systems may rate-limit abusive traffic to keep latency low for everyone. Personal practice within normal bounds is always the goal.
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-sm leading-relaxed text-slate-600 shadow-sm md:p-8">
+          <strong className="font-semibold text-aura-ink">Roadmap:</strong>
+          <ul className="mt-4 space-y-2">
             {soon.map((x) => (
-              <li key={x} className="flex gap-3 text-sm text-slate-600">
+              <li key={x} className="flex gap-3">
                 <span className="text-slate-400" aria-hidden>
                   ○
                 </span>
@@ -75,14 +150,7 @@ export default function PricingPage() {
               </li>
             ))}
           </ul>
-          <p className="mt-8 text-xs text-slate-500">
-            For now, reach out via your institution email — we read every serious note while we’re in focused build mode.
-          </p>
-        </motion.div>
-      </div>
-
-      <div className="mt-12 rounded-2xl border border-slate-200 bg-white/90 p-6 text-sm leading-relaxed text-slate-600 shadow-sm md:p-8">
-        <strong className="font-semibold text-aura-ink">Fair use:</strong> automated systems may rate-limit abusive traffic to keep latency low for everyone. Personal practice within normal bounds is always the goal.
+        </div>
       </div>
     </div>
     <SiteFooter />

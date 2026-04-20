@@ -49,4 +49,12 @@ export const getAllInterviews = () => api.get("/interview");
 export const submitAnswer = (id, data) => api.post(`/interview/${id}/answer`, data);
 export const deleteInterview = (id) => api.delete(`/interview/${id}`);
 
+// ── Billing / Plan ────────────────────────────────────────────
+export const getBillingMe = () => api.get("/billing/me");
+export const upgradePlan = (plan) => api.post("/billing/upgrade", { plan });
+
+// ── Sharing ───────────────────────────────────────────────────
+export const createShareToken = (interviewId) => api.post(`/interview/${interviewId}/share`);
+export const getSharedReport = (token) => api.get(`/share/${token}`);
+
 export default api;

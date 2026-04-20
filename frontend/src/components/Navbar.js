@@ -125,6 +125,11 @@ export default function Navbar() {
                 <span className="max-w-[88px] truncate text-sm font-medium text-slate-600 dark:text-slate-300 md:max-w-[140px]">
                   {user.name.split(" ")[0]}
                 </span>
+                {(user.plan || "free") !== "free" && (
+                  <span className="ml-1 inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-700">
+                    Pro
+                  </span>
+                )}
               </div>
               <NavLink to="/dashboard" className={({ isActive }) => `${navGhostBtn} hidden sm:inline-flex ${isActive ? navGhostActive : ""}`}>
                 Dashboard

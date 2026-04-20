@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 const mongoose = require("mongoose");
 const pdfParse = require("pdf-parse");
 const rateLimit = require("express-rate-limit");
@@ -9,6 +10,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Interview = require("../models/Interview");
 const { protect } = require("../middleware/auth");
 const { validateMongoId } = require("../middleware/validateMongoId");
+const { assertCanCreateInterview, bumpMonthlyInterviewUsage } = require("../middleware/planLimits");
 const { parseJsonFromAi } = require("../utils/parseAiJson");
 
 const router = express.Router();
@@ -190,7 +192,7 @@ Return ONLY valid JSON with no markdown or backticks:
 // Body: { jobRole, jdText } + optional file (resume PDF)
 // OR Body: { jobRole, resumeText, jdText } for plain text
 // ════════════════════════════════════════════════════════════════
-router.post("/create", protect, createInterviewLimiter, upload.single("resume"), async (req, res) => {
+router.post("/create", protect, assertCanCreateInterview, createInterviewLimiter, upload.single("resume"), async (req, res) => {
   try {
     const { jobRole, jdText, resumeText: bodyResumeText } = req.body;
 
@@ -232,10 +234,18 @@ router.post("/create", protect, createInterviewLimiter, upload.single("resume"),
     });
 
     console.log(`✅ Interview created: ${interview._id}`);
+    try {
+      await bumpMonthlyInterviewUsage(req.user._id);
+    } catch (err) {
+      if (err?.status === 402) {
+        await interview.deleteOne().catch(() => {});
+      }
+      throw err;
+    }
     res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
   } catch (err) {
     console.error("Create interview error:", err.message);
-    res.status(500).json({ message: err.message });
+    res.status(err.status || 500).json({ message: err.message, code: err.code });
   }
 });
 
@@ -382,6 +392,33 @@ router.post("/:id/answer", protect, validateMongoId("id"), async (req, res) => {
 // ROUTE 5: Delete an interview
 // DELETE /api/interview/:id
 // ════════════════════════════════════════════════════════════════
+router.post("/:id/share", protect, validateMongoId("id"), async (req, res) => {
+  try {
+    if ((req.user.plan || "free") === "free") {
+      return res.status(402).json({ message: "Sharing is a Pro feature. Upgrade to generate a shareable link." });
+    }
+
+    const interview = await Interview.findById(req.params.id);
+    if (!interview) return res.status(404).json({ message: "Interview not found." });
+    if (interview.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized." });
+    }
+    if (interview.status !== "completed") {
+      return res.status(409).json({ message: "You can share a report after completing the interview." });
+    }
+
+    if (!interview.shareToken) {
+      interview.shareToken = crypto.randomBytes(24).toString("base64url");
+      interview.sharedAt = new Date();
+      await interview.save();
+    }
+
+    res.json({ token: interview.shareToken });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.delete("/:id", protect, validateMongoId("id"), async (req, res) => {
   try {
     const interview = await Interview.findById(req.params.id);

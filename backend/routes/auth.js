@@ -34,6 +34,7 @@ router.post("/register", async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      plan: user.plan || "free",
       token: generateToken(user._id),
     });
   } catch (err) {
@@ -60,6 +61,7 @@ router.post("/login", async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      plan: user.plan || "free",
       token: generateToken(user._id),
     });
   } catch (err) {

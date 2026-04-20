@@ -56,7 +56,9 @@ const authLimiter = rateLimit({
 
 app.use("/api", apiLimiter);
 app.use("/api/auth", authLimiter, require("./routes/auth"));
+app.use("/api/billing", require("./routes/billing"));
 app.use("/api/interview", require("./routes/interview"));
+app.use("/api/share", require("./routes/share"));
 
 app.get("/", (req, res) =>
   res.json({ message: "Mock Interview API running ✅", ok: true, time: new Date().toISOString() })

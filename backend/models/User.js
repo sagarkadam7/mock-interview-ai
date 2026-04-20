@@ -6,6 +6,12 @@ const userSchema = new mongoose.Schema(
     name:     { type: String, required: true, trim: true },
     email:    { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true, minlength: 8 },
+    plan: { type: String, enum: ["free", "pro", "team"], default: "free", index: true },
+    planUpdatedAt: { type: Date, default: null },
+    usage: {
+      monthKey: { type: String, default: "" }, // e.g. "2026-04"
+      interviewsCreated: { type: Number, default: 0 },
+    },
   },
   { timestamps: true }
 );
