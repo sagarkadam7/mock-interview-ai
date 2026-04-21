@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import SiteFooter from "../components/SiteFooter";
 import HowItWorksSection from "../components/landing/HowItWorksSection";
 import ComparisonSection from "../components/landing/ComparisonSection";
@@ -257,44 +257,6 @@ function FeatureCard({ f, idx }) {
   );
 }
 
-/* ─── ENGINE ROW ─────────────────────────────────────────────────────── */
-function EngineRow({ e, idx }) {
-  const { palette: C } = useTheme();
-  const [ref, visible] = useInView();
-  const [hovered, setHovered] = useState(false);
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x: -20 }}
-      animate={visible ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.5, delay: idx * 0.08 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 2fr 1fr",
-        alignItems: "center",
-        gap: 24,
-        padding: "28px 32px",
-        borderBottom: `1px solid ${C.border}`,
-        background: hovered ? `${C.coral}04` : "transparent",
-        transition: "background 0.25s ease",
-        cursor: "default",
-      }}
-    >
-      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: C.coral, fontWeight: 600 }}>
-        {e.label}
-      </span>
-      <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: C.ink, fontStyle: "italic" }}>
-        {e.name}
-      </span>
-      <span style={{ fontSize: 13, color: C.muted, textAlign: "right", fontFamily: "'Lora', serif", lineHeight: 1.5 }}>
-        {e.detail}
-      </span>
-    </motion.div>
-  );
-}
-
 /* ─── CTA BUTTON ─────────────────────────────────────────────────────── */
 function CtaButton({ to, children }) {
   const { palette: C } = useTheme();
@@ -403,9 +365,6 @@ export default function LandingPage() {
     if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }));
   }, [location.hash, reduceMotion]);
 
-  const [heroRef, heroVisible] = useInView(0.01);
-  const [ctaRef, ctaVisible] = useInView();
-
   return (
     <div style={{ background: C.paper, color: C.ink, overflowX: "hidden", minHeight: "100vh" }}>
       <Grain />
@@ -417,40 +376,102 @@ export default function LandingPage() {
       <section
         aria-label="Trusted by"
         style={{
-          borderTop: `1px solid ${C.border}`,
-          borderBottom: `1px solid ${C.border}`,
-          padding: "48px 0",
-          background: C.card,
+          padding: "72px 24px 80px",
+          background: C.paper,
           position: "relative",
         }}
       >
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <span style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: 10,
-            fontWeight: 600,
-            letterSpacing: "0.35em",
-            textTransform: "uppercase",
-            color: C.muted,
-          }}>
-            Trusted by students from
-          </span>
+        <div style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          borderRadius: 28,
+          border: `1px solid ${C.border}`,
+          background: C.card,
+          boxShadow: C.cardShadow,
+          padding: "40px 20px 36px",
+          position: "relative",
+          overflow: "hidden",
+        }}>
+          <div aria-hidden style={{
+            position: "absolute", top: 0, left: "12%", right: "12%", height: 1,
+            background: `linear-gradient(90deg, transparent, ${C.coral}40, ${C.violet}40, transparent)`,
+            opacity: 0.9,
+          }} />
+          <div style={{ textAlign: "center", marginBottom: 8 }}>
+            <span style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 10,
+              fontWeight: 600,
+              letterSpacing: "0.38em",
+              textTransform: "uppercase",
+              color: C.coral,
+            }}>
+              Social proof
+            </span>
+          </div>
+          <div style={{ textAlign: "center", marginBottom: 26 }}>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(1.35rem, 3vw, 1.75rem)",
+              fontWeight: 700,
+              fontStyle: "italic",
+              color: C.ink,
+              letterSpacing: "-0.02em",
+              margin: 0,
+            }}>
+              Trusted on campuses where interviews are a sport
+            </p>
+            <p style={{
+              margin: "12px auto 0",
+              fontFamily: "'Lora', serif",
+              fontSize: 14,
+              color: C.muted,
+              maxWidth: 420,
+              lineHeight: 1.6,
+            }}>
+              Students and new grads use InterviewAI to rehearse with the same rigor as the real loop.
+            </p>
+          </div>
+          <Marquee items={TRUST_MARKS} speed={42} />
         </div>
-        <Marquee items={TRUST_MARKS} speed={32} />
       </section>
 
       {/* ── STATS BAND ── */}
       <section
         style={{
-          maxWidth: 1100,
+          maxWidth: 1200,
           margin: "0 auto",
-          padding: "96px 24px 80px",
+          padding: "24px 24px 96px",
         }}
       >
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <SectionLabel>Outcomes</SectionLabel>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+            fontWeight: 800,
+            color: C.ink,
+            letterSpacing: "-0.02em",
+            margin: "0 0 12px",
+            lineHeight: 1.15,
+          }}>
+            Numbers that match how you <span style={{ fontStyle: "italic", ...gradientTextStyle(C.coral, C.violet) }}>actually feel</span> after reps
+          </h2>
+          <p style={{
+            fontFamily: "'Lora', serif",
+            fontSize: 15,
+            color: C.muted,
+            maxWidth: 520,
+            margin: "0 auto",
+            lineHeight: 1.65,
+          }}>
+            Confidence compounds when feedback is specific, fast, and tied to your materials — not a random quiz.
+          </p>
+        </div>
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: 20,
+          gap: 22,
         }}>
           {STATS.map((s, i) => <StatCard key={s.value} {...s} delay={i * 0.08} />)}
         </div>
@@ -483,7 +504,7 @@ export default function LandingPage() {
           pointerEvents: "none",
         }} />
 
-        <div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 2 }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
           <div style={{ marginBottom: 72 }}>
             <SectionLabel>Core architecture</SectionLabel>
             <h2 style={{
@@ -532,17 +553,15 @@ export default function LandingPage() {
                 }}>{h}</span>
               ))}
             </div>
-            {ENGINES.map((e, i) => {
-              const [ref, visible] = [useRef(null), useState(false)];
-              // inline because hook-order safe
-              return <EngineRowDark key={i} e={e} idx={i} />;
-            })}
+            {ENGINES.map((e, i) => (
+              <EngineRowDark key={e.label} e={e} idx={i} />
+            ))}
           </div>
         </div>
       </section>
 
       {/* ── FEATURES GRID ── */}
-      <section style={{ maxWidth: 1100, margin: "0 auto", padding: "120px 24px" }}>
+      <section style={{ maxWidth: 1200, margin: "0 auto", padding: "120px 24px" }}>
         <div style={{ textAlign: "center", marginBottom: 72 }}>
           <SectionLabel>What's inside</SectionLabel>
           <h2 style={{
@@ -669,7 +688,7 @@ function FinalCta({ user }) {
       style={{
         position: "relative",
         overflow: "hidden",
-        padding: "140px 24px",
+        padding: "160px 24px 150px",
         background: C.band,
         textAlign: "center",
       }}
@@ -678,8 +697,9 @@ function FinalCta({ user }) {
       <div aria-hidden style={{
         position: "absolute", inset: 0,
         backgroundImage: `
-          radial-gradient(ellipse 80% 60% at 30% 50%, ${C.coral}14 0%, transparent 55%),
-          radial-gradient(ellipse 70% 60% at 75% 50%, ${C.violet}14 0%, transparent 55%)
+          radial-gradient(ellipse 85% 65% at 28% 45%, ${C.coral}18 0%, transparent 52%),
+          radial-gradient(ellipse 75% 60% at 78% 52%, ${C.violet}16 0%, transparent 55%),
+          radial-gradient(ellipse 50% 40% at 50% 100%, rgba(255,255,255,0.04) 0%, transparent 45%)
         `,
         pointerEvents: "none",
       }} />
@@ -700,28 +720,28 @@ function FinalCta({ user }) {
         <SectionLabel>Get started</SectionLabel>
         <h2 style={{
           fontFamily: "'Playfair Display', serif",
-          fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
+          fontSize: "clamp(2.65rem, 6.5vw, 4.75rem)",
           fontWeight: 900,
           color: "white",
-          lineHeight: 1.05,
-          letterSpacing: "-0.03em",
-          marginBottom: 24,
+          lineHeight: 1.02,
+          letterSpacing: "-0.035em",
+          marginBottom: 28,
         }}>
-          Ready for<br />
+          Ship the version of you<br />
           <span style={{ fontStyle: "italic", ...gradientTextStyle(C.coral, C.violet) }}>
-            your next round?
+            who closes the loop
           </span>
         </h2>
         <p style={{
           fontFamily: "'Lora', serif",
           fontSize: 18,
           color: "#9ca3af",
-          lineHeight: 1.7,
+          lineHeight: 1.75,
           marginBottom: 48,
-          maxWidth: 480,
-          margin: "0 auto 48px",
+          maxWidth: 520,
+          margin: "0 auto 52px",
         }}>
-          Replace guesswork with signal. Eye contact, pace, and answer quality — measured, scored, improved.
+          Every session produces structured signal: where you looked, how you paced, what you said — and what to fix next. No vibes, no vague “be confident.”
         </p>
         <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
           <CtaButton to={user ? "/interview/new" : "/register"}>

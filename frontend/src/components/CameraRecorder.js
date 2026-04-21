@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from "react";
 import { FaceMesh } from "@mediapipe/face_mesh";
 import { Camera } from "@mediapipe/camera_utils";
 
@@ -64,9 +64,9 @@ function Dial({ label, value, pct, color }) {
   const dashOffset = c * (1 - progress);
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <svg width={size} height={size} viewBox="0 0 56 56" role="img" aria-label={`${label} gauge`}>
-        <circle cx="28" cy="28" r={r} stroke="rgba(15,23,42,0.1)" strokeWidth="5" fill="none" />
+    <div className="text-aura-ink dark:text-slate-100" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <svg width={size} height={size} viewBox="0 0 56 56" role="img" aria-label={`${label} gauge`} className="text-aura-ink dark:text-slate-100">
+        <circle cx="28" cy="28" r={r} className="stroke-slate-200 dark:stroke-slate-600" strokeWidth="5" fill="none" />
         <circle
           cx="28"
           cy="28"
@@ -79,7 +79,7 @@ function Dial({ label, value, pct, color }) {
           strokeDashoffset={dashOffset}
           style={{ transition: "stroke-dashoffset 0.35s ease" }}
         />
-        <text x="28" y="30.5" textAnchor="middle" fontSize="11" fill="#0f172a" fontWeight="800">
+        <text x="28" y="30.5" textAnchor="middle" fontSize="11" fill="currentColor" fontWeight="800">
           {value ?? "—"}
         </text>
       </svg>
@@ -121,16 +121,20 @@ export function renderTranscriptWithFillerHighlights(text) {
   });
 }
 
-export default function CameraRecorder({
-  onTranscriptChange,
-  onRecordingComplete,
-  onMLData,
-  disabled,
-  /** Hide built-in transcript (e.g. when parent shows it in a main column) */
-  showTranscript = true,
-  /** "overlay" = metrics on video; "below" = metrics stacked under video (sidebar layout) */
-  metricsLayout = "overlay",
-}) {
+const CameraRecorder = forwardRef(function CameraRecorder(
+  {
+    onTranscriptChange,
+    onRecordingComplete,
+    onMLData,
+    onRecordingChange,
+    disabled,
+    /** Hide built-in transcript (e.g. when parent shows it in a main column) */
+    showTranscript = true,
+    /** "overlay" = metrics on video; "below" = metrics stacked under video (sidebar layout) */
+    metricsLayout = "overlay",
+  },
+  ref
+) {
   const videoRef      = useRef(null);
   const canvasRef     = useRef(null);
   const mediaRecorder = useRef(null);
@@ -141,6 +145,7 @@ export default function CameraRecorder({
   const cameraRef     = useRef(null);
   const streamRef     = useRef(null);
   const recordingRef  = useRef(false);
+  const lastMlPayloadRef = useRef(null);
 
   const [recording,   setRecording]   = useState(false);
   const [transcript,  setTranscript]  = useState("");
@@ -280,10 +285,88 @@ export default function CameraRecorder({
     }
   }, [transcript, timer]);
 
+  useEffect(() => {
+    onRecordingChange?.(recording);
+  }, [recording, onRecordingChange]);
+
+  // ── Stop + ML (shared by Stop button and parent finalize) ─────
+  const performStopRecording = useCallback(() => {
+    if (stopRequestedRef.current) {
+      return lastMlPayloadRef.current;
+    }
+    stopRequestedRef.current = true;
+    recordingRef.current = false;
+    mediaRecorder.current?.stop();
+    recognitionRef.current?.stop();
+    setRecording(false);
+
+    const eyeContactPct = eyeFrames.current.length > 0
+      ? Math.round((eyeFrames.current.filter(Boolean).length / eyeFrames.current.length) * 100)
+      : null;
+
+    const lower = transcriptRef.current.toLowerCase();
+    let fillerTotal = 0;
+    const foundFillers = [];
+    FILLER_WORDS.forEach((w) => {
+      const m = lower.match(new RegExp(`\\b${w}\\b`, "gi"));
+      if (m) {
+        fillerTotal += m.length;
+        if (!foundFillers.includes(w)) foundFillers.push(w);
+      }
+    });
+
+    const words = transcriptRef.current.trim().split(/\s+/).filter(Boolean).length;
+    const durationSec = startTimeRef.current ? (Date.now() - startTimeRef.current) / 1000 : 0;
+    const finalWpm = durationSec > 5 ? Math.round(words / (durationSec / 60)) : 0;
+
+    const confidenceScore = calcConfidenceScore({
+      eyeContactPct,
+      fillerCount: fillerTotal,
+      wpm: finalWpm,
+      dominantEmotion: "neutral",
+    });
+
+    const payload = {
+      eyeContactPct,
+      fillerWordCount: fillerTotal,
+      fillerWords: foundFillers,
+      wordsPerMinute: finalWpm,
+      paceLabel: getPaceLabel(finalWpm),
+      dominantEmotion: "neutral",
+      emotionScores: { neutral: 1, happy: 0, sad: 0, angry: 0, fearful: 0, disgusted: 0, surprised: 0 },
+      confidenceScore,
+    };
+    lastMlPayloadRef.current = payload;
+    onMLData?.(payload);
+    onTranscriptChange?.(transcriptRef.current);
+    return payload;
+  }, [onMLData, onTranscriptChange]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      /** Stops the recorder if active; returns latest transcript + ML payload synchronously for submit. */
+      finalizeRecording() {
+        if (recordingRef.current) {
+          performStopRecording();
+        }
+        return {
+          text: transcriptRef.current.trim(),
+          mlPayload: lastMlPayloadRef.current,
+        };
+      },
+      isRecording() {
+        return recordingRef.current;
+      },
+    }),
+    [performStopRecording]
+  );
+
   // ── Start recording ──────────────────────────────────────────
   const startRecording = () => {
     if (!cameraReady || !streamRef.current) return;
     stopRequestedRef.current = false;
+    lastMlPayloadRef.current = null;
     chunks.current       = [];
     eyeFrames.current    = [];
     startTimeRef.current = Date.now();
@@ -325,45 +408,9 @@ export default function CameraRecorder({
     setTimer(0);
   };
 
-  // ── Stop recording + collect ML data ─────────────────────────
   const stopRecording = () => {
-    if (stopRequestedRef.current) return;
-    stopRequestedRef.current = true;
-    recordingRef.current = false;
-    mediaRecorder.current?.stop();
-    recognitionRef.current?.stop();
-    setRecording(false);
-
-    const eyeContactPct = eyeFrames.current.length > 0
-      ? Math.round((eyeFrames.current.filter(Boolean).length / eyeFrames.current.length) * 100)
-      : null;
-
-    const lower = transcriptRef.current.toLowerCase();
-    let fillerTotal = 0;
-    const foundFillers = [];
-    FILLER_WORDS.forEach((w) => {
-      const m = lower.match(new RegExp(`\\b${w}\\b`,"gi"));
-      if (m) { fillerTotal += m.length; if (!foundFillers.includes(w)) foundFillers.push(w); }
-    });
-
-    const words       = transcriptRef.current.trim().split(/\s+/).filter(Boolean).length;
-    const durationSec = (Date.now() - startTimeRef.current) / 1000;
-    const finalWpm    = durationSec > 5 ? Math.round(words / (durationSec / 60)) : 0;
-
-    const confidenceScore = calcConfidenceScore({
-      eyeContactPct, fillerCount: fillerTotal, wpm: finalWpm, dominantEmotion: "neutral",
-    });
-
-    onMLData?.({
-      eyeContactPct,
-      fillerWordCount: fillerTotal,
-      fillerWords:     foundFillers,
-      wordsPerMinute:  finalWpm,
-      paceLabel:       getPaceLabel(finalWpm),
-      dominantEmotion: "neutral",
-      emotionScores:   { neutral:1, happy:0, sad:0, angry:0, fearful:0, disgusted:0, surprised:0 },
-      confidenceScore,
-    });
+    if (!recordingRef.current) return;
+    performStopRecording();
   };
 
   const eyeColor    = eyePct === null ? "#888" : eyePct > 70 ? "#22c55e" : eyePct > 40 ? "#f59e0b" : "#ef4444";
@@ -378,33 +425,45 @@ export default function CameraRecorder({
 
   return (
     <div className="flex flex-col gap-4">
-
-      <div className="relative aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-zinc-900 shadow-md">
-        <video ref={videoRef} autoPlay muted playsInline className="block h-full w-full object-cover" />
-        <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" />
+      <div className="relative aspect-video overflow-hidden rounded-2xl border border-slate-200/90 bg-zinc-950 shadow-[0_24px_48px_-16px_rgba(15,23,42,0.35),inset_0_0_0_1px_rgba(255,255,255,0.06)] ring-1 ring-black/5 dark:border-slate-700/90 dark:shadow-[0_28px_56px_-18px_rgba(0,0,0,0.65)]">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/[0.04]" aria-hidden />
+        <video ref={videoRef} autoPlay muted playsInline className="relative z-0 block h-full w-full object-cover" />
+        <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-[1] h-full w-full" />
 
         {/* Face status */}
-        <div className={`absolute bottom-3 left-3 rounded-lg px-2.5 py-1 text-[11px] font-medium backdrop-blur-md ${faceFound ? "bg-black/60 text-emerald-400" : "bg-black/60 text-amber-400"}`}>
-          {faceFound ? "✓ Face detected" : "⚠ No face detected"}
+        <div
+          className={`absolute bottom-3 left-3 z-[2] flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold shadow-lg backdrop-blur-xl ${
+            faceFound
+              ? "border-emerald-500/30 bg-emerald-950/70 text-emerald-300"
+              : "border-amber-500/35 bg-black/70 text-amber-200"
+          }`}
+        >
+          <span className={faceFound ? "text-emerald-400" : "text-amber-400"} aria-hidden>
+            {faceFound ? "✓" : "⚠"}
+          </span>
+          {faceFound ? "Face detected" : "No face in frame"}
         </div>
 
         {/* MediaPipe status */}
         {!mpReady && (
-          <div className="absolute bottom-3 right-3 rounded-lg bg-black/60 px-2.5 py-1 text-[11px] text-amber-400 backdrop-blur-md">
-            ⏳ Loading MediaPipe…
+          <div className="absolute bottom-3 right-3 z-[2] rounded-full border border-white/10 bg-black/70 px-3 py-1.5 text-[11px] font-semibold text-amber-200 shadow-lg backdrop-blur-xl">
+            Loading vision…
           </div>
         )}
         {mpReady && !recording && (
-          <div className="absolute bottom-3 right-3 rounded-lg bg-black/60 px-2.5 py-1 text-[11px] text-emerald-400 backdrop-blur-md">
-            ✓ MediaPipe ready
+          <div className="absolute bottom-3 right-3 z-[2] flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-950/65 px-3 py-1.5 text-[11px] font-semibold text-emerald-200 shadow-lg backdrop-blur-xl">
+            <span className="text-emerald-400" aria-hidden>
+              ✓
+            </span>
+            Vision ready
           </div>
         )}
 
         {/* REC badge */}
         {recording && (
-          <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-black/75 px-3.5 py-1.5 backdrop-blur-md">
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-rose-500" />
-            <span className="text-xs font-semibold text-white">REC {fmt(timer)}</span>
+          <div className="absolute left-3 top-3 z-[2] flex items-center gap-2 rounded-full border border-rose-500/30 bg-black/80 px-3.5 py-1.5 shadow-lg backdrop-blur-xl">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]" />
+            <span className="text-xs font-bold tabular-nums tracking-wide text-white">REC {fmt(timer)}</span>
           </div>
         )}
 
@@ -450,7 +509,8 @@ export default function CameraRecorder({
         )}
 
         {!cameraReady && !error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black text-sm text-aura-muted">
+          <div className="absolute inset-0 z-[2] flex flex-col items-center justify-center gap-2 bg-zinc-950/90 text-sm font-medium text-slate-400">
+            <span className="inline-block h-8 w-8 animate-pulse rounded-full border-2 border-slate-600 border-t-violet-400" aria-hidden />
             Starting camera…
           </div>
         )}
@@ -458,8 +518,13 @@ export default function CameraRecorder({
 
       {/* Live coaching below video (sidebar layout — no overlap on feed) */}
       {recording && metricsLayout === "below" && (
-        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm backdrop-blur-md">
-          <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-aura-muted">Live coaching</div>
+        <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white/95 to-slate-50/90 p-4 shadow-lux ring-1 ring-white/70 dark:border-slate-700/80 dark:from-slate-900/90 dark:to-slate-950/90 dark:ring-slate-800/50">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Live signal</span>
+            <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+              Streaming
+            </span>
+          </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Dial
               label="Eye"
@@ -513,33 +578,52 @@ export default function CameraRecorder({
           type="button"
           onClick={startRecording}
           disabled={!cameraReady || disabled}
-          className={`w-full rounded-full py-3.5 text-[15px] font-bold transition-all duration-300 ${
+          className={`group relative w-full overflow-hidden rounded-full py-4 text-[15px] font-bold tracking-tight transition-transform duration-250 ease-out-expo active:scale-[0.98] ${
             !cameraReady || disabled
-              ? "cursor-not-allowed bg-slate-100 text-aura-muted"
-              : "border-0 bg-gradient-to-r from-aura-coral to-aura-violet text-white shadow-lg shadow-aura-violet/25 hover:scale-[1.01]"
+              ? "cursor-not-allowed bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+              : "text-white shadow-[0_16px_40px_-10px_rgba(157,80,187,0.45),0_0_0_1px_rgba(255,255,255,0.1)_inset] hover:shadow-[0_20px_48px_-10px_rgba(157,80,187,0.55)]"
           }`}
         >
-          🎙 Start Recording
+          {cameraReady && !disabled && (
+            <>
+              <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet" />
+              <span className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent opacity-50" />
+            </>
+          )}
+          <span className="relative inline-flex items-center justify-center gap-2.5">
+            {cameraReady && !disabled && (
+              <svg className="h-5 w-5 shrink-0 opacity-95" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" x2="12" y1="19" y2="23" />
+              </svg>
+            )}
+            Start recording
+          </span>
         </button>
       ) : (
         <button
           type="button"
           onClick={stopRecording}
           disabled={disabled}
-          className="w-full rounded-xl border border-rose-200 bg-rose-50 py-3.5 text-[15px] font-medium text-rose-800 transition-all duration-300 hover:border-rose-300 hover:bg-rose-100 disabled:pointer-events-none disabled:opacity-45 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-200"
+          className="w-full rounded-full border border-rose-200/90 bg-rose-50 py-4 text-[15px] font-semibold text-rose-900 transition-all duration-250 ease-out-expo hover:border-rose-300 hover:bg-rose-100 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 dark:border-rose-500/35 dark:bg-rose-950/50 dark:text-rose-100 dark:hover:bg-rose-950/70"
         >
-          ⏹ Stop recording
+          Stop recording (optional)
         </button>
       )}
 
       {recording && (
-        <p className="m-0 text-center text-xs text-aura-muted">
-          MediaPipe is tracking your iris for eye contact. Speak naturally!
+        <p className="m-0 text-center text-[11px] font-medium leading-relaxed text-slate-500 dark:text-slate-400">
+          Gaze and pace update live. You can tap <span className="font-semibold text-slate-600 dark:text-slate-300">Submit answer</span> anytime — we stop the recorder for you and send this take.
         </p>
       )}
     </div>
   );
-}
+});
+
+CameraRecorder.displayName = "CameraRecorder";
+
+export default CameraRecorder;
 
 function Row({ label, value, color }) {
   return (
