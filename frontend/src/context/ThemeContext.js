@@ -51,6 +51,10 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
+    const meta = typeof document !== "undefined" ? document.querySelector('meta[name="theme-color"]') : null;
+    if (meta) {
+      meta.setAttribute("content", theme === "dark" ? "#06070c" : "#f4f4f7");
+    }
     try {
       localStorage.setItem(STORAGE_KEY, theme);
     } catch {

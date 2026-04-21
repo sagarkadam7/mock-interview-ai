@@ -62,7 +62,7 @@ export function ConfirmProvider({ children }) {
           >
             <button
               type="button"
-              className="absolute inset-0 cursor-default bg-slate-900/40 backdrop-blur-[2px]"
+              className="absolute inset-0 cursor-default bg-slate-900/40 backdrop-blur-[2px] dark:bg-black/55"
               onClick={() => close(false)}
               aria-label="Close dialog"
             />
@@ -71,16 +71,16 @@ export function ConfirmProvider({ children }) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 10 }}
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/90 bg-white/98 shadow-lux-lg ring-1 ring-white/80 backdrop-blur-xl"
+              className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/90 bg-white/98 shadow-lux-lg ring-1 ring-white/80 backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-900/95 dark:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.55)] dark:ring-slate-800/50"
             >
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent" />
-              <div className="border-b border-slate-100 px-6 py-5">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent dark:via-slate-500/40" />
+              <div className="border-b border-slate-100 px-6 py-5 dark:border-slate-800/90">
                 <h2 id="confirm-dialog-title" className="text-lg font-semibold tracking-tight text-aura-ink">
                   {state.title}
                 </h2>
               </div>
               <p className="px-6 py-5 text-[15px] leading-relaxed text-aura-muted">{state.message}</p>
-              <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/80 px-5 py-4 sm:flex-row sm:justify-end sm:gap-3">
+              <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/80 px-5 py-4 dark:border-slate-800/90 dark:bg-slate-950/80 sm:flex-row sm:justify-end sm:gap-3">
                 <button type="button" onClick={() => close(false)} className="btn-outline w-full px-6 py-3 text-sm sm:w-auto">
                   {state.cancelLabel}
                 </button>

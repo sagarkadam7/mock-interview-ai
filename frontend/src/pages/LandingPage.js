@@ -101,11 +101,13 @@ function gradientTextStyle(coral, violet, { angle = "135deg", fontStyle } = {}) 
 
 /* ─── GRAIN OVERLAY ──────────────────────────────────────────────────── */
 function Grain() {
+  const { theme } = useTheme();
+  const opacity = theme === "dark" ? 0.055 : 0.028;
   return (
     <div aria-hidden style={{
       position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none",
       backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-      opacity: 0.028,
+      opacity,
     }} />
   );
 }
@@ -521,7 +523,7 @@ export default function LandingPage() {
                 One seamless verdict.
               </span>
             </h2>
-            <p style={{ fontFamily: "'Lora', serif", fontSize: 17, color: "#9ca3af", maxWidth: 520, lineHeight: 1.7 }}>
+            <p style={{ fontFamily: "'Lora', serif", fontSize: 17, color: C.muted, maxWidth: 520, lineHeight: 1.7 }}>
               Every millisecond of your session passes through a purpose-built pipeline — no black boxes, no guesswork.
             </p>
           </div>
@@ -667,7 +669,7 @@ function EngineRowDark({ e, idx }) {
       </span>
       <span style={{
         fontSize: 13,
-        color: "#6b7280",
+        color: C.muted,
         textAlign: "right",
         fontFamily: "'Lora', serif",
         lineHeight: 1.5,
@@ -735,7 +737,7 @@ function FinalCta({ user }) {
         <p style={{
           fontFamily: "'Lora', serif",
           fontSize: 18,
-          color: "#9ca3af",
+          color: C.muted,
           lineHeight: 1.75,
           marginBottom: 48,
           maxWidth: 520,
@@ -756,7 +758,7 @@ function FinalCta({ user }) {
           fontFamily: "'DM Mono', monospace",
           fontSize: 11,
           letterSpacing: "0.2em",
-          color: "rgba(255,255,255,0.2)",
+          color: C.marqueeText,
           textTransform: "uppercase",
         }}>
           No credit card required · Free plan always available

@@ -421,7 +421,7 @@ export default function InterviewPage() {
                 {COACH_CARDS.map((c) => (
                   <div
                     key={c.title}
-                    className={`relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b ${c.accent} to-white/90 p-5 shadow-sm ring-1 ring-white/70 dark:border-slate-700/80 dark:to-slate-900/80 dark:ring-slate-800/40`}
+                    className={`relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b ${c.accent} to-white/90 p-5 shadow-sm ring-1 ring-white/70 dark:border-slate-700/80 dark:to-slate-900/85 dark:ring-slate-800/40`}
                   >
                     <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{c.k}</p>
                     <h3 className="mt-1.5 text-sm font-bold tracking-tight text-aura-ink">{c.title}</h3>
@@ -457,7 +457,7 @@ export default function InterviewPage() {
               <p className="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-[15px]">{feedback.feedback}</p>
 
               {feedback.followUpInserted && (
-                <div className="mb-6 rounded-2xl border border-aura-violet/20 bg-gradient-to-br from-aura-violet/[0.07] to-white/90 p-4 ring-1 ring-aura-violet/10">
+                <div className="mb-6 rounded-2xl border border-aura-violet/20 bg-gradient-to-br from-aura-violet/[0.07] to-white/90 p-4 ring-1 ring-aura-violet/10 dark:to-slate-900/90">
                   <div className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-aura-violet">Adaptive interviewer</div>
                   <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                     Based on your answer, the session added a targeted follow-up question next. Continue to drill deeper, then move on when you are ready.
@@ -504,7 +504,7 @@ export default function InterviewPage() {
                       </MetricTile>
                     )}
                     {feedback.mlData.confidenceScore !== null && (
-                      <MetricTile label="Confidence (ML)" className="col-span-2 border-aura-violet/25 bg-gradient-to-br from-aura-violet/[0.07] to-white/90">
+                      <MetricTile label="Confidence (ML)" className="col-span-2 border-aura-violet/25 bg-gradient-to-br from-aura-violet/[0.07] to-white/90 dark:to-slate-900/90">
                         <div className="text-2xl font-bold text-aura-ink">{feedback.mlData.confidenceScore}/10</div>
                       </MetricTile>
                     )}
@@ -605,14 +605,14 @@ export default function InterviewPage() {
             <div className="flex flex-col gap-3">
               <button
                 type="button"
-                className="group relative w-full overflow-hidden rounded-full py-4 text-[15px] font-bold tracking-tight text-white shadow-[0_16px_40px_-10px_rgba(15,23,42,0.45)] transition-transform duration-250 ease-out-expo enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 dark:shadow-[0_16px_40px_-10px_rgba(0,0,0,0.5)]"
+                className="group relative w-full overflow-hidden rounded-full py-4 text-[15px] font-bold tracking-tight text-white shadow-[0_16px_40px_-10px_rgba(15,23,42,0.45)] transition-transform duration-250 ease-out-expo enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-100 disabled:shadow-none dark:shadow-[0_16px_40px_-10px_rgba(0,0,0,0.5)]"
                 onClick={handleSubmitAnswer}
                 disabled={submitting || !canSubmitAnswer}
                 aria-busy={submitting}
               >
-                <span className="absolute inset-0 bg-aura-ink dark:bg-slate-100" />
+                <span className="absolute inset-0 bg-aura-ink dark:bg-slate-100 group-disabled:bg-slate-700 dark:group-disabled:bg-slate-200" />
                 <span className="absolute inset-0 bg-gradient-to-r from-white/12 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-slate-900/20" />
-                <span className="relative flex items-center justify-center gap-2 dark:text-aura-ink">
+                <span className="relative flex items-center justify-center gap-2 dark:text-aura-ink group-disabled:text-slate-200 dark:group-disabled:text-slate-900">
                   {submitting ? (
                     <>
                       <span
@@ -638,7 +638,7 @@ export default function InterviewPage() {
               </p>
               <button
                 type="button"
-                className="w-full rounded-full border border-slate-200/90 bg-white/80 py-3.5 text-sm font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-aura-ink disabled:opacity-45 dark:border-slate-600/80 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800/80 dark:hover:text-white"
+                className="w-full rounded-full border border-slate-200/90 bg-white/80 py-3.5 text-sm font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-aura-ink disabled:cursor-not-allowed disabled:opacity-100 disabled:border-slate-200/70 disabled:bg-slate-100/70 disabled:text-slate-400 dark:border-slate-600/80 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800/80 dark:hover:text-white dark:disabled:border-slate-700/80 dark:disabled:bg-slate-900/35 dark:disabled:text-slate-500"
                 onClick={handleSkip}
                 disabled={submitting}
               >

@@ -6,13 +6,16 @@ export default function TermsPage() {
   return (
     <div className="min-h-screen">
     <div className="page-shell max-w-3xl pb-16 pt-4">
-      <Link to="/" className="mb-10 inline-flex text-sm font-medium text-slate-500 no-underline hover:text-aura-ink">
+      <Link
+        to="/"
+        className="mb-10 inline-flex text-sm font-medium text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-slate-100"
+      >
         ← Home
       </Link>
       <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">Terms of Service</h1>
-      <p className="mt-2 text-sm text-slate-500">Last updated: {new Date().getFullYear()}</p>
+      <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Last updated: {new Date().getFullYear()}</p>
 
-      <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-slate-700">
+      <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
         <section>
           <h2 className="text-lg font-bold text-aura-ink">Acceptance</h2>
           <p className="mt-3">

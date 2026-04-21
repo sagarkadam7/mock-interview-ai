@@ -23,7 +23,7 @@ export default function FounderLetterSection() {
       className="relative z-10 scroll-mt-24 overflow-hidden border-y border-slate-200/70 bg-gradient-to-b from-[#fdfcfa] via-white to-[#f8f7fc] py-24 dark:border-slate-800/70 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 md:py-32"
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.35]"
+        className="pointer-events-none absolute inset-0 opacity-[0.35] dark:opacity-[0.12]"
         style={{
           backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.035) 1px, transparent 1px)`,
           backgroundSize: "80px 100%",

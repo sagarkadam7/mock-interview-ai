@@ -66,8 +66,11 @@ export default function FAQSection({ limit = null }) {
         </div>
 
         {limit != null && (
-          <p className="mt-8 text-center text-sm text-slate-600">
-            <Link to="/faq" className="font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 hover:text-violet-900">
+          <p className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
+            <Link
+              to="/faq"
+              className="font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 hover:text-violet-900 dark:text-violet-400 dark:decoration-violet-500/50 dark:hover:text-violet-300"
+            >
               View all questions →
             </Link>
           </p>

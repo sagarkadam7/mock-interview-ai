@@ -56,14 +56,14 @@ export default function NewInterviewPage() {
 
   return (
     <div className="page-shell min-h-screen max-w-6xl">
-      <div className="mb-10 flex flex-wrap items-start justify-between gap-4 border-b border-slate-200/80 pb-8">
+      <div className="mb-10 flex flex-wrap items-start justify-between gap-4 border-b border-slate-200/80 pb-8 dark:border-slate-800/80">
         <div>
-          <Link to="/dashboard" className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-slate-500 no-underline transition-colors hover:text-aura-ink">
+          <Link to="/dashboard" className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-slate-100">
             ← Back to dashboard
           </Link>
           <span className="section-eyebrow mb-3 block w-fit">New session</span>
           <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">Configure your interview</h1>
-          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600">
+          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
             AI generates seven tailored questions from your resume and role. Add a job description for sharper targeting.
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function NewInterviewPage() {
             </div>
             <div>
               <h2 className="text-lg font-bold tracking-tight text-aura-ink">Role & job context</h2>
-              <p className="text-sm text-slate-500">What position are you interviewing for?</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">What position are you interviewing for?</p>
             </div>
           </div>
           <div className="flex flex-col gap-5">
@@ -113,7 +113,7 @@ export default function NewInterviewPage() {
             <div>
               <label className="label-field">
                 Job description{" "}
-                <span className="normal-case font-normal tracking-normal text-slate-500">(optional — improves relevance)</span>
+                <span className="normal-case font-normal tracking-normal text-slate-500 dark:text-slate-400">(optional — improves relevance)</span>
               </label>
               <textarea
                 className="input-field min-h-[120px] resize-y"
@@ -132,11 +132,11 @@ export default function NewInterviewPage() {
             </div>
             <div>
               <h2 className="text-lg font-bold tracking-tight text-aura-ink">Resume source</h2>
-              <p className="text-sm text-slate-500">Paste text or upload a PDF — we never store your file after parsing.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Paste text or upload a PDF — we never store your file after parsing.</p>
             </div>
           </div>
 
-          <div className="mb-8 inline-flex rounded-full border border-slate-200/90 bg-slate-100/90 p-1 shadow-inner">
+          <div className="mb-8 inline-flex rounded-full border border-slate-200/90 bg-slate-100/90 p-1 shadow-inner dark:border-slate-700/80 dark:bg-slate-800/80">
             {["paste", "upload"].map((mode) => (
               <button
                 key={mode}
@@ -149,8 +149,8 @@ export default function NewInterviewPage() {
                 }}
                 className={`rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-200 ${
                   inputMode === mode
-                    ? "bg-white text-aura-ink shadow-md shadow-slate-200/50 ring-1 ring-slate-200/80"
-                    : "text-slate-500 hover:text-aura-ink"
+                    ? "bg-white text-aura-ink shadow-md shadow-slate-200/50 ring-1 ring-slate-200/80 dark:bg-slate-900 dark:shadow-black/30 dark:ring-slate-600/80"
+                    : "text-slate-500 hover:text-aura-ink dark:text-slate-400 dark:hover:text-slate-100"
                 }`}
               >
                 {mode === "paste" ? "Paste text" : "Upload PDF"}
@@ -167,7 +167,7 @@ export default function NewInterviewPage() {
                 value={resumeText}
                 onChange={(e) => setResumeText(e.target.value)}
               />
-              <p className="mt-2 text-xs text-slate-500">Minimum 50 characters so the model has enough context.</p>
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Minimum 50 characters so the model has enough context.</p>
             </div>
           ) : (
             <div>
@@ -175,8 +175,8 @@ export default function NewInterviewPage() {
               <div
                 className={`cursor-pointer rounded-2xl border-2 border-dashed p-12 text-center transition-all duration-300 ${
                   dragOver
-                    ? "border-aura-violet/50 bg-violet-50/80 shadow-lg shadow-violet-200/30"
-                    : "border-slate-200 bg-slate-50/80 hover:border-aura-coral/35 hover:bg-orange-50/40"
+                    ? "border-aura-violet/50 bg-violet-50/80 shadow-lg shadow-violet-200/30 dark:border-violet-400/40 dark:bg-violet-950/40 dark:shadow-violet-900/20"
+                    : "border-slate-200 bg-slate-50/80 hover:border-aura-coral/35 hover:bg-orange-50/40 dark:border-slate-600 dark:bg-slate-900/50 dark:hover:border-aura-coral/40 dark:hover:bg-slate-800/60"
                 }`}
                 onClick={() => fileRef.current?.click()}
                 onDragOver={(e) => {
@@ -190,14 +190,14 @@ export default function NewInterviewPage() {
                 {file ? (
                   <div>
                     <div className="mb-3 text-4xl">✓</div>
-                    <p className="font-semibold text-emerald-700">{file.name}</p>
-                    <p className="mt-1 text-xs text-slate-500">{(file.size / 1024).toFixed(0)} KB — click to replace</p>
+                    <p className="font-semibold text-emerald-700 dark:text-emerald-400">{file.name}</p>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{(file.size / 1024).toFixed(0)} KB — click to replace</p>
                   </div>
                 ) : (
                   <div>
                     <div className="mb-3 text-4xl opacity-50">↑</div>
                     <p className="mb-1 font-semibold text-aura-ink">Drop PDF here or click to browse</p>
-                    <p className="text-xs text-slate-500">PDF only · Max 5MB</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">PDF only · Max 5MB</p>
                   </div>
                 )}
               </div>
@@ -208,7 +208,7 @@ export default function NewInterviewPage() {
         <button type="submit" className="btn-cta w-full py-4 text-[15px]" disabled={loading}>
           {loading ? (
             <>
-              <span className="spinner h-5 w-5 !border-white/25 !border-t-white" /> Generating questions… (10–20s)
+              <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" /> Generating questions… (10–20s)
             </>
           ) : (
             "Generate interview questions →"
@@ -216,7 +216,7 @@ export default function NewInterviewPage() {
         </button>
 
         {loading && (
-          <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50 to-white px-5 py-5 text-center text-sm text-slate-600 shadow-inner">
+          <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50 to-white px-5 py-5 text-center text-sm text-slate-600 shadow-inner dark:border-slate-700/80 dark:from-slate-900/80 dark:to-slate-950 dark:text-slate-300">
             Reading your resume and generating seven questions. This usually takes 10–20 seconds.
           </div>
         )}

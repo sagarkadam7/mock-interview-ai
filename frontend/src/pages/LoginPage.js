@@ -116,7 +116,7 @@ export default function LoginPage() {
               <button type="submit" className="btn-cta mt-2 w-full" disabled={loading}>
                 {loading ? (
                   <>
-                    <span className="spinner h-5 w-5 !border-white/25 !border-t-white" /> Signing in…
+                    <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" /> Signing in…
                   </>
                 ) : (
                   "Sign in →"

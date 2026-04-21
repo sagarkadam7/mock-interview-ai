@@ -8,7 +8,7 @@ function YesNo({ value }) {
       <div className="flex justify-center py-1">
         {value ? (
           <span
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 shadow-sm ring-1 ring-emerald-200/80"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 shadow-sm ring-1 ring-emerald-200/80 dark:bg-emerald-950/55 dark:text-emerald-300 dark:ring-emerald-800/60"
             title="Yes"
             aria-label="Yes"
           >
@@ -56,7 +56,7 @@ export default function ComparisonSection() {
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/95 text-left dark:border-slate-700 dark:bg-slate-800/60">
                   <th className="px-4 py-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 sm:px-6">Capability</th>
-                  <th className="px-3 py-4 text-center font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 sm:px-5">
+                  <th className="px-3 py-4 text-center font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300 sm:px-5">
                     InterviewAI
                   </th>
                   <th className="px-3 py-4 text-center font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:px-5">
@@ -66,7 +66,7 @@ export default function ComparisonSection() {
               </thead>
               <tbody>
                 {COMPARISON_ROWS.map((row) => (
-                  <tr key={row.label} className="border-b border-slate-100 bg-white last:border-0 dark:border-slate-800 dark:bg-slate-900/40">
+                  <tr key={row.label} className="border-b border-slate-100 bg-white last:border-0 odd:dark:bg-slate-950/50 even:dark:bg-slate-900/35 dark:border-slate-800/90">
                     <td className="px-4 py-4 font-medium text-aura-ink sm:px-6">{row.label}</td>
                     <td className="px-3 py-3 sm:px-5">
                       <YesNo value={row.us} />

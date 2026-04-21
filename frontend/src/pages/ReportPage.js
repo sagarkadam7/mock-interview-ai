@@ -46,8 +46,8 @@ function StatCard({ label, value, sub, colorClass }) {
   return (
     <div className="glass-panel rounded-2xl p-6 text-center ring-1 ring-white/40">
       <div className={`mb-1 font-sans text-3xl font-bold tracking-tight ${colorClass || "text-violet-600"}`}>{value ?? "—"}</div>
-      <div className="text-xs font-medium text-slate-500">{label}</div>
-      {sub && <div className="mt-1 text-[11px] text-slate-500">{sub}</div>}
+      <div className="text-xs font-medium text-slate-500 dark:text-slate-400">{label}</div>
+      {sub && <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{sub}</div>}
     </div>
   );
 }
@@ -55,7 +55,7 @@ function StatCard({ label, value, sub, colorClass }) {
 function MiniBar({ value, max, barClass }) {
   const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
   return (
-    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200">
+    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700/80">
       <div className={`h-full rounded-full transition-all duration-500 ${barClass || "bg-aura-violet"}`} style={{ width: `${pct}%` }} />
     </div>
   );
@@ -98,10 +98,10 @@ function QuestionCard({ question, index }) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-start justify-between gap-4 border-none bg-transparent p-6 text-left transition-all duration-300 hover:bg-slate-50/80 md:p-8"
+        className="flex w-full items-start justify-between gap-4 border-none bg-transparent p-6 text-left transition-all duration-300 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 md:p-8"
       >
         <div className="flex min-w-0 flex-1 items-start gap-3.5">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-600 shadow-sm">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-600 shadow-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
             {index + 1}
           </div>
           <div className="min-w-0 flex-1 space-y-2">
@@ -135,20 +135,20 @@ function QuestionCard({ question, index }) {
             question.confidenceScore !== null) && (
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {question.eyeContactPct !== null && (
-                <div className="rounded-xl bg-slate-50 p-3 text-center">
+                <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-800/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">👁 Eye</div>
                   <div className={`text-lg font-bold ${eyeColor(question.eyeContactPct)}`}>{question.eyeContactPct}%</div>
                 </div>
               )}
               {question.wordsPerMinute > 0 && (
-                <div className="rounded-xl bg-slate-50 p-3 text-center">
+                <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-800/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">📊 Pace</div>
                   <div className={`text-sm font-bold ${paceColor(question.paceLabel)}`}>{question.wordsPerMinute} wpm</div>
                   <div className="text-[10px] capitalize text-aura-muted">{question.paceLabel}</div>
                 </div>
               )}
               {question.fillerWordCount !== null && (
-                <div className="rounded-xl bg-slate-50 p-3 text-center">
+                <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-800/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">🗣 Fillers</div>
                   <div
                     className={`text-lg font-bold ${
@@ -178,7 +178,7 @@ function QuestionCard({ question, index }) {
           {question.answer ? (
             <div>
               <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Your answer</div>
-              <p className="text-sm italic leading-relaxed text-slate-700">&quot;{question.answer}&quot;</p>
+              <p className="text-sm italic leading-relaxed text-slate-700 dark:text-slate-300">&quot;{question.answer}&quot;</p>
               {question.fillerWords?.length > 0 && (
                 <p className="mt-2 text-xs text-aura-muted">
                   Filler words detected: {question.fillerWords.map((w) => `"${w}"`).join(", ")}
@@ -189,12 +189,12 @@ function QuestionCard({ question, index }) {
             <p className="text-sm italic text-aura-muted">No answer recorded.</p>
           )}
 
-          <div className="h-px bg-slate-100" />
+          <div className="h-px bg-slate-100 dark:bg-slate-800/90" />
 
           {question.feedback && (
             <div>
               <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-coral">AI Feedback</div>
-              <p className="text-sm leading-relaxed text-slate-700">{question.feedback}</p>
+              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.feedback}</p>
             </div>
           )}
 
@@ -202,13 +202,13 @@ function QuestionCard({ question, index }) {
             {question.strengths && (
               <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-4">
                 <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-400">✓ Strengths</div>
-                <p className="text-sm leading-relaxed text-slate-700">{question.strengths}</p>
+                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.strengths}</p>
               </div>
             )}
             {question.improvements && (
               <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4">
                 <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-400">↑ Improvements</div>
-                <p className="text-sm leading-relaxed text-slate-700">{question.improvements}</p>
+                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.improvements}</p>
               </div>
             )}
           </div>
@@ -351,7 +351,7 @@ export default function ReportPage() {
         <div className="glass-panel mb-8 rounded-3xl p-6 md:p-8">
           <div className="mb-6 flex flex-wrap items-start justify-between gap-6">
             <div>
-              <span className="mb-3 inline-block rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+              <span className="mb-3 inline-block rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted dark:border-slate-600 dark:bg-slate-800/80">
                 Metric radar
               </span>
               <h2 className="text-xl font-bold tracking-tight text-aura-ink">Your coaching snapshot</h2>
@@ -364,7 +364,7 @@ export default function ReportPage() {
           </div>
           <RadarChart metrics={radarMetrics} stroke="#FF7E5F" fill="rgba(157,80,187,0.14)" />
 
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/90 p-5">
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/90 p-5 dark:border-slate-700 dark:bg-slate-900/60">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-aura-coral">Next focus</div>
@@ -401,7 +401,7 @@ export default function ReportPage() {
         </div>
 
         {overall !== null && (
-          <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50/90 px-5 py-4 text-[15px] leading-relaxed text-slate-700">
+          <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50/90 px-5 py-4 text-[15px] leading-relaxed text-slate-700 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200">
             {overall >= 8
               ? "🌟 Outstanding performance! You're interview-ready."
               : overall >= 6

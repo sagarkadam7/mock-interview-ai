@@ -38,10 +38,10 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen">
     <div className="page-shell max-w-5xl pb-20">
-      <div className="mb-14 border-b border-slate-200/80 pb-10">
+      <div className="mb-14 border-b border-slate-200/80 pb-10 dark:border-slate-800/80">
         <div className="section-eyebrow mb-4">Pricing</div>
         <h1 className="font-display text-4xl font-semibold tracking-tight text-aura-ink md:text-5xl">Simple today. Ambitious tomorrow.</h1>
-        <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600">
+        <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
           Start free, then upgrade when you want unlimited sessions and shareable reports for mentors and referrals.
         </p>
       </div>
@@ -53,17 +53,17 @@ export default function PricingPage() {
           transition={{ duration: 0.4 }}
           className="glass-panel-lg relative overflow-hidden rounded-3xl p-8 md:p-10"
         >
-          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gradient-to-br from-violet-200/40 to-transparent blur-3xl" aria-hidden />
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-violet-700">Starter</p>
+          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gradient-to-br from-violet-200/40 to-transparent blur-3xl dark:from-violet-900/35 dark:to-transparent" aria-hidden />
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-violet-700 dark:text-violet-300">Starter</p>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="font-display text-5xl font-bold text-aura-ink">$0</span>
-            <span className="text-slate-500">/ month</span>
+            <span className="text-slate-500 dark:text-slate-400">/ month</span>
           </div>
-          <p className="mt-4 text-sm text-slate-600">Everything you need to run serious reps — no credit card.</p>
+          <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">Everything you need to run serious reps — no credit card.</p>
           <ul className="mt-8 space-y-3">
             {free.map((x) => (
-              <li key={x} className="flex gap-3 text-sm text-slate-700">
-                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs text-emerald-700 ring-1 ring-emerald-200/80">
+              <li key={x} className="flex gap-3 text-sm text-slate-700 dark:text-slate-300">
+                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs text-emerald-700 ring-1 ring-emerald-200/80 dark:bg-emerald-950/50 dark:text-emerald-300 dark:ring-emerald-800/50">
                   ✓
                 </span>
                 {x}
@@ -75,7 +75,7 @@ export default function PricingPage() {
               <span className="btn-cta flex w-full justify-center py-4">Create free account →</span>
             </Link>
           ) : (
-            <div className="mt-10 rounded-2xl border border-slate-200 bg-white/80 px-5 py-4 text-sm text-slate-600">
+            <div className="mt-10 rounded-2xl border border-slate-200 bg-white/80 px-5 py-4 text-sm text-slate-600 dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-slate-300">
               You’re currently on <strong className="font-semibold text-aura-ink">{plan.toUpperCase()}</strong>.
             </div>
           )}
@@ -87,17 +87,17 @@ export default function PricingPage() {
           transition={{ duration: 0.4, delay: 0.06 }}
           className="glass-panel-lg relative overflow-hidden rounded-3xl p-8 md:p-10"
         >
-          <div className="pointer-events-none absolute -left-24 -bottom-24 h-56 w-56 rounded-full bg-gradient-to-tr from-orange-200/35 to-transparent blur-3xl" aria-hidden />
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-aura-coral">Pro</p>
+          <div className="pointer-events-none absolute -left-24 -bottom-24 h-56 w-56 rounded-full bg-gradient-to-tr from-orange-200/35 to-transparent blur-3xl dark:from-orange-950/40 dark:to-transparent" aria-hidden />
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-aura-coral dark:text-aura-coral">Pro</p>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="font-display text-5xl font-bold text-aura-ink">$12</span>
-            <span className="text-slate-500">/ month</span>
+            <span className="text-slate-500 dark:text-slate-400">/ month</span>
           </div>
-          <p className="mt-4 text-sm text-slate-600">Unlimited practice + shareable signal. Built for serious prep loops.</p>
+          <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">Unlimited practice + shareable signal. Built for serious prep loops.</p>
           <ul className="mt-8 space-y-3">
             {pro.map((x) => (
-              <li key={x} className="flex gap-3 text-sm text-slate-700">
-                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs text-violet-700 ring-1 ring-violet-200/80">
+              <li key={x} className="flex gap-3 text-sm text-slate-700 dark:text-slate-300">
+                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs text-violet-700 ring-1 ring-violet-200/80 dark:bg-violet-950/55 dark:text-violet-200 dark:ring-violet-800/50">
                   ✦
                 </span>
                 {x}
@@ -135,15 +135,15 @@ export default function PricingPage() {
       </div>
 
       <div className="mt-12 grid gap-6 md:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-sm leading-relaxed text-slate-600 shadow-sm md:p-8">
+        <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-sm leading-relaxed text-slate-600 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/55 dark:text-slate-300 md:p-8">
           <strong className="font-semibold text-aura-ink">Fair use:</strong> automated systems may rate-limit abusive traffic to keep latency low for everyone. Personal practice within normal bounds is always the goal.
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-sm leading-relaxed text-slate-600 shadow-sm md:p-8">
+        <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-sm leading-relaxed text-slate-600 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/55 dark:text-slate-300 md:p-8">
           <strong className="font-semibold text-aura-ink">Roadmap:</strong>
           <ul className="mt-4 space-y-2">
             {soon.map((x) => (
               <li key={x} className="flex gap-3">
-                <span className="text-slate-400" aria-hidden>
+                <span className="text-slate-400 dark:text-slate-500" aria-hidden>
                   ○
                 </span>
                 {x}

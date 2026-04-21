@@ -111,7 +111,7 @@ export default function Navbar() {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             onClick={() => setMenuOpen((o) => !o)}
           >
-            <span className="text-lg font-light leading-none text-slate-800" aria-hidden>
+            <span className="text-lg font-light leading-none text-slate-800 dark:text-slate-100" aria-hidden>
               {menuOpen ? "✕" : "☰"}
             </span>
           </button>
@@ -119,14 +119,14 @@ export default function Navbar() {
           {user ? (
             <>
               <div className={profilePill} title={user.name}>
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral to-aura-violet text-sm font-bold text-white ring-2 ring-white/60">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral to-aura-violet text-sm font-bold text-white ring-2 ring-white/60 dark:ring-slate-700/80">
                   {user.name?.[0]?.toUpperCase()}
                 </div>
                 <span className="max-w-[88px] truncate text-sm font-medium text-slate-600 dark:text-slate-300 md:max-w-[140px]">
                   {user.name.split(" ")[0]}
                 </span>
                 {(user.plan || "free") !== "free" && (
-                  <span className="ml-1 inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-700">
+                  <span className="ml-1 inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-700 dark:border-violet-500/40 dark:bg-violet-950/70 dark:text-violet-200">
                     Pro
                   </span>
                 )}
@@ -193,7 +193,7 @@ export default function Navbar() {
                 <NavLink to="/faq" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   FAQ
                 </NavLink>
-                <div className="my-2 h-px bg-slate-200/90" />
+                <div className="my-2 h-px bg-slate-200/90 dark:bg-slate-700/80" />
                 {user ? (
                   <>
                     <NavLink to="/dashboard" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
@@ -202,7 +202,7 @@ export default function Navbar() {
                     <NavLink to="/interview/new" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                       New interview
                     </NavLink>
-                    <button type="button" className={`${mobileNavLinkClass} w-full text-left text-rose-700`} onClick={handleLogout}>
+                    <button type="button" className={`${mobileNavLinkClass} w-full text-left text-rose-700 dark:text-rose-300`} onClick={handleLogout}>
                       Log out
                     </button>
                   </>

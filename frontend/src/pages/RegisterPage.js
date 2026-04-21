@@ -133,7 +133,7 @@ export default function RegisterPage() {
               <button type="submit" className="btn-cta mt-2 w-full" disabled={loading}>
                 {loading ? (
                   <>
-                    <span className="spinner h-5 w-5 !border-white/25 !border-t-white" /> Creating account…
+                    <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" /> Creating account…
                   </>
                 ) : (
                   "Create account →"

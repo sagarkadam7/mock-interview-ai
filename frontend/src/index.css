@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     --accent: #9d50bb;
     --accent2: #ff7e5f;
     --indigo2: #9d50bb;
@@ -24,6 +25,7 @@
   }
 
   html.dark {
+    color-scheme: dark;
     --aura-page: #0a0b10;
     --aura-page-deep: #12141c;
     --aura-ink: #e8eaf0;
@@ -184,7 +186,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     @apply hover:bg-zinc-800 hover:shadow-[0_12px_32px_-8px_rgba(157,80,187,0.28)];
     @apply active:scale-[0.98];
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/40 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page;
-    @apply disabled:pointer-events-none disabled:opacity-45 disabled:active:scale-100;
+    @apply disabled:pointer-events-none disabled:opacity-85 disabled:shadow-none disabled:active:scale-100;
   }
 
   .btn-cta::after {
@@ -404,7 +406,13 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     @apply border-slate-600/80 bg-slate-800/90 text-slate-100 hover:border-slate-500 hover:bg-slate-800 hover:text-white;
   }
   html.dark .btn-cta {
-    @apply bg-slate-100 text-aura-ink shadow-none hover:bg-white hover:shadow-[0_12px_32px_-8px_rgba(157,80,187,0.35)];
+    /* Light CTA surface in dark theme needs truly-dark label color for contrast. */
+    @apply bg-slate-100 text-slate-900 shadow-none hover:bg-white hover:shadow-[0_12px_32px_-8px_rgba(157,80,187,0.35)];
+  }
+  /* In dark mode, the CTA surface is intentionally light; avoid "washed-out" disabled state. */
+  html.dark .btn-cta:disabled {
+    opacity: 1;
+    @apply bg-slate-200/90 text-slate-500;
   }
   html.dark .btn-outline {
     @apply border-slate-600/80 bg-slate-900/40 text-slate-300 hover:border-slate-500 hover:bg-slate-800 hover:text-white;

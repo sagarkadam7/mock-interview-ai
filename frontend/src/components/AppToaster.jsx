@@ -23,12 +23,12 @@ export default function AppToaster() {
         error: {
           duration: 5200,
           iconTheme: { primary: "#e11d48", secondary: "#ffffff" },
-          className: `${toastBase} !border-rose-200 !bg-rose-50/95 !animate-toast-in dark:!border-rose-500/40 dark:!bg-rose-950/90`,
+          className: `${toastBase} !border-rose-200 !bg-rose-50/95 !text-rose-950 !animate-toast-in dark:!border-rose-500/40 dark:!bg-rose-950/90 dark:!text-rose-50`,
         },
         success: {
           duration: 3600,
           iconTheme: { primary: "#059669", secondary: "#ffffff" },
-          className: `${toastBase} !border-emerald-200 !bg-emerald-50/95 !animate-toast-in dark:!border-emerald-500/35 dark:!bg-emerald-950/90`,
+          className: `${toastBase} !border-emerald-200 !bg-emerald-50/95 !text-emerald-950 !animate-toast-in dark:!border-emerald-500/35 dark:!bg-emerald-950/90 dark:!text-emerald-50`,
         },
         loading: {
           iconTheme: { primary: "#FF7E5F", secondary: "#ffffff" },

@@ -38,7 +38,7 @@ export default function SecuritySection() {
               transition={{ duration: 0.35, delay: i * 0.05 }}
               className="glass-panel rounded-2xl p-6"
             >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-xs font-bold text-white shadow-md">✓</div>
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-xs font-bold text-white shadow-md dark:bg-gradient-to-br dark:from-violet-600/90 dark:to-aura-coral/80 dark:ring-1 dark:ring-white/10">✓</div>
               <h3 className="text-sm font-bold text-aura-ink">{b.title}</h3>
               <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">{b.desc}</p>
             </motion.div>
