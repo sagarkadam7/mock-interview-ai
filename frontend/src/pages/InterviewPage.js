@@ -221,9 +221,24 @@ export default function InterviewPage() {
   const questions = interview.questions;
   const currentQ = questions[currentIndex];
   const totalQ = questions.length;
+  const primaryQuestions = questions.filter((q) => (q.questionType || "primary") === "primary");
+  const primaryAnswered = primaryQuestions.filter((q) => q.score !== null).length;
   const answeredCount = questions.filter((q) => q.score !== null).length;
-  const progress = (answeredCount / totalQ) * 100;
+  const progress = totalQ > 0 ? (answeredCount / totalQ) * 100 : 0;
   const isLastQ = currentIndex === totalQ - 1;
+
+  const parentQ =
+    currentQ?.questionType === "follow_up" && currentQ.parentQuestionId
+      ? questions.find((q) => String(q._id) === String(currentQ.parentQuestionId))
+      : null;
+
+  const settingsLabel = [
+    interview.level ? String(interview.level).toUpperCase() : null,
+    interview.interviewMode ? String(interview.interviewMode).replace(/_/g, " ").toUpperCase() : null,
+    interview.persona ? String(interview.persona).replace(/_/g, " ").toUpperCase() : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   const canSubmitAnswer = Boolean(transcript.trim()) || isRecording;
 
@@ -304,6 +319,11 @@ export default function InterviewPage() {
                 <span className="inline-flex max-w-full items-center truncate rounded-full border border-slate-200/90 bg-white/95 px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-aura-ink shadow-sm ring-1 ring-white/80 dark:border-slate-600/80 dark:bg-slate-800/90 dark:text-slate-100 dark:ring-slate-700/50">
                   {interview.jobRole}
                 </span>
+                {settingsLabel && (
+                  <span className="inline-flex max-w-full items-center truncate rounded-full border border-slate-200/80 bg-slate-50/90 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600 ring-1 ring-white/70 dark:border-slate-600/70 dark:bg-slate-900/50 dark:text-slate-300 dark:ring-slate-800/40">
+                    {settingsLabel}
+                  </span>
+                )}
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/[0.08] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-800 dark:text-emerald-200">
                   <span className="relative flex h-1.5 w-1.5">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/50 opacity-75" />
@@ -319,13 +339,13 @@ export default function InterviewPage() {
             <div className="text-left sm:text-right">
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Progress</p>
               <p className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">
-                <span className="text-2xl font-bold tabular-nums text-aura-ink dark:text-slate-100">{answeredCount}</span>
+                <span className="text-2xl font-bold tabular-nums text-aura-ink dark:text-slate-100">{primaryAnswered}</span>
                 <span className="mx-1 text-slate-300 dark:text-slate-600">/</span>
-                <span className="font-semibold tabular-nums text-slate-600 dark:text-slate-300">{totalQ}</span>
-                <span className="ml-2 text-slate-400 dark:text-slate-500">answered</span>
+                <span className="font-semibold tabular-nums text-slate-600 dark:text-slate-300">{primaryQuestions.length}</span>
+                <span className="ml-2 text-slate-400 dark:text-slate-500">primary</span>
               </p>
             </div>
-            <SessionProgressRing answered={answeredCount} total={totalQ} />
+            <SessionProgressRing answered={primaryAnswered} total={primaryQuestions.length || 1} />
           </div>
         </div>
 
@@ -393,8 +413,14 @@ export default function InterviewPage() {
                   </span>
                   <div className="flex flex-wrap items-center justify-end gap-2">
                     {currentQ.questionType === "follow_up" && (
-                      <span className="rounded-full border border-aura-violet/30 bg-aura-violet/[0.1] px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-aura-violet">
+                      <span className="rounded-full border border-aura-violet/30 bg-aura-violet/[0.1] px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-aura-violet dark:border-aura-violet/35 dark:bg-aura-violet/15">
                         Adaptive follow-up
+                      </span>
+                    )}
+                    {parentQ && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/90 bg-white/80 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-600 ring-1 ring-white/70 dark:border-slate-600/70 dark:bg-slate-900/45 dark:text-slate-300 dark:ring-slate-800/40">
+                        On: {String(parentQ.text || "").slice(0, 42)}
+                        {String(parentQ.text || "").length > 42 ? "…" : ""}
                       </span>
                     )}
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/90 bg-slate-50/90 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-600 ring-1 ring-white/80 dark:border-slate-600/80 dark:bg-slate-800/90 dark:text-slate-300 dark:ring-slate-700/50">

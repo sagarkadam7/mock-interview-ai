@@ -9,6 +9,10 @@ export default function NewInterviewPage() {
   const navigate = useNavigate();
   const [jobRole, setJobRole] = useState("");
   const [jdText, setJdText] = useState("");
+  const [level, setLevel] = useState("mid");
+  const [interviewMode, setInterviewMode] = useState("mixed");
+  const [persona, setPersona] = useState("coach");
+  const [timeboxMin, setTimeboxMin] = useState(0);
   const [resumeText, setResumeText] = useState("");
   const [file, setFile] = useState(null);
   const [inputMode, setInputMode] = useState("paste");
@@ -41,6 +45,10 @@ export default function NewInterviewPage() {
       const fd = new FormData();
       fd.append("jobRole", jobRole.trim());
       fd.append("jdText", jdText.trim());
+      fd.append("level", level);
+      fd.append("interviewMode", interviewMode);
+      fd.append("persona", persona);
+      fd.append("timeboxMin", String(timeboxMin || 0));
       if (inputMode === "upload") fd.append("resume", file);
       else fd.append("resumeText", resumeText.trim());
       const { data } = await createInterview(fd);
@@ -89,6 +97,71 @@ export default function NewInterviewPage() {
       </AnimatePresence>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+        <div className="glass-panel-lg p-6 sm:p-8 md:p-10">
+          <div className="mb-8 flex items-center gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-aura-violet to-aura-coral text-sm font-bold text-white shadow-lg shadow-aura-violet/20">
+              0
+            </div>
+            <div>
+              <h2 className="text-lg font-bold tracking-tight text-aura-ink">Session style</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Tune the interviewer for your target level and loop.</p>
+            </div>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <div>
+              <label className="label-field">Level</label>
+              <select className="input-field" value={level} onChange={(e) => setLevel(e.target.value)}>
+                <option value="intern">Intern</option>
+                <option value="junior">Junior</option>
+                <option value="mid">Mid</option>
+                <option value="senior">Senior</option>
+                <option value="staff">Staff</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="label-field">Mode</label>
+              <select className="input-field" value={interviewMode} onChange={(e) => setInterviewMode(e.target.value)}>
+                <option value="mixed">Mixed (recommended)</option>
+                <option value="behavioral">Behavioral (STAR)</option>
+                <option value="technical">Technical</option>
+                <option value="system_design">System design</option>
+                <option value="coding">Coding (DSA)</option>
+                <option value="rapid_fire">Rapid-fire</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="label-field">Interviewer persona</label>
+              <select className="input-field" value={persona} onChange={(e) => setPersona(e.target.value)}>
+                <option value="coach">Coach (supportive)</option>
+                <option value="friendly">Friendly</option>
+                <option value="skeptical">Skeptical</option>
+                <option value="bar_raiser">Bar raiser</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="label-field">Timebox (optional)</label>
+              <select
+                className="input-field"
+                value={String(timeboxMin)}
+                onChange={(e) => setTimeboxMin(Number(e.target.value))}
+              >
+                <option value="0">No timer</option>
+                <option value="2">2 min / question</option>
+                <option value="5">5 min / question</option>
+                <option value="10">10 min / question</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-slate-200/80 bg-white/60 px-5 py-4 text-sm text-slate-600 dark:border-slate-700/70 dark:bg-slate-900/40 dark:text-slate-300">
+            We’ll adapt difficulty, follow-ups, and coaching tone based on these settings.
+          </div>
+        </div>
+
         <div className="glass-panel-lg p-6 sm:p-8 md:p-10">
           <div className="mb-8 flex items-center gap-4">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-aura-coral to-aura-violet text-sm font-bold text-white shadow-lg shadow-aura-violet/20">

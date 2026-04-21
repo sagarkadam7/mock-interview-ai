@@ -135,8 +135,17 @@ export default function DashboardPage() {
   const completed = interviews.filter((i) => i.status === "completed");
   const inProgress = interviews.filter((i) => i.status === "in_progress");
   const completedSorted = [...completed].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-  const trend = completedSorted.map((i) => i.overallScore).filter((v) => typeof v === "number");
-  const trendLast = trend.slice(-8);
+  const scoreTrend = completedSorted.map((i) => i.overallScore).filter((v) => typeof v === "number");
+  const scoreLast = scoreTrend.slice(-8);
+
+  const eyeTrend = completedSorted.map((i) => i.avgEyeContact).filter((v) => typeof v === "number");
+  const eyeLast = eyeTrend.slice(-8);
+
+  const paceTrend = completedSorted.map((i) => i.avgPace).filter((v) => typeof v === "number");
+  const paceLast = paceTrend.slice(-8);
+
+  const confTrend = completedSorted.map((i) => i.avgConfidence).filter((v) => typeof v === "number");
+  const confLast = confTrend.slice(-8);
   const avgScore =
     completed.filter((i) => i.overallScore !== null).length > 0
       ? (
@@ -228,20 +237,60 @@ export default function DashboardPage() {
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
               {loading
                 ? "Loading session history…"
-                : trendLast.length >= 2
-                  ? `Last ${trendLast.length} completed sessions`
+                : scoreLast.length >= 2
+                  ? `Last ${scoreLast.length} completed sessions`
                   : "Your line chart unlocks after two completed sessions"}
             </p>
           </div>
         </div>
         {loading ? (
           <div className="h-[88px] w-full animate-pulse rounded-xl bg-slate-100/90 dark:bg-slate-800/60" aria-hidden />
-        ) : trendLast.length >= 2 ? (
+        ) : scoreLast.length >= 2 ? (
           <div className="min-w-0">
-            <Sparkline data={trendLast} stroke="#9D50BB" fill="rgba(157,80,187,0.14)" />
+            <Sparkline data={scoreLast} stroke="#9D50BB" fill="rgba(157,80,187,0.14)" />
           </div>
         ) : (
           <TrendPlaceholder />
+        )}
+
+        {!loading && scoreLast.length >= 2 && (
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40">
+              <div className="mb-2 flex items-center justify-between">
+                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Eye contact</div>
+                <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{eyeLast.at(-1) != null ? `${eyeLast.at(-1)}%` : "—"}</div>
+              </div>
+              {eyeLast.length >= 2 ? (
+                <Sparkline data={eyeLast} stroke="#10b981" fill="rgba(16,185,129,0.10)" />
+              ) : (
+                <div className="h-[44px] rounded-xl bg-slate-100/80 dark:bg-slate-800/50" aria-hidden />
+              )}
+            </div>
+
+            <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40">
+              <div className="mb-2 flex items-center justify-between">
+                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Pace</div>
+                <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{paceLast.at(-1) != null ? `${paceLast.at(-1)} wpm` : "—"}</div>
+              </div>
+              {paceLast.length >= 2 ? (
+                <Sparkline data={paceLast} stroke="#f59e0b" fill="rgba(245,158,11,0.12)" />
+              ) : (
+                <div className="h-[44px] rounded-xl bg-slate-100/80 dark:bg-slate-800/50" aria-hidden />
+              )}
+            </div>
+
+            <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40">
+              <div className="mb-2 flex items-center justify-between">
+                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Confidence</div>
+                <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{confLast.at(-1) != null ? `${confLast.at(-1)}/10` : "—"}</div>
+              </div>
+              {confLast.length >= 2 ? (
+                <Sparkline data={confLast} stroke="#ec4899" fill="rgba(236,72,153,0.10)" />
+              ) : (
+                <div className="h-[44px] rounded-xl bg-slate-100/80 dark:bg-slate-800/50" aria-hidden />
+              )}
+            </div>
+          </div>
         )}
       </div>
 

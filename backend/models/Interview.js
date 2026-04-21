@@ -34,6 +34,11 @@ const interviewSchema = new mongoose.Schema(
   {
     userId:       { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     jobRole:      { type: String, required: true, trim: true },
+    // Configuration (drives question generation + follow-ups)
+    level:        { type: String, default: "mid", trim: true }, // intern|junior|mid|senior|staff
+    interviewMode:{ type: String, default: "mixed", trim: true }, // mixed|behavioral|technical|system_design|coding|rapid_fire
+    persona:      { type: String, default: "coach", trim: true }, // coach|friendly|skeptical|bar_raiser
+    timeboxMin:   { type: Number, default: 0 }, // 0 = no timer
     resumeText:   { type: String, required: true },
     jdText:       { type: String, default: "" },
     status:       { type: String, enum: ["pending", "in_progress", "completed"], default: "pending" },

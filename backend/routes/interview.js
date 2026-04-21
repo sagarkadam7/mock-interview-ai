@@ -59,12 +59,32 @@ async function extractTextFromPDF(filePath) {
 }
 
 // ─── Helper: Generate questions with Gemini ───────────────────
-async function generateQuestions(resumeText, jdText, jobRole) {
+function describeSettings({ level, interviewMode, persona, timeboxMin }) {
+  const lvl = String(level || "mid").trim();
+  const mode = String(interviewMode || "mixed").trim();
+  const pers = String(persona || "coach").trim();
+  const time = Number(timeboxMin || 0);
+  return `Seniority: ${lvl}\nMode: ${mode}\nInterviewer persona: ${pers}\nTimebox: ${time > 0 ? `${time} minutes` : "none"}`;
+}
+
+async function generateQuestions(resumeText, jdText, jobRole, settings) {
   const prompt = `You are an expert technical interviewer at a top tech company.
 
 Based on the resume and job description below, generate exactly 7 interview questions.
 Make them specific to this candidate's experience and the job role.
-Mix behavioral, technical, and situational questions.
+Respect the session configuration below. The user's goal is to practice for real interviews.
+
+Session configuration:
+${describeSettings(settings)}
+
+Guidelines:
+- If Mode is "behavioral": focus on STAR, scope, impact, conflict, leadership.
+- If Mode is "technical": focus on fundamentals, debugging, architecture basics, tradeoffs.
+- If Mode is "system_design": focus on requirements, scale, data model, APIs, bottlenecks, tradeoffs.
+- If Mode is "coding": focus on algorithmic questions appropriate for the level (include constraints hints).
+- If Mode is "rapid_fire": shorter questions, higher signal density, less setup.
+- If Seniority is senior/staff: raise the bar (ownership, ambiguity, influence, metrics, tradeoffs).
+- Persona affects tone: coach = supportive and clear; skeptical/bar_raiser = crisp, probing; friendly = warm.
 
 Job Role: ${jobRole}
 Resume: ${resumeText.slice(0, 3000)}
@@ -134,10 +154,17 @@ function buildDeliverySummary(body) {
 }
 
 // Primary questions: score + feedback + optional ONE follow-up question to drill deeper.
-async function getAIFeedbackWithOptionalFollowUp(questionText, userAnswer, hint, jobRole, jdSnippet, deliverySummary) {
+async function getAIFeedbackWithOptionalFollowUp(questionText, userAnswer, hint, interview, jdSnippet, deliverySummary) {
   const prompt = `You are a senior hiring manager and interview coach.
 
-Job role: ${jobRole}
+Job role: ${interview.jobRole}
+Session configuration:
+${describeSettings({
+  level: interview.level,
+  interviewMode: interview.interviewMode,
+  persona: interview.persona,
+  timeboxMin: interview.timeboxMin,
+})}
 Job description (excerpt): ${jdSnippet}
 
 Original interview question: ${questionText}
@@ -152,6 +179,7 @@ Tasks:
 1) Score the answer 0–10 and give concise coaching (same rubric as a real loop).
 2) Decide if ONE short follow-up question would meaningfully deepen signal (e.g. missing metrics, unclear ownership, hand-wavy tradeoffs, weak STAR result, contradictions). If the answer is already strong and specific, or too empty to probe, set followUp to null.
 3) If you add followUp, it must be a single focused question (one sentence), not a multi-part exam. It should reference specifics from their answer when possible.
+4) Match the followUp style to the mode and seniority (e.g. system_design probes scale/tradeoffs; behavioral probes impact/conflict; staff probes ambiguity/influence/metrics).
 
 Return ONLY valid JSON with no markdown or backticks:
 {
@@ -194,7 +222,15 @@ Return ONLY valid JSON with no markdown or backticks:
 // ════════════════════════════════════════════════════════════════
 router.post("/create", protect, assertCanCreateInterview, createInterviewLimiter, upload.single("resume"), async (req, res) => {
   try {
-    const { jobRole, jdText, resumeText: bodyResumeText } = req.body;
+    const {
+      jobRole,
+      jdText,
+      resumeText: bodyResumeText,
+      level = "mid",
+      interviewMode = "mixed",
+      persona = "coach",
+      timeboxMin = 0,
+    } = req.body;
 
     if (!jobRole) {
       return res.status(400).json({ message: "Job role is required." });
@@ -213,7 +249,13 @@ router.post("/create", protect, assertCanCreateInterview, createInterviewLimiter
     }
 
     console.log("🤖 Generating questions with Gemini...");
-    const questions = await generateQuestions(resumeText, jdText || "", jobRole);
+    const settings = {
+      level,
+      interviewMode,
+      persona,
+      timeboxMin: Number(timeboxMin || 0),
+    };
+    const questions = await generateQuestions(resumeText, jdText || "", jobRole, settings);
 
     if (!Array.isArray(questions) || questions.length === 0) {
       return res.status(500).json({ message: "Failed to generate questions. Try again." });
@@ -222,6 +264,10 @@ router.post("/create", protect, assertCanCreateInterview, createInterviewLimiter
     const interview = await Interview.create({
       userId: req.user._id,
       jobRole,
+      level: String(level || "mid").trim(),
+      interviewMode: String(interviewMode || "mixed").trim(),
+      persona: String(persona || "coach").trim(),
+      timeboxMin: Number(timeboxMin || 0),
       resumeText,
       jdText: jdText || "",
       status: "pending",
@@ -256,7 +302,7 @@ router.post("/create", protect, assertCanCreateInterview, createInterviewLimiter
 router.get("/", protect, async (req, res) => {
   try {
     const interviews = await Interview.find({ userId: req.user._id })
-      .select("jobRole status overallScore createdAt questions")
+      .select("jobRole status overallScore avgEyeContact avgPace avgConfidence avgFillerWords createdAt questions level interviewMode persona timeboxMin")
       .sort("-createdAt");
 
     res.json(interviews);
@@ -324,7 +370,7 @@ router.post("/:id/answer", protect, validateMongoId("id"), async (req, res) => {
         question.text,
         answer,
         question.hint,
-        interview.jobRole,
+        interview,
         (interview.jdText || "").slice(0, 2000),
         buildDeliverySummary(req.body)
       );
