@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -8,7 +8,9 @@ const statRows = [
   { v: "PDF", l: "Export reports" },
 ];
 
-const waveformHeights = [28, 44, 36, 52, 40, 64, 48, 72, 56, 80, 60, 88, 68, 92, 76, 100, 70, 85, 58, 78];
+const energyBars = [
+  18, 24, 22, 28, 26, 34, 30, 38, 34, 44, 40, 52, 48, 58, 54, 66, 62, 70, 64, 74, 68, 78, 70, 82, 74, 80, 72, 76,
+];
 
 const proofAvatars = [
   { initials: "AR", tone: "from-violet-500 to-fuchsia-500" },
@@ -19,6 +21,47 @@ const proofAvatars = [
 ];
 
 function HeroShowcase({ reduceMotion }) {
+  const [score, setScore] = useState(reduceMotion ? 8.6 : 0);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const start = performance.now();
+    const duration = 1200;
+    const from = 0;
+    const to = 8.6;
+
+    let raf = 0;
+    const tick = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const v = from + (to - from) * eased;
+      setScore(Math.round(v * 10) / 10);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [reduceMotion]);
+
+  const followUpText = "What tradeoff did you reject — and why?";
+  const followUpCharCount = followUpText.length;
+
+  const cardStyle = useMemo(
+    () => ({
+      ["--cardBg"]: "#161012",
+      ["--cardBg2"]: "#1a1314",
+      ["--borderGlow"]: "rgba(255,80,80,0.25)",
+      ["--muted"]: "#6b6460",
+      ["--pink"]: "#e8609a",
+      ["--barBottom"]: "#c0456a",
+      ["--barMid"]: "#e8609a",
+      ["--barTop"]: "#9b6fdc",
+      ["--track"]: "#2a2228",
+      ["--pillBg"]: "#1e1820",
+      ["--pillBorder"]: "#2e2a30",
+    }),
+    []
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, y: reduceMotion ? 0 : 28 }}
@@ -26,113 +69,249 @@ function HeroShowcase({ reduceMotion }) {
       transition={{ duration: reduceMotion ? 0.2 : 0.95, ease: [0.16, 1, 0.3, 1], delay: reduceMotion ? 0 : 0.14 }}
       className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-lg xl:max-w-xl"
     >
-      <div
-        className={
-          reduceMotion
-            ? ""
-            : "pointer-events-none absolute -inset-12 rounded-[2.75rem] bg-gradient-to-br from-aura-coral/25 via-transparent to-aura-violet/20 blur-3xl animate-hero-breathe"
+      <style>{`
+        .lux-scorecard {
+          width: 100%;
+          max-width: 540px;
+          padding: 24px;
+          box-sizing: border-box;
+          border-radius: 16px;
+          background: radial-gradient(120% 120% at 20% 0%, rgba(232,96,154,0.14) 0%, transparent 55%),
+            radial-gradient(120% 120% at 90% 12%, rgba(155,111,220,0.12) 0%, transparent 55%),
+            linear-gradient(180deg, var(--cardBg) 0%, var(--cardBg2) 100%);
+          border: 1px solid var(--borderGlow);
+          box-shadow: 0 0 60px rgba(220, 60, 80, 0.12), 0 0 120px rgba(180, 50, 200, 0.08);
+          transform: perspective(1100px) rotateX(7deg) rotateY(-10deg);
+          transform-origin: center;
         }
-        aria-hidden
-      />
+        @media (max-width: 640px) {
+          .lux-scorecard {
+            transform: none;
+            padding: 18px;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .lux-scorecard { transform: none; }
+        }
+        .lux-pulse-dot {
+          animation: luxPulse 1.5s ease-in-out infinite;
+          box-shadow: 0 0 12px rgba(40,200,100,0.45);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .lux-pulse-dot { animation: none; opacity: 1; }
+        }
+        @keyframes luxPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.35; }
+        }
+        .lux-energy-bar { transform-origin: bottom; }
+        .lux-typewriter {
+          width: calc(var(--chars) * 1ch);
+          max-width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          border-right: 2px solid rgba(232,96,154,0.7);
+          animation: luxType 1.25s steps(var(--chars)) both;
+          animation-delay: 1s;
+        }
+        .lux-typewriter--static {
+          animation: none;
+          width: auto;
+          max-width: 100%;
+          white-space: normal;
+          border-right: none;
+        }
+        @keyframes luxType { from { width: 0ch; } to { width: calc(var(--chars) * 1ch); } }
+        @media (prefers-reduced-motion: reduce) {
+          .lux-typewriter:not(.lux-typewriter--static) { animation: none; }
+        }
+        .lux-metric-pill {
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .lux-metric-pill:hover {
+          border-color: #555555;
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+        }
+      `}</style>
 
-      {/* Gradient frame — premium product shot */}
-      <div className="relative rounded-[1.85rem] bg-gradient-to-br from-aura-coral/70 via-white/30 to-aura-violet/70 p-[1px] shadow-[0_32px_80px_-24px_rgba(15,23,42,0.2)] dark:from-aura-coral/40 dark:via-slate-700/30 dark:to-aura-violet/50 dark:shadow-[0_40px_100px_-28px_rgba(0,0,0,0.65)]">
-        <div className="rounded-[1.8rem] bg-white/90 p-1 shadow-lux-lg backdrop-blur-xl dark:bg-slate-950/85">
-          <div className="overflow-hidden rounded-2xl bg-gradient-to-b from-slate-50/95 to-white ring-1 ring-slate-900/[0.035] dark:from-slate-900/95 dark:to-slate-950 dark:ring-white/[0.06]">
-            <div className="flex items-center gap-2 border-b border-slate-200/80 bg-gradient-to-r from-slate-50/95 via-white/80 to-slate-50/95 px-4 py-3 dark:border-slate-700/80 dark:from-slate-900/90 dark:via-slate-900/70 dark:to-slate-900/90">
-              <div className="flex gap-1.5" aria-hidden>
-                <span className="h-2.5 w-2.5 rounded-full bg-rose-400/90 shadow-sm" />
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-400/85 shadow-sm" />
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/90 shadow-sm" />
-              </div>
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
-                Live session · composite scoring
+      <motion.div
+        style={cardStyle}
+        initial={{ opacity: 0, y: reduceMotion ? 0 : 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduceMotion ? 0.15 : 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="lux-scorecard relative mx-auto select-none"
+        aria-label="Live interview scorecard mock"
+      >
+        {/* Top bar */}
+        <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
+          <div className="flex shrink-0 items-center gap-2">
+            <span className="h-[10px] w-[10px] rounded-full" style={{ background: "#ff5f57" }} aria-hidden />
+            <span className="h-[10px] w-[10px] rounded-full" style={{ background: "#febc2e" }} aria-hidden />
+            <span className="h-[10px] w-[10px] rounded-full" style={{ background: "#28c840" }} aria-hidden />
+          </div>
+          <div
+            className="min-w-0 flex-1 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.28em] sm:text-[11px] sm:tracking-[0.32em]"
+            style={{ color: "var(--muted)" }}
+          >
+            LIVE SESSION · SCORECARD
+          </div>
+          <div
+            className="inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] sm:text-[11px] sm:tracking-[0.14em]"
+            style={{ background: "rgba(40,200,100,0.12)", borderColor: "#28c840", color: "#28c840" }}
+          >
+            <span className="lux-pulse-dot h-2 w-2 rounded-full" style={{ background: "#28c840" }} aria-hidden />
+            STREAMING
+          </div>
+        </div>
+
+        <div className="mt-5 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }} />
+
+        {/* Section 1 */}
+        <div className="mt-5 flex items-start justify-between gap-6">
+          <div>
+            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.32em]" style={{ color: "var(--muted)" }}>
+              LIVE MOCK INTERVIEW
+            </div>
+            <div className="mt-2 text-[15px] font-semibold text-white">Score + presence + adaptive follow-ups</div>
+          </div>
+
+          <div className="relative grid h-16 w-16 place-items-center rounded-full" aria-label="Composite score">
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background:
+                  "conic-gradient(from 210deg, rgba(232,96,154,0.0) 0%, rgba(232,96,154,0.9) 35%, rgba(155,111,220,0.9) 70%, rgba(232,96,154,0.0) 100%)",
+                filter: "blur(0px)",
+                opacity: 0.55,
+              }}
+              aria-hidden
+            />
+            <div
+              className="absolute inset-[2px] rounded-full"
+              style={{
+                border: "2px solid #e8609a",
+                boxShadow: "0 0 16px rgba(232,96,154,0.5)",
+                background: "rgba(0,0,0,0.25)",
+              }}
+              aria-hidden
+            />
+            <div className="relative font-display text-[22px] font-semibold text-white tabular-nums">
+              {score.toFixed(1)}
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2 */}
+        <div className="mt-6">
+          <div className="flex items-center justify-between font-mono text-[10px] font-bold uppercase tracking-[0.32em]" style={{ color: "var(--muted)" }}>
+            <span>ENERGY</span>
+            <span>LAST 30S</span>
+          </div>
+
+          <div className="mt-3 flex h-20 min-w-0 items-end justify-between gap-0.5 sm:gap-1">
+            {energyBars.map((h, i) => (
+              <motion.div
+                key={i}
+                className="lux-energy-bar min-w-[2px] max-w-[10px] flex-1"
+                initial={reduceMotion ? false : { scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : i * 0.02, ease: [0.16, 1, 0.3, 1] }}
+                style={{
+                  height: `${h}px`,
+                  borderRadius: "3px 3px 0 0",
+                  background: `linear-gradient(180deg, var(--barTop) 0%, var(--barMid) 45%, var(--barBottom) 100%)`,
+                  opacity: 0.95,
+                }}
+                aria-hidden
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Section 3 */}
+        <div className="mt-6 flex flex-wrap gap-3">
+          {[
+            ["GAZE", "78%"],
+            ["PACE", "142 wpm"],
+            ["FILLERS", "Low"],
+          ].map(([k, v]) => (
+            <div
+              key={k}
+              className="lux-metric-pill group inline-flex cursor-default items-center gap-3 rounded-full border px-4 py-2"
+              style={{ background: "var(--pillBg)", borderColor: "var(--pillBorder)" }}
+            >
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                {k}
               </span>
+              <span className="font-mono text-[11px] font-bold text-white">{v}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Section 4 */}
+        <div
+          className="mt-6 grid gap-4 rounded-2xl border p-4"
+          style={{ background: "#1c1618", borderColor: "#2a2228" }}
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Rubric */}
+            <div>
+              <div className="font-mono text-[10px] font-bold uppercase tracking-[0.32em]" style={{ color: "var(--muted)" }}>
+                RUBRIC
+              </div>
+              <div className="mt-3 space-y-3">
+                {[
+                  ["Structure", 80, "#4ade80"],
+                  ["Clarity", 60, "#a855f7"],
+                  ["Depth", 45, "#f59e0b"],
+                ].map(([label, pct, color], idx) => (
+                  <div key={label}>
+                    <div className="mb-1 flex items-center justify-between">
+                      <span className="text-[13px] font-semibold text-white">{label}</span>
+                      <span className="font-mono text-[11px] font-bold" style={{ color: "rgba(255,255,255,0.7)" }}>
+                        {pct}%
+                      </span>
+                    </div>
+                    <div className="h-[5px] w-full overflow-hidden rounded-full" style={{ background: "var(--track)" }}>
+                      <motion.div
+                        className="h-full rounded-full"
+                        style={{ background: color }}
+                        initial={reduceMotion ? false : { width: "0%" }}
+                        animate={{ width: `${pct}%` }}
+                        transition={{ duration: reduceMotion ? 0 : 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.35 + idx * 0.08 }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="space-y-6 p-5 sm:p-6">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Verdict layer</p>
-                  <p className="mt-1 text-sm font-semibold tracking-tight text-aura-ink">Answer quality · pace · gaze</p>
-                </div>
-                <div className="relative rounded-full bg-gradient-to-br from-aura-coral via-aura-violet to-aura-coral p-[2.5px] shadow-lg shadow-aura-violet/20">
-                  <div className="flex h-[4.75rem] w-[4.75rem] items-center justify-center rounded-full bg-white font-display text-[1.65rem] font-semibold tabular-nums tracking-tight text-aura-ink dark:bg-slate-950">
-                    <motion.span
-                      initial={reduceMotion ? false : { scale: 0.92, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 0.35, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      8.6
-                    </motion.span>
+            {/* Follow-up */}
+            <div className="relative">
+              <div className="font-mono text-[9px] font-bold uppercase tracking-[0.32em]" style={{ color: "var(--muted)" }}>
+                ADAPTIVE FOLLOW-UP
+              </div>
+              <div className="mt-3 flex gap-3">
+                <div className="mt-1 h-10 w-[2px] rounded-full" style={{ background: "var(--pink)" }} aria-hidden />
+                <div className="min-w-0">
+                  <div
+                    className={`lux-typewriter italic ${reduceMotion ? "lux-typewriter--static" : ""}`}
+                    style={{ ["--chars"]: followUpCharCount, color: "#e8e0ec", fontSize: 13, lineHeight: 1.4 }}
+                    aria-label="Follow-up question"
+                  >
+                    {followUpText}
+                  </div>
+                  <div className="mt-2 text-[12px]" style={{ color: "rgba(255,255,255,0.55)" }}>
+                    Explain the constraint, alternatives, and measurable impact.
                   </div>
                 </div>
-              </div>
-
-              <div>
-                <div className="mb-2 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                  <span>Transcript energy</span>
-                  <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400/90">
-                    <span className="relative flex h-1.5 w-1.5">
-                      {!reduceMotion && (
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/50 opacity-75" />
-                      )}
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    </span>
-                    Streaming
-                  </span>
-                </div>
-                <div
-                  className="flex h-[5.25rem] items-end justify-between gap-0.5 rounded-xl border border-slate-200/80 bg-slate-50/60 px-2 pb-2 pt-4 dark:border-slate-600/80 dark:bg-slate-800/50"
-                  role="img"
-                  aria-label="Abstract waveform visualization"
-                >
-                  {waveformHeights.map((pct, i) => (
-                    <div
-                      key={i}
-                      className="min-w-[3px] flex-1 rounded-full bg-gradient-to-t from-aura-violet/20 via-aura-coral/55 to-aura-coral opacity-95"
-                      style={{ height: `${pct}%` }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { t: "Gaze on camera", s: "78%" },
-                  { t: "Pace", s: "142 wpm" },
-                  { t: "Fillers", s: "Low" },
-                ].map((chip) => (
-                  <span
-                    key={chip.t}
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/95 px-3 py-1.5 text-[11px] font-medium text-slate-700 shadow-sm dark:border-slate-600/80 dark:bg-slate-800/95 dark:text-slate-200"
-                  >
-                    <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{chip.t}</span>
-                    <span className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-aura-ink dark:bg-slate-700 dark:text-slate-100">{chip.s}</span>
-                  </span>
-                ))}
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {!reduceMotion && (
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute -right-4 top-[18%] hidden h-28 w-20 rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white/80 to-white/30 shadow-lux backdrop-blur-md dark:border-slate-600/50 dark:from-slate-800/80 dark:to-slate-900/40 lg:block"
-          animate={{ y: [0, -12, 0], rotate: [0, 1.5, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-      )}
-      {!reduceMotion && (
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute -left-2 bottom-[12%] hidden h-16 w-28 rounded-2xl border border-slate-200/60 bg-white/50 shadow-md backdrop-blur-sm dark:border-slate-700/50 dark:bg-slate-900/50 lg:block"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-        />
-      )}
+      {/* Removed floating placeholders (looked like glitches). */}
     </motion.div>
   );
 }
