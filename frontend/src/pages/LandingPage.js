@@ -1,19 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { motion, useReducedMotion } from "framer-motion";
-import SiteFooter from "../components/SiteFooter";
 import { FAQ_ITEMS } from "../data/marketing";
-import HowItWorksSection from "../components/landing/HowItWorksSection";
-import ComparisonSection from "../components/landing/ComparisonSection";
-import PersonasSection from "../components/landing/PersonasSection";
-import TestimonialsSection from "../components/landing/TestimonialsSection";
-import PricingTeaserSection from "../components/landing/PricingTeaserSection";
-import SecuritySection from "../components/landing/SecuritySection";
-import FAQSection from "../components/landing/FAQSection";
-import FounderLetterSection from "../components/landing/FounderLetterSection";
 import LandingHero from "../components/landing/LandingHero";
+
+const HowItWorksSection = lazy(() => import("../components/landing/HowItWorksSection"));
+const ComparisonSection = lazy(() => import("../components/landing/ComparisonSection"));
+const PersonasSection = lazy(() => import("../components/landing/PersonasSection"));
+const TestimonialsSection = lazy(() => import("../components/landing/TestimonialsSection"));
+const PricingTeaserSection = lazy(() => import("../components/landing/PricingTeaserSection"));
+const SecuritySection = lazy(() => import("../components/landing/SecuritySection"));
+const FAQSection = lazy(() => import("../components/landing/FAQSection"));
+const FounderLetterSection = lazy(() => import("../components/landing/FounderLetterSection"));
+const SiteFooter = lazy(() => import("../components/SiteFooter"));
 
 /* ─── DATA ───────────────────────────────────────────────────────────── */
 const FEATURES = [
@@ -491,7 +492,9 @@ export default function LandingPage() {
       </section>
 
       {/* ── HOW IT WORKS (original) ── */}
-      <HowItWorksSection />
+      <Suspense fallback={null}>
+        <HowItWorksSection />
+      </Suspense>
 
       {/* ── CORE ARCHITECTURE ── */}
       <section
@@ -607,30 +610,46 @@ export default function LandingPage() {
       <Divider />
 
       {/* ── COMPARISON (original) ── */}
-      <ComparisonSection />
+      <Suspense fallback={null}>
+        <ComparisonSection />
+      </Suspense>
 
       {/* ── FOUNDER LETTER (original) ── */}
-      <FounderLetterSection />
+      <Suspense fallback={null}>
+        <FounderLetterSection />
+      </Suspense>
 
       {/* ── PERSONAS (original) ── */}
-      <PersonasSection />
+      <Suspense fallback={null}>
+        <PersonasSection />
+      </Suspense>
 
       {/* ── TESTIMONIALS (original) ── */}
-      <TestimonialsSection />
+      <Suspense fallback={null}>
+        <TestimonialsSection />
+      </Suspense>
 
       {/* ── PRICING (original) ── */}
-      <PricingTeaserSection />
+      <Suspense fallback={null}>
+        <PricingTeaserSection />
+      </Suspense>
 
       {/* ── SECURITY (original) ── */}
-      <SecuritySection />
+      <Suspense fallback={null}>
+        <SecuritySection />
+      </Suspense>
 
       {/* ── FAQ (original) ── */}
-      <FAQSection limit={4} />
+      <Suspense fallback={null}>
+        <FAQSection limit={4} />
+      </Suspense>
 
       {/* ── FINAL CTA ── */}
       <FinalCta user={user} />
 
-      <SiteFooter />
+      <Suspense fallback={null}>
+        <SiteFooter />
+      </Suspense>
     </div>
   );
 }
