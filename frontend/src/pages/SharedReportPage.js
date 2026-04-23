@@ -353,6 +353,18 @@ export default function SharedReportPage() {
           </ol>
         </div>
 
+        <div className="mb-8 rounded-2xl border border-slate-200/80 bg-white/80 px-5 py-4 text-sm text-slate-600 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/45 dark:text-slate-300">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="font-semibold text-aura-ink dark:text-slate-100">Shared link</span>
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
+              Generated {new Date(interview.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+            </span>
+          </div>
+          <p className="mt-2 leading-relaxed">
+            This page is read‑only. If you received it from a candidate, you’re seeing their scorecard and coaching signals — not their account data.
+          </p>
+        </div>
+
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-aura-muted">Want your own sessions, reports, and practice history?</p>
           <Link to="/register">
