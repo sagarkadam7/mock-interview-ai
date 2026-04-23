@@ -225,6 +225,7 @@ export default function ReportPage() {
   const [interview, setInterview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
+  const [copying, setCopying] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -280,6 +281,22 @@ export default function ReportPage() {
 
   const focusDim = getSessionCoachingFocus(interview);
   const nextRepsBullets = buildNextRepsFromInterview(interview);
+
+  const copyText = async (text, successMsg) => {
+    try {
+      setCopying(true);
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        toast.success(successMsg);
+      } else {
+        window.prompt("Copy this text:", text);
+      }
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Couldn’t copy to clipboard."));
+    } finally {
+      setCopying(false);
+    }
+  };
 
   const questionScores = interview.questions.map((q) => q.score).filter((s) => typeof s === "number");
   const eyeTrend = interview.questions.map((q) => q.eyeContactPct).filter((p) => typeof p === "number");
@@ -413,6 +430,42 @@ export default function ReportPage() {
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Next 7 minutes</p>
               <h2 className="mt-1 font-brand text-xl font-semibold tracking-tight text-aura-ink dark:text-white md:text-2xl">Your next reps</h2>
               <p className="mt-1 max-w-xl text-sm text-aura-muted">Close the loop while the session is still fresh — three focused actions, no new tooling.</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="btn-outline px-4 py-2 text-xs"
+                disabled={copying}
+                aria-busy={copying}
+                onClick={() => {
+                  const dateStr = new Date(interview.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+                  const text = [
+                    `InterviewAI — Session summary`,
+                    `Role: ${interview.jobRole}`,
+                    `Date: ${dateStr}`,
+                    `Overall: ${overall ?? "—"}/10`,
+                    `Next focus: ${focusDim.key} (${Math.round(focusDim.value * 10)}/10)`,
+                    "",
+                    "Next reps:",
+                    ...nextRepsBullets.map((x, i) => `${i + 1}. ${x}`),
+                  ].join("\n");
+                  copyText(text, "Session summary copied");
+                }}
+              >
+                Copy summary
+              </button>
+              <button
+                type="button"
+                className="btn-outline px-4 py-2 text-xs"
+                disabled={copying}
+                aria-busy={copying}
+                onClick={() => {
+                  const text = nextRepsBullets.map((x, i) => `${i + 1}. ${x}`).join("\n");
+                  copyText(text, "Next reps copied");
+                }}
+              >
+                Copy reps
+              </button>
             </div>
           </div>
           <ol className="list-none space-y-3 p-0">
