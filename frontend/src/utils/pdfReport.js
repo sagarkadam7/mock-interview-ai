@@ -1,4 +1,5 @@
 import jsPDF from "jspdf";
+import { buildNextRepsFromInterview } from "./practiceSignals";
 
 export function generatePDFReport(interview) {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
@@ -83,6 +84,16 @@ export function generatePDFReport(interview) {
     doc.line(margin, y, W - margin, y);
     y += 6;
   });
+
+  // ── Next reps (matches in-app report) ──
+  y += 6;
+  addLine("YOUR NEXT REPS", 14, true, [200, 170, 255]);
+  addLine("Three focused actions before your next session.", 9, false, [120, 128, 160]);
+  const reps = buildNextRepsFromInterview(interview);
+  reps.forEach((line, i) => {
+    addLine(`${i + 1}. ${line}`, 10, false, [200, 205, 220]);
+  });
+  y += 4;
 
   // ── Footer ──
   y = 285;

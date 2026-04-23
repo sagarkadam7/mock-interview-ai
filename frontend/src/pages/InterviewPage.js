@@ -198,6 +198,20 @@ export default function InterviewPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, [feedback, handleSubmitAnswer, interview, loading, submitting]);
 
+  useEffect(() => {
+    if (!interview || interview.status === "completed") return undefined;
+    const answered = interview.questions.filter((q) => q.score !== null).length;
+    const onBeforeUnload = (e) => {
+      const dirty =
+        answered > 0 || Boolean(transcript.trim()) || Boolean(feedback) || submitting || isRecording;
+      if (!dirty) return;
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [interview, transcript, feedback, submitting, isRecording]);
+
   if (loading) {
     return <InterviewLoadingSkeleton />;
   }

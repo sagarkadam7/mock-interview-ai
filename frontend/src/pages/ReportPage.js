@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { getInterview, createShareToken } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import { generatePDFReport } from "../utils/pdfReport";
-import { buildNextRepsBullets } from "../utils/practiceSignals";
+import { buildNextRepsFromInterview, getSessionCoachingFocus } from "../utils/practiceSignals";
 import { RadarChart, Sparkline } from "../components/Charts";
 
 function ReportPageSkeleton() {
@@ -278,16 +278,8 @@ export default function ReportPage() {
     { label: "Overall", normalized: overallN },
   ];
 
-  const coachingDims = [
-    { key: "Eye", value: eyeN, accentClass: "text-emerald-600", msg: "Focus on steady eye contact. Try pausing and resetting your gaze to the lens." },
-    { key: "Conf", value: confN, accentClass: "text-violet-600", msg: "Build confidence by structuring answers (STAR). Aim for clear, complete sentences." },
-    { key: "Pace", value: paceN, accentClass: "text-emerald-600", msg: "Dial in your pace. Aiming for ~130–170 wpm often boosts clarity and confidence." },
-    { key: "Fill", value: fillerN, accentClass: "text-amber-600", msg: "Reduce filler words. If you feel stuck, pause for 1 second before continuing." },
-  ];
-
-  const focusDim = coachingDims.reduce((min, d) => (d.value < min.value ? d : min), coachingDims[0]);
-
-  const nextRepsBullets = buildNextRepsBullets(interview, focusDim);
+  const focusDim = getSessionCoachingFocus(interview);
+  const nextRepsBullets = buildNextRepsFromInterview(interview);
 
   const questionScores = interview.questions.map((q) => q.score).filter((s) => typeof s === "number");
   const eyeTrend = interview.questions.map((q) => q.eyeContactPct).filter((p) => typeof p === "number");

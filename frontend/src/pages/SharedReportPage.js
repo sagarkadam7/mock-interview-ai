@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getSharedReport } from "../utils/api";
+import { buildNextRepsFromInterview } from "../utils/practiceSignals";
 import { getApiErrorMessage } from "../utils/apiError";
 import { RadarChart, Sparkline } from "../components/Charts";
 
@@ -261,6 +262,7 @@ export default function SharedReportPage() {
 
   const questionScores = (interview.questions || []).map((q) => q.score).filter((s) => typeof s === "number");
   const eyeTrend = (interview.questions || []).map((q) => q.eyeContactPct).filter((p) => typeof p === "number");
+  const nextRepsBullets = buildNextRepsFromInterview(interview);
 
   return (
     <div className="page-shell min-h-screen max-w-6xl">
@@ -332,6 +334,23 @@ export default function SharedReportPage() {
             <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Eye contact</h3>
             {eyeTrend.length >= 2 ? <Sparkline data={eyeTrend} stroke="#34d399" fill="rgba(16,185,129,0.10)" /> : <p className="text-sm text-aura-muted">No eye contact data yet.</p>}
           </div>
+        </div>
+
+        <div className="mb-8 rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-violet-50/40 to-orange-50/30 p-6 shadow-inner dark:border-slate-700 dark:from-slate-900/90 dark:via-slate-950 dark:to-violet-950/25 md:p-8">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Shared takeaway</p>
+          <h2 className="mt-1 font-brand text-xl font-semibold tracking-tight text-aura-ink dark:text-white md:text-2xl">Next reps</h2>
+          <p className="mt-1 max-w-xl text-sm text-aura-muted">What to rehearse next — same playbook as the full report.</p>
+          <ol className="mt-4 list-none space-y-3 p-0">
+            {nextRepsBullets.map((line, idx) => (
+              <li
+                key={idx}
+                className="flex gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3.5 text-[15px] leading-snug text-slate-800 dark:border-slate-700/80 dark:bg-slate-900/50 dark:text-slate-100"
+              >
+                <span className="font-mono text-xs font-bold tabular-nums text-aura-violet dark:text-violet-300">{String(idx + 1).padStart(2, "0")}</span>
+                <span className="min-w-0 flex-1">{line}</span>
+              </li>
+            ))}
+          </ol>
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-3">

@@ -1,5 +1,50 @@
 /** @typedef {{ status?: string, createdAt?: string }} InterviewLike */
 
+function clamp01(n) {
+  return Math.max(0, Math.min(1, n));
+}
+
+/**
+ * Normalized coaching dimensions for radar / “next focus” (same math as report UI).
+ * @param {{
+ *   overallScore?: number | null,
+ *   avgEyeContact?: number | null,
+ *   avgConfidence?: number | null,
+ *   avgPace?: number | null,
+ *   avgFillerWords?: number | null,
+ * }} interview
+ * @returns {{ key: string, value: number, accentClass: string, msg: string }[]}
+ */
+export function getSessionCoachingDimensions(interview) {
+  const eyeN = interview.avgEyeContact !== null && interview.avgEyeContact !== undefined ? clamp01(interview.avgEyeContact / 100) : 0;
+  const confN = interview.avgConfidence !== null && interview.avgConfidence !== undefined ? clamp01(interview.avgConfidence / 10) : 0;
+  const paceN = interview.avgPace ? clamp01(1 - Math.abs(interview.avgPace - 150) / 100) : 0;
+  const fillerN = interview.avgFillerWords !== null && interview.avgFillerWords !== undefined ? clamp01(1 - interview.avgFillerWords / 10) : 0;
+
+  return [
+    { key: "Eye", value: eyeN, accentClass: "text-emerald-600", msg: "Focus on steady eye contact. Try pausing and resetting your gaze to the lens." },
+    { key: "Conf", value: confN, accentClass: "text-violet-600", msg: "Build confidence by structuring answers (STAR). Aim for clear, complete sentences." },
+    { key: "Pace", value: paceN, accentClass: "text-emerald-600", msg: "Dial in your pace. Aiming for ~130–170 wpm often boosts clarity and confidence." },
+    { key: "Fill", value: fillerN, accentClass: "text-amber-600", msg: "Reduce filler words. If you feel stuck, pause for 1 second before continuing." },
+  ];
+}
+
+/**
+ * Lowest normalized dimension — primary coaching lever for the session.
+ * @param {Parameters<typeof getSessionCoachingDimensions>[0]} interview
+ */
+export function getSessionCoachingFocus(interview) {
+  const dims = getSessionCoachingDimensions(interview);
+  return dims.reduce((min, d) => (d.value < min.value ? d : min), dims[0]);
+}
+
+/**
+ * @param {{ questions?: unknown[], overallScore?: number | null, avgEyeContact?: number | null, avgConfidence?: number | null, avgPace?: number | null, avgFillerWords?: number | null }} interview
+ */
+export function buildNextRepsFromInterview(interview) {
+  return buildNextRepsBullets(interview, getSessionCoachingFocus(interview));
+}
+
 /**
  * Local calendar date key YYYY-MM-DD for streak / week math.
  * @param {string | Date} d
