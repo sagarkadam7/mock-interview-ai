@@ -3,8 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f4f4f7" />
-    <meta name="color-scheme" content="light" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="robots" content="index,follow" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#070A12" media="(prefers-color-scheme: dark)" />
     <meta
       name="description"
       content="InterviewAI — adaptive mock interviews with presence coaching, threaded follow-ups, streaks, and exportable scorecards. Rehearse like it’s the real loop."
@@ -21,6 +24,7 @@
       name="twitter:description"
       content="Adaptive mocks, presence metrics, PDF reports, and weekly practice goals."
     />
+    <link rel="canonical" href="%PUBLIC_URL%/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
