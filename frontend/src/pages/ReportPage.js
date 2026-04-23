@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getInterview, createShareToken } from "../utils/api";
@@ -226,30 +226,53 @@ export default function ReportPage() {
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
   const [copying, setCopying] = useState(false);
+  const [loadError, setLoadError] = useState("");
+
+  const loadReport = useCallback(async () => {
+    setLoadError("");
+    setLoading(true);
+    try {
+      const { data } = await getInterview(id);
+      setInterview(data);
+    } catch (err) {
+      const msg = getApiErrorMessage(err, "Couldn’t load this report.");
+      setLoadError(msg);
+      setInterview(null);
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
 
   useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    getInterview(id)
-      .then(({ data }) => {
-        if (!cancelled) setInterview(data);
-      })
-      .catch((err) => {
-        if (!cancelled) {
-          toast.error(getApiErrorMessage(err, "Couldn’t load this report."));
-          navigate("/dashboard", { replace: true });
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [id, navigate]);
+    loadReport();
+  }, [loadReport]);
 
   if (loading) {
     return <ReportPageSkeleton />;
+  }
+
+  if (loadError) {
+    return (
+      <div className="page-shell min-h-screen max-w-3xl py-16 md:py-20">
+        <div className="glass-panel-lg overflow-hidden p-6 sm:p-8">
+          <div className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Report unavailable</div>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">We couldn’t load this report</h1>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{loadError}</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <button type="button" className="btn-cta px-8 py-3" onClick={loadReport}>
+              Retry →
+            </button>
+            <button type="button" className="btn-outline px-8 py-3" onClick={() => navigate("/dashboard")}>
+              Back to dashboard
+            </button>
+            <Link to="/interview/new" className="no-underline">
+              <span className="btn-primary px-8 py-3">Start a new session</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!interview) return null;
