@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { motion, useReducedMotion } from "framer-motion";
 import SiteFooter from "../components/SiteFooter";
+import { FAQ_ITEMS } from "../data/marketing";
 import HowItWorksSection from "../components/landing/HowItWorksSection";
 import ComparisonSection from "../components/landing/ComparisonSection";
 import PersonasSection from "../components/landing/PersonasSection";
@@ -348,6 +349,15 @@ export default function LandingPage() {
   const { palette: C } = useTheme();
   const reduceMotion = useReducedMotion();
   const location = useLocation();
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
 
   useEffect(() => {
     // Inject fonts
@@ -369,6 +379,7 @@ export default function LandingPage() {
 
   return (
     <div style={{ background: C.paper, color: C.ink, overflowX: "hidden", minHeight: "100vh" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <Grain />
 
       {/* ── HERO (original component preserved) ── */}
