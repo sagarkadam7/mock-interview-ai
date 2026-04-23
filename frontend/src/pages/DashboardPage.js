@@ -389,6 +389,38 @@ export default function DashboardPage() {
                   </div>
                 ))}
               </div>
+
+              <div className="glass-panel-lg overflow-hidden rounded-3xl p-6 sm:p-8">
+                <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <span className="section-eyebrow mb-3">Before you start</span>
+                    <h3 className="text-xl font-bold tracking-tight text-aura-ink">A 60‑second setup that boosts your score</h3>
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                      Candidates who do these basics get cleaner transcripts, better pacing, and more accurate gaze coaching.
+                    </p>
+                  </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {[
+                    { t: "Use desktop Chrome/Edge", s: "Best speech recognition + camera APIs." },
+                    { t: "Face a window or soft light", s: "Eye contact estimation improves when your face is lit." },
+                    { t: "Position the camera at eye level", s: "You’ll look confident and avoid looking down." },
+                    { t: "Answer in 60–120 seconds", s: "Short, structured answers score higher than rambling." },
+                  ].map((x) => (
+                    <div key={x.t} className="rounded-2xl border border-slate-200/80 bg-white/80 p-4 dark:border-slate-700/70 dark:bg-slate-900/45">
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-bold text-violet-700 ring-1 ring-violet-200/70 dark:bg-violet-950/55 dark:text-violet-200 dark:ring-violet-800/50">
+                          ✓
+                        </span>
+                        <div className="min-w-0">
+                          <div className="font-semibold text-aura-ink dark:text-slate-100">{x.t}</div>
+                          <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">{x.s}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           ) : (
             <motion.div
