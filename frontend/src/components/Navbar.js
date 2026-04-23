@@ -89,6 +89,14 @@ export default function Navbar() {
 
           <div className="hidden min-w-0 items-center gap-0.5 lg:flex">
             <NavLink
+              to="/#how-it-works"
+              className={({ isActive }) =>
+                `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink dark:bg-slate-800 dark:text-slate-100" : ""}`
+              }
+            >
+              How it works
+            </NavLink>
+            <NavLink
               to="/pricing"
               className={({ isActive }) => `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink dark:bg-slate-800 dark:text-slate-100" : ""}`}
             >
@@ -190,8 +198,17 @@ export default function Navbar() {
                 <NavLink to="/pricing" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   Pricing
                 </NavLink>
+                <NavLink to="/#how-it-works" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                  How it works
+                </NavLink>
                 <NavLink to="/faq" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   FAQ
+                </NavLink>
+                <NavLink to="/privacy" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                  Privacy
+                </NavLink>
+                <NavLink to="/terms" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                  Terms
                 </NavLink>
                 <div className="my-2 h-px bg-slate-200/90 dark:bg-slate-700/80" />
                 {user ? (
