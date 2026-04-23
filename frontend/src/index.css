@@ -356,12 +356,21 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     pointer-events: none;
     transition: transform 0.28s var(--ease-out-expo), opacity 0.2s ease;
   }
-  .skip-link:focus {
+  .skip-link:focus,
+  .skip-link:focus-visible {
     transform: translate(-50%, 0);
     opacity: 1;
     pointer-events: auto;
     outline: none;
     box-shadow: 0 0 0 2px #f4f4f7, 0 0 0 4px rgba(157, 80, 187, 0.45), 0 12px 32px -8px rgba(15, 23, 42, 0.25);
+  }
+  @media (forced-colors: active) {
+    .skip-link {
+      border: 1px solid ButtonText;
+      background: Canvas;
+      color: ButtonText;
+      forced-color-adjust: none;
+    }
   }
 
   .skeleton-row {
