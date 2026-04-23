@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { getInterview, createShareToken } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import { generatePDFReport } from "../utils/pdfReport";
+import { buildNextRepsBullets } from "../utils/practiceSignals";
 import { RadarChart, Sparkline } from "../components/Charts";
 
 function ReportPageSkeleton() {
@@ -286,6 +287,8 @@ export default function ReportPage() {
 
   const focusDim = coachingDims.reduce((min, d) => (d.value < min.value ? d : min), coachingDims[0]);
 
+  const nextRepsBullets = buildNextRepsBullets(interview, focusDim);
+
   const questionScores = interview.questions.map((q) => q.score).filter((s) => typeof s === "number");
   const eyeTrend = interview.questions.map((q) => q.eyeContactPct).filter((p) => typeof p === "number");
 
@@ -411,6 +414,27 @@ export default function ReportPage() {
                   : "💪 Keep practicing! Every session makes you better."}
           </div>
         )}
+
+        <div className="mb-8 rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-violet-50/40 to-orange-50/30 p-6 shadow-inner dark:border-slate-700 dark:from-slate-900/90 dark:via-slate-950 dark:to-violet-950/25 md:p-8">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Next 7 minutes</p>
+              <h2 className="mt-1 font-brand text-xl font-semibold tracking-tight text-aura-ink dark:text-white md:text-2xl">Your next reps</h2>
+              <p className="mt-1 max-w-xl text-sm text-aura-muted">Close the loop while the session is still fresh — three focused actions, no new tooling.</p>
+            </div>
+          </div>
+          <ol className="list-none space-y-3 p-0">
+            {nextRepsBullets.map((line, idx) => (
+              <li
+                key={idx}
+                className="flex gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3.5 text-[15px] leading-snug text-slate-800 dark:border-slate-700/80 dark:bg-slate-900/50 dark:text-slate-100"
+              >
+                <span className="font-mono text-xs font-bold tabular-nums text-aura-violet dark:text-violet-300">{String(idx + 1).padStart(2, "0")}</span>
+                <span className="min-w-0 flex-1">{line}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
 
         <div className="flex flex-wrap gap-3">
           <button

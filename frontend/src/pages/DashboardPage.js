@@ -7,6 +7,7 @@ import { getApiErrorMessage } from "../utils/apiError";
 import { useAuth } from "../context/AuthContext";
 import { useConfirm } from "../context/ConfirmContext";
 import { Sparkline } from "../components/Charts";
+import { computePracticeStreak, countCompletedThisWeek, WEEKLY_SESSION_GOAL } from "../utils/practiceSignals";
 
 function StatusBadge({ status }) {
   const map = {
@@ -167,6 +168,10 @@ export default function DashboardPage() {
   const hasInterviews = interviews.length > 0;
   const recent = [...interviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3);
 
+  const practiceStreak = !loading ? computePracticeStreak(interviews) : 0;
+  const weekCount = !loading ? countCompletedThisWeek(interviews) : 0;
+  const weekPct = Math.min(100, Math.round((weekCount / WEEKLY_SESSION_GOAL) * 100));
+
   return (
     <div className="relative mx-auto min-h-screen w-full max-w-7xl px-5 py-10 sm:px-8 sm:py-12 md:px-10 md:py-14">
       {/* Hero */}
@@ -226,6 +231,61 @@ export default function DashboardPage() {
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">{s.hint}</p>
           </div>
         ))}
+      </div>
+
+      {/* Practice rhythm — streak + weekly goal (client-side from session dates) */}
+      <div className="mb-10 grid gap-4 md:grid-cols-2">
+        <div className="glass-panel relative overflow-hidden rounded-2xl p-6 sm:p-7">
+          <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-aura-coral/15 blur-2xl dark:bg-aura-coral/10" aria-hidden />
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Streak</p>
+          <div className="mt-3 flex flex-wrap items-end gap-2">
+            <span className="font-brand text-4xl font-semibold tabular-nums tracking-tight text-aura-ink dark:text-white">
+              {loading ? "—" : practiceStreak}
+            </span>
+            {!loading && (
+              <span className="mb-1.5 text-sm font-medium text-slate-500 dark:text-slate-400">
+                {practiceStreak === 1 ? "day in a row" : "days in a row"}
+              </span>
+            )}
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+            {loading
+              ? "Calculating from your completed sessions…"
+              : practiceStreak === 0
+                ? "Complete a session today or yesterday to start a streak."
+                : "Keep the chain: at least one completed session per calendar day."}
+          </p>
+        </div>
+        <div className="glass-panel relative overflow-hidden rounded-2xl p-6 sm:p-7">
+          <div className="pointer-events-none absolute -bottom-10 -right-6 h-36 w-36 rounded-full bg-aura-violet/15 blur-2xl dark:bg-aura-violet/10" aria-hidden />
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Weekly goal</p>
+          <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <span className="font-brand text-4xl font-semibold tabular-nums tracking-tight text-aura-ink dark:text-white">
+                {loading ? "—" : `${weekCount}/${WEEKLY_SESSION_GOAL}`}
+              </span>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Completed sessions this week (Mon–Sun)</p>
+            </div>
+            {!loading && weekCount >= WEEKLY_SESSION_GOAL && (
+              <span className="mb-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950/50 dark:text-emerald-200">
+                On track
+              </span>
+            )}
+          </div>
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200/90 dark:bg-slate-700/80">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-aura-coral to-aura-violet transition-[width] duration-500 ease-out"
+              style={{ width: loading ? "0%" : `${weekPct}%` }}
+            />
+          </div>
+          <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
+            {loading
+              ? "Syncing this week’s completed sessions…"
+              : weekCount >= WEEKLY_SESSION_GOAL
+                ? "Goal hit — optional extra reps compound faster."
+                : `${WEEKLY_SESSION_GOAL - weekCount} more to hit the weekly bar.`}
+          </p>
+        </div>
       </div>
 
       {/* Momentum — always show panel (avoids layout jump while loading) */}
