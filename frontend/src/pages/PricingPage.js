@@ -18,6 +18,7 @@ const free = [
 const pro = [
   "Unlimited mock sessions",
   "Shareable report links (send to mentors)",
+  "Practice streaks + weekly goals",
   "Priority AI queue (future)",
   "Early access to new analytics",
 ];
@@ -43,6 +44,13 @@ export default function PricingPage() {
         <h1 className="font-display text-4xl font-semibold tracking-tight text-aura-ink md:text-5xl">Simple today. Ambitious tomorrow.</h1>
         <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
           Start free, then upgrade when you want unlimited sessions and shareable reports for mentors and referrals.
+        </p>
+        <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
+          Questions?{" "}
+          <Link to="/faq" className="font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 hover:text-violet-900 dark:text-violet-400 dark:decoration-violet-500/50 dark:hover:text-violet-300">
+            Read the FAQ
+          </Link>
+          .
         </p>
       </div>
 
@@ -151,6 +159,16 @@ export default function PricingPage() {
             ))}
           </ul>
         </div>
+      </div>
+
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-6 py-5 text-sm text-slate-600 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/45 dark:text-slate-300">
+        <span>
+          Prefer to try it first?{" "}
+          <span className="font-semibold text-aura-ink dark:text-slate-100">Run one session</span> and decide after you see your scorecard.
+        </span>
+        <Link to="/interview/new" className="no-underline">
+          <span className="btn-primary">Start a session →</span>
+        </Link>
       </div>
     </div>
     <SiteFooter />
