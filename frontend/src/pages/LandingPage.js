@@ -15,6 +15,7 @@ const PricingTeaserSection = lazy(() => import("../components/landing/PricingTea
 const SecuritySection = lazy(() => import("../components/landing/SecuritySection"));
 const FAQSection = lazy(() => import("../components/landing/FAQSection"));
 const FounderLetterSection = lazy(() => import("../components/landing/FounderLetterSection"));
+const UseCasesSection = lazy(() => import("../components/landing/UseCasesSection"));
 const SiteFooter = lazy(() => import("../components/SiteFooter"));
 
 /* ─── DATA ───────────────────────────────────────────────────────────── */
@@ -513,6 +514,11 @@ export default function LandingPage() {
       {/* ── HOW IT WORKS (original) ── */}
       <Suspense fallback={null}>
         <HowItWorksSection />
+      </Suspense>
+
+      {/* ── USE CASES ── */}
+      <Suspense fallback={null}>
+        <UseCasesSection />
       </Suspense>
 
       {/* ── CORE ARCHITECTURE ── */}
