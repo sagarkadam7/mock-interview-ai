@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
+import InteractiveHeroDemo from "./InteractiveHeroDemo";
 
 const statRows = [
   { v: "7", l: "Tailored Qs" },
@@ -498,7 +499,8 @@ export default function LandingHero({ user }) {
         </motion.div>
 
         <div className="lg:col-span-6 lg:pl-2">
-          <HeroShowcase reduceMotion={reduceMotion} />
+          {/* Interactive demo lets visitors experience the core value (filler detection) in the hero */}
+          <InteractiveHeroDemo />
         </div>
       </div>
     </section>
