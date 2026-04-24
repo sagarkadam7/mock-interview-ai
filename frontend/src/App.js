@@ -12,6 +12,7 @@ import CookieConsent from "./components/CookieConsent";
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
 import MobileStickyCTA from "./components/MobileStickyCTA";
+import OfflineBanner from "./components/OfflineBanner";
 
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -162,6 +163,7 @@ export default function App() {
             <CookieConsent />
             <BackToTop />
             <MobileStickyCTA />
+            <OfflineBanner />
           </ConfirmProvider>
         </AuthProvider>
       </BrowserRouter>
