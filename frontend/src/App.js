@@ -7,6 +7,7 @@ import AppToaster from "./components/AppToaster";
 import Navbar from "./components/Navbar";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SkipLink from "./components/SkipLink";
+import CookieConsent from "./components/CookieConsent";
 
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -152,6 +153,7 @@ export default function App() {
           <ConfirmProvider>
             <AppShell />
             <AppToaster />
+            <CookieConsent />
           </ConfirmProvider>
         </AuthProvider>
       </BrowserRouter>
