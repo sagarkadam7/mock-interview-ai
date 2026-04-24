@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SkipLink from "./components/SkipLink";
 import CookieConsent from "./components/CookieConsent";
+import ScrollProgress from "./components/ScrollProgress";
 
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -70,6 +71,7 @@ function AppShell() {
   return (
     <div className="relative z-10 flex min-h-screen w-full min-w-0 flex-col aura-frame">
       <SkipLink />
+      <ScrollProgress />
       <Navbar />
       <main id="main-content" tabIndex={-1} className="min-w-0 w-full flex-1 outline-none focus:outline-none">
         <AnimatePresence mode="wait" initial={false}>
