@@ -66,16 +66,22 @@ export const PERSONAS = [
     title: "Final-year & campus hiring",
     desc: "Structured rounds, tight timelines — rehearse with questions that reference your projects and CGPA story, not generic HR fluff.",
     icon: "◇",
+    outcomes: ["Campus-style panels", "Project deep-dives", "Behavioral rubrics"],
+    cta: { label: "Start campus prep", to: "/register?track=campus" },
   },
   {
     title: "Career switchers",
     desc: "Paste a JD from a new domain and practice explaining transferable wins with STAR-ready prompts.",
     icon: "◆",
+    outcomes: ["Transferable skill framing", "Domain-adaptive questions", "Narrative coaching"],
+    cta: { label: "Prep for the switch", to: "/register?track=switcher" },
   },
   {
     title: "Experienced hires",
     desc: "Senior IC or manager tracks — balance technical depth with leadership narratives, scored every time.",
     icon: "◎",
+    outcomes: ["Staff-level probes", "Leadership stories", "Executive presence"],
+    cta: { label: "Rehearse a senior loop", to: "/register?track=senior" },
   },
 ];
 
