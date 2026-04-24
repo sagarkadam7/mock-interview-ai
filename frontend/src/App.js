@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ConfirmProvider } from "./context/ConfirmContext";
 import AppToaster from "./components/AppToaster";
 import Navbar from "./components/Navbar";
+import AnnouncementBar from "./components/AnnouncementBar";
 import ErrorBoundary from "./components/ErrorBoundary";
 import SkipLink from "./components/SkipLink";
 import CookieConsent from "./components/CookieConsent";
@@ -74,6 +75,7 @@ function AppShell() {
     <div className="relative z-10 flex min-h-screen w-full min-w-0 flex-col aura-frame">
       <SkipLink />
       <ScrollProgress />
+      <AnnouncementBar />
       <Navbar />
       <main id="main-content" tabIndex={-1} className="min-w-0 w-full flex-1 outline-none focus:outline-none">
         <AnimatePresence mode="wait" initial={false}>
