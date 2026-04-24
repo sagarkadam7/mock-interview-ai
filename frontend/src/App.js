@@ -10,6 +10,7 @@ import SkipLink from "./components/SkipLink";
 import CookieConsent from "./components/CookieConsent";
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
+import MobileStickyCTA from "./components/MobileStickyCTA";
 
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -158,6 +159,7 @@ export default function App() {
             <AppToaster />
             <CookieConsent />
             <BackToTop />
+            <MobileStickyCTA />
           </ConfirmProvider>
         </AuthProvider>
       </BrowserRouter>
