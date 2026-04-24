@@ -51,11 +51,14 @@ export const HOW_STEPS = [
 ];
 
 export const COMPARISON_ROWS = [
-  { label: "Questions tied to your resume", us: true, them: false },
-  { label: "Live speech + filler analytics", us: true, them: "Rare" },
-  { label: "Camera / gaze coaching", us: true, them: false },
-  { label: "Per-answer AI scores + PDF", us: true, them: "Partial" },
-  { label: "Works in the browser (no install)", us: true, them: true },
+  { label: "Questions tied to your resume & JD", us: true, chatbot: false, coach: "Sometimes" },
+  { label: "Real-time speech + filler analytics", us: true, chatbot: "Rare", coach: false },
+  { label: "Camera presence coaching", us: true, chatbot: false, coach: "Subjective" },
+  { label: "Adaptive follow-up questions", us: true, chatbot: "Scripted", coach: true },
+  { label: "Deterministic rubric scoring", us: true, chatbot: false, coach: false },
+  { label: "Exportable PDF scorecards", us: true, chatbot: "Partial", coach: false },
+  { label: "Available 24/7", us: true, chatbot: true, coach: false },
+  { label: "Pricing starts at", us: "Free", chatbot: "Freemium", coach: "$120/hr" },
 ];
 
 export const PERSONAS = [
