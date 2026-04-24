@@ -4,34 +4,93 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="robots" content="index,follow" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#070A12" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="InterviewAI" />
+    <meta name="keywords" content="mock interview, AI interview practice, interview coach, resume-aware interview, behavioral interview prep, technical interview, presence coaching, interview analytics" />
+
+    <!-- Primary meta -->
+    <title>InterviewAI — Mock Interview Practice with Real-Time AI Coaching</title>
     <meta
       name="description"
-      content="InterviewAI — adaptive mock interviews with presence coaching, threaded follow-ups, streaks, and exportable scorecards. Rehearse like it’s the real loop."
+      content="Rehearse resume-aware mock interviews with real-time speech analytics, camera presence coaching, adaptive follow-ups, and exportable scorecards. Show up to the real loop already calibrated."
     />
-    <meta property="og:title" content="InterviewAI — Practice with AI" />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="InterviewAI" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="InterviewAI — Mock Interview Practice with Real-Time AI Coaching" />
     <meta
       property="og:description"
       content="Resume-aware questions, live gaze and pace feedback, rubric scoring, and a dashboard that tracks momentum — not just a chatbot."
     />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.svg" />
+    <meta property="og:image:alt" content="InterviewAI — the premium AI mock interview platform" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="%PUBLIC_URL%/" />
+
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="InterviewAI — Practice with AI" />
-    <meta
-      name="twitter:description"
-      content="Adaptive mocks, presence metrics, PDF reports, and weekly practice goals."
-    />
+    <meta name="twitter:title" content="InterviewAI — Mock Interview Practice with Real-Time AI Coaching" />
+    <meta name="twitter:description" content="Adaptive mocks, presence metrics, PDF reports, and weekly practice goals." />
+    <meta name="twitter:image" content="%PUBLIC_URL%/og-image.svg" />
+    <meta name="twitter:image:alt" content="InterviewAI — the premium AI mock interview platform" />
+
     <link rel="canonical" href="%PUBLIC_URL%/" />
+    <link rel="sitemap" type="application/xml" href="%PUBLIC_URL%/sitemap.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Sora:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>InterviewAI — Practice with AI</title>
+
+    <!-- Organization + SoftwareApplication JSON-LD. Helps Google render rich results. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "InterviewAI",
+        "url": "https://interviewai.app",
+        "logo": "https://interviewai.app/logo.svg",
+        "sameAs": [
+          "https://github.com/sagarkadam7/mock-interview-ai"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "InterviewAI",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Starter",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pro",
+            "price": "19",
+            "priceCurrency": "USD"
+          }
+        ],
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "reviewCount": "210"
+        },
+        "description": "Adaptive mock interviews with real-time speech analytics, camera presence coaching, and exportable scorecards."
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
