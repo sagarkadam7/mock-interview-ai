@@ -108,6 +108,40 @@
     html {
       scroll-behavior: auto;
     }
+    /* Neutralize all non-essential motion globally. Keeps opacity/position animations
+       instant so the UI remains usable for vestibular-sensitive users. */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Screen-reader only utility (for labels that should not render visually). */
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  /* High contrast forced-colors mode — strip custom shadows, keep borders. */
+  @media (forced-colors: active) {
+    .glass-panel,
+    .btn-cta,
+    .btn-secondary,
+    .btn-outline {
+      box-shadow: none !important;
+      border: 1px solid ButtonText !important;
+    }
   }
 }
 
