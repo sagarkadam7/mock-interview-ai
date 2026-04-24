@@ -56,10 +56,26 @@ const FEATURES = [
 ];
 
 const ENGINES = [
-  { label: "Cognitive engine", name: "Gemini 1.5 Flash", detail: "Context-aware questions & deterministic JSON grading" },
-  { label: "Spatial tracking", name: "MediaPipe Vision", detail: "468 facial landmarks at 30 fps for gaze estimation" },
-  { label: "Neural transcription", name: "Web Speech API", detail: "Browser-native STT with minimal latency" },
-  { label: "Behavioral analytics", name: "Local NLP heuristics", detail: "WPM & filler detection — no round-trips to server" },
+  {
+    label: "Preparation outcome",
+    name: "Role-aware interview strategy",
+    detail: "Practice answers shaped to your resume and target role so every rep stays relevant.",
+  },
+  {
+    label: "Presence outcome",
+    name: "Camera confidence coaching",
+    detail: "Build steadier eye contact and interview posture with instant visibility into habits.",
+  },
+  {
+    label: "Communication outcome",
+    name: "Real-time speech analytics",
+    detail: "Hear how you sound in the moment, then tighten pacing and clarity before the real loop.",
+  },
+  {
+    label: "Execution outcome",
+    name: "Zero-latency behavioral feedback",
+    detail: "Catch filler words and delivery drift instantly so corrections happen while context is fresh.",
+  },
 ];
 
 const TRUST_MARKS = ["IIT", "NIT", "SPPU", "VIT", "BITS", "IIIT"];
@@ -70,6 +86,8 @@ const STATS = [
   { value: "<80ms", label: "real-time feedback latency" },
   { value: "10k+", label: "interviews analyzed" },
 ];
+
+const BODY_FONT_STACK = "Inter, ui-sans-serif, system-ui, -apple-system, sans-serif";
 
 /* ─── HELPERS ────────────────────────────────────────────────────────── */
 const useInView = (threshold = 0.15) => {
@@ -150,13 +168,13 @@ function Marquee({ items, speed = 30 }) {
       >
         {doubled.map((item, i) => (
           <span key={i} style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: BODY_FONT_STACK,
             fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
-            fontWeight: 700,
+            fontWeight: 600,
             color: C.marqueeText,
             letterSpacing: "0.1em",
             textTransform: "uppercase",
-            fontStyle: "italic",
+            fontStyle: "normal",
           }}>{item}</span>
         ))}
       </motion.div>
@@ -185,9 +203,9 @@ function StatCard({ value, label, delay = 0 }) {
     >
       <div
         style={{
-          fontFamily: "'Playfair Display', serif",
+          fontFamily: BODY_FONT_STACK,
           fontSize: "clamp(2rem, 4vw, 3rem)",
-          fontWeight: 900,
+          fontWeight: 800,
           lineHeight: 1.1,
           marginBottom: 8,
           ...gradientTextStyle(C.coral, C.violet),
@@ -195,7 +213,7 @@ function StatCard({ value, label, delay = 0 }) {
       >
         {value}
       </div>
-      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, fontFamily: "'Lora', serif" }}>{label}</p>
+      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.65, fontFamily: BODY_FONT_STACK }}>{label}</p>
     </motion.div>
   );
 }
@@ -249,14 +267,14 @@ function FeatureCard({ f, idx }) {
         filter: `drop-shadow(0 2px 8px ${f.accent}33)`,
       }}>{f.icon}</div>
       <h3 style={{
-        fontFamily: "'Playfair Display', serif",
+        fontFamily: BODY_FONT_STACK,
         fontSize: 22,
         fontWeight: 700,
         color: C.ink,
         marginBottom: 12,
         lineHeight: 1.25,
       }}>{f.title}</h3>
-      <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.7, fontFamily: "'Lora', serif" }}>{f.body}</p>
+      <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.8, fontFamily: BODY_FONT_STACK }}>{f.body}</p>
     </motion.div>
   );
 }
@@ -366,7 +384,7 @@ export default function LandingPage() {
       const link = document.createElement("link");
       link.id = "lp-fonts";
       link.rel = "stylesheet";
-      link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500;600&display=swap";
+      link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Mono:wght@400;500;600&display=swap";
       document.head.appendChild(link);
     }
   }, []);
@@ -425,10 +443,10 @@ export default function LandingPage() {
           </div>
           <div style={{ textAlign: "center", marginBottom: 26 }}>
             <p style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: BODY_FONT_STACK,
               fontSize: "clamp(1.35rem, 3vw, 1.75rem)",
-              fontWeight: 700,
-              fontStyle: "italic",
+              fontWeight: 600,
+              fontStyle: "normal",
               color: C.ink,
               letterSpacing: "-0.02em",
               margin: 0,
@@ -437,11 +455,11 @@ export default function LandingPage() {
             </p>
             <p style={{
               margin: "12px auto 0",
-              fontFamily: "'Lora', serif",
+              fontFamily: BODY_FONT_STACK,
               fontSize: 14,
               color: C.muted,
               maxWidth: 420,
-              lineHeight: 1.6,
+              lineHeight: 1.75,
             }}>
               Students and new grads use InterviewAI to rehearse with the same rigor as the real loop.
             </p>
@@ -472,12 +490,12 @@ export default function LandingPage() {
             Numbers that match how you <span style={{ fontStyle: "italic", ...gradientTextStyle(C.coral, C.violet) }}>actually feel</span> after reps
           </h2>
           <p style={{
-            fontFamily: "'Lora', serif",
+            fontFamily: BODY_FONT_STACK,
             fontSize: 15,
             color: C.muted,
             maxWidth: 520,
             margin: "0 auto",
-            lineHeight: 1.65,
+            lineHeight: 1.75,
           }}>
             Confidence compounds when feedback is specific, fast, and tied to your materials — not a random quiz.
           </p>
@@ -522,7 +540,7 @@ export default function LandingPage() {
 
         <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
           <div style={{ marginBottom: 72 }}>
-            <SectionLabel>Core architecture</SectionLabel>
+            <SectionLabel>Outcome engine</SectionLabel>
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(2.2rem, 5vw, 3.75rem)",
@@ -532,13 +550,13 @@ export default function LandingPage() {
               letterSpacing: "-0.02em",
               marginBottom: 20,
             }}>
-              Four specialized engines.<br />
+              Practice loops built for<br />
               <span style={gradientTextStyle(C.coral, C.violet, { angle: "90deg", fontStyle: "italic" })}>
-                One seamless verdict.
+                measurable interview wins.
               </span>
             </h2>
-            <p style={{ fontFamily: "'Lora', serif", fontSize: 17, color: C.muted, maxWidth: 520, lineHeight: 1.7 }}>
-              Every millisecond of your session passes through a purpose-built pipeline — no black boxes, no guesswork.
+            <p style={{ fontFamily: BODY_FONT_STACK, fontSize: 17, color: C.muted, maxWidth: 620, lineHeight: 1.8 }}>
+              InterviewAI turns each session into immediate coaching signals so you improve clarity, confidence, and executive presence in one pass.
             </p>
           </div>
 
@@ -558,7 +576,7 @@ export default function LandingPage() {
               padding: "16px 32px",
               borderBottom: "1px solid rgba(255,255,255,0.06)",
             }}>
-              {["Layer", "Engine", "Responsibility"].map(h => (
+              {["Candidate outcome", "Experience layer", "What improves"].map(h => (
                 <span key={h} style={{
                   fontFamily: "'DM Mono', monospace",
                   fontSize: 10,
@@ -594,7 +612,7 @@ export default function LandingPage() {
               land the offer
             </span>
           </h2>
-          <p style={{ fontFamily: "'Lora', serif", fontSize: 17, color: C.muted, maxWidth: 480, margin: "0 auto", lineHeight: 1.7 }}>
+          <p style={{ fontFamily: BODY_FONT_STACK, fontSize: 17, color: C.muted, maxWidth: 480, margin: "0 auto", lineHeight: 1.8 }}>
             No generic question banks. Every question is grounded in your story.
           </p>
         </div>
@@ -689,11 +707,11 @@ function EngineRowDark({ e, idx }) {
         {e.label}
       </span>
       <span style={{
-        fontFamily: "'Playfair Display', serif",
-        fontSize: "clamp(1rem, 2vw, 1.375rem)",
-        fontWeight: 700,
+        fontFamily: BODY_FONT_STACK,
+        fontSize: "clamp(1rem, 2vw, 1.2rem)",
+        fontWeight: 600,
         color: "white",
-        fontStyle: "italic",
+        fontStyle: "normal",
       }}>
         {e.name}
       </span>
@@ -701,8 +719,8 @@ function EngineRowDark({ e, idx }) {
         fontSize: 13,
         color: C.muted,
         textAlign: "right",
-        fontFamily: "'Lora', serif",
-        lineHeight: 1.5,
+        fontFamily: BODY_FONT_STACK,
+        lineHeight: 1.7,
       }}>
         {e.detail}
       </span>
@@ -765,10 +783,10 @@ function FinalCta({ user }) {
           </span>
         </h2>
         <p style={{
-          fontFamily: "'Lora', serif",
+          fontFamily: BODY_FONT_STACK,
           fontSize: 18,
           color: C.muted,
-          lineHeight: 1.75,
+          lineHeight: 1.85,
           marginBottom: 48,
           maxWidth: 520,
           margin: "0 auto 52px",

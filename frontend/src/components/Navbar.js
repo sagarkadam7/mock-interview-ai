@@ -8,13 +8,13 @@ const navMutedLink =
   "inline-flex rounded-full px-3 py-2 text-[12px] font-semibold text-slate-500 no-underline transition-colors hover:bg-slate-100 hover:text-aura-ink dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100";
 
 const navGhostBtn =
-  "inline-flex items-center justify-center rounded-full border border-slate-200/90 bg-white/85 px-4 py-2 text-[13px] font-medium text-slate-600 shadow-sm backdrop-blur-md transition-[transform,background-color,border-color,color,box-shadow] duration-250 ease-out-expo hover:border-slate-300 hover:bg-white hover:text-aura-ink hover:shadow-md active:scale-[0.97] no-underline dark:border-slate-600/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800 dark:hover:text-white";
+  "inline-flex items-center justify-center rounded-full border border-slate-200/90 bg-white/85 px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm backdrop-blur-md transition-[transform,background-color,border-color,color,box-shadow] duration-250 ease-out-expo hover:border-slate-300 hover:bg-white hover:text-aura-ink hover:shadow-md active:scale-[0.97] no-underline sm:px-3 sm:py-1.5 sm:text-xs md:px-4 md:py-2 md:text-[13px] dark:border-slate-600/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800 dark:hover:text-white";
 
 const navGhostActive =
   "!border-slate-300 !bg-white !text-aura-ink shadow-lux dark:!border-slate-500 dark:!bg-slate-800 dark:!text-white";
 
 const navCtaBtn =
-  "inline-flex items-center justify-center rounded-full border-0 bg-aura-ink px-5 py-2 text-[13px] font-bold text-white no-underline shadow-[0_2px_12px_-2px_rgba(15,23,42,0.35)] transition-[transform,background-color,box-shadow] duration-250 ease-out-expo hover:bg-zinc-800 hover:shadow-lg active:scale-[0.97] dark:bg-slate-100 dark:text-slate-900 dark:shadow-[0_2px_12px_-2px_rgba(0,0,0,0.4)] dark:hover:bg-white";
+  "inline-flex items-center justify-center rounded-full border-0 bg-aura-ink px-4 py-1.5 text-xs font-bold text-white no-underline shadow-[0_2px_12px_-2px_rgba(15,23,42,0.35)] transition-[transform,background-color,box-shadow] duration-250 ease-out-expo hover:bg-zinc-800 hover:shadow-lg active:scale-[0.97] sm:px-4 sm:py-1.5 sm:text-xs md:px-5 md:py-2 md:text-[13px] dark:bg-slate-100 dark:text-slate-900 dark:shadow-[0_2px_12px_-2px_rgba(0,0,0,0.4)] dark:hover:bg-white";
 
 const profilePill =
   "mr-0.5 hidden items-center gap-2.5 rounded-full border border-slate-200/90 bg-white/95 py-1.5 pl-1.5 pr-4 shadow-sm backdrop-blur-sm transition-colors duration-250 dark:border-slate-600/80 dark:bg-slate-900/80 sm:flex";
@@ -26,16 +26,9 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const btnRef = useRef(null);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 6);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -68,11 +61,7 @@ export default function Navbar() {
   return (
     <nav
       aria-label="Primary"
-      className={`sticky top-0 z-[100] border-b transition-[border-color,background-color,box-shadow,backdrop-filter] duration-350 ease-out-expo ${
-        scrolled
-          ? "border-slate-200/90 bg-white/95 shadow-lux-nav backdrop-blur-xl dark:border-slate-800/90 dark:bg-slate-950/92 dark:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]"
-          : "border-slate-200/50 bg-white/80 backdrop-blur-lg dark:border-slate-800/50 dark:bg-slate-950/85"
-      }`}
+      className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-300 ease-out-expo dark:border-slate-800/80 dark:bg-slate-950/85"
     >
       <div className="relative mx-auto flex h-[3.75rem] max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-10">
         <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4 md:gap-6">

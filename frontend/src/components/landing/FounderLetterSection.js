@@ -62,12 +62,12 @@ export default function FounderLetterSection() {
               viewport={{ once: true, margin: "-40px" }}
               variants={fadeUp}
               transition={{ delay: reduceMotion ? 0 : 0.06 }}
-              className="mt-8 text-lg font-medium leading-relaxed text-slate-700 dark:text-slate-300 md:text-xl md:leading-relaxed"
+              className="mt-8 text-lg font-medium leading-loose text-slate-700 dark:text-slate-300 md:text-xl md:leading-loose"
             >
               {FOUNDER_LETTER.lead}
             </motion.p>
 
-            <div className="mt-10 space-y-6 text-[15px] leading-relaxed text-slate-600 dark:text-slate-400 md:text-base md:leading-relaxed">
+            <div className="mt-10 space-y-6 text-[15px] leading-loose text-slate-600 dark:text-slate-400 md:text-base md:leading-loose">
               {FOUNDER_LETTER.paragraphs.map((p, i) => (
                 <motion.p
                   key={i}
@@ -98,12 +98,12 @@ export default function FounderLetterSection() {
               />
               <div className="relative flex flex-col items-center text-center">
                 <div
-                  className="mb-8 flex h-20 w-20 items-center justify-center rounded-full border border-slate-200/95 bg-gradient-to-br from-white to-slate-50 font-display text-xl font-semibold tracking-tight text-gradient shadow-inner dark:border-slate-600 dark:from-slate-800 dark:to-slate-900"
+                  className="mb-8 flex h-20 w-20 items-center justify-center rounded-full border border-slate-200/95 bg-gradient-to-br from-white to-slate-50 text-xl font-semibold tracking-tight text-gradient shadow-inner dark:border-slate-600 dark:from-slate-800 dark:to-slate-900"
                   aria-hidden
                 >
                   SK
                 </div>
-                <blockquote className="font-display text-lg font-medium italic leading-snug text-slate-700 dark:text-slate-300 md:text-xl">
+                <blockquote className="text-lg font-medium leading-loose text-slate-700 dark:text-slate-300 md:text-xl">
                   &ldquo;{FOUNDER_LETTER.asideQuote}&rdquo;
                 </blockquote>
                 <div className="mt-10 h-px w-12 bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" aria-hidden />
