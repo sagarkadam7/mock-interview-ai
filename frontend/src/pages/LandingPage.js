@@ -5,6 +5,7 @@ import { useTheme } from "../context/ThemeContext";
 import { motion, useReducedMotion } from "framer-motion";
 import { FAQ_ITEMS } from "../data/marketing";
 import LandingHero from "../components/landing/LandingHero";
+import TrustLogoRail from "../components/landing/TrustLogoRail";
 
 const HowItWorksSection = lazy(() => import("../components/landing/HowItWorksSection"));
 const ComparisonSection = lazy(() => import("../components/landing/ComparisonSection"));
@@ -464,7 +465,7 @@ export default function LandingPage() {
               Students and new grads use InterviewAI to rehearse with the same rigor as the real loop.
             </p>
           </div>
-          <Marquee items={TRUST_MARKS} speed={42} />
+          <TrustLogoRail />
         </div>
       </section>
 
