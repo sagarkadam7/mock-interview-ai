@@ -28,6 +28,7 @@ import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import WelcomePage from "./pages/WelcomePage";
+import { installClientErrorReporter } from "./utils/errorReporter";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -72,6 +73,11 @@ function AppShell() {
   const reduceMotion = useReducedMotion();
   const enterY = reduceMotion ? 0 : 10;
   const enterDur = reduceMotion ? 0.01 : 0.32;
+
+  React.useEffect(() => {
+    const uninstall = installClientErrorReporter({ sampleRate: 1 });
+    return () => uninstall?.();
+  }, []);
 
   return (
     <div className="relative z-10 flex min-h-screen w-full min-w-0 flex-col aura-frame">
