@@ -79,6 +79,31 @@ function AppShell() {
     return () => uninstall?.();
   }, []);
 
+  React.useEffect(() => {
+    const path = location.pathname;
+    const title =
+      path === "/"
+        ? "InterviewAI — Mock Interview Practice"
+        : path === "/pricing"
+          ? "Pricing · InterviewAI"
+          : path === "/faq"
+            ? "FAQ · InterviewAI"
+            : path === "/privacy"
+              ? "Privacy · InterviewAI"
+              : path === "/terms"
+                ? "Terms · InterviewAI"
+                : path === "/login"
+                  ? "Sign in · InterviewAI"
+                  : path === "/register"
+                    ? "Create account · InterviewAI"
+                    : path === "/dashboard"
+                      ? "Dashboard · InterviewAI"
+                      : path === "/welcome"
+                        ? "Welcome · InterviewAI"
+                        : "InterviewAI";
+    document.title = title;
+  }, [location.pathname]);
+
   return (
     <div className="relative z-10 flex min-h-screen w-full min-w-0 flex-col aura-frame">
       <SkipLink />
