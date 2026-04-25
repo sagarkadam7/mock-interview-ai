@@ -11,6 +11,7 @@ const HowItWorksSection = lazy(() => import("../components/landing/HowItWorksSec
 const ComparisonSection = lazy(() => import("../components/landing/ComparisonSection"));
 const PersonasSection = lazy(() => import("../components/landing/PersonasSection"));
 const TestimonialsSection = lazy(() => import("../components/landing/TestimonialsSection"));
+const QuoteWallSection = lazy(() => import("../components/landing/QuoteWallSection"));
 const PricingTeaserSection = lazy(() => import("../components/landing/PricingTeaserSection"));
 const SecuritySection = lazy(() => import("../components/landing/SecuritySection"));
 const FAQSection = lazy(() => import("../components/landing/FAQSection"));
@@ -677,6 +678,11 @@ export default function LandingPage() {
       {/* ── PERSONAS (original) ── */}
       <Suspense fallback={null}>
         <PersonasSection />
+      </Suspense>
+
+      {/* ── QUOTE WALL + OUTCOMES ── */}
+      <Suspense fallback={null}>
+        <QuoteWallSection />
       </Suspense>
 
       {/* ── TESTIMONIALS (original) ── */}
