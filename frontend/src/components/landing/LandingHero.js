@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import InteractiveHeroDemo from "./InteractiveHeroDemo";
+import VideoModal from "../VideoModal";
 
 const statRows = [
   { v: "7", l: "Tailored Qs" },
@@ -320,6 +321,7 @@ function HeroShowcase({ reduceMotion }) {
 export default function LandingHero({ user }) {
   const heroRef = useRef(null);
   const reduceMotion = useReducedMotion();
+  const [videoOpen, setVideoOpen] = useState(false);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -439,6 +441,13 @@ export default function LandingHero({ user }) {
                 <span className="btn-secondary w-full justify-center py-4 sm:inline-flex sm:w-auto sm:px-8">Sign in</span>
               </Link>
             )}
+            <button
+              type="button"
+              onClick={() => setVideoOpen(true)}
+              className="btn-outline w-full justify-center py-4 font-semibold sm:inline-flex sm:w-auto sm:px-8"
+            >
+              Watch demo
+            </button>
             {user && (
               <Link to="/interview/new" className="w-full no-underline sm:w-auto">
                 <span className="btn-outline w-full justify-center py-4 font-semibold sm:inline-flex sm:w-auto sm:px-8">New interview</span>
@@ -503,6 +512,8 @@ export default function LandingHero({ user }) {
           <InteractiveHeroDemo />
         </div>
       </div>
+
+      <VideoModal open={videoOpen} onClose={() => setVideoOpen(false)} />
     </section>
   );
 }
