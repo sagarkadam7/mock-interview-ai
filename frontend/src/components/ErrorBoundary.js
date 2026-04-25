@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "./ui/Button";
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -24,19 +25,17 @@ export default class ErrorBoundary extends React.Component {
             Try refreshing the page. If this keeps happening, clear site data for this origin and sign in again.
           </p>
           <div className="mt-2 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <button
-              type="button"
-              className="btn-cta"
+            <Button
+              variant="cta"
               onClick={() => {
                 this.setState({ hasError: false, error: null });
                 window.location.reload();
               }}
             >
               Retry
-            </button>
-            <button
-              type="button"
-              className="btn-outline"
+            </Button>
+            <Button
+              variant="outline"
               onClick={async () => {
                 try {
                   await navigator.clipboard.writeText(details);
@@ -46,17 +45,16 @@ export default class ErrorBoundary extends React.Component {
               }}
             >
               Copy error details
-            </button>
-            <button
-              type="button"
-              className="btn-outline"
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => {
                 this.setState({ hasError: false, error: null });
                 window.location.assign("/");
               }}
             >
               Back to home
-            </button>
+            </Button>
           </div>
         </div>
       );
