@@ -57,7 +57,7 @@ export default function TestimonialsSection() {
     return () => clearTimeout(timerRef.current);
   }, [paused, idx]);
 
-  // Global keyboard shortcuts while carousel is on screen.
+  // Keyboard shortcuts when carousel region is focused.
   const handleKey = (e) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -88,6 +88,7 @@ export default function TestimonialsSection() {
           role="region"
           aria-roledescription="carousel"
           aria-label="Candidate testimonials"
+          aria-describedby="testimonials-help"
           tabIndex={0}
           onKeyDown={handleKey}
           onMouseEnter={() => setPaused(true)}
@@ -96,6 +97,9 @@ export default function TestimonialsSection() {
           onBlur={() => setPaused(false)}
           className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/90 p-8 shadow-xl shadow-slate-900/5 ring-1 ring-white/70 backdrop-blur-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 dark:border-slate-700/70 dark:bg-slate-900/70 dark:ring-slate-700/50 md:p-14"
         >
+          <p id="testimonials-help" className="visually-hidden">
+            Use left and right arrow keys to change testimonials.
+          </p>
           {/* Ambient glow */}
           <div
             aria-hidden

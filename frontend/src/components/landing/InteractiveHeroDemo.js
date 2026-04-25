@@ -105,6 +105,7 @@ export default function InteractiveHeroDemo() {
     <div
       className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-lg xl:max-w-xl"
       aria-label="InterviewAI live coaching demo"
+      role="region"
     >
       <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white/95 to-slate-50/90 p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.28)] ring-1 ring-white/70 backdrop-blur-lg dark:border-slate-800/80 dark:from-slate-900/90 dark:to-slate-950/90 dark:ring-slate-700/50 sm:p-7">
         {/* Ambient glow */}
@@ -133,6 +134,7 @@ export default function InteractiveHeroDemo() {
             onClick={phase === "idle" || phase === "insights" ? startDemo : resetDemo}
             disabled={phase === "recording" || phase === "transcribing"}
             aria-pressed={phase === "recording"}
+            aria-label={phase === "idle" || phase === "insights" ? "Start microphone demo" : "Reset demo"}
             className={`group relative inline-flex h-24 w-24 items-center justify-center rounded-full transition-transform duration-300 ease-out focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-aura-violet/40 ${
               phase === "idle" || phase === "insights" ? "hover:scale-[1.04] active:scale-[0.97]" : ""
             }`}
