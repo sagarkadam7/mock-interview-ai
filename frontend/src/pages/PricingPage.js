@@ -24,10 +24,16 @@ const pro = [
 ];
 
 const soon = ["Team / cohort dashboards", "ATS integrations", "Custom rubrics per company"];
+const pricingFaq = [
+  { q: "Is Pro refundable?", a: "If Pro isn’t helping you practice more effectively, we’ll make it right. Reach out and we’ll help you troubleshoot or refund." },
+  { q: "Can I cancel anytime?", a: "Yes. Pro is month-to-month. Cancel anytime and keep access until the end of the billing period." },
+  { q: "Do I need Pro to try the product?", a: "No. Starter is free and includes the core interview flow so you can see your scorecard before upgrading." },
+];
 
 export default function PricingPage() {
   const { user, login } = useAuth();
   const [upgrading, setUpgrading] = useState(false);
+  const [billing, setBilling] = useState("monthly"); // monthly | annual
   const plan = (user?.plan || "free").toLowerCase();
   const isPro = plan === "pro" || plan === "team";
   const ctaLabel = useMemo(() => {
@@ -35,6 +41,9 @@ export default function PricingPage() {
     if (isPro) return "You’re on Pro";
     return "Upgrade to Pro (dev) →";
   }, [user, isPro]);
+
+  const proPrice = billing === "annual" ? 9 : 12;
+  const proCadence = billing === "annual" ? "/ month · billed annually" : "/ month";
 
   return (
     <div className="min-h-screen">
@@ -52,6 +61,33 @@ export default function PricingPage() {
           </Link>
           .
         </p>
+      </div>
+
+      <div className="mb-10 flex flex-col items-start justify-between gap-4 rounded-2xl border border-slate-200/80 bg-white/70 px-6 py-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/45 sm:flex-row sm:items-center">
+        <div>
+          <p className="text-sm font-semibold text-aura-ink dark:text-slate-100">Choose billing</p>
+          <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-400">Annual saves ~25%. Switch anytime.</p>
+        </div>
+        <div className="inline-flex rounded-full border border-slate-200/80 bg-white p-1 dark:border-slate-700/70 dark:bg-slate-900/60">
+          {[
+            { id: "monthly", label: "Monthly" },
+            { id: "annual", label: "Annual (save)" },
+          ].map((o) => (
+            <button
+              key={o.id}
+              type="button"
+              onClick={() => setBilling(o.id)}
+              className={`rounded-full px-4 py-2 text-xs font-bold transition-colors ${
+                billing === o.id
+                  ? "bg-aura-ink text-white dark:bg-slate-100 dark:text-slate-900"
+                  : "text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+              }`}
+              aria-pressed={billing === o.id}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
@@ -93,13 +129,13 @@ export default function PricingPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.06 }}
-          className="glass-panel-lg relative overflow-hidden rounded-3xl p-8 md:p-10"
+          className="glass-panel-lg relative overflow-hidden rounded-3xl p-8 ring-2 ring-violet-400/45 shadow-xl shadow-purple-500/15 md:p-10 dark:ring-violet-500/50"
         >
           <div className="pointer-events-none absolute -left-24 -bottom-24 h-56 w-56 rounded-full bg-gradient-to-tr from-orange-200/35 to-transparent blur-3xl dark:from-orange-950/40 dark:to-transparent" aria-hidden />
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-aura-coral dark:text-aura-coral">Pro</p>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-display text-5xl font-bold text-aura-ink">$12</span>
-            <span className="text-slate-500 dark:text-slate-400">/ month</span>
+            <span className="font-display text-5xl font-bold text-aura-ink">${proPrice}</span>
+            <span className="text-slate-500 dark:text-slate-400">{proCadence}</span>
           </div>
           <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">Unlimited practice + shareable signal. Built for serious prep loops.</p>
           <ul className="mt-8 space-y-3">
@@ -142,6 +178,13 @@ export default function PricingPage() {
         </motion.div>
       </div>
 
+      <div className="mt-10 rounded-3xl border border-emerald-200/70 bg-emerald-50/70 p-6 text-sm text-emerald-950 shadow-sm dark:border-emerald-500/25 dark:bg-emerald-950/40 dark:text-emerald-50 md:p-8">
+        <p className="font-semibold">30-day outcome guarantee</p>
+        <p className="mt-2 leading-relaxed text-emerald-900/80 dark:text-emerald-100/80">
+          If you don’t feel more confident and structured after consistent reps, we’ll help you fix your workflow or refund Pro.
+        </p>
+      </div>
+
       <div className="mt-12 grid gap-6 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-200 bg-white/90 p-6 text-sm leading-relaxed text-slate-600 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/55 dark:text-slate-300 md:p-8">
           <strong className="font-semibold text-aura-ink">Fair use:</strong> automated systems may rate-limit abusive traffic to keep latency low for everyone. Personal practice within normal bounds is always the goal.
@@ -158,6 +201,18 @@ export default function PricingPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+
+      <div className="mt-12">
+        <div className="section-eyebrow mb-4">Pricing FAQ</div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {pricingFaq.map((x) => (
+            <div key={x.q} className="rounded-2xl border border-slate-200/80 bg-white/80 p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/55">
+              <p className="text-sm font-bold text-aura-ink dark:text-slate-100">{x.q}</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{x.a}</p>
+            </div>
+          ))}
         </div>
       </div>
 
