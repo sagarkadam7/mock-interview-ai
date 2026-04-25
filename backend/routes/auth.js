@@ -14,6 +14,7 @@ router.post("/register", async (req, res) => {
     const name = typeof req.body.name === "string" ? req.body.name.trim() : "";
     const email = typeof req.body.email === "string" ? req.body.email.trim().toLowerCase() : "";
     const password = typeof req.body.password === "string" ? req.body.password : "";
+    const utm = typeof req.body.utm === "object" && req.body.utm ? req.body.utm : null;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields are required." });
@@ -28,7 +29,22 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Email already registered." });
     }
 
-    const user = await User.create({ name, email, password });
+    const user = await User.create({
+      name,
+      email,
+      password,
+      utm: utm
+        ? {
+            utm_source: String(utm.utm_source || ""),
+            utm_medium: String(utm.utm_medium || ""),
+            utm_campaign: String(utm.utm_campaign || ""),
+            utm_term: String(utm.utm_term || ""),
+            utm_content: String(utm.utm_content || ""),
+            ref: String(utm.ref || ""),
+            capturedAt: new Date(),
+          }
+        : undefined,
+    });
 
     res.status(201).json({
       _id: user._id,

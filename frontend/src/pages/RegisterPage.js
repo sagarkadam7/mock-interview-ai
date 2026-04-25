@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { registerUser } from "../utils/api";
 import AuthBrandPanel from "../components/AuthBrandPanel";
+import { getStoredUtm } from "../utils/utm";
 
 export default function RegisterPage() {
   const { login } = useAuth();
@@ -20,7 +21,8 @@ export default function RegisterPage() {
     if (form.password.length < 8) return setError("Password must be at least 8 characters.");
     setLoading(true);
     try {
-      const { data } = await registerUser(form);
+      const utm = getStoredUtm();
+      const { data } = await registerUser({ ...form, utm: utm || undefined });
       login(data);
       navigate("/welcome");
     } catch (err) {
