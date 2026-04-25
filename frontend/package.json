@@ -20,11 +20,13 @@
     "autoprefixer": "^10.4.27",
     "http-proxy-middleware": "^2.0.9",
     "postcss": "^8.5.8",
+    "prettier": "^3.8.3",
     "tailwindcss": "^3.4.19"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md,json}\""
   },
   "browserslist": {
     "production": [
