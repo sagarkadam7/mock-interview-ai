@@ -66,8 +66,9 @@ export default function SiteFooter() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const onSubscribe = (e) => {
+  const onSubscribe = async (e) => {
     e.preventDefault();
     const trimmed = email.trim();
     // Minimal email validation — avoid extra deps; server will re-validate.
@@ -75,10 +76,26 @@ export default function SiteFooter() {
       setError("Please enter a valid email address.");
       return;
     }
+    setLoading(true);
     setError("");
-    setSubscribed(true);
-    setEmail("");
-    // Future: POST to /api/newsletter
+    try {
+      const res = await fetch("/api/marketing/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: trimmed }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.message || "Subscription failed.");
+      }
+      setSubscribed(true);
+      setEmail("");
+    } catch (err) {
+      setError(err?.message || "Subscription failed.");
+      setSubscribed(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -123,9 +140,11 @@ export default function SiteFooter() {
               />
               <button
                 type="submit"
-                className="inline-flex items-center justify-center rounded-full bg-aura-ink px-6 py-3 text-sm font-bold text-white shadow-sm transition-transform active:scale-[0.97] hover:shadow-lg dark:bg-slate-100 dark:text-slate-900"
+                className="inline-flex items-center justify-center rounded-full bg-aura-ink px-6 py-3 text-sm font-bold text-white shadow-sm transition-transform active:scale-[0.97] hover:shadow-lg disabled:opacity-70 dark:bg-slate-100 dark:text-slate-900"
+                disabled={loading}
+                aria-busy={loading}
               >
-                Subscribe
+                {loading ? "Subscribing…" : "Subscribe"}
               </button>
             </div>
             {error && (
