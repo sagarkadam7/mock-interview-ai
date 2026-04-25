@@ -9,6 +9,8 @@ import { useConfirm } from "../context/ConfirmContext";
 import { Sparkline } from "../components/Charts";
 import { computePracticeStreak, countCompletedThisWeek, WEEKLY_SESSION_GOAL } from "../utils/practiceSignals";
 
+const DASH_CHECKLIST_KEY = "ia.dashboard.quickstart.v1";
+
 function StatusBadge({ status }) {
   const map = {
     pending: ["Not started", "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-500/35 dark:bg-amber-950/45 dark:text-amber-200"],
@@ -101,6 +103,22 @@ export default function DashboardPage() {
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(null);
+  const [quickstart, setQuickstart] = useState(() => {
+    try {
+      const raw = localStorage.getItem(DASH_CHECKLIST_KEY);
+      return raw ? JSON.parse(raw) : { chrome: false, lighting: false, structure: false };
+    } catch {
+      return { chrome: false, lighting: false, structure: false };
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(DASH_CHECKLIST_KEY, JSON.stringify(quickstart));
+    } catch {
+      // ignore
+    }
+  }, [quickstart]);
 
   useEffect(() => {
     getAllInterviews()
@@ -375,6 +393,48 @@ export default function DashboardPage() {
                     Start your first interview <span aria-hidden>→</span>
                   </span>
                 </Link>
+              </div>
+
+              <div className="glass-panel-lg overflow-hidden rounded-3xl p-6 sm:p-8">
+                <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <span className="section-eyebrow mb-3">Quick start</span>
+                    <h3 className="text-xl font-bold tracking-tight text-aura-ink">Do these once. Score higher every rep.</h3>
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                      This isn’t busywork — it improves transcript quality, pacing, and gaze coaching accuracy.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-outline px-5 py-2.5 text-sm"
+                    onClick={() => setQuickstart({ chrome: false, lighting: false, structure: false })}
+                  >
+                    Reset
+                  </button>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[
+                    { id: "chrome", t: "Use Chrome/Edge", s: "Best speech + camera APIs." },
+                    { id: "lighting", t: "Good lighting", s: "Face a window or soft light." },
+                    { id: "structure", t: "60–120s answers", s: "Short, structured beats rambling." },
+                  ].map((x) => (
+                    <label
+                      key={x.id}
+                      className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-4 shadow-sm transition-colors hover:bg-white dark:border-slate-700/70 dark:bg-slate-900/45 dark:hover:bg-slate-900/60"
+                    >
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-4 w-4 accent-violet-600"
+                        checked={!!quickstart[x.id]}
+                        onChange={(e) => setQuickstart((p) => ({ ...p, [x.id]: e.target.checked }))}
+                      />
+                      <span className="min-w-0">
+                        <span className="block font-semibold text-aura-ink dark:text-slate-100">{x.t}</span>
+                        <span className="mt-0.5 block text-sm text-slate-600 dark:text-slate-400">{x.s}</span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
