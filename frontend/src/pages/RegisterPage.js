@@ -22,7 +22,7 @@ export default function RegisterPage() {
     try {
       const { data } = await registerUser(form);
       login(data);
-      navigate("/dashboard");
+      navigate("/welcome");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed.");
     } finally {

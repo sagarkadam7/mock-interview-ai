@@ -27,6 +27,7 @@ import FAQPage from "./pages/FAQPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import WelcomePage from "./pages/WelcomePage";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -116,6 +117,14 @@ function AppShell() {
                 element={
                   <PrivateRoute>
                     <DashboardPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/welcome"
+                element={
+                  <PrivateRoute>
+                    <WelcomePage />
                   </PrivateRoute>
                 }
               />
