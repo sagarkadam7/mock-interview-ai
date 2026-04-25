@@ -391,6 +391,36 @@ export default function LandingPage() {
     }
   }, []);
 
+  // Hint the browser to fetch the most visible landing assets sooner.
+  useEffect(() => {
+    const preconnect = (href) => {
+      if (document.querySelector(`link[rel="preconnect"][href="${href}"]`)) return;
+      const l = document.createElement("link");
+      l.rel = "preconnect";
+      l.href = href;
+      document.head.appendChild(l);
+    };
+    preconnect("https://fonts.googleapis.com");
+    preconnect("https://fonts.gstatic.com");
+  }, []);
+
+  // Light prefetch of the likely next navigation targets from the landing page.
+  // Uses requestIdleCallback to avoid blocking initial render.
+  useEffect(() => {
+    const w = window;
+    const idle = w.requestIdleCallback || ((cb) => setTimeout(cb, 750));
+    const cancelIdle = w.cancelIdleCallback || clearTimeout;
+    const id = idle(() => {
+      try {
+        import("./PricingPage");
+        import("./FAQPage");
+      } catch {
+        // ignore
+      }
+    });
+    return () => cancelIdle(id);
+  }, []);
+
   useEffect(() => {
     if (!location.hash) return;
     const id = location.hash.replace("#", "");
