@@ -23,6 +23,14 @@ const createInterviewLimiter = rateLimit({
   message: { message: "Too many interview sessions created. Try again later." },
 });
 
+const answerLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: Number(process.env.ANSWER_RATE_LIMIT_MAX) || 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many answer submissions. Slow down and try again." },
+});
+
 function getGeminiModel() {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("GEMINI_API_KEY is not configured.");
@@ -335,7 +343,7 @@ router.get("/:id", protect, validateMongoId("id"), async (req, res) => {
 // POST /api/interview/:id/answer
 // Body: { questionId, answer }
 // ════════════════════════════════════════════════════════════════
-router.post("/:id/answer", protect, validateMongoId("id"), async (req, res) => {
+router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async (req, res) => {
   try {
     const { questionId, answer, eyeContactPct, fillerWordCount, fillerWords, wordsPerMinute, paceLabel, dominantEmotion, emotionScores, confidenceScore } = req.body;
 
