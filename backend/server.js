@@ -11,6 +11,7 @@ dotenv.config();
 
 const app = express();
 app.set("trust proxy", 1);
+const startedAt = Date.now();
 
 const rawOrigins = process.env.FRONTEND_ORIGINS || "http://localhost:3000";
 const allowedOrigins = rawOrigins
@@ -61,6 +62,14 @@ app.use("/api/interview", require("./routes/interview"));
 app.use("/api/share", require("./routes/share"));
 app.use("/api/marketing", require("./routes/marketing"));
 app.use("/api/marketing", require("./routes/clientError"));
+
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    uptimeSec: Math.round((Date.now() - startedAt) / 1000),
+    time: new Date().toISOString(),
+  });
+});
 
 app.get("/", (req, res) =>
   res.json({ message: "Mock Interview API running ✅", ok: true, time: new Date().toISOString() })
