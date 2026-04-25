@@ -365,13 +365,30 @@ export default function SharedReportPage() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-aura-muted">Want your own sessions, reports, and practice history?</p>
-          <Link to="/register">
-            <button type="button" className="btn-primary">
-              Create free account →
-            </button>
-          </Link>
+        <div className="mt-8 rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white via-slate-50/50 to-violet-50/30 p-6 shadow-sm dark:border-slate-700/70 dark:from-slate-900/70 dark:via-slate-950 dark:to-violet-950/25 md:p-8">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Try InterviewAI</p>
+              <p className="mt-2 text-lg font-semibold tracking-tight text-aura-ink dark:text-slate-100">
+                Want your own sessions, reports, and practice history?
+              </p>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                Create a free account and run your first rep in minutes. You’ll get the same transcript, filler detection, and scorecard.
+              </p>
+            </div>
+            <div className="flex w-full flex-col gap-2 sm:w-auto">
+              <Link to="/register" className="no-underline">
+                <span className="btn-cta inline-flex w-full justify-center px-8 py-3.5 text-sm sm:w-auto">
+                  Create free account →
+                </span>
+              </Link>
+              <Link to="/pricing" className="no-underline">
+                <span className="btn-outline inline-flex w-full justify-center px-8 py-3 text-sm sm:w-auto">
+                  View plans
+                </span>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
