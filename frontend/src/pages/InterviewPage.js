@@ -139,6 +139,12 @@ export default function InterviewPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    if (!interview?.jobRole) return undefined;
+    document.title = `${interview.jobRole} · Live session · InterviewAI`;
+    return undefined;
+  }, [interview?.jobRole]);
+
   const handleSubmitAnswer = useCallback(async () => {
     if (!interview?.questions?.length) return;
     const q = interview.questions[currentIndex];
