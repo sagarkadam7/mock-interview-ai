@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { getSharedReport } from "../utils/api";
 import { buildNextRepsFromInterview } from "../utils/practiceSignals";
 import { getApiErrorMessage } from "../utils/apiError";
+import { formatRelativeTime } from "../utils/formatRelativeTime";
 import { RadarChart, Sparkline } from "../components/Charts";
 
 function ReportPageSkeleton() {
@@ -239,6 +240,12 @@ export default function SharedReportPage() {
     };
   }, [token, navigate]);
 
+  useEffect(() => {
+    if (!interview?.jobRole) return undefined;
+    document.title = `${interview.jobRole} · Shared report · InterviewAI`;
+    return undefined;
+  }, [interview?.jobRole]);
+
   if (loading) return <ReportPageSkeleton />;
   if (!interview) return null;
 
@@ -274,6 +281,7 @@ export default function SharedReportPage() {
             <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">{interview.jobRole}</h1>
             <p className="mt-1 text-sm text-aura-muted">
               {new Date(interview.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+              <span className="text-slate-400 dark:text-slate-500"> · {formatRelativeTime(interview.createdAt)}</span>
             </p>
             <p className="mt-1 text-sm text-aura-muted">
               {answered.length}/{interview.questions?.length || 0} questions answered
