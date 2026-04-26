@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -105,6 +105,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [sessionQuery, setSessionQuery] = useState("");
+  const [sessionSort, setSessionSort] = useState("newest");
   const [deleting, setDeleting] = useState(null);
   const [quickstart, setQuickstart] = useState(() => {
     try {
@@ -202,6 +203,24 @@ export default function DashboardPage() {
   const filteredSessions = q
     ? interviews.filter((iv) => (iv.jobRole || "").toLowerCase().includes(q))
     : interviews;
+
+  const sortedSessions = useMemo(() => {
+    const list = [...filteredSessions];
+    switch (sessionSort) {
+      case "oldest":
+        return list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      case "score_high":
+        return list.sort((a, b) => (b.overallScore ?? -1) - (a.overallScore ?? -1));
+      case "score_low":
+        return list.sort((a, b) => (a.overallScore ?? 999) - (b.overallScore ?? 999));
+      case "role":
+        return list.sort((a, b) => (a.jobRole || "").localeCompare(b.jobRole || "", undefined, { sensitivity: "base" }));
+      case "newest":
+      default:
+        return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+  }, [filteredSessions, sessionSort]);
+
   const recent = [...interviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3);
 
   const practiceStreak = !loading ? computePracticeStreak(interviews) : 0;
@@ -532,18 +551,35 @@ export default function DashboardPage() {
                     {q ? ` · ${filteredSessions.length} match` : ""}
                   </span>
                 </div>
-                <label className="sr-only" htmlFor="dashboard-session-search">
-                  Filter sessions by role
-                </label>
-                <input
-                  id="dashboard-session-search"
-                  type="search"
-                  value={sessionQuery}
-                  onChange={(e) => setSessionQuery(e.target.value)}
-                  placeholder="Filter by role…"
-                  className="input-field max-w-md py-2.5 text-sm"
-                  autoComplete="off"
-                />
+                <div className="flex w-full min-w-0 flex-col gap-2 sm:max-w-xl sm:flex-row sm:items-center">
+                  <label className="sr-only" htmlFor="dashboard-session-search">
+                    Filter sessions by role
+                  </label>
+                  <input
+                    id="dashboard-session-search"
+                    type="search"
+                    value={sessionQuery}
+                    onChange={(e) => setSessionQuery(e.target.value)}
+                    placeholder="Filter by role…"
+                    className="input-field min-w-0 flex-1 py-2.5 text-sm"
+                    autoComplete="off"
+                  />
+                  <label className="sr-only" htmlFor="dashboard-session-sort">
+                    Sort sessions
+                  </label>
+                  <select
+                    id="dashboard-session-sort"
+                    className="input-field shrink-0 py-2.5 text-sm sm:w-[11.5rem]"
+                    value={sessionSort}
+                    onChange={(e) => setSessionSort(e.target.value)}
+                  >
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                    <option value="score_high">Score · high to low</option>
+                    <option value="score_low">Score · low to high</option>
+                    <option value="role">Role A–Z</option>
+                  </select>
+                </div>
               </div>
               {filteredSessions.length === 0 && q ? (
                 <div className="rounded-2xl border border-dashed border-slate-200/90 bg-slate-50/60 px-6 py-10 text-center dark:border-slate-600/60 dark:bg-slate-900/40">
@@ -553,7 +589,7 @@ export default function DashboardPage() {
                   </button>
                 </div>
               ) : null}
-              {filteredSessions.map((iv) => {
+              {sortedSessions.map((iv) => {
                 const answered = iv.questions?.filter((q) => q.score !== null).length || 0;
                 const total = iv.questions?.length || 0;
                 const pct = total > 0 ? (answered / total) * 100 : 0;
