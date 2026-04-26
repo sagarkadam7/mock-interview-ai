@@ -12,6 +12,7 @@ export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -115,14 +116,25 @@ export default function RegisterPage() {
                 />
               </div>
               <div>
-                <label htmlFor="password" className="label-field">
-                  Password
-                </label>
+                <div className="mb-2 flex items-end justify-between gap-2">
+                  <label htmlFor="password" className="label-field mb-0">
+                    Password
+                  </label>
+                  <button
+                    type="button"
+                    className="shrink-0 rounded-full px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500 transition-colors hover:bg-slate-100 hover:text-aura-ink dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-pressed={showPassword}
+                    aria-controls="password"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
                 <input
                   id="password"
                   className="input-field"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Min 8 characters"
                   autoComplete="new-password"
                   value={form.password}
