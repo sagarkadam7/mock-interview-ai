@@ -26,7 +26,7 @@ export default function MobileStickyCTA() {
 
   return (
     <div
-      className={`pointer-events-none fixed inset-x-0 bottom-0 z-[75] px-3 pb-3 transition-transform duration-300 ease-out sm:hidden ${
+      className={`pointer-events-none fixed inset-x-0 bottom-0 z-[75] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] transition-transform duration-300 ease-out sm:hidden ${
         visible ? "translate-y-0" : "translate-y-[110%]"
       }`}
       aria-hidden={!visible}
