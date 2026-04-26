@@ -47,6 +47,7 @@ export const createInterview = (formData) =>
 export const getInterview = (id) => api.get(`/interview/${id}`);
 export const getAllInterviews = () => api.get("/interview");
 export const patchInterviewMeta = (id, data) => api.patch(`/interview/${id}/meta`, data);
+export const duplicateInterview = (id) => api.post(`/interview/${id}/duplicate`);
 export const submitAnswer = (id, data) => api.post(`/interview/${id}/answer`, data);
 export const deleteInterview = (id) => api.delete(`/interview/${id}`);
 

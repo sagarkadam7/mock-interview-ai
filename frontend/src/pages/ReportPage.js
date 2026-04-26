@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getInterview, createShareToken, patchInterviewMeta } from "../utils/api";
+import { getInterview, getAllInterviews, createShareToken, patchInterviewMeta, duplicateInterview } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import { generatePDFReport } from "../utils/pdfReport";
 import { buildNextRepsFromInterview, getSessionCoachingFocus } from "../utils/practiceSignals";
 import { formatRelativeTime } from "../utils/formatRelativeTime";
+import { formatSessionWallDuration } from "../utils/formatSessionDuration";
 import { RadarChart, Sparkline } from "../components/Charts";
 
 function ReportPageSkeleton() {
@@ -228,6 +229,8 @@ export default function ReportPage() {
   const [sharing, setSharing] = useState(false);
   const [copying, setCopying] = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [peerList, setPeerList] = useState([]);
+  const [duplicating, setDuplicating] = useState(false);
   const [prepNotes, setPrepNotes] = useState("");
   const [prepCompany, setPrepCompany] = useState("");
   const [sessionStarred, setSessionStarred] = useState(false);
@@ -238,12 +241,14 @@ export default function ReportPage() {
     setLoadError("");
     setLoading(true);
     try {
-      const { data } = await getInterview(id);
+      const [{ data }, allRes] = await Promise.all([getInterview(id), getAllInterviews()]);
       setInterview(data);
+      setPeerList(Array.isArray(allRes.data) ? allRes.data : []);
     } catch (err) {
       const msg = getApiErrorMessage(err, "Couldn’t load this report.");
       setLoadError(msg);
       setInterview(null);
+      setPeerList([]);
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -346,6 +351,34 @@ export default function ReportPage() {
 
   const answered = interview.questions.filter((q) => q.score !== null);
   const overall = interview.overallScore;
+
+  const peerCompleted = peerList.filter(
+    (row) => String(row._id) !== String(interview._id) && row.status === "completed" && typeof row.overallScore === "number"
+  );
+  const peerAvgScore =
+    peerCompleted.length > 0 ? peerCompleted.reduce((s, r) => s + r.overallScore, 0) / peerCompleted.length : null;
+  const scoreVsPeer =
+    peerAvgScore != null && overall != null ? Math.round((overall - peerAvgScore) * 10) / 10 : null;
+
+  const weakPrimary = [...interview.questions]
+    .filter((q) => (q.questionType || "primary") === "primary" && typeof q.score === "number")
+    .sort((a, b) => a.score - b.score)
+    .slice(0, 2);
+
+  const sessionWall = formatSessionWallDuration(interview.firstAnsweredAt, interview.completedAt);
+
+  const onDuplicateSession = async () => {
+    setDuplicating(true);
+    try {
+      const { data } = await duplicateInterview(id);
+      toast.success("Fresh questions ready — opening new session.");
+      navigate(`/interview/${data.interviewId}`);
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Couldn’t duplicate this session."));
+    } finally {
+      setDuplicating(false);
+    }
+  };
   const overallRing =
     overall >= 7
       ? "border-emerald-400 bg-emerald-50"
@@ -432,6 +465,9 @@ export default function ReportPage() {
             <p className="mt-1 text-sm text-aura-muted">
               {answered.length}/{interview.questions.length} questions answered
             </p>
+            {sessionWall ? (
+              <p className="mt-1 text-sm font-medium text-slate-600 dark:text-slate-400">Wall time in session: {sessionWall}</p>
+            ) : null}
           </div>
           {overall !== null && (
             <div className="text-center">
@@ -472,6 +508,51 @@ export default function ReportPage() {
           />
         </div>
 
+        {(peerAvgScore != null && scoreVsPeer != null) || weakPrimary.length > 0 ? (
+          <div className="mb-8 grid gap-4 md:grid-cols-2">
+            {peerAvgScore != null && scoreVsPeer != null ? (
+              <div className="glass-panel rounded-3xl p-6 md:p-7">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Benchmark</span>
+                <h2 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">This session vs your average</h2>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                  Avg overall score across your other <span className="font-semibold text-aura-ink dark:text-slate-200">{peerCompleted.length}</span>{" "}
+                  completed session{peerCompleted.length === 1 ? "" : "s"}:{" "}
+                  <span className="font-bold tabular-nums text-violet-600 dark:text-violet-300">{peerAvgScore.toFixed(1)}</span>
+                  <span className="text-aura-muted"> /10</span>
+                </p>
+                <p className="mt-4 text-2xl font-black tabular-nums tracking-tight text-aura-ink dark:text-white">
+                  {scoreVsPeer > 0 ? "+" : ""}
+                  {scoreVsPeer}
+                  <span className="ml-2 text-base font-semibold text-slate-500 dark:text-slate-400">vs avg</span>
+                </p>
+                <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">
+                  {scoreVsPeer >= 0.5
+                    ? "Ahead of your recent baseline — keep pressure on delivery."
+                    : scoreVsPeer <= -0.5
+                      ? "Below your recent baseline — mine the per-question feedback for the gap."
+                      : "Roughly on par with your recent baseline — tighten one axis next rep."}
+                </p>
+              </div>
+            ) : null}
+            {weakPrimary.length > 0 ? (
+              <div className="glass-panel rounded-3xl border border-amber-200/60 bg-amber-50/30 p-6 dark:border-amber-500/25 dark:bg-amber-950/20 md:p-7">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-amber-800 dark:text-amber-200">Drill targets</span>
+                <h2 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Lowest-scoring primaries</h2>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Re-answer these out loud before your next mock — same STAR depth, sharper metrics.</p>
+                <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm text-slate-800 dark:text-slate-200">
+                  {weakPrimary.map((q) => (
+                    <li key={q._id} className="pl-1">
+                      <span className="font-semibold text-rose-700 dark:text-rose-300">{q.score}/10</span>
+                      <span className="text-slate-600 dark:text-slate-400"> — </span>
+                      <span>{q.text}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
         <div className="glass-panel mb-8 rounded-3xl border border-violet-200/50 bg-gradient-to-br from-violet-50/40 via-white to-white p-6 dark:border-violet-500/20 dark:from-violet-950/25 dark:via-slate-900/80 dark:to-slate-950 md:p-8">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <div>
@@ -481,11 +562,21 @@ export default function ReportPage() {
                 Capture stories to tighten, questions to ask them, and reminders for the human round. Only you can see this — it is never included in share links.
               </p>
             </div>
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500" aria-live="polite">
-              {notesStatus === "saving" && "Saving…"}
-              {notesStatus === "saved" && "Saved"}
-              {notesStatus === "error" && "Save failed"}
-            </span>
+            <div className="flex flex-col items-end gap-2">
+              <button
+                type="button"
+                className="btn-outline px-3 py-2 text-xs"
+                disabled={!prepNotes.trim() || copying}
+                onClick={() => copyText(prepNotes, "Prep notes copied")}
+              >
+                Copy notes
+              </button>
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500" aria-live="polite">
+                {notesStatus === "saving" && "Saving…"}
+                {notesStatus === "saved" && "Saved"}
+                {notesStatus === "error" && "Save failed"}
+              </span>
+            </div>
           </div>
           <div className="mb-4">
             <label htmlFor="prep-target-company" className="label-field">
@@ -648,6 +739,22 @@ export default function ReportPage() {
             }}
           >
             ↓ Download PDF Report
+          </button>
+          <button
+            type="button"
+            className="btn-outline"
+            disabled={duplicating}
+            aria-busy={duplicating}
+            title="Same resume, JD, and settings — new AI question set. Counts toward your monthly plan."
+            onClick={onDuplicateSession}
+          >
+            {duplicating ? (
+              <>
+                <span className="spinner h-4 w-4" /> Generating…
+              </>
+            ) : (
+              "⟲ Same setup, new questions"
+            )}
           </button>
           <button
             type="button"

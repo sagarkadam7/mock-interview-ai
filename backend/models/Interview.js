@@ -47,6 +47,10 @@ const interviewSchema = new mongoose.Schema(
     candidateNotes: { type: String, default: "", maxlength: 8000 },
     /** Pin important sessions on the dashboard. */
     starred:      { type: Boolean, default: false },
+    /** First time any question was scored (session truly started). */
+    firstAnsweredAt: { type: Date, default: null },
+    /** When all questions had scores (session closed). */
+    completedAt:  { type: Date, default: null },
     status:       { type: String, enum: ["pending", "in_progress", "completed"], default: "pending" },
     shareToken:   { type: String, default: "", index: true },
     sharedAt:     { type: Date, default: null },

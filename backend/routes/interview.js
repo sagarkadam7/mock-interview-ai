@@ -317,7 +317,7 @@ router.get("/", protect, async (req, res) => {
   try {
     const interviews = await Interview.find({ userId: req.user._id })
       .select(
-        "jobRole targetCompany starred status overallScore avgEyeContact avgPace avgConfidence avgFillerWords createdAt questions level interviewMode persona timeboxMin"
+        "jobRole targetCompany starred status overallScore avgEyeContact avgPace avgConfidence avgFillerWords createdAt firstAnsweredAt completedAt questions level interviewMode persona timeboxMin"
       )
       .sort("-createdAt");
 
@@ -386,6 +386,71 @@ router.patch("/:id/meta", protect, validateMongoId("id"), async (req, res) => {
 });
 
 // ════════════════════════════════════════════════════════════════
+// Duplicate session: same resume/JD/settings, newly generated questions (counts toward plan).
+// POST /api/interview/:id/duplicate
+// ════════════════════════════════════════════════════════════════
+router.post("/:id/duplicate", protect, assertCanCreateInterview, createInterviewLimiter, validateMongoId("id"), async (req, res) => {
+  try {
+    const source = await Interview.findById(req.params.id);
+    if (!source) return res.status(404).json({ message: "Interview not found." });
+    if (source.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized." });
+    }
+
+    const resumeText = (source.resumeText || "").trim();
+    if (resumeText.length < 50) {
+      return res.status(400).json({ message: "Source session has no usable resume text to duplicate." });
+    }
+
+    const settings = {
+      level: source.level,
+      interviewMode: source.interviewMode,
+      persona: source.persona,
+      timeboxMin: Number(source.timeboxMin || 0),
+    };
+
+    console.log("🤖 Duplicating interview — generating fresh questions…");
+    const questions = await generateQuestions(resumeText, source.jdText || "", source.jobRole, settings);
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return res.status(500).json({ message: "Failed to generate questions. Try again." });
+    }
+
+    const interview = await Interview.create({
+      userId: req.user._id,
+      jobRole: source.jobRole,
+      level: String(source.level || "mid").trim(),
+      interviewMode: String(source.interviewMode || "mixed").trim(),
+      persona: String(source.persona || "coach").trim(),
+      timeboxMin: Number(source.timeboxMin || 0),
+      targetCompany: (source.targetCompany && String(source.targetCompany).trim().slice(0, 120)) || "",
+      resumeText,
+      jdText: source.jdText || "",
+      status: "pending",
+      questions: questions.map((q, i) => ({
+        questionType: "primary",
+        text: (q.text && String(q.text).trim()) || `Question ${i + 1}`,
+        hint: (q.hint && String(q.hint).trim()) || "Give a clear example and quantify impact where possible.",
+        orderIndex: i,
+      })),
+    });
+
+    try {
+      await bumpMonthlyInterviewUsage(req.user._id);
+    } catch (err) {
+      if (err?.status === 402) {
+        await interview.deleteOne().catch(() => {});
+      }
+      throw err;
+    }
+
+    res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
+  } catch (err) {
+    console.error("Duplicate interview error:", err.message);
+    res.status(err.status || 500).json({ message: err.message, code: err.code });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
 // ROUTE 4: Submit answer for one question
 // POST /api/interview/:id/answer
 // Body: { questionId, answer }
@@ -403,6 +468,8 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
     if (interview.userId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not authorized." });
     }
+
+    const hadAnyScoredBefore = interview.questions.some((q) => q.score !== null);
 
     // Find the specific question
     const question = interview.questions.id(questionId);
@@ -469,9 +536,15 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
       }
     }
 
-    // Update interview status
+    // Update interview status + session timing
     const allAnswered = interview.questions.every((q) => q.score !== null);
+    if (!hadAnyScoredBefore) {
+      interview.firstAnsweredAt = new Date();
+    }
     interview.status = allAnswered ? "completed" : "in_progress";
+    if (allAnswered && !interview.completedAt) {
+      interview.completedAt = new Date();
+    }
 
     await interview.save();
 
@@ -482,6 +555,9 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
       improvements: question.improvements,
       followUpInserted,
       questions: interview.questions,
+      interviewStatus: interview.status,
+      firstAnsweredAt: interview.firstAnsweredAt,
+      completedAt: interview.completedAt,
     });
   } catch (err) {
     console.error("Submit answer error:", err.message);

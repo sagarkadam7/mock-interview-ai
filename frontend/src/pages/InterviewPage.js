@@ -5,6 +5,7 @@ import { getInterview, submitAnswer, patchInterviewMeta } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import { useConfirm } from "../context/ConfirmContext";
 import CameraRecorder, { renderTranscriptWithFillerHighlights } from "../components/CameraRecorder";
+import InterviewKeyboardHelp from "../components/InterviewKeyboardHelp";
 
 const scoreColor = (s) => (s >= 7 ? "text-emerald-600" : s >= 4 ? "text-amber-600" : "text-rose-600");
 const eyeColor = (p) => (p > 70 ? "text-emerald-600" : p > 40 ? "text-amber-600" : "text-rose-600");
@@ -121,6 +122,7 @@ export default function InterviewPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [prepNotesOpen, setPrepNotesOpen] = useState(false);
   const [prepNotes, setPrepNotes] = useState("");
+  const [helpOpen, setHelpOpen] = useState(false);
   const prepNotesSyncedRef = useRef("");
   const cameraRecorderRef = useRef(null);
   const questionAnchorRef = useRef(null);
@@ -160,6 +162,19 @@ export default function InterviewPage() {
     setPrepNotes(interview.candidateNotes || "");
     prepNotesSyncedRef.current = interview.candidateNotes || "";
   }, [interview?._id]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (helpOpen) return;
+      if (e.key !== "?" || e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      e.preventDefault();
+      setHelpOpen(true);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [helpOpen]);
 
   useEffect(() => {
     if (!interview?._id || loading) return undefined;
@@ -202,7 +217,17 @@ export default function InterviewPage() {
       const { data } = await submitAnswer(id, payload);
       setFeedback({ ...data, mlData });
       if (data.questions?.length) {
-        setInterview((prev) => (prev ? { ...prev, questions: data.questions } : prev));
+        setInterview((prev) =>
+          prev
+            ? {
+                ...prev,
+                questions: data.questions,
+                status: data.interviewStatus ?? prev.status,
+                firstAnsweredAt: data.firstAnsweredAt ?? prev.firstAnsweredAt,
+                completedAt: data.completedAt ?? prev.completedAt,
+              }
+            : prev
+        );
       }
     } catch {
       toast.error("Couldn’t get AI feedback. Please try again.");
@@ -322,7 +347,17 @@ export default function InterviewPage() {
     try {
       const { data } = await submitAnswer(id, { questionId: currentQ._id, answer: "" });
       if (data.questions?.length) {
-        setInterview((prev) => (prev ? { ...prev, questions: data.questions } : prev));
+        setInterview((prev) =>
+          prev
+            ? {
+                ...prev,
+                questions: data.questions,
+                status: data.interviewStatus ?? prev.status,
+                firstAnsweredAt: data.firstAnsweredAt ?? prev.firstAnsweredAt,
+                completedAt: data.completedAt ?? prev.completedAt,
+              }
+            : prev
+        );
       }
       if (isLastQ) navigate(`/interview/${id}/report`);
       else {
@@ -340,6 +375,16 @@ export default function InterviewPage() {
 
   return (
     <div className="relative mx-auto min-h-screen w-full max-w-7xl overflow-x-hidden px-5 py-8 sm:px-8 sm:py-10 md:px-10 md:py-12">
+      <InterviewKeyboardHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
+      <button
+        type="button"
+        className="fixed bottom-5 right-5 z-[90] flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200/90 bg-white/95 text-sm font-bold text-slate-600 shadow-lg backdrop-blur-md transition-colors hover:border-violet-300 hover:text-violet-700 dark:border-slate-600 dark:bg-slate-900/95 dark:text-slate-300 dark:hover:text-violet-300 sm:bottom-8 sm:right-8"
+        onClick={() => setHelpOpen(true)}
+        aria-label="Keyboard shortcuts"
+        title="Shortcuts (?)"
+      >
+        ?
+      </button>
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[min(55vh,480px)]"
         style={{

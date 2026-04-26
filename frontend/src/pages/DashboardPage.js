@@ -10,6 +10,8 @@ import { Sparkline } from "../components/Charts";
 import { computePracticeStreak, countCompletedThisWeek, WEEKLY_SESSION_GOAL } from "../utils/practiceSignals";
 import { formatRelativeTime } from "../utils/formatRelativeTime";
 import { getReadinessSnapshot } from "../utils/readinessSnapshot";
+import { formatSessionWallDuration } from "../utils/formatSessionDuration";
+import { downloadPracticeBlockIcs } from "../utils/practiceCalendarIcs";
 
 const DASH_CHECKLIST_KEY = "ia.dashboard.quickstart.v1";
 
@@ -292,6 +294,16 @@ export default function DashboardPage() {
             <Link to="/pricing" className="no-underline">
               <span className="btn-secondary inline-flex w-full justify-center py-3.5 text-sm sm:w-auto sm:px-6">View plans</span>
             </Link>
+            <button
+              type="button"
+              className="btn-outline inline-flex w-full justify-center py-3.5 text-sm sm:w-auto sm:px-6"
+              onClick={() => {
+                downloadPracticeBlockIcs({ title: "InterviewAI — practice block", minutes: 45, hoursFromNow: 2 });
+                toast.success("Calendar file downloaded — open it to add to your calendar app.");
+              }}
+            >
+              Block practice time (.ics)
+            </button>
           </div>
         </div>
       </div>
@@ -697,6 +709,14 @@ export default function DashboardPage() {
                             <span className="text-slate-400 dark:text-slate-500"> · {formatRelativeTime(iv.createdAt)}</span>
                             {" · "}
                             {answered}/{total} scored
+                            {formatSessionWallDuration(iv.firstAnsweredAt, iv.completedAt) ? (
+                              <>
+                                {" · "}
+                                <span className="text-slate-400 dark:text-slate-500" title="First answer → session complete">
+                                  {formatSessionWallDuration(iv.firstAnsweredAt, iv.completedAt)} session
+                                </span>
+                              </>
+                            ) : null}
                           </p>
                           <div className="progress-track max-w-xl">
                             <div className="progress-fill-bar" style={{ width: `${pct}%` }} />
