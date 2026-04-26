@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, matchPath } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ConfirmProvider } from "./context/ConfirmContext";
@@ -100,7 +100,15 @@ function AppShell() {
                       ? "Dashboard · InterviewAI"
                       : path === "/welcome"
                         ? "Welcome · InterviewAI"
-                        : "InterviewAI";
+                        : path === "/interview/new"
+                          ? "New session · InterviewAI"
+                          : matchPath("/interview/:id/report", path)
+                            ? "Session report · InterviewAI"
+                            : matchPath("/interview/:id", path)
+                              ? "Live session · InterviewAI"
+                              : matchPath("/share/:token", path)
+                                ? "Shared report · InterviewAI"
+                                : "InterviewAI";
     document.title = title;
   }, [location.pathname]);
 
