@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const ConfirmContext = createContext(null);
@@ -10,6 +10,7 @@ const ConfirmContext = createContext(null);
  */
 export function ConfirmProvider({ children }) {
   const [state, setState] = useState(null);
+  const cancelButtonRef = useRef(null);
 
   const confirm = useCallback((message, options = {}) => {
     const {
@@ -44,6 +45,11 @@ export function ConfirmProvider({ children }) {
     };
   }, [state, close]);
 
+  useLayoutEffect(() => {
+    if (!state) return;
+    cancelButtonRef.current?.focus();
+  }, [state]);
+
   return (
     <ConfirmContext.Provider value={{ confirm }}>
       {children}
@@ -75,13 +81,15 @@ export function ConfirmProvider({ children }) {
             >
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent dark:via-slate-500/40" />
               <div className="border-b border-slate-100 px-6 py-5 dark:border-slate-800/90">
-                <h2 id="confirm-dialog-title" className="text-lg font-semibold tracking-tight text-aura-ink">
+                <h2 id="confirm-dialog-title" className="text-lg font-semibold tracking-tight text-aura-ink" aria-describedby="confirm-dialog-message">
                   {state.title}
                 </h2>
               </div>
-              <p className="px-6 py-5 text-[15px] leading-relaxed text-aura-muted">{state.message}</p>
+              <p id="confirm-dialog-message" className="px-6 py-5 text-[15px] leading-relaxed text-aura-muted">
+                {state.message}
+              </p>
               <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/80 px-5 py-4 dark:border-slate-800/90 dark:bg-slate-950/80 sm:flex-row sm:justify-end sm:gap-3">
-                <button type="button" onClick={() => close(false)} className="btn-outline w-full px-6 py-3 text-sm sm:w-auto">
+                <button ref={cancelButtonRef} type="button" onClick={() => close(false)} className="btn-outline w-full px-6 py-3 text-sm sm:w-auto">
                   {state.cancelLabel}
                 </button>
                 <button
