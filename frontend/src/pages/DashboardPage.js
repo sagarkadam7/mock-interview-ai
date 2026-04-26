@@ -104,6 +104,7 @@ export default function DashboardPage() {
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
+  const [sessionQuery, setSessionQuery] = useState("");
   const [deleting, setDeleting] = useState(null);
   const [quickstart, setQuickstart] = useState(() => {
     try {
@@ -197,6 +198,10 @@ export default function DashboardPage() {
   ];
 
   const hasInterviews = interviews.length > 0;
+  const q = sessionQuery.trim().toLowerCase();
+  const filteredSessions = q
+    ? interviews.filter((iv) => (iv.jobRole || "").toLowerCase().includes(q))
+    : interviews;
   const recent = [...interviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3);
 
   const practiceStreak = !loading ? computePracticeStreak(interviews) : 0;
@@ -519,11 +524,36 @@ export default function DashboardPage() {
                 },
               }}
             >
-              <div className="mb-1 flex items-end justify-between gap-4">
-                <h2 className="text-lg font-bold tracking-tight text-aura-ink">Sessions</h2>
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{interviews.length} total</span>
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div className="flex items-end justify-between gap-4 sm:block">
+                  <h2 className="text-lg font-bold tracking-tight text-aura-ink">Sessions</h2>
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400 sm:mt-1 sm:block">
+                    {interviews.length} total
+                    {q ? ` · ${filteredSessions.length} match` : ""}
+                  </span>
+                </div>
+                <label className="sr-only" htmlFor="dashboard-session-search">
+                  Filter sessions by role
+                </label>
+                <input
+                  id="dashboard-session-search"
+                  type="search"
+                  value={sessionQuery}
+                  onChange={(e) => setSessionQuery(e.target.value)}
+                  placeholder="Filter by role…"
+                  className="input-field max-w-md py-2.5 text-sm"
+                  autoComplete="off"
+                />
               </div>
-              {interviews.map((iv) => {
+              {filteredSessions.length === 0 && q ? (
+                <div className="rounded-2xl border border-dashed border-slate-200/90 bg-slate-50/60 px-6 py-10 text-center dark:border-slate-600/60 dark:bg-slate-900/40">
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">No sessions match “{sessionQuery.trim()}”.</p>
+                  <button type="button" className="btn-outline mt-4 px-5 py-2 text-xs" onClick={() => setSessionQuery("")}>
+                    Clear filter
+                  </button>
+                </div>
+              ) : null}
+              {filteredSessions.map((iv) => {
                 const answered = iv.questions?.filter((q) => q.score !== null).length || 0;
                 const total = iv.questions?.length || 0;
                 const pct = total > 0 ? (answered / total) * 100 : 0;
