@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
@@ -13,6 +13,10 @@ const QUICK_LINKS = [
 
 export default function NotFoundPage() {
   const { user } = useAuth();
+
+  useEffect(() => {
+    document.title = "Page not found · InterviewAI";
+  }, []);
 
   return (
     <div className="page-shell relative flex min-h-[min(100vh,880px)] flex-col items-center justify-center overflow-hidden py-20 md:py-28">
