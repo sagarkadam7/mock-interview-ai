@@ -184,10 +184,15 @@ export default function NewInterviewPage() {
               />
             </div>
             <div>
-              <label className="label-field">
-                Job description{" "}
-                <span className="normal-case font-normal tracking-normal text-slate-500 dark:text-slate-400">(optional — improves relevance)</span>
-              </label>
+              <div className="mb-2 flex flex-wrap items-end justify-between gap-2">
+                <label className="label-field mb-0">
+                  Job description{" "}
+                  <span className="normal-case font-normal tracking-normal text-slate-500 dark:text-slate-400">(optional — improves relevance)</span>
+                </label>
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500" aria-live="polite">
+                  {jdText.length.toLocaleString()} chars
+                </span>
+              </div>
               <textarea
                 className="input-field min-h-[120px] resize-y"
                 placeholder="Paste the job description, key requirements, or team notes…"
@@ -233,7 +238,17 @@ export default function NewInterviewPage() {
 
           {inputMode === "paste" ? (
             <div>
-              <label className="label-field">Resume content *</label>
+              <div className="mb-2 flex flex-wrap items-end justify-between gap-2">
+                <label className="label-field mb-0">Resume content *</label>
+                <span
+                  className={`font-mono text-[10px] font-semibold uppercase tracking-wider ${
+                    resumeText.length >= 50 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
+                  }`}
+                  aria-live="polite"
+                >
+                  {resumeText.length.toLocaleString()} / 50 min
+                </span>
+              </div>
               <textarea
                 className="input-field min-h-[220px] resize-y"
                 placeholder="Paste your full resume — experience, skills, education, projects…"
