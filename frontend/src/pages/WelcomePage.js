@@ -1,22 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 
 const steps = [
   {
+    step: "01",
     title: "Create your first session",
     desc: "Paste a job description + resume context so questions stay grounded in your story.",
     to: "/interview/new",
     cta: "Start a new interview →",
   },
   {
+    step: "02",
     title: "Treat it like a real loop",
     desc: "Turn on camera, speak out loud, and let the transcript + fillers guide the fix.",
     to: "/#how-it-works",
     cta: "See how it works →",
   },
   {
+    step: "03",
     title: "Review the scorecard",
     desc: "Export a PDF and compare reps. Momentum comes from iteration, not vibes.",
     to: "/dashboard",
@@ -27,6 +30,10 @@ const steps = [
 export default function WelcomePage() {
   const { user } = useAuth();
   const firstName = user?.name?.split?.(" ")?.[0] || "there";
+
+  useEffect(() => {
+    document.title = "Welcome · InterviewAI";
+  }, []);
 
   return (
     <div className="page-shell max-w-6xl pb-20 pt-10">
@@ -55,7 +62,8 @@ export default function WelcomePage() {
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {steps.map((s) => (
               <div key={s.title} className="glass-panel-lg rounded-2xl p-6 md:p-7">
-                <p className="text-sm font-bold text-aura-ink dark:text-slate-100">{s.title}</p>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-300">{s.step}</span>
+                <p className="mt-2 text-sm font-bold text-aura-ink dark:text-slate-100">{s.title}</p>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{s.desc}</p>
                 <Link
                   to={s.to}
