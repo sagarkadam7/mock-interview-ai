@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 import { useConfirm } from "../context/ConfirmContext";
 import { Sparkline } from "../components/Charts";
 import { computePracticeStreak, countCompletedThisWeek, WEEKLY_SESSION_GOAL } from "../utils/practiceSignals";
+import { formatRelativeTime } from "../utils/formatRelativeTime";
 
 const DASH_CHECKLIST_KEY = "ia.dashboard.quickstart.v1";
 
@@ -530,7 +531,10 @@ export default function DashboardPage() {
                             <StatusBadge status={iv.status} />
                           </div>
                           <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">
-                            {new Date(iv.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                            <span title={new Date(iv.createdAt).toISOString()}>
+                              {new Date(iv.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                            </span>
+                            <span className="text-slate-400 dark:text-slate-500"> · {formatRelativeTime(iv.createdAt)}</span>
                             {" · "}
                             {answered}/{total} scored
                           </p>
@@ -644,8 +648,8 @@ export default function DashboardPage() {
                       className="block rounded-lg py-1 no-underline transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
                     >
                       <span className="block truncate text-sm font-semibold text-aura-ink">{iv.jobRole}</span>
-                      <span className="text-[11px] text-slate-500 dark:text-slate-500">
-                        {new Date(iv.createdAt).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}
+                      <span className="text-[11px] text-slate-500 dark:text-slate-500" title={new Date(iv.createdAt).toISOString()}>
+                        {formatRelativeTime(iv.createdAt)}
                       </span>
                     </Link>
                   </li>
