@@ -37,7 +37,11 @@ export default function Navbar() {
   useEffect(() => {
     if (!menuOpen) return;
     const onKey = (e) => {
-      if (e.key === "Escape") setMenuOpen(false);
+      if (e.key !== "Escape") return;
+      setMenuOpen(false);
+      requestAnimationFrame(() => {
+        btnRef.current?.focus();
+      });
     };
     const onPointer = (e) => {
       if (menuRef.current?.contains(e.target)) return;
