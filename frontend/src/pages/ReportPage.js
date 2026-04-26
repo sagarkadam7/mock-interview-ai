@@ -5,6 +5,7 @@ import { getInterview, createShareToken } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import { generatePDFReport } from "../utils/pdfReport";
 import { buildNextRepsFromInterview, getSessionCoachingFocus } from "../utils/practiceSignals";
+import { formatRelativeTime } from "../utils/formatRelativeTime";
 import { RadarChart, Sparkline } from "../components/Charts";
 
 function ReportPageSkeleton() {
@@ -345,6 +346,7 @@ export default function ReportPage() {
                 month: "long",
                 year: "numeric",
               })}
+              <span className="text-slate-400 dark:text-slate-500"> · {formatRelativeTime(interview.createdAt)}</span>
             </p>
             <p className="mt-1 text-sm text-aura-muted">
               {answered.length}/{interview.questions.length} questions answered
