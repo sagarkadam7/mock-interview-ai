@@ -2,13 +2,14 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { getAllInterviews, deleteInterview } from "../utils/api";
+import { getAllInterviews, deleteInterview, patchInterviewMeta } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import { useAuth } from "../context/AuthContext";
 import { useConfirm } from "../context/ConfirmContext";
 import { Sparkline } from "../components/Charts";
 import { computePracticeStreak, countCompletedThisWeek, WEEKLY_SESSION_GOAL } from "../utils/practiceSignals";
 import { formatRelativeTime } from "../utils/formatRelativeTime";
+import { getReadinessSnapshot } from "../utils/readinessSnapshot";
 
 const DASH_CHECKLIST_KEY = "ia.dashboard.quickstart.v1";
 
@@ -106,6 +107,7 @@ export default function DashboardPage() {
   const [loadError, setLoadError] = useState("");
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessionSort, setSessionSort] = useState("newest");
+  const [starredOnly, setStarredOnly] = useState(false);
   const [deleting, setDeleting] = useState(null);
   const [quickstart, setQuickstart] = useState(() => {
     try {
@@ -166,6 +168,19 @@ export default function DashboardPage() {
     }
   };
 
+  const onToggleSessionStar = async (iv, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const next = !iv.starred;
+    try {
+      await patchInterviewMeta(iv._id, { starred: next });
+      setInterviews((prev) => prev.map((x) => (x._id === iv._id ? { ...x, starred: next } : x)));
+      toast.success(next ? "Pinned to your dashboard" : "Unstarred");
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Couldn’t update star."));
+    }
+  };
+
   const completed = interviews.filter((i) => i.status === "completed");
   const inProgress = interviews.filter((i) => i.status === "in_progress");
   const completedSorted = [...completed].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
@@ -200,9 +215,10 @@ export default function DashboardPage() {
 
   const hasInterviews = interviews.length > 0;
   const q = sessionQuery.trim().toLowerCase();
-  const filteredSessions = q
+  const queryFiltered = q
     ? interviews.filter((iv) => (iv.jobRole || "").toLowerCase().includes(q))
     : interviews;
+  const filteredSessions = starredOnly ? queryFiltered.filter((iv) => iv.starred) : queryFiltered;
 
   const sortedSessions = useMemo(() => {
     const list = [...filteredSessions];
@@ -215,11 +231,20 @@ export default function DashboardPage() {
         return list.sort((a, b) => (a.overallScore ?? 999) - (b.overallScore ?? 999));
       case "role":
         return list.sort((a, b) => (a.jobRole || "").localeCompare(b.jobRole || "", undefined, { sensitivity: "base" }));
+      case "starred_first":
+        return list.sort((a, b) => {
+          const sb = b.starred ? 1 : 0;
+          const sa = a.starred ? 1 : 0;
+          if (sb !== sa) return sb - sa;
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
       case "newest":
       default:
         return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
   }, [filteredSessions, sessionSort]);
+
+  const readiness = useMemo(() => getReadinessSnapshot(interviews), [interviews]);
 
   const recent = [...interviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3);
 
@@ -280,6 +305,25 @@ export default function DashboardPage() {
           <button type="button" className="btn-primary shrink-0 py-2.5 text-sm" onClick={fetchInterviews}>
             Retry sync
           </button>
+        </div>
+      )}
+
+      {!loading && !loadError && readiness && (
+        <div className="glass-panel-lg relative mb-10 overflow-hidden rounded-3xl p-6 sm:p-8">
+          <div className="pointer-events-none absolute -right-16 top-0 h-40 w-40 rounded-full bg-aura-violet/10 blur-2xl dark:bg-aura-violet/15" aria-hidden />
+          <span className="section-eyebrow mb-3">Readiness snapshot</span>
+          <h2 className="font-display text-xl font-semibold tracking-tight text-aura-ink dark:text-slate-100 md:text-2xl">{readiness.headline}</h2>
+          <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-400">
+            Derived from your last few scored sessions — the kind of signal hiring loops actually weight alongside raw scores.
+          </p>
+          <ul className="mt-5 space-y-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+            {readiness.bullets.map((line, i) => (
+              <li key={i} className="flex gap-3">
+                <span className="mt-0.5 font-mono text-xs font-bold text-aura-violet dark:text-violet-300">{String(i + 1).padStart(2, "0")}</span>
+                <span className="min-w-0">{line}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
@@ -548,9 +592,18 @@ export default function DashboardPage() {
                   <h2 className="text-lg font-bold tracking-tight text-aura-ink">Sessions</h2>
                   <span className="text-xs font-medium text-slate-500 dark:text-slate-400 sm:mt-1 sm:block">
                     {interviews.length} total
-                    {q ? ` · ${filteredSessions.length} match` : ""}
+                    {q || starredOnly ? ` · ${filteredSessions.length} shown` : ""}
                   </span>
                 </div>
+                <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-slate-300 accent-violet-600 dark:border-slate-600"
+                    checked={starredOnly}
+                    onChange={(e) => setStarredOnly(e.target.checked)}
+                  />
+                  Starred only
+                </label>
                 <div className="flex w-full min-w-0 flex-col gap-2 sm:max-w-xl sm:flex-row sm:items-center">
                   <label className="sr-only" htmlFor="dashboard-session-search">
                     Filter sessions by role
@@ -575,12 +628,21 @@ export default function DashboardPage() {
                   >
                     <option value="newest">Newest first</option>
                     <option value="oldest">Oldest first</option>
+                    <option value="starred_first">Starred first</option>
                     <option value="score_high">Score · high to low</option>
                     <option value="score_low">Score · low to high</option>
                     <option value="role">Role A–Z</option>
                   </select>
                 </div>
               </div>
+              {filteredSessions.length === 0 && starredOnly && !q ? (
+                <div className="rounded-2xl border border-dashed border-slate-200/90 bg-slate-50/60 px-6 py-10 text-center dark:border-slate-600/60 dark:bg-slate-900/40">
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">No starred sessions yet. Star a report from the scorecard to pin it here.</p>
+                  <button type="button" className="btn-outline mt-4 px-5 py-2 text-xs" onClick={() => setStarredOnly(false)}>
+                    Show all sessions
+                  </button>
+                </div>
+              ) : null}
               {filteredSessions.length === 0 && q ? (
                 <div className="rounded-2xl border border-dashed border-slate-200/90 bg-slate-50/60 px-6 py-10 text-center dark:border-slate-600/60 dark:bg-slate-900/40">
                   <p className="text-sm font-medium text-slate-600 dark:text-slate-400">No sessions match “{sessionQuery.trim()}”.</p>
@@ -619,7 +681,15 @@ export default function DashboardPage() {
                               {iv.jobRole}
                             </span>
                             <StatusBadge status={iv.status} />
+                            {iv.starred ? (
+                              <span className="rounded-full border border-amber-200/90 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-900 dark:border-amber-500/35 dark:bg-amber-950/50 dark:text-amber-100">
+                                Starred
+                              </span>
+                            ) : null}
                           </div>
+                          {iv.targetCompany ? (
+                            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">{iv.targetCompany}</p>
+                          ) : null}
                           <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">
                             <span title={new Date(iv.createdAt).toISOString()}>
                               {new Date(iv.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
@@ -657,7 +727,20 @@ export default function DashboardPage() {
                         </div>
                       </Link>
 
-                      <div className="mt-4 flex items-center justify-end gap-3 border-t border-slate-200/80 pt-4 dark:border-slate-700/80 md:ml-4 md:mt-0 md:w-28 md:flex-col md:justify-center md:border-l md:border-t-0 md:pl-4 md:pt-0">
+                      <div className="mt-4 flex items-center justify-end gap-2 border-t border-slate-200/80 pt-4 dark:border-slate-700/80 md:ml-4 md:mt-0 md:w-[7.25rem] md:flex-col md:justify-center md:border-l md:border-t-0 md:pl-3 md:pt-0">
+                        <button
+                          type="button"
+                          className={`rounded-full border px-3 py-2 text-xs font-semibold transition-colors ${
+                            iv.starred
+                              ? "border-amber-200/90 bg-amber-50 text-amber-900 hover:bg-amber-100 dark:border-amber-500/35 dark:bg-amber-950/45 dark:text-amber-100 dark:hover:bg-amber-950/70"
+                              : "border-transparent text-slate-500 hover:border-slate-200 hover:bg-slate-50 hover:text-aura-ink dark:hover:border-slate-600 dark:hover:bg-slate-800/60 dark:hover:text-slate-100"
+                          }`}
+                          onClick={(e) => onToggleSessionStar(iv, e)}
+                          aria-pressed={!!iv.starred}
+                          aria-label={iv.starred ? "Remove star from session" : "Star session on dashboard"}
+                        >
+                          {iv.starred ? "★" : "☆"}
+                        </button>
                         <button
                           type="button"
                           className="rounded-full border border-transparent px-3 py-2 text-xs font-semibold text-slate-500 transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-rose-800 dark:hover:border-rose-500/30 dark:hover:bg-rose-950/40 dark:hover:text-rose-200"

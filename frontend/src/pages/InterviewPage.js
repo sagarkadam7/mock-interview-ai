@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useId, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getInterview, submitAnswer } from "../utils/api";
+import { getInterview, submitAnswer, patchInterviewMeta } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import { useConfirm } from "../context/ConfirmContext";
 import CameraRecorder, { renderTranscriptWithFillerHighlights } from "../components/CameraRecorder";
@@ -119,6 +119,9 @@ export default function InterviewPage() {
   const [feedback, setFeedback] = useState(null);
   const [error, setError] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [prepNotesOpen, setPrepNotesOpen] = useState(false);
+  const [prepNotes, setPrepNotes] = useState("");
+  const prepNotesSyncedRef = useRef("");
   const cameraRecorderRef = useRef(null);
   const questionAnchorRef = useRef(null);
   const skipQuestionScrollOnce = useRef(true);
@@ -151,6 +154,27 @@ export default function InterviewPage() {
     document.title = `${interview.jobRole} · Live session · InterviewAI`;
     return undefined;
   }, [interview?.jobRole]);
+
+  useEffect(() => {
+    if (!interview?._id) return;
+    setPrepNotes(interview.candidateNotes || "");
+    prepNotesSyncedRef.current = interview.candidateNotes || "";
+  }, [interview?._id]);
+
+  useEffect(() => {
+    if (!interview?._id || loading) return undefined;
+    if (prepNotes === prepNotesSyncedRef.current) return undefined;
+    const t = setTimeout(async () => {
+      try {
+        await patchInterviewMeta(id, { candidateNotes: prepNotes });
+        prepNotesSyncedRef.current = prepNotes;
+        setInterview((prev) => (prev ? { ...prev, candidateNotes: prepNotes } : prev));
+      } catch (err) {
+        toast.error(getApiErrorMessage(err, "Couldn’t save prep notes."));
+      }
+    }, 900);
+    return () => clearTimeout(t);
+  }, [prepNotes, id, interview?._id, loading]);
 
   const handleSubmitAnswer = useCallback(async () => {
     if (!interview?.questions?.length) return;
@@ -364,6 +388,9 @@ export default function InterviewPage() {
                   Live
                 </span>
               </div>
+              {interview.targetCompany ? (
+                <p className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">{interview.targetCompany}</p>
+              ) : null}
             </div>
           </div>
 
@@ -388,6 +415,34 @@ export default function InterviewPage() {
               style={{ width: `${progress}%`, boxShadow: "0 0 20px rgba(157, 80, 187, 0.25)" }}
             />
           </div>
+        </div>
+
+        <div className="mt-5 rounded-2xl border border-violet-200/70 bg-violet-50/25 dark:border-violet-500/25 dark:bg-violet-950/25">
+          <button
+            type="button"
+            className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm font-semibold text-aura-ink dark:text-slate-100"
+            onClick={() => setPrepNotesOpen((o) => !o)}
+            aria-expanded={prepNotesOpen}
+          >
+            <span>
+              Private prep notes
+              {prepNotes.trim() ? <span className="ml-2 font-normal text-slate-500 dark:text-slate-400">· autosaved</span> : null}
+            </span>
+            <span className="shrink-0 text-slate-400" aria-hidden>
+              {prepNotesOpen ? "▲" : "▼"}
+            </span>
+          </button>
+          {prepNotesOpen ? (
+            <div className="border-t border-violet-200/60 px-4 pb-4 dark:border-violet-800/40">
+              <textarea
+                className="input-field mt-3 min-h-[100px] resize-y text-sm"
+                value={prepNotes}
+                onChange={(e) => setPrepNotes(e.target.value.slice(0, 8000))}
+                placeholder="Jot reminders between questions — same notes appear on your scorecard."
+                maxLength={8000}
+              />
+            </div>
+          ) : null}
         </div>
 
         <div

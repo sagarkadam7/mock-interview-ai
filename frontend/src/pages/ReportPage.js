@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getInterview, createShareToken } from "../utils/api";
+import { getInterview, createShareToken, patchInterviewMeta } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import { generatePDFReport } from "../utils/pdfReport";
 import { buildNextRepsFromInterview, getSessionCoachingFocus } from "../utils/practiceSignals";
@@ -228,6 +228,11 @@ export default function ReportPage() {
   const [sharing, setSharing] = useState(false);
   const [copying, setCopying] = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [prepNotes, setPrepNotes] = useState("");
+  const [prepCompany, setPrepCompany] = useState("");
+  const [sessionStarred, setSessionStarred] = useState(false);
+  const [notesStatus, setNotesStatus] = useState("idle");
+  const notesSyncedRef = useRef("");
 
   const loadReport = useCallback(async () => {
     setLoadError("");
@@ -254,6 +259,61 @@ export default function ReportPage() {
     document.title = `${interview.jobRole} · Report · InterviewAI`;
     return undefined;
   }, [interview?.jobRole]);
+
+  useEffect(() => {
+    if (!interview?._id) return;
+    setPrepNotes(interview.candidateNotes || "");
+    setPrepCompany(interview.targetCompany || "");
+    setSessionStarred(!!interview.starred);
+    notesSyncedRef.current = interview.candidateNotes || "";
+  }, [interview?._id]);
+
+  useEffect(() => {
+    if (!interview?._id || loading) return undefined;
+    if (prepNotes === notesSyncedRef.current) return undefined;
+    setNotesStatus("saving");
+    const t = setTimeout(async () => {
+      try {
+        await patchInterviewMeta(id, { candidateNotes: prepNotes });
+        notesSyncedRef.current = prepNotes;
+        setInterview((prev) => (prev ? { ...prev, candidateNotes: prepNotes } : prev));
+        setNotesStatus("saved");
+        setTimeout(() => setNotesStatus("idle"), 1800);
+      } catch (err) {
+        setNotesStatus("error");
+        toast.error(getApiErrorMessage(err, "Couldn’t save your notes."));
+      }
+    }, 900);
+    return () => clearTimeout(t);
+  }, [prepNotes, id, interview?._id, loading]);
+
+  const onToggleStar = async () => {
+    if (!interview?._id) return;
+    const next = !sessionStarred;
+    setSessionStarred(next);
+    try {
+      await patchInterviewMeta(id, { starred: next });
+      setInterview((prev) => (prev ? { ...prev, starred: next } : prev));
+      toast.success(next ? "Pinned on your dashboard" : "Removed from starred");
+    } catch (err) {
+      setSessionStarred(!next);
+      toast.error(getApiErrorMessage(err, "Couldn’t update starred state."));
+    }
+  };
+
+  const onSaveCompany = async () => {
+    if (!interview?._id) return;
+    const t = prepCompany.trim().slice(0, 120);
+    if (t === (interview.targetCompany || "")) return;
+    try {
+      await patchInterviewMeta(id, { targetCompany: t });
+      setPrepCompany(t);
+      setInterview((prev) => (prev ? { ...prev, targetCompany: t } : prev));
+      toast.success("Company label saved");
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Couldn’t save company label."));
+    }
+  };
 
   if (loading) {
     return <ReportPageSkeleton />;
@@ -336,9 +396,30 @@ export default function ReportPage() {
       <div className="glass-panel-lg relative mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/50 via-transparent to-orange-50/30 opacity-90" aria-hidden />
         <div className="relative mb-10 flex flex-wrap items-start justify-between gap-8">
-          <div>
+          <div className="min-w-0 flex-1">
             <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Session report</div>
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">{interview.jobRole}</h1>
+            <div className="flex flex-wrap items-start gap-3">
+              <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">{interview.jobRole}</h1>
+              <button
+                type="button"
+                onClick={onToggleStar}
+                className={`mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg transition-colors ${
+                  sessionStarred
+                    ? "border-amber-300/80 bg-amber-50 text-amber-800 shadow-sm dark:border-amber-500/40 dark:bg-amber-950/50 dark:text-amber-100"
+                    : "border-slate-200/90 bg-white/90 text-slate-400 hover:border-violet-300 hover:text-violet-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-500 dark:hover:text-violet-300"
+                }`}
+                aria-pressed={sessionStarred}
+                aria-label={sessionStarred ? "Remove star from dashboard" : "Star this session on dashboard"}
+                title={sessionStarred ? "Starred on dashboard" : "Star on dashboard"}
+              >
+                {sessionStarred ? "★" : "☆"}
+              </button>
+            </div>
+            {(prepCompany || interview.targetCompany) ? (
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">
+                {prepCompany || interview.targetCompany}
+              </p>
+            ) : null}
             <p className="mt-1 text-sm text-aura-muted">
               {new Date(interview.createdAt).toLocaleDateString("en-IN", {
                 weekday: "long",
@@ -389,6 +470,51 @@ export default function ReportPage() {
               interview.avgFillerWords <= 2 ? "text-emerald-600" : interview.avgFillerWords <= 5 ? "text-amber-600" : "text-rose-600"
             }
           />
+        </div>
+
+        <div className="glass-panel mb-8 rounded-3xl border border-violet-200/50 bg-gradient-to-br from-violet-50/40 via-white to-white p-6 dark:border-violet-500/20 dark:from-violet-950/25 dark:via-slate-900/80 dark:to-slate-950 md:p-8">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <span className="section-eyebrow mb-2">Private prep zone</span>
+              <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Your next real loop</h2>
+              <p className="mt-1 max-w-2xl text-sm text-slate-600 dark:text-slate-400">
+                Capture stories to tighten, questions to ask them, and reminders for the human round. Only you can see this — it is never included in share links.
+              </p>
+            </div>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500" aria-live="polite">
+              {notesStatus === "saving" && "Saving…"}
+              {notesStatus === "saved" && "Saved"}
+              {notesStatus === "error" && "Save failed"}
+            </span>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="prep-target-company" className="label-field">
+              Target company or team
+            </label>
+            <input
+              id="prep-target-company"
+              className="input-field max-w-xl"
+              value={prepCompany}
+              onChange={(e) => setPrepCompany(e.target.value.slice(0, 120))}
+              onBlur={onSaveCompany}
+              placeholder="e.g. Meta, Series B startup, client name"
+              maxLength={120}
+            />
+          </div>
+          <div>
+            <label htmlFor="prep-notes" className="label-field">
+              Prep notes
+            </label>
+            <textarea
+              id="prep-notes"
+              className="input-field min-h-[140px] resize-y"
+              value={prepNotes}
+              onChange={(e) => setPrepNotes(e.target.value.slice(0, 8000))}
+              placeholder="What will you rehearse before the real interview? Metrics to add, weak follow-ups, questions for the panel…"
+              maxLength={8000}
+            />
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">{prepNotes.length.toLocaleString()} / 8,000 · autosaves as you type</p>
+          </div>
         </div>
 
         <div className="glass-panel mb-8 rounded-3xl p-6 md:p-8">

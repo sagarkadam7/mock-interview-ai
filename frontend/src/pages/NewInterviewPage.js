@@ -8,6 +8,7 @@ import { getApiErrorMessage } from "../utils/apiError";
 export default function NewInterviewPage() {
   const navigate = useNavigate();
   const [jobRole, setJobRole] = useState("");
+  const [targetCompany, setTargetCompany] = useState("");
   const [jdText, setJdText] = useState("");
   const [level, setLevel] = useState("mid");
   const [interviewMode, setInterviewMode] = useState("mixed");
@@ -48,6 +49,7 @@ export default function NewInterviewPage() {
     try {
       const fd = new FormData();
       fd.append("jobRole", jobRole.trim());
+      fd.append("targetCompany", targetCompany.trim());
       fd.append("jdText", jdText.trim());
       fd.append("level", level);
       fd.append("interviewMode", interviewMode);
@@ -186,6 +188,22 @@ export default function NewInterviewPage() {
                 onChange={(e) => setJobRole(e.target.value)}
                 required
               />
+            </div>
+            <div>
+              <label className="label-field">
+                Target company or team{" "}
+                <span className="normal-case font-normal tracking-normal text-slate-500 dark:text-slate-400">(optional)</span>
+              </label>
+              <input
+                className="input-field"
+                placeholder="e.g. Stripe, Google Cloud, Series B fintech"
+                value={targetCompany}
+                onChange={(e) => setTargetCompany(e.target.value.slice(0, 120))}
+                maxLength={120}
+              />
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                Helps you organize sessions; we never put this on public share links.
+              </p>
             </div>
             <div>
               <div className="mb-2 flex flex-wrap items-end justify-between gap-2">

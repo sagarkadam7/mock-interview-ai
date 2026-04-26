@@ -41,6 +41,12 @@ const interviewSchema = new mongoose.Schema(
     timeboxMin:   { type: Number, default: 0 }, // 0 = no timer
     resumeText:   { type: String, required: true },
     jdText:       { type: String, default: "" },
+    /** Optional company or team (e.g. "Meta — Payments") for the candidate's own organization. */
+    targetCompany: { type: String, default: "", trim: true, maxlength: 120 },
+    /** Private notes: what to rehearse, stories to tighten, questions to ask them — never shown on shared links. */
+    candidateNotes: { type: String, default: "", maxlength: 8000 },
+    /** Pin important sessions on the dashboard. */
+    starred:      { type: Boolean, default: false },
     status:       { type: String, enum: ["pending", "in_progress", "completed"], default: "pending" },
     shareToken:   { type: String, default: "", index: true },
     sharedAt:     { type: Date, default: null },

@@ -238,7 +238,12 @@ router.post("/create", protect, assertCanCreateInterview, createInterviewLimiter
       interviewMode = "mixed",
       persona = "coach",
       timeboxMin = 0,
+      targetCompany: rawTargetCompany = "",
     } = req.body;
+
+    const targetCompany = String(rawTargetCompany || "")
+      .trim()
+      .slice(0, 120);
 
     if (!jobRole) {
       return res.status(400).json({ message: "Job role is required." });
@@ -276,6 +281,7 @@ router.post("/create", protect, assertCanCreateInterview, createInterviewLimiter
       interviewMode: String(interviewMode || "mixed").trim(),
       persona: String(persona || "coach").trim(),
       timeboxMin: Number(timeboxMin || 0),
+      targetCompany,
       resumeText,
       jdText: jdText || "",
       status: "pending",
@@ -310,7 +316,9 @@ router.post("/create", protect, assertCanCreateInterview, createInterviewLimiter
 router.get("/", protect, async (req, res) => {
   try {
     const interviews = await Interview.find({ userId: req.user._id })
-      .select("jobRole status overallScore avgEyeContact avgPace avgConfidence avgFillerWords createdAt questions level interviewMode persona timeboxMin")
+      .select(
+        "jobRole targetCompany starred status overallScore avgEyeContact avgPace avgConfidence avgFillerWords createdAt questions level interviewMode persona timeboxMin"
+      )
       .sort("-createdAt");
 
     res.json(interviews);
@@ -334,6 +342,45 @@ router.get("/:id", protect, validateMongoId("id"), async (req, res) => {
 
     res.json(interview);
   } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// PATCH meta: private prep notes, star, target company (not in shared report payload by design on share route)
+// PATCH /api/interview/:id/meta
+// ════════════════════════════════════════════════════════════════
+router.patch("/:id/meta", protect, validateMongoId("id"), async (req, res) => {
+  try {
+    const { candidateNotes, starred, targetCompany } = req.body || {};
+    if (candidateNotes === undefined && starred === undefined && targetCompany === undefined) {
+      return res.status(400).json({ message: "Provide candidateNotes, starred, and/or targetCompany." });
+    }
+
+    const interview = await Interview.findById(req.params.id);
+    if (!interview) return res.status(404).json({ message: "Interview not found." });
+    if (interview.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized." });
+    }
+
+    if (typeof candidateNotes === "string") {
+      interview.candidateNotes = String(candidateNotes).slice(0, 8000);
+    }
+    if (typeof starred === "boolean") {
+      interview.starred = starred;
+    }
+    if (typeof targetCompany === "string") {
+      interview.targetCompany = String(targetCompany).trim().slice(0, 120);
+    }
+
+    await interview.save();
+    res.json({
+      candidateNotes: interview.candidateNotes,
+      starred: interview.starred,
+      targetCompany: interview.targetCompany,
+    });
+  } catch (err) {
+    console.error("Patch interview meta error:", err.message);
     res.status(500).json({ message: err.message });
   }
 });
