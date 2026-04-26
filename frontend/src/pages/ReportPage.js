@@ -248,6 +248,12 @@ export default function ReportPage() {
     loadReport();
   }, [loadReport]);
 
+  useEffect(() => {
+    if (!interview?.jobRole) return undefined;
+    document.title = `${interview.jobRole} · Report · InterviewAI`;
+    return undefined;
+  }, [interview?.jobRole]);
+
   if (loading) {
     return <ReportPageSkeleton />;
   }
