@@ -123,8 +123,10 @@ export default function InterviewPage() {
   const questionAnchorRef = useRef(null);
   const skipQuestionScrollOnce = useRef(true);
 
-  useEffect(() => {
+  const loadInterview = useCallback(() => {
     skipQuestionScrollOnce.current = true;
+    setLoading(true);
+    setError("");
     getInterview(id)
       .then(({ data }) => {
         const first = data.questions.findIndex((q) => q.score === null);
@@ -133,11 +135,16 @@ export default function InterviewPage() {
       })
       .catch((err) => {
         const msg = getApiErrorMessage(err, "Failed to load interview.");
+        setInterview(null);
         setError(msg);
         toast.error(msg);
       })
       .finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    loadInterview();
+  }, [loadInterview]);
 
   useEffect(() => {
     if (!interview?.jobRole) return undefined;
@@ -231,9 +238,14 @@ export default function InterviewPage() {
           </span>
           <span>{error || "Interview not found or you no longer have access."}</span>
         </div>
-        <button type="button" className="btn-cta px-8 py-3" onClick={() => navigate("/dashboard")}>
-          Back to dashboard
-        </button>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <button type="button" className="btn-cta px-8 py-3" onClick={loadInterview}>
+            Retry
+          </button>
+          <button type="button" className="btn-outline px-8 py-3" onClick={() => navigate("/dashboard")}>
+            Back to dashboard
+          </button>
+        </div>
       </div>
     );
   }
