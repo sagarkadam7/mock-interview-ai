@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
@@ -20,6 +20,10 @@ export default function NewInterviewPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const fileRef = useRef();
+
+  useEffect(() => {
+    document.title = "New session · InterviewAI";
+  }, []);
 
   const handleFileDrop = (e) => {
     e.preventDefault();
