@@ -26,7 +26,7 @@ export default function NotFoundPage() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 50% at 30% 40%, rgba(255,126,95,0.15), transparent 55%), radial-gradient(ellipse 60% 45% at 75% 65%, rgba(157,80,187,0.12), transparent 55%)",
+            "radial-gradient(ellipse 70% 50% at 30% 40%, rgba(232,85,71,0.15), transparent 55%), radial-gradient(ellipse 60% 45% at 75% 65%, rgba(91,33,182,0.12), transparent 55%)",
         }}
       />
 
@@ -39,7 +39,7 @@ export default function NotFoundPage() {
         {/* Oversized 404 glyph */}
         <div
           aria-hidden
-          className="pointer-events-none mb-4 select-none bg-gradient-to-br from-aura-coral via-fuchsia-500 to-aura-violet bg-clip-text font-display text-[7rem] font-black leading-none tracking-tighter text-transparent drop-shadow-[0_10px_40px_rgba(157,80,187,0.22)] md:text-[10rem]"
+          className="pointer-events-none mb-4 select-none bg-gradient-to-br from-aura-coral via-fuchsia-500 to-aura-violet bg-clip-text font-display text-[7rem] font-black leading-none tracking-tighter text-transparent drop-shadow-[0_10px_40px_rgba(91,33,182,0.22)] md:text-[10rem]"
         >
           404
         </div>
@@ -57,7 +57,7 @@ export default function NotFoundPage() {
         {/* Primary CTAs */}
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link to="/" className="no-underline">
-            <span className="inline-flex items-center justify-center rounded-full bg-gradient-to-br from-aura-coral via-fuchsia-500 to-aura-violet px-8 py-3.5 text-sm font-bold text-white shadow-[0_16px_40px_-10px_rgba(157,80,187,0.5)] transition-transform active:scale-[0.97] sm:w-auto">
+            <span className="inline-flex items-center justify-center rounded-full bg-gradient-to-br from-aura-coral via-fuchsia-500 to-aura-violet px-8 py-3.5 text-sm font-bold text-white shadow-[0_16px_40px_-10px_rgba(91,33,182,0.5)] transition-transform active:scale-[0.97] sm:w-auto">
               Take me home →
             </span>
           </Link>

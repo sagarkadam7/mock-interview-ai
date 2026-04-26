@@ -622,7 +622,7 @@ export default function ReportPage() {
               Eye: higher · Conf: higher · Pace: 130–170 wpm · Fillers: lower
             </div>
           </div>
-          <RadarChart metrics={radarMetrics} stroke="#FF7E5F" fill="rgba(157,80,187,0.14)" />
+          <RadarChart metrics={radarMetrics} stroke="#E85547" fill="rgba(91,33,182,0.14)" />
 
           <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/90 p-5 dark:border-slate-700 dark:bg-slate-900/60">
             <div className="flex flex-wrap items-start justify-between gap-4">
@@ -644,7 +644,7 @@ export default function ReportPage() {
             <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
             <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Question score</h3>
             {questionScores.length >= 2 ? (
-              <Sparkline data={questionScores} stroke="#9D50BB" fill="rgba(157,80,187,0.12)" />
+              <Sparkline data={questionScores} stroke="#5B21B6" fill="rgba(91,33,182,0.12)" />
             ) : (
               <p className="text-sm text-aura-muted">Not enough scores yet.</p>
             )}

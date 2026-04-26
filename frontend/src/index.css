@@ -5,21 +5,21 @@
 @layer base {
   :root {
     color-scheme: light;
-    --accent: #9d50bb;
-    --accent2: #ff7e5f;
-    --indigo2: #9d50bb;
+    --accent: #5B21B6;
+    --accent2: #E85547;
+    --indigo2: #5B21B6;
     --green: #34d399;
     --amber: #fbbf24;
     --red: #f87171;
     --text2: #64748b;
     --text3: #94a3b8;
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-    --aura-page: #f4f4f7;
-    --aura-page-deep: #ececf0;
+    --aura-page: #f1f4f8;
+    --aura-page-deep: #e6eaf2;
     --aura-ink: #0f172a;
     --aura-card: #ffffff;
     --aura-line: #e4e4e9;
-    --aura-muted: #64748b;
+    --aura-muted: #556177;
     --aura-cta: #121217;
     --aura-frame: rgba(15, 23, 42, 0.06);
   }
@@ -78,18 +78,18 @@
     inset: 0;
     z-index: 0;
     opacity: 1;
-    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 126, 95, 0.09) 0%, transparent 55%),
-      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(157, 80, 187, 0.07) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(157, 80, 187, 0.05) 0%, transparent 45%),
+    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,85,71, 0.09) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(91,33,182, 0.07) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(91,33,182, 0.05) 0%, transparent 45%),
       radial-gradient(rgba(15, 23, 42, 0.055) 1px, transparent 1px);
     background-size: auto, auto, auto, 40px 40px;
     background-repeat: no-repeat, no-repeat, no-repeat, repeat;
   }
 
   html.dark #root::before {
-    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 126, 95, 0.07) 0%, transparent 55%),
-      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(157, 80, 187, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 45%),
+    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,85,71, 0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(91,33,182, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(91,33,182, 0.08) 0%, transparent 45%),
       radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   }
 
@@ -101,7 +101,7 @@
   select:focus-visible,
   summary:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(124, 58, 237, 0.45);
+    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(91,33,182, 0.45);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -217,7 +217,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border-0 bg-aura-ink px-8 py-3.5 text-base font-bold text-white;
     @apply shadow-[0_2px_8px_-2px_rgba(15,23,42,0.25),0_0_0_1px_rgba(255,255,255,0.08)_inset];
     @apply transition-[transform,background-color,box-shadow] duration-250 ease-out-expo;
-    @apply hover:bg-zinc-800 hover:shadow-[0_12px_32px_-8px_rgba(157,80,187,0.28)];
+    @apply hover:bg-zinc-800 hover:shadow-[0_12px_32px_-8px_rgba(91,33,182,0.28)];
     @apply active:scale-[0.98];
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/40 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page;
     @apply disabled:pointer-events-none disabled:opacity-85 disabled:shadow-none disabled:active:scale-100;
@@ -293,7 +293,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   }
   .progress-fill-bar {
     @apply h-full rounded-full bg-gradient-progress transition-[width] duration-500 ease-out-expo;
-    box-shadow: 0 0 12px rgba(157, 80, 187, 0.25);
+    box-shadow: 0 0 12px rgba(91,33,182, 0.25);
   }
 
   .spinner {
@@ -396,7 +396,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     opacity: 1;
     pointer-events: auto;
     outline: none;
-    box-shadow: 0 0 0 2px #f4f4f7, 0 0 0 4px rgba(157, 80, 187, 0.45), 0 12px 32px -8px rgba(15, 23, 42, 0.25);
+    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(91,33,182, 0.45), 0 12px 32px -8px rgba(15, 23, 42, 0.25);
   }
   @media (forced-colors: active) {
     .skip-link {
@@ -450,7 +450,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   }
   html.dark .btn-cta {
     /* Light CTA surface in dark theme needs truly-dark label color for contrast. */
-    @apply bg-slate-100 text-slate-900 shadow-none hover:bg-white hover:shadow-[0_12px_32px_-8px_rgba(157,80,187,0.35)];
+    @apply bg-slate-100 text-slate-900 shadow-none hover:bg-white hover:shadow-[0_12px_32px_-8px_rgba(91,33,182,0.35)];
   }
   /* In dark mode, the CTA surface is intentionally light; avoid "washed-out" disabled state. */
   html.dark .btn-cta:disabled {

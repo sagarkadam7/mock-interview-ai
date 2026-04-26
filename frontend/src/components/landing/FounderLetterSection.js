@@ -35,7 +35,7 @@ export default function FounderLetterSection() {
         className="pointer-events-none absolute inset-0"
         style={{
           background: `radial-gradient(ellipse 70% 55% at 18% 40%, rgba(255, 200, 185, 0.22) 0%, transparent 55%),
-            radial-gradient(ellipse 55% 50% at 88% 60%, rgba(157, 80, 187, 0.08) 0%, transparent 50%)`,
+            radial-gradient(ellipse 55% 50% at 88% 60%, rgba(91,33,182, 0.08) 0%, transparent 50%)`,
         }}
         aria-hidden
       />

@@ -149,7 +149,7 @@ export default function InteractiveHeroDemo() {
               className={`absolute inset-0 rounded-full bg-gradient-to-br transition-all duration-500 ${
                 phase === "recording"
                   ? "from-rose-500 to-red-600 shadow-[0_16px_48px_-8px_rgba(244,63,94,0.6)]"
-                  : "from-aura-coral to-aura-violet shadow-[0_16px_48px_-8px_rgba(157,80,187,0.45)]"
+                  : "from-aura-coral to-aura-violet shadow-[0_16px_48px_-8px_rgba(91,33,182,0.45)]"
               }`}
             />
             {/* Icon */}

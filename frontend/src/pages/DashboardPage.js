@@ -282,7 +282,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-stretch xl:flex-row">
             <Link to="/interview/new" className="no-underline">
-              <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3.5 text-sm font-bold text-white shadow-[0_16px_40px_-10px_rgba(157,80,187,0.45),0_0_0_1px_rgba(255,255,255,0.1)_inset] transition-transform duration-250 ease-out-expo active:scale-[0.98] sm:w-auto">
+              <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3.5 text-sm font-bold text-white shadow-[0_16px_40px_-10px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.1)_inset] transition-transform duration-250 ease-out-expo active:scale-[0.98] sm:w-auto">
                 <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet" />
                 <span className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-50" />
                 <span className="relative">New interview</span>
@@ -430,7 +430,7 @@ export default function DashboardPage() {
           <div className="h-[88px] w-full animate-pulse rounded-xl bg-slate-100/90 dark:bg-slate-800/60" aria-hidden />
         ) : scoreLast.length >= 2 ? (
           <div className="min-w-0">
-            <Sparkline data={scoreLast} stroke="#9D50BB" fill="rgba(157,80,187,0.14)" />
+            <Sparkline data={scoreLast} stroke="#5B21B6" fill="rgba(91,33,182,0.14)" />
           </div>
         ) : (
           <TrendPlaceholder />

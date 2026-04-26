@@ -54,8 +54,8 @@ function SessionProgressRing({ answered, total }) {
         />
         <defs>
           <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FF7E5F" />
-            <stop offset="100%" stopColor="#9D50BB" />
+            <stop offset="0%" stopColor="#E85547" />
+            <stop offset="100%" stopColor="#5B21B6" />
           </linearGradient>
         </defs>
       </svg>
@@ -388,9 +388,9 @@ export default function InterviewPage() {
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[min(55vh,480px)]"
         style={{
-          background: `radial-gradient(ellipse 90% 75% at 50% -15%, rgba(255,126,95,0.11) 0%, transparent 58%),
-            radial-gradient(ellipse 55% 45% at 100% 5%, rgba(157,80,187,0.09) 0%, transparent 48%),
-            radial-gradient(ellipse 45% 40% at 0% 25%, rgba(157,80,187,0.05) 0%, transparent 45%)`,
+          background: `radial-gradient(ellipse 90% 75% at 50% -15%, rgba(232,85,71,0.11) 0%, transparent 58%),
+            radial-gradient(ellipse 55% 45% at 100% 5%, rgba(91,33,182,0.09) 0%, transparent 48%),
+            radial-gradient(ellipse 45% 40% at 0% 25%, rgba(91,33,182,0.05) 0%, transparent 45%)`,
         }}
         aria-hidden
       />
@@ -457,7 +457,7 @@ export default function InterviewPage() {
           <div className="progress-track h-2.5 overflow-hidden rounded-full shadow-inner ring-1 ring-slate-900/[0.04] dark:ring-white/[0.06]">
             <div
               className="h-full rounded-full bg-gradient-to-r from-aura-coral to-aura-violet transition-[width] duration-700 ease-out-expo"
-              style={{ width: `${progress}%`, boxShadow: "0 0 20px rgba(157, 80, 187, 0.25)" }}
+              style={{ width: `${progress}%`, boxShadow: "0 0 20px rgba(91,33,182, 0.25)" }}
             />
           </div>
         </div>
@@ -508,7 +508,7 @@ export default function InterviewPage() {
                       ? "border border-amber-300/50 bg-amber-50/95 text-amber-950 shadow-sm dark:border-amber-500/25 dark:bg-amber-950/45 dark:text-amber-100"
                       : "border border-rose-300/50 bg-rose-50/95 text-rose-900 shadow-sm dark:border-rose-500/25 dark:bg-rose-950/45 dark:text-rose-100"
                   : i === currentIndex
-                    ? "border border-aura-violet/35 bg-white text-aura-ink shadow-[0_0_0_2px_rgba(157,80,187,0.15),0_10px_28px_-12px_rgba(15,23,42,0.15)] dark:bg-slate-900 dark:text-white dark:shadow-[0_0_0_2px_rgba(157,80,187,0.25),0_10px_28px_-12px_rgba(0,0,0,0.4)]"
+                    ? "border border-aura-violet/35 bg-white text-aura-ink shadow-[0_0_0_2px_rgba(91,33,182,0.15),0_10px_28px_-12px_rgba(15,23,42,0.15)] dark:bg-slate-900 dark:text-white dark:shadow-[0_0_0_2px_rgba(91,33,182,0.25),0_10px_28px_-12px_rgba(0,0,0,0.4)]"
                     : "border border-transparent text-slate-500 dark:text-slate-400"
               }`}
             >
@@ -609,7 +609,7 @@ export default function InterviewPage() {
               <div className="progress-track mb-6 h-2 shadow-inner ring-1 ring-slate-900/[0.03]">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-aura-coral to-aura-violet transition-all duration-500"
-                  style={{ width: `${feedback.score * 10}%`, boxShadow: "0 0 16px rgba(157, 80, 187, 0.28)" }}
+                  style={{ width: `${feedback.score * 10}%`, boxShadow: "0 0 16px rgba(91,33,182, 0.28)" }}
                 />
               </div>
               <p className="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-[15px]">{feedback.feedback}</p>

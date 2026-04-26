@@ -581,7 +581,7 @@ const CameraRecorder = forwardRef(function CameraRecorder(
           className={`group relative w-full overflow-hidden rounded-full py-4 text-[15px] font-bold tracking-tight transition-transform duration-250 ease-out-expo active:scale-[0.98] ${
             !cameraReady || disabled
               ? "cursor-not-allowed bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-              : "text-white shadow-[0_16px_40px_-10px_rgba(157,80,187,0.45),0_0_0_1px_rgba(255,255,255,0.1)_inset] hover:shadow-[0_20px_48px_-10px_rgba(157,80,187,0.55)]"
+              : "text-white shadow-[0_16px_40px_-10px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.1)_inset] hover:shadow-[0_20px_48px_-10px_rgba(91,33,182,0.55)]"
           }`}
         >
           {cameraReady && !disabled && (

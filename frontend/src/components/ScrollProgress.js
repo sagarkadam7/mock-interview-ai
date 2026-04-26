@@ -36,7 +36,7 @@ export default function ScrollProgress() {
       className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[3px] bg-transparent"
     >
       <div
-        className="h-full origin-left bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet shadow-[0_0_12px_rgba(157,80,187,0.5)] transition-transform duration-75 ease-out"
+        className="h-full origin-left bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet shadow-[0_0_12px_rgba(91,33,182,0.5)] transition-transform duration-75 ease-out"
         style={{ transform: `scaleX(${progress})` }}
       />
     </div>

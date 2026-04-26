@@ -110,7 +110,7 @@ function PlanCard({ plan, index }) {
           <span
             className={`inline-flex w-full items-center justify-center rounded-full px-8 py-3.5 text-[14px] font-bold tracking-tight no-underline transition-transform duration-200 ease-out active:scale-[0.98] ${
               isPro
-                ? "bg-gradient-to-br from-aura-coral via-fuchsia-500 to-aura-violet text-white shadow-[0_14px_40px_-10px_rgba(157,80,187,0.55)] hover:shadow-[0_18px_48px_-10px_rgba(157,80,187,0.65)]"
+                ? "bg-gradient-to-br from-aura-coral via-fuchsia-500 to-aura-violet text-white shadow-[0_14px_40px_-10px_rgba(91,33,182,0.55)] hover:shadow-[0_18px_48px_-10px_rgba(91,33,182,0.65)]"
                 : "border border-slate-900/90 bg-white text-slate-900 shadow-sm hover:bg-slate-50 dark:border-slate-300 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
             }`}
           >

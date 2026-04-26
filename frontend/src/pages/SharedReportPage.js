@@ -328,14 +328,14 @@ export default function SharedReportPage() {
               <p className="mt-1 text-sm text-aura-muted">Larger shape = better performance for that dimension.</p>
             </div>
           </div>
-          <RadarChart metrics={radarMetrics} stroke="#FF7E5F" fill="rgba(157,80,187,0.14)" />
+          <RadarChart metrics={radarMetrics} stroke="#E85547" fill="rgba(91,33,182,0.14)" />
         </div>
 
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
           <div className="glass-panel rounded-2xl p-6">
             <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
             <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Question score</h3>
-            {questionScores.length >= 2 ? <Sparkline data={questionScores} stroke="#9D50BB" fill="rgba(157,80,187,0.12)" /> : <p className="text-sm text-aura-muted">Not enough scores yet.</p>}
+            {questionScores.length >= 2 ? <Sparkline data={questionScores} stroke="#5B21B6" fill="rgba(91,33,182,0.12)" /> : <p className="text-sm text-aura-muted">Not enough scores yet.</p>}
           </div>
           <div className="glass-panel rounded-2xl p-6">
             <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>

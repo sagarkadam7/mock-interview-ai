@@ -363,9 +363,9 @@ export default function LandingHero({ user }) {
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-500"
         style={{
-          background: `radial-gradient(ellipse 980px 720px at var(--mx,50%) var(--my,38%), rgba(255,126,95,0.22), transparent 55%),
-            radial-gradient(ellipse 560px 520px at 88% 12%, rgba(157,80,187,0.14), transparent 52%),
-            radial-gradient(ellipse 520px 480px at 8% 92%, rgba(157,80,187,0.09), transparent 50%)`,
+          background: `radial-gradient(ellipse 980px 720px at var(--mx,50%) var(--my,38%), rgba(232,85,71,0.22), transparent 55%),
+            radial-gradient(ellipse 560px 520px at 88% 12%, rgba(91,33,182,0.14), transparent 52%),
+            radial-gradient(ellipse 520px 480px at 8% 92%, rgba(91,33,182,0.09), transparent 50%)`,
         }}
         aria-hidden
       />
@@ -409,7 +409,7 @@ export default function LandingHero({ user }) {
           >
             Turn interview
             <br />
-            <span className="font-display text-[1.02em] font-semibold italic tracking-[-0.02em] text-gradient drop-shadow-[0_2px_28px_rgba(157,80,187,0.14)]">
+            <span className="font-display text-[1.02em] font-semibold italic tracking-[-0.02em] text-gradient drop-shadow-[0_2px_28px_rgba(91,33,182,0.14)]">
               pressure into signal
             </span>
           </motion.h1>
@@ -427,7 +427,7 @@ export default function LandingHero({ user }) {
               to={user ? "/dashboard" : "/register"}
               className="w-full rounded-full no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page sm:w-auto"
             >
-              <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-10 py-4 text-[15px] font-bold tracking-tight text-white shadow-[0_20px_50px_-12px_rgba(157,80,187,0.45),0_0_0_1px_rgba(255,255,255,0.12)_inset] transition-transform duration-250 ease-out-expo active:scale-[0.98] sm:w-auto sm:px-11">
+              <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-10 py-4 text-[15px] font-bold tracking-tight text-white shadow-[0_20px_50px_-12px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.12)_inset] transition-transform duration-250 ease-out-expo active:scale-[0.98] sm:w-auto sm:px-11">
                 <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet opacity-100 transition-opacity duration-300 group-hover:opacity-100" />
                 <span className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent opacity-40" />
                 <span className="relative">{user ? "Open dashboard" : "Start free — no card"}</span>

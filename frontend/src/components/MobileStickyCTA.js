@@ -42,7 +42,7 @@ export default function MobileStickyCTA() {
         </div>
         <Link
           to="/register"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-aura-coral via-fuchsia-500 to-aura-violet px-4 py-2.5 text-xs font-bold tracking-tight text-white no-underline shadow-[0_10px_24px_-8px_rgba(157,80,187,0.55)] transition-transform active:scale-[0.97]"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-br from-aura-coral via-fuchsia-500 to-aura-violet px-4 py-2.5 text-xs font-bold tracking-tight text-white no-underline shadow-[0_10px_24px_-8px_rgba(91,33,182,0.55)] transition-transform active:scale-[0.97]"
         >
           Get started <span aria-hidden>→</span>
         </Link>

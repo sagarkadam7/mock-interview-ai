@@ -14,7 +14,7 @@ export default function AppToaster() {
         duration: 4200,
         className: `${toastBase} !animate-toast-in`,
         iconTheme: {
-          primary: "#9D50BB",
+          primary: "#5B21B6",
           secondary: "#ffffff",
         },
         style: {
@@ -31,7 +31,7 @@ export default function AppToaster() {
           className: `${toastBase} !border-emerald-200 !bg-emerald-50/95 !text-emerald-950 !animate-toast-in dark:!border-emerald-500/35 dark:!bg-emerald-950/90 dark:!text-emerald-50`,
         },
         loading: {
-          iconTheme: { primary: "#FF7E5F", secondary: "#ffffff" },
+          iconTheme: { primary: "#E85547", secondary: "#ffffff" },
           className: `${toastBase} !animate-toast-in`,
         },
       }}

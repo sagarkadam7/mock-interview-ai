@@ -8,8 +8,8 @@ export const PALETTE_LIGHT = {
   paper: "#fafaf8",
   card: "#ffffff",
   band: "#0a0a0f",
-  coral: "#ff5c3a",
-  violet: "#7c3aed",
+  coral: "#e85547",
+  violet: "#5b21b6",
   gold: "#c9a84c",
   muted: "#6b7280",
   border: "rgba(15,23,42,0.08)",
@@ -23,8 +23,8 @@ export const PALETTE_DARK = {
   paper: "#06070c",
   card: "#10141f",
   band: "#03050c",
-  coral: "#ff8a6e",
-  violet: "#b49cff",
+  coral: "#f09183",
+  violet: "#a78bfa",
   gold: "#d4b868",
   muted: "#94a3b8",
   border: "rgba(148,163,184,0.16)",
@@ -53,7 +53,7 @@ export function ThemeProvider({ children }) {
     document.documentElement.classList.toggle("dark", theme === "dark");
     const meta = typeof document !== "undefined" ? document.querySelector('meta[name="theme-color"]') : null;
     if (meta) {
-      meta.setAttribute("content", theme === "dark" ? "#06070c" : "#f4f4f7");
+      meta.setAttribute("content", theme === "dark" ? "#06070c" : "#f1f4f8");
     }
     try {
       localStorage.setItem(STORAGE_KEY, theme);
