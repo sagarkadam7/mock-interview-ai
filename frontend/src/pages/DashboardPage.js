@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -103,6 +103,7 @@ export default function DashboardPage() {
   const { confirm } = useConfirm();
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [deleting, setDeleting] = useState(null);
   const [quickstart, setQuickstart] = useState(() => {
     try {
@@ -121,14 +122,25 @@ export default function DashboardPage() {
     }
   }, [quickstart]);
 
-  useEffect(() => {
+  const fetchInterviews = useCallback(() => {
+    setLoading(true);
+    setLoadError("");
     getAllInterviews()
-      .then(({ data }) => setInterviews(data))
+      .then(({ data }) => {
+        setInterviews(data);
+        setLoadError("");
+      })
       .catch((err) => {
-        toast.error(getApiErrorMessage(err, "Couldn’t load your interviews."));
+        const msg = getApiErrorMessage(err, "Couldn’t load your interviews.");
+        setLoadError(msg);
+        toast.error(msg);
       })
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    fetchInterviews();
+  }, [fetchInterviews]);
 
   const handleDelete = async (id, e) => {
     e.preventDefault();
@@ -234,6 +246,18 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {!loading && loadError && (
+        <div
+          className="mb-8 flex flex-col gap-4 rounded-2xl border border-rose-200/90 bg-rose-50/95 p-5 shadow-sm dark:border-rose-500/30 dark:bg-rose-950/40 sm:flex-row sm:items-center sm:justify-between"
+          role="alert"
+        >
+          <p className="text-sm font-medium text-rose-900 dark:text-rose-100">{loadError}</p>
+          <button type="button" className="btn-primary shrink-0 py-2.5 text-sm" onClick={fetchInterviews}>
+            Retry sync
+          </button>
+        </div>
+      )}
 
       {/* KPI strip — always visible */}
       <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
