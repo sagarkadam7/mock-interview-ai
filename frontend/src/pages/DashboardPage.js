@@ -199,20 +199,25 @@ export default function DashboardPage() {
     }
   };
 
-  const completed = interviews.filter((i) => i.status === "completed");
-  const inProgress = interviews.filter((i) => i.status === "in_progress");
-  const completedSorted = [...completed].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-  const scoreTrend = completedSorted.map((i) => i.overallScore).filter((v) => typeof v === "number");
-  const scoreLast = scoreTrend.slice(-8);
+  const { completed, inProgress, scoreLast, eyeLast, paceLast, confLast } = useMemo(() => {
+    const completedSessions = interviews.filter((i) => i.status === "completed");
+    const inFlight = interviews.filter((i) => i.status === "in_progress");
+    const completedSorted = [...completedSessions].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-  const eyeTrend = completedSorted.map((i) => i.avgEyeContact).filter((v) => typeof v === "number");
-  const eyeLast = eyeTrend.slice(-8);
+    const scoreTrend = completedSorted.map((i) => i.overallScore).filter((v) => typeof v === "number");
+    const eyeTrend = completedSorted.map((i) => i.avgEyeContact).filter((v) => typeof v === "number");
+    const paceTrend = completedSorted.map((i) => i.avgPace).filter((v) => typeof v === "number");
+    const confTrend = completedSorted.map((i) => i.avgConfidence).filter((v) => typeof v === "number");
 
-  const paceTrend = completedSorted.map((i) => i.avgPace).filter((v) => typeof v === "number");
-  const paceLast = paceTrend.slice(-8);
-
-  const confTrend = completedSorted.map((i) => i.avgConfidence).filter((v) => typeof v === "number");
-  const confLast = confTrend.slice(-8);
+    return {
+      completed: completedSessions,
+      inProgress: inFlight,
+      scoreLast: scoreTrend.slice(-8),
+      eyeLast: eyeTrend.slice(-8),
+      paceLast: paceTrend.slice(-8),
+      confLast: confTrend.slice(-8),
+    };
+  }, [interviews]);
   const avgScore =
     completed.filter((i) => i.overallScore !== null).length > 0
       ? (
