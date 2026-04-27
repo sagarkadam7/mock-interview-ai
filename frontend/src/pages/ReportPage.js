@@ -541,6 +541,22 @@ export default function ReportPage() {
                 <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-amber-800 dark:text-amber-200">Drill targets</span>
                 <h2 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Lowest-scoring primaries</h2>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Re-answer these out loud before your next mock — same STAR depth, sharper metrics.</p>
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-xs font-medium text-amber-900/70 dark:text-amber-100/70">
+                    {weakPrimary.length} item{weakPrimary.length === 1 ? "" : "s"}
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-outline border-amber-300/70 bg-white/80 px-4 py-2 text-xs text-amber-900 hover:bg-white dark:border-amber-500/30 dark:bg-slate-900/40 dark:text-amber-100"
+                    disabled={copying}
+                    onClick={() => {
+                      const text = weakPrimary.map((q, i) => `${i + 1}. ${q.score}/10 — ${q.text}`).join("\n");
+                      copyText(text, "Drill targets copied");
+                    }}
+                  >
+                    Copy drill list
+                  </button>
+                </div>
                 <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm text-slate-800 dark:text-slate-200">
                   {weakPrimary.map((q) => (
                     <li key={q._id} className="pl-1">
