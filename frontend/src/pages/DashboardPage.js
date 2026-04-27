@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { getAllInterviews, deleteInterview, patchInterviewMeta } from "../utils/api";
@@ -104,6 +104,7 @@ function greetingForNow() {
 export default function DashboardPage() {
   const { user } = useAuth();
   const { confirm } = useConfirm();
+  const navigate = useNavigate();
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -147,6 +148,21 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchInterviews();
   }, [fetchInterviews]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.defaultPrevented) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const tag = e.target?.tagName?.toLowerCase?.();
+      if (tag === "input" || tag === "textarea" || tag === "select") return;
+      if (e.key?.toLowerCase?.() === "n") {
+        e.preventDefault();
+        navigate("/interview/new");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [navigate]);
 
   const handleDelete = async (id, e) => {
     e.preventDefault();
