@@ -217,8 +217,12 @@ export default function DashboardPage() {
 
   const hasInterviews = interviews.length > 0;
   const q = sessionQuery.trim().toLowerCase();
+  const qTokens = q ? q.split(/\s+/).filter(Boolean) : [];
   const queryFiltered = q
-    ? interviews.filter((iv) => (iv.jobRole || "").toLowerCase().includes(q))
+    ? interviews.filter((iv) => {
+        const haystack = `${iv.jobRole || ""} ${iv.company || ""}`.toLowerCase();
+        return qTokens.length === 0 ? true : qTokens.every((t) => haystack.includes(t));
+      })
     : interviews;
   const filteredSessions = starredOnly ? queryFiltered.filter((iv) => iv.starred) : queryFiltered;
 
@@ -618,17 +622,29 @@ export default function DashboardPage() {
                 </label>
                 <div className="flex w-full min-w-0 flex-col gap-2 sm:max-w-xl sm:flex-row sm:items-center">
                   <label className="sr-only" htmlFor="dashboard-session-search">
-                    Filter sessions by role
+                    Search sessions by role or company
                   </label>
-                  <input
-                    id="dashboard-session-search"
-                    type="search"
-                    value={sessionQuery}
-                    onChange={(e) => setSessionQuery(e.target.value)}
-                    placeholder="Filter by role…"
-                    className="input-field min-w-0 flex-1 py-2.5 text-sm"
-                    autoComplete="off"
-                  />
+                  <div className="relative min-w-0 flex-1">
+                    <input
+                      id="dashboard-session-search"
+                      type="search"
+                      value={sessionQuery}
+                      onChange={(e) => setSessionQuery(e.target.value)}
+                      placeholder="Search role or company…"
+                      className="input-field w-full min-w-0 py-2.5 pr-10 text-sm"
+                      autoComplete="off"
+                    />
+                    {sessionQuery.trim() ? (
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-2 my-auto inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/40 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:text-slate-400 dark:hover:bg-slate-800/70 dark:hover:text-slate-200 dark:focus-visible:ring-offset-slate-950"
+                        onClick={() => setSessionQuery("")}
+                        aria-label="Clear search"
+                      >
+                        ×
+                      </button>
+                    ) : null}
+                  </div>
                   <label className="sr-only" htmlFor="dashboard-session-sort">
                     Sort sessions
                   </label>
