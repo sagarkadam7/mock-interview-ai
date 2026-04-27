@@ -228,6 +228,7 @@ export default function ReportPage() {
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
   const [copying, setCopying] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
   const [loadError, setLoadError] = useState("");
   const [peerList, setPeerList] = useState([]);
   const [duplicating, setDuplicating] = useState(false);
@@ -244,6 +245,7 @@ export default function ReportPage() {
       const [{ data }, allRes] = await Promise.all([getInterview(id), getAllInterviews()]);
       setInterview(data);
       setPeerList(Array.isArray(allRes.data) ? allRes.data : []);
+      setShareUrl("");
     } catch (err) {
       const msg = getApiErrorMessage(err, "Couldn’t load this report.");
       setLoadError(msg);
@@ -762,10 +764,15 @@ export default function ReportPage() {
             disabled={sharing}
             aria-busy={sharing}
             onClick={async () => {
+              if (shareUrl) {
+                copyText(shareUrl, "Share link copied");
+                return;
+              }
               try {
                 setSharing(true);
                 const { data } = await createShareToken(interview._id);
                 const url = `${window.location.origin}/share/${data.token}`;
+                setShareUrl(url);
                 if (navigator.clipboard?.writeText) {
                   await navigator.clipboard.writeText(url);
                   toast.success("Share link copied");
@@ -784,7 +791,7 @@ export default function ReportPage() {
                 <span className="spinner h-4 w-4" /> Creating link…
               </>
             ) : (
-              "↗ Share report"
+              shareUrl ? "⎘ Copy share link" : "↗ Share report"
             )}
           </button>
           <Link to="/interview/new">
@@ -798,6 +805,23 @@ export default function ReportPage() {
             </button>
           </Link>
         </div>
+
+        {shareUrl ? (
+          <div className="mt-4 flex flex-col gap-2 rounded-2xl border border-slate-200/90 bg-white/80 p-4 text-sm dark:border-slate-700/80 dark:bg-slate-900/50 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Share link</div>
+              <div className="truncate font-mono text-[13px] text-slate-700 dark:text-slate-200">{shareUrl}</div>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-2">
+              <button type="button" className="btn-outline px-4 py-2 text-xs" disabled={copying} onClick={() => copyText(shareUrl, "Share link copied")}>
+                Copy
+              </button>
+              <a className="btn-outline inline-flex items-center px-4 py-2 text-xs no-underline" href={shareUrl} target="_blank" rel="noreferrer">
+                Open
+              </a>
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <h2 className="mb-4 text-xl font-bold tracking-tight text-aura-ink">Question-by-question breakdown</h2>
