@@ -335,9 +335,10 @@ export default function InterviewPage() {
 
   const handleSkip = async () => {
     const ok = await confirm(
-      "Your answer will be submitted as blank and scored. You won’t be able to re-record for this question.",
+      "This will submit a blank answer and score it as-is. You won’t be able to re-record for this question.",
       {
         title: "Skip this question?",
+        variant: "danger",
         confirmLabel: "Skip",
         cancelLabel: "Keep answering",
       }
