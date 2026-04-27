@@ -60,6 +60,7 @@ export function ConfirmProvider({ children }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="confirm-dialog-title"
+            aria-describedby="confirm-dialog-message"
             className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -81,7 +82,7 @@ export function ConfirmProvider({ children }) {
             >
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent dark:via-slate-500/40" />
               <div className="border-b border-slate-100 px-6 py-5 dark:border-slate-800/90">
-                <h2 id="confirm-dialog-title" className="text-lg font-semibold tracking-tight text-aura-ink" aria-describedby="confirm-dialog-message">
+                <h2 id="confirm-dialog-title" className="text-lg font-semibold tracking-tight text-aura-ink">
                   {state.title}
                 </h2>
               </div>
