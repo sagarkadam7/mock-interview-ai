@@ -215,21 +215,24 @@ function QuestionCard({ question, index }) {
 
 export default function SharedReportPage() {
   const { token } = useParams();
-  const navigate = useNavigate();
   const [interview, setInterview] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setError("");
     getSharedReport(token)
       .then(({ data }) => {
         if (!cancelled) setInterview(data);
       })
       .catch((err) => {
         if (!cancelled) {
-          toast.error(getApiErrorMessage(err, "Couldn’t load this shared report."));
-          navigate("/", { replace: true });
+          const msg = getApiErrorMessage(err, "Couldn’t load this shared report.");
+          setInterview(null);
+          setError(msg);
+          toast.error(msg);
         }
       })
       .finally(() => {
@@ -238,7 +241,7 @@ export default function SharedReportPage() {
     return () => {
       cancelled = true;
     };
-  }, [token, navigate]);
+  }, [token]);
 
   useEffect(() => {
     if (!interview?.jobRole) return undefined;
@@ -247,6 +250,25 @@ export default function SharedReportPage() {
   }, [interview?.jobRole]);
 
   if (loading) return <ReportPageSkeleton />;
+  if (error) {
+    return (
+      <div className="page-shell min-h-screen max-w-3xl py-16 md:py-20">
+        <div className="glass-panel-lg overflow-hidden p-6 sm:p-8">
+          <div className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Share link</div>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">This shared report isn’t available</h1>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{error}</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link to="/" className="no-underline">
+              <span className="btn-cta px-8 py-3">Go to home →</span>
+            </Link>
+            <Link to="/login" className="no-underline">
+              <span className="btn-outline px-8 py-3">Sign in</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (!interview) return null;
 
   const answered = interview.questions?.filter((q) => q.score !== null) || [];
