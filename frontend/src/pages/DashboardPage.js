@@ -250,6 +250,40 @@ export default function DashboardPage() {
     }
   }, [filteredSessions, sessionSort]);
 
+  const downloadSessionsCsv = useCallback((rows) => {
+    const toCell = (v) => {
+      const s = v === null || v === undefined ? "" : String(v);
+      const escaped = s.replaceAll('"', '""');
+      return /[",\n]/.test(escaped) ? `"${escaped}"` : escaped;
+    };
+
+    const header = ["role", "company", "status", "score", "starred", "createdAt", "duration"].join(",");
+    const lines = rows.map((iv) => {
+      const duration = formatSessionWallDuration(iv.firstAnsweredAt, iv.completedAt);
+      return [
+        toCell(iv.jobRole || ""),
+        toCell(iv.company || ""),
+        toCell(iv.status || ""),
+        toCell(iv.overallScore ?? ""),
+        toCell(iv.starred ? "yes" : "no"),
+        toCell(iv.createdAt ? new Date(iv.createdAt).toISOString() : ""),
+        toCell(duration || ""),
+      ].join(",");
+    });
+
+    const csv = [header, ...lines].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const date = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `interviewai-sessions-${date}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }, []);
+
   const readiness = useMemo(() => getReadinessSnapshot(interviews), [interviews]);
 
   const recent = [...interviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3);
@@ -661,6 +695,18 @@ export default function DashboardPage() {
                     <option value="score_low">Score · low to high</option>
                     <option value="role">Role A–Z</option>
                   </select>
+                  <button
+                    type="button"
+                    className="btn-outline shrink-0 py-2.5 text-sm sm:px-4"
+                    disabled={sortedSessions.length === 0}
+                    onClick={() => {
+                      downloadSessionsCsv(sortedSessions);
+                      toast.success("CSV exported");
+                    }}
+                    title="Download a CSV of the sessions shown (after filters and sorting)."
+                  >
+                    Export CSV
+                  </button>
                 </div>
               </div>
               {filteredSessions.length === 0 && starredOnly && !q ? (
