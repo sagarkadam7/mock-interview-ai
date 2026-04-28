@@ -34,6 +34,10 @@ jobs:
         working-directory: backend
         run: npm ci
 
+      - name: Backend tests
+        working-directory: backend
+        run: npm test
+
       - name: Backend boot smoke check
         working-directory: backend
         run: node -e "console.log('backend deps ok')"
