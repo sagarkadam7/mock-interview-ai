@@ -717,7 +717,7 @@ export default function DashboardPage() {
                 },
               }}
             >
-              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div className="mb-4 flex flex-col gap-3 sm:sticky sm:top-24 sm:z-20 sm:rounded-2xl sm:border sm:border-slate-200/70 sm:bg-aura-page/70 sm:p-3 sm:backdrop-blur-md dark:sm:border-slate-700/60 dark:sm:bg-slate-950/35 sm:flex-row sm:items-end sm:justify-between">
                 <div className="flex items-end justify-between gap-4 sm:block">
                   <h2 className="text-lg font-bold tracking-tight text-aura-ink">Sessions</h2>
                   <span className="text-xs font-medium text-slate-500 dark:text-slate-400 sm:mt-1 sm:block">
