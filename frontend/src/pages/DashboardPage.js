@@ -875,7 +875,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Sidebar */}
-        <aside className="min-w-0 space-y-6 lg:col-span-1">
+        <aside className="min-w-0 space-y-6 lg:col-span-1 lg:sticky lg:top-24 lg:self-start">
           <div className="glass-panel-lg rounded-2xl p-6">
             <h3 className="text-sm font-bold tracking-tight text-aura-ink">Quick links</h3>
             <ul className="mt-4 space-y-1">
