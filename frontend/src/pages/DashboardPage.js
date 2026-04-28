@@ -15,6 +15,7 @@ import { downloadPracticeBlockIcs } from "../utils/practiceCalendarIcs";
 
 const DASH_CHECKLIST_KEY = "ia.dashboard.quickstart.v1";
 const DASH_VIEW_KEY = "ia.dashboard.view.v1";
+const DASH_DENSITY_KEY = "ia.dashboard.density.v1";
 
 function StatusBadge({ status }) {
   const map = {
@@ -129,6 +130,13 @@ export default function DashboardPage() {
       return "sessions";
     }
   });
+  const [dashDensity, setDashDensity] = useState(() => {
+    try {
+      return localStorage.getItem(DASH_DENSITY_KEY) || "comfy";
+    } catch {
+      return "comfy";
+    }
+  });
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessionSort, setSessionSort] = useState("newest");
   const [starredOnly, setStarredOnly] = useState(false);
@@ -157,6 +165,14 @@ export default function DashboardPage() {
       // ignore
     }
   }, [dashView]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(DASH_DENSITY_KEY, dashDensity);
+    } catch {
+      // ignore
+    }
+  }, [dashDensity]);
 
   const fetchInterviews = useCallback(() => {
     setLoading(true);
@@ -341,6 +357,7 @@ export default function DashboardPage() {
   const practiceStreak = !loading ? computePracticeStreak(interviews) : 0;
   const weekCount = !loading ? countCompletedThisWeek(interviews) : 0;
   const weekPct = Math.min(100, Math.round((weekCount / WEEKLY_SESSION_GOAL) * 100));
+  const isCompact = dashDensity === "compact";
 
   return (
     <div className="page-shell relative min-h-screen max-w-7xl">
@@ -787,6 +804,15 @@ export default function DashboardPage() {
                   >
                     Export CSV
                   </button>
+                  <button
+                    type="button"
+                    className="btn-outline shrink-0 py-2.5 text-sm sm:px-4"
+                    onClick={() => setDashDensity((d) => (d === "compact" ? "comfy" : "compact"))}
+                    aria-pressed={isCompact}
+                    title={isCompact ? "Switch to comfortable spacing" : "Switch to compact spacing"}
+                  >
+                    {isCompact ? "Comfy" : "Compact"}
+                  </button>
                 </div>
               </div>
               {filteredSessions.length === 0 && starredOnly && !q ? (
@@ -820,7 +846,11 @@ export default function DashboardPage() {
                     }}
                     className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white/90 p-1 shadow-lux transition-[box-shadow,border-color] duration-350 ease-out-expo hover:border-slate-300/95 hover:shadow-[0_32px_64px_-24px_rgba(15,23,42,0.12)] dark:border-slate-700/80 dark:bg-slate-900/50 dark:hover:border-slate-600/80 dark:hover:shadow-[0_32px_64px_-24px_rgba(0,0,0,0.45)]"
                   >
-                    <div className="flex flex-col rounded-[0.9rem] bg-gradient-to-br from-white/80 to-slate-50/30 p-5 dark:from-slate-900/60 dark:to-slate-950/40 md:flex-row md:items-stretch md:gap-0 md:p-6">
+                    <div
+                      className={`flex flex-col rounded-[0.9rem] bg-gradient-to-br from-white/80 to-slate-50/30 ${
+                        isCompact ? "p-4" : "p-5"
+                      } dark:from-slate-900/60 dark:to-slate-950/40 md:flex-row md:items-stretch md:gap-0 ${isCompact ? "md:p-5" : "md:p-6"}`}
+                    >
                       <Link
                         to={to}
                         className="group flex min-w-0 flex-1 flex-wrap items-center gap-5 text-inherit no-underline md:flex-nowrap md:gap-6"
