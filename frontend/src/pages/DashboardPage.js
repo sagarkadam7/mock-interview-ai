@@ -56,6 +56,19 @@ function TrendPlaceholder() {
   );
 }
 
+function SectionHeader({ eyebrow, title, subtitle, right }) {
+  return (
+    <div className="mb-5 flex min-w-0 flex-wrap items-start justify-between gap-4">
+      <div className="min-w-0">
+        {eyebrow ? <span className="section-eyebrow mb-3">{eyebrow}</span> : null}
+        {title ? <h2 className="text-xl font-bold tracking-tight text-aura-ink dark:text-slate-100">{title}</h2> : null}
+        {subtitle ? <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{subtitle}</p> : null}
+      </div>
+      {right ? <div className="shrink-0">{right}</div> : null}
+    </div>
+  );
+}
+
 function DashboardSkeleton() {
   return (
     <div className="flex flex-col gap-4 lg:col-span-2" aria-busy="true" aria-label="Loading interviews">
@@ -314,7 +327,7 @@ export default function DashboardPage() {
   const weekPct = Math.min(100, Math.round((weekCount / WEEKLY_SESSION_GOAL) * 100));
 
   return (
-    <div className="relative mx-auto min-h-screen w-full max-w-7xl px-5 py-10 sm:px-8 sm:py-12 md:px-10 md:py-14">
+    <div className="page-shell relative min-h-screen max-w-7xl">
       {/* Hero */}
       <div className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-white to-slate-50/90 p-8 shadow-lux-lg ring-1 ring-white/80 dark:border-slate-700/80 dark:from-slate-900/90 dark:via-slate-950 dark:to-slate-900/80 dark:shadow-none dark:ring-slate-800/50 sm:p-10">
         <div
@@ -382,11 +395,11 @@ export default function DashboardPage() {
       {!loading && !loadError && readiness && (
         <div className="glass-panel-lg relative mb-10 overflow-hidden rounded-3xl p-6 sm:p-8">
           <div className="pointer-events-none absolute -right-16 top-0 h-40 w-40 rounded-full bg-aura-violet/10 blur-2xl dark:bg-aura-violet/15" aria-hidden />
-          <span className="section-eyebrow mb-3">Readiness snapshot</span>
-          <h2 className="font-display text-xl font-semibold tracking-tight text-aura-ink dark:text-slate-100 md:text-2xl">{readiness.headline}</h2>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-400">
-            Derived from your last few scored sessions — the kind of signal hiring loops actually weight alongside raw scores.
-          </p>
+          <SectionHeader
+            eyebrow="Readiness snapshot"
+            title={readiness.headline}
+            subtitle="Derived from your last few scored sessions — the kind of signal hiring loops actually weight alongside raw scores."
+          />
           <ul className="mt-5 space-y-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
             {readiness.bullets.map((line, i) => (
               <li key={i} className="flex gap-3">
@@ -472,19 +485,17 @@ export default function DashboardPage() {
 
       {/* Momentum — always show panel (avoids layout jump while loading) */}
       <div className="glass-panel-lg mb-10 min-w-0 overflow-hidden p-6 md:p-8">
-        <div className="mb-5 flex min-w-0 flex-wrap items-start justify-between gap-4">
-          <div>
-            <span className="section-eyebrow mb-3">Momentum</span>
-            <h2 className="text-xl font-bold tracking-tight text-aura-ink">Overall score trend</h2>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              {loading
-                ? "Loading session history…"
-                : scoreLast.length >= 2
-                  ? `Last ${scoreLast.length} completed sessions`
-                  : "Your line chart unlocks after two completed sessions"}
-            </p>
-          </div>
-        </div>
+        <SectionHeader
+          eyebrow="Momentum"
+          title="Overall score trend"
+          subtitle={
+            loading
+              ? "Loading session history…"
+              : scoreLast.length >= 2
+                ? `Last ${scoreLast.length} completed sessions`
+                : "Your line chart unlocks after two completed sessions"
+          }
+        />
         {loading ? (
           <div className="h-[88px] w-full animate-pulse rounded-xl bg-slate-100/90 dark:bg-slate-800/60" aria-hidden />
         ) : scoreLast.length >= 2 ? (
