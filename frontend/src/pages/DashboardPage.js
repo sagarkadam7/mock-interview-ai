@@ -690,17 +690,15 @@ export default function DashboardPage() {
                 ))}
               </div>
 
-              <div className="glass-panel-lg overflow-hidden rounded-3xl p-6 sm:p-8">
-                <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <span className="section-eyebrow mb-3">Before you start</span>
-                    <h3 className="text-xl font-bold tracking-tight text-aura-ink">A 60‑second setup that boosts your score</h3>
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                      Candidates who do these basics get cleaner transcripts, better pacing, and more accurate gaze coaching.
-                    </p>
-                  </div>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
+              <details className="glass-panel-lg overflow-hidden rounded-3xl p-6 sm:p-8">
+                <summary className="cursor-pointer list-none">
+                  <span className="section-eyebrow mb-3">Before you start</span>
+                  <h3 className="text-xl font-bold tracking-tight text-aura-ink">A 60‑second setup that boosts your score</h3>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    Candidates who do these basics get cleaner transcripts, better pacing, and more accurate gaze coaching.
+                  </p>
+                </summary>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
                   {[
                     { t: "Use desktop Chrome/Edge", s: "Best speech recognition + camera APIs." },
                     { t: "Face a window or soft light", s: "Eye contact estimation improves when your face is lit." },
@@ -720,7 +718,7 @@ export default function DashboardPage() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </details>
             </div>
           ) : (
             <motion.div
