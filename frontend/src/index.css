@@ -284,6 +284,19 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     @apply focus:border-aura-violet/45 focus:ring-2 focus:ring-aura-violet/15;
   }
 
+  .segmented-control {
+    @apply inline-flex items-center rounded-full border border-slate-200/90 bg-white/85 p-1 shadow-sm backdrop-blur-md;
+    @apply dark:border-slate-700/70 dark:bg-slate-900/50;
+  }
+  .segmented-pill {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold transition-colors;
+    @apply text-slate-600 hover:bg-slate-50 hover:text-aura-ink;
+    @apply dark:text-slate-300 dark:hover:bg-slate-800/70 dark:hover:text-white;
+  }
+  .segmented-pill-active {
+    @apply bg-aura-ink text-white shadow-sm dark:bg-slate-100 dark:text-slate-900;
+  }
+
   .label-field {
     @apply mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-aura-muted;
   }

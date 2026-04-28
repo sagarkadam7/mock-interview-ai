@@ -414,7 +414,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="mb-10 flex flex-wrap items-center justify-between gap-3">
-        <div className="inline-flex items-center rounded-full border border-slate-200/90 bg-white/85 p-1 shadow-sm backdrop-blur-md dark:border-slate-700/70 dark:bg-slate-900/50">
+        <div className="segmented-control">
           {[
             { id: "sessions", label: "Sessions" },
             { id: "overview", label: "Overview" },
@@ -423,11 +423,7 @@ export default function DashboardPage() {
               key={t.id}
               type="button"
               onClick={() => setDashView(t.id)}
-              className={`inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
-                dashView === t.id
-                  ? "bg-aura-ink text-white shadow-sm dark:bg-slate-100 dark:text-slate-900"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-aura-ink dark:text-slate-300 dark:hover:bg-slate-800/70 dark:hover:text-white"
-              }`}
+              className={`${dashView === t.id ? "segmented-pill segmented-pill-active" : "segmented-pill"}`}
               aria-pressed={dashView === t.id}
             >
               {t.label}
