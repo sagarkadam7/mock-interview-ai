@@ -941,8 +941,9 @@ export default function DashboardPage() {
                           disabled={deleting === iv._id}
                           aria-busy={deleting === iv._id}
                           aria-label={deleting === iv._id ? "Deleting interview" : `Delete interview for ${iv.jobRole}`}
+                          title="Delete session"
                         >
-                          {deleting === iv._id ? <span className="spinner h-4 w-4" /> : "Remove"}
+                          {deleting === iv._id ? <span className="spinner h-4 w-4" /> : "Delete"}
                         </button>
                       </div>
                     </div>
