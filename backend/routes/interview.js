@@ -12,6 +12,7 @@ const { protect } = require("../middleware/auth");
 const { validateMongoId } = require("../middleware/validateMongoId");
 const { assertCanCreateInterview, bumpMonthlyInterviewUsage } = require("../middleware/planLimits");
 const { parseJsonFromAi } = require("../utils/parseAiJson");
+const { normalizeFeedback, normalizeQuestions } = require("../utils/aiSchemas");
 
 const router = express.Router();
 
@@ -110,8 +111,9 @@ Return ONLY a valid JSON array. No markdown, no explanation, no backticks, just 
   const result = await model.generateContent(prompt);
   const raw = result.response.text();
   const parsed = parseJsonFromAi(raw);
-  if (!Array.isArray(parsed)) throw new Error("AI did not return a question list.");
-  return parsed;
+  const normalized = normalizeQuestions(parsed);
+  if (!normalized) throw new Error("AI did not return a valid question list.");
+  return normalized;
 }
 
 // ─── Helper: Get AI feedback for an answer ───────────────────
@@ -135,10 +137,9 @@ Return ONLY valid JSON with no markdown or backticks:
   const result = await model.generateContent(prompt);
   const raw = result.response.text();
   const parsed = parseJsonFromAi(raw);
-  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-    throw new Error("AI did not return feedback object.");
-  }
-  return parsed;
+  const normalized = normalizeFeedback(parsed);
+  if (!normalized) throw new Error("AI did not return valid feedback.");
+  return normalized;
 }
 
 function buildDeliverySummary(body) {
@@ -162,7 +163,14 @@ function buildDeliverySummary(body) {
 }
 
 // Primary questions: score + feedback + optional ONE follow-up question to drill deeper.
-async function getAIFeedbackWithOptionalFollowUp(questionText, userAnswer, hint, interview, jdSnippet, deliverySummary) {
+async function getAIFeedbackWithOptionalFollowUp(
+  questionText,
+  userAnswer,
+  hint,
+  interview,
+  jdSnippet,
+  deliverySummary
+) {
   const prompt = `You are a senior hiring manager and interview coach.
 
 Job role: ${interview.jobRole}
@@ -202,24 +210,9 @@ Return ONLY valid JSON with no markdown or backticks:
   const result = await model.generateContent(prompt);
   const raw = result.response.text();
   const parsed = parseJsonFromAi(raw);
-  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-    throw new Error("AI did not return feedback object.");
-  }
-  let followUp = null;
-  if (parsed.followUp && typeof parsed.followUp === "object" && !Array.isArray(parsed.followUp)) {
-    const t = String(parsed.followUp.text || "").trim();
-    const h = String(parsed.followUp.hint || "").trim();
-    if (t.length > 15 && t.includes("?") && h.length > 10) {
-      followUp = { text: t.slice(0, 500), hint: h.slice(0, 600) };
-    }
-  }
-  return {
-    score: parsed.score,
-    feedback: parsed.feedback,
-    strengths: parsed.strengths,
-    improvements: parsed.improvements,
-    followUp,
-  };
+  const normalized = normalizeFeedback(parsed);
+  if (!normalized) throw new Error("AI did not return valid feedback.");
+  return normalized;
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -228,86 +221,94 @@ Return ONLY valid JSON with no markdown or backticks:
 // Body: { jobRole, jdText } + optional file (resume PDF)
 // OR Body: { jobRole, resumeText, jdText } for plain text
 // ════════════════════════════════════════════════════════════════
-router.post("/create", protect, assertCanCreateInterview, createInterviewLimiter, upload.single("resume"), async (req, res) => {
-  try {
-    const {
-      jobRole,
-      jdText,
-      resumeText: bodyResumeText,
-      level = "mid",
-      interviewMode = "mixed",
-      persona = "coach",
-      timeboxMin = 0,
-      targetCompany: rawTargetCompany = "",
-    } = req.body;
-
-    const targetCompany = String(rawTargetCompany || "")
-      .trim()
-      .slice(0, 120);
-
-    if (!jobRole) {
-      return res.status(400).json({ message: "Job role is required." });
-    }
-
-    // Extract resume text from PDF or use pasted text
-    let resumeText = bodyResumeText || "";
-    if (req.file) {
-      resumeText = await extractTextFromPDF(req.file.path);
-      // Clean up the uploaded file after extraction
-      fs.unlink(req.file.path, () => {});
-    }
-
-    if (!resumeText || resumeText.trim().length < 50) {
-      return res.status(400).json({ message: "Resume text is too short. Please upload a valid resume." });
-    }
-
-    console.log("🤖 Generating questions with Gemini...");
-    const settings = {
-      level,
-      interviewMode,
-      persona,
-      timeboxMin: Number(timeboxMin || 0),
-    };
-    const questions = await generateQuestions(resumeText, jdText || "", jobRole, settings);
-
-    if (!Array.isArray(questions) || questions.length === 0) {
-      return res.status(500).json({ message: "Failed to generate questions. Try again." });
-    }
-
-    const interview = await Interview.create({
-      userId: req.user._id,
-      jobRole,
-      level: String(level || "mid").trim(),
-      interviewMode: String(interviewMode || "mixed").trim(),
-      persona: String(persona || "coach").trim(),
-      timeboxMin: Number(timeboxMin || 0),
-      targetCompany,
-      resumeText,
-      jdText: jdText || "",
-      status: "pending",
-      questions: questions.map((q, i) => ({
-        questionType: "primary",
-        text: (q.text && String(q.text).trim()) || `Question ${i + 1}`,
-        hint: (q.hint && String(q.hint).trim()) || "Give a clear example and quantify impact where possible.",
-        orderIndex: i,
-      })),
-    });
-
-    console.log(`✅ Interview created: ${interview._id}`);
+router.post(
+  "/create",
+  protect,
+  assertCanCreateInterview,
+  createInterviewLimiter,
+  upload.single("resume"),
+  async (req, res) => {
     try {
-      await bumpMonthlyInterviewUsage(req.user._id);
-    } catch (err) {
-      if (err?.status === 402) {
-        await interview.deleteOne().catch(() => {});
+      const {
+        jobRole,
+        jdText,
+        resumeText: bodyResumeText,
+        level = "mid",
+        interviewMode = "mixed",
+        persona = "coach",
+        timeboxMin = 0,
+        targetCompany: rawTargetCompany = "",
+      } = req.body;
+
+      const targetCompany = String(rawTargetCompany || "")
+        .trim()
+        .slice(0, 120);
+
+      if (!jobRole) {
+        return res.status(400).json({ message: "Job role is required." });
       }
-      throw err;
+
+      // Extract resume text from PDF or use pasted text
+      let resumeText = bodyResumeText || "";
+      if (req.file) {
+        resumeText = await extractTextFromPDF(req.file.path);
+        // Clean up the uploaded file after extraction
+        fs.unlink(req.file.path, () => {});
+      }
+
+      if (!resumeText || resumeText.trim().length < 50) {
+        return res.status(400).json({ message: "Resume text is too short. Please upload a valid resume." });
+      }
+
+      console.log("🤖 Generating questions with Gemini...");
+      const settings = {
+        level,
+        interviewMode,
+        persona,
+        timeboxMin: Number(timeboxMin || 0),
+      };
+      const questions = await generateQuestions(resumeText, jdText || "", jobRole, settings);
+
+      if (!Array.isArray(questions) || questions.length === 0) {
+        return res.status(500).json({ message: "Failed to generate questions. Try again." });
+      }
+
+      const interview = await Interview.create({
+        userId: req.user._id,
+        jobRole,
+        level: String(level || "mid").trim(),
+        interviewMode: String(interviewMode || "mixed").trim(),
+        persona: String(persona || "coach").trim(),
+        timeboxMin: Number(timeboxMin || 0),
+        targetCompany,
+        resumeText,
+        jdText: jdText || "",
+        status: "pending",
+        questions: questions.map((q, i) => ({
+          questionType: "primary",
+          text: (q.text && String(q.text).trim()) || `Question ${i + 1}`,
+          hint:
+            (q.hint && String(q.hint).trim()) || "Give a clear example and quantify impact where possible.",
+          orderIndex: i,
+        })),
+      });
+
+      console.log(`✅ Interview created: ${interview._id}`);
+      try {
+        await bumpMonthlyInterviewUsage(req.user._id);
+      } catch (err) {
+        if (err?.status === 402) {
+          await interview.deleteOne().catch(() => {});
+        }
+        throw err;
+      }
+      res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
+    } catch (err) {
+      console.error("Create interview error:", err.message);
+      res.status(err.status || 500).json({ message: err.message, code: err.code });
     }
-    res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
-  } catch (err) {
-    console.error("Create interview error:", err.message);
-    res.status(err.status || 500).json({ message: err.message, code: err.code });
   }
-});
+);
 
 // ════════════════════════════════════════════════════════════════
 // ROUTE 2: List interviews (must be before "/:id")
@@ -389,66 +390,74 @@ router.patch("/:id/meta", protect, validateMongoId("id"), async (req, res) => {
 // Duplicate session: same resume/JD/settings, newly generated questions (counts toward plan).
 // POST /api/interview/:id/duplicate
 // ════════════════════════════════════════════════════════════════
-router.post("/:id/duplicate", protect, assertCanCreateInterview, createInterviewLimiter, validateMongoId("id"), async (req, res) => {
-  try {
-    const source = await Interview.findById(req.params.id);
-    if (!source) return res.status(404).json({ message: "Interview not found." });
-    if (source.userId.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: "Not authorized." });
-    }
-
-    const resumeText = (source.resumeText || "").trim();
-    if (resumeText.length < 50) {
-      return res.status(400).json({ message: "Source session has no usable resume text to duplicate." });
-    }
-
-    const settings = {
-      level: source.level,
-      interviewMode: source.interviewMode,
-      persona: source.persona,
-      timeboxMin: Number(source.timeboxMin || 0),
-    };
-
-    console.log("🤖 Duplicating interview — generating fresh questions…");
-    const questions = await generateQuestions(resumeText, source.jdText || "", source.jobRole, settings);
-    if (!Array.isArray(questions) || questions.length === 0) {
-      return res.status(500).json({ message: "Failed to generate questions. Try again." });
-    }
-
-    const interview = await Interview.create({
-      userId: req.user._id,
-      jobRole: source.jobRole,
-      level: String(source.level || "mid").trim(),
-      interviewMode: String(source.interviewMode || "mixed").trim(),
-      persona: String(source.persona || "coach").trim(),
-      timeboxMin: Number(source.timeboxMin || 0),
-      targetCompany: (source.targetCompany && String(source.targetCompany).trim().slice(0, 120)) || "",
-      resumeText,
-      jdText: source.jdText || "",
-      status: "pending",
-      questions: questions.map((q, i) => ({
-        questionType: "primary",
-        text: (q.text && String(q.text).trim()) || `Question ${i + 1}`,
-        hint: (q.hint && String(q.hint).trim()) || "Give a clear example and quantify impact where possible.",
-        orderIndex: i,
-      })),
-    });
-
+router.post(
+  "/:id/duplicate",
+  protect,
+  assertCanCreateInterview,
+  createInterviewLimiter,
+  validateMongoId("id"),
+  async (req, res) => {
     try {
-      await bumpMonthlyInterviewUsage(req.user._id);
-    } catch (err) {
-      if (err?.status === 402) {
-        await interview.deleteOne().catch(() => {});
+      const source = await Interview.findById(req.params.id);
+      if (!source) return res.status(404).json({ message: "Interview not found." });
+      if (source.userId.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ message: "Not authorized." });
       }
-      throw err;
-    }
 
-    res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
-  } catch (err) {
-    console.error("Duplicate interview error:", err.message);
-    res.status(err.status || 500).json({ message: err.message, code: err.code });
+      const resumeText = (source.resumeText || "").trim();
+      if (resumeText.length < 50) {
+        return res.status(400).json({ message: "Source session has no usable resume text to duplicate." });
+      }
+
+      const settings = {
+        level: source.level,
+        interviewMode: source.interviewMode,
+        persona: source.persona,
+        timeboxMin: Number(source.timeboxMin || 0),
+      };
+
+      console.log("🤖 Duplicating interview — generating fresh questions…");
+      const questions = await generateQuestions(resumeText, source.jdText || "", source.jobRole, settings);
+      if (!Array.isArray(questions) || questions.length === 0) {
+        return res.status(500).json({ message: "Failed to generate questions. Try again." });
+      }
+
+      const interview = await Interview.create({
+        userId: req.user._id,
+        jobRole: source.jobRole,
+        level: String(source.level || "mid").trim(),
+        interviewMode: String(source.interviewMode || "mixed").trim(),
+        persona: String(source.persona || "coach").trim(),
+        timeboxMin: Number(source.timeboxMin || 0),
+        targetCompany: (source.targetCompany && String(source.targetCompany).trim().slice(0, 120)) || "",
+        resumeText,
+        jdText: source.jdText || "",
+        status: "pending",
+        questions: questions.map((q, i) => ({
+          questionType: "primary",
+          text: (q.text && String(q.text).trim()) || `Question ${i + 1}`,
+          hint:
+            (q.hint && String(q.hint).trim()) || "Give a clear example and quantify impact where possible.",
+          orderIndex: i,
+        })),
+      });
+
+      try {
+        await bumpMonthlyInterviewUsage(req.user._id);
+      } catch (err) {
+        if (err?.status === 402) {
+          await interview.deleteOne().catch(() => {});
+        }
+        throw err;
+      }
+
+      res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
+    } catch (err) {
+      console.error("Duplicate interview error:", err.message);
+      res.status(err.status || 500).json({ message: err.message, code: err.code });
+    }
   }
-});
+);
 
 // ════════════════════════════════════════════════════════════════
 // ROUTE 4: Submit answer for one question
@@ -457,7 +466,18 @@ router.post("/:id/duplicate", protect, assertCanCreateInterview, createInterview
 // ════════════════════════════════════════════════════════════════
 router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async (req, res) => {
   try {
-    const { questionId, answer, eyeContactPct, fillerWordCount, fillerWords, wordsPerMinute, paceLabel, dominantEmotion, emotionScores, confidenceScore } = req.body;
+    const {
+      questionId,
+      answer,
+      eyeContactPct,
+      fillerWordCount,
+      fillerWords,
+      wordsPerMinute,
+      paceLabel,
+      dominantEmotion,
+      emotionScores,
+      confidenceScore,
+    } = req.body;
 
     if (!questionId || !mongoose.Types.ObjectId.isValid(questionId)) {
       return res.status(400).json({ message: "Valid questionId is required." });
@@ -480,10 +500,7 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
       (q) => q.parentQuestionId && q.parentQuestionId.toString() === question._id.toString()
     );
     const qType = question.questionType || "primary";
-    const allowAdaptiveFollowUp =
-      qType === "primary" &&
-      !alreadyHasFollowUp &&
-      trimmedAnswer.length >= 40;
+    const allowAdaptiveFollowUp = qType === "primary" && !alreadyHasFollowUp && trimmedAnswer.length >= 40;
 
     console.log(`🤖 Getting Gemini feedback for question ${question.orderIndex + 1}...`);
     let feedback;
@@ -508,13 +525,13 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
     const rawScore = typeof feedback.score === "number" ? feedback.score : 5;
     question.score = Math.max(0, Math.min(10, Math.round(rawScore)));
     question.answeredAt = new Date();
-    if (eyeContactPct !== undefined)   question.eyeContactPct   = eyeContactPct;
+    if (eyeContactPct !== undefined) question.eyeContactPct = eyeContactPct;
     if (fillerWordCount !== undefined) question.fillerWordCount = fillerWordCount;
-    if (fillerWords)                   question.fillerWords     = fillerWords;
-    if (wordsPerMinute !== undefined)  question.wordsPerMinute  = wordsPerMinute;
-    if (paceLabel)                     question.paceLabel       = paceLabel;
-    if (dominantEmotion)               question.dominantEmotion = dominantEmotion;
-    if (emotionScores)                 question.emotionScores   = emotionScores;
+    if (fillerWords) question.fillerWords = fillerWords;
+    if (wordsPerMinute !== undefined) question.wordsPerMinute = wordsPerMinute;
+    if (paceLabel) question.paceLabel = paceLabel;
+    if (dominantEmotion) question.dominantEmotion = dominantEmotion;
+    if (emotionScores) question.emotionScores = emotionScores;
     if (confidenceScore !== undefined) question.confidenceScore = confidenceScore;
 
     let followUpInserted = false;
@@ -572,7 +589,9 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
 router.post("/:id/share", protect, validateMongoId("id"), async (req, res) => {
   try {
     if ((req.user.plan || "free") === "free") {
-      return res.status(402).json({ message: "Sharing is a Pro feature. Upgrade to generate a shareable link." });
+      return res
+        .status(402)
+        .json({ message: "Sharing is a Pro feature. Upgrade to generate a shareable link." });
     }
 
     const interview = await Interview.findById(req.params.id);
