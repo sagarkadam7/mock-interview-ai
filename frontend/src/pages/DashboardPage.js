@@ -890,7 +890,14 @@ export default function DashboardPage() {
                               </>
                             ) : null}
                           </p>
-                          <div className="progress-track max-w-xl">
+                          <div
+                            className="progress-track max-w-xl"
+                            role="progressbar"
+                            aria-label="Session completion"
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            aria-valuenow={Math.round(pct)}
+                          >
                             <div className="progress-fill-bar" style={{ width: `${pct}%` }} />
                           </div>
                         </div>
