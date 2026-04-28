@@ -14,6 +14,7 @@ import { formatSessionWallDuration } from "../utils/formatSessionDuration";
 import { downloadPracticeBlockIcs } from "../utils/practiceCalendarIcs";
 
 const DASH_CHECKLIST_KEY = "ia.dashboard.quickstart.v1";
+const DASH_VIEW_KEY = "ia.dashboard.view.v1";
 
 function StatusBadge({ status }) {
   const map = {
@@ -121,6 +122,13 @@ export default function DashboardPage() {
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
+  const [dashView, setDashView] = useState(() => {
+    try {
+      return localStorage.getItem(DASH_VIEW_KEY) || "sessions";
+    } catch {
+      return "sessions";
+    }
+  });
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessionSort, setSessionSort] = useState("newest");
   const [starredOnly, setStarredOnly] = useState(false);
@@ -141,6 +149,14 @@ export default function DashboardPage() {
       // ignore
     }
   }, [quickstart]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(DASH_VIEW_KEY, dashView);
+    } catch {
+      // ignore
+    }
+  }, [dashView]);
 
   const fetchInterviews = useCallback(() => {
     setLoading(true);
@@ -380,6 +396,32 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      <div className="mb-10 flex flex-wrap items-center justify-between gap-3">
+        <div className="inline-flex items-center rounded-full border border-slate-200/90 bg-white/85 p-1 shadow-sm backdrop-blur-md dark:border-slate-700/70 dark:bg-slate-900/50">
+          {[
+            { id: "sessions", label: "Sessions" },
+            { id: "overview", label: "Overview" },
+          ].map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setDashView(t.id)}
+              className={`inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
+                dashView === t.id
+                  ? "bg-aura-ink text-white shadow-sm dark:bg-slate-100 dark:text-slate-900"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-aura-ink dark:text-slate-300 dark:hover:bg-slate-800/70 dark:hover:text-white"
+              }`}
+              aria-pressed={dashView === t.id}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+          Tip: press <span className="rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] dark:border-slate-700 dark:bg-slate-900">n</span> to start a new session
+        </p>
+      </div>
+
       {!loading && loadError && (
         <div
           className="mb-8 flex flex-col gap-4 rounded-2xl border border-rose-200/90 bg-rose-50/95 p-5 shadow-sm dark:border-rose-500/30 dark:bg-rose-950/40 sm:flex-row sm:items-center sm:justify-between"
@@ -392,7 +434,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {!loading && !loadError && readiness && (
+      {dashView === "overview" && !loading && !loadError && readiness && (
         <div className="glass-panel-lg relative mb-10 overflow-hidden rounded-3xl p-6 sm:p-8">
           <div className="pointer-events-none absolute -right-16 top-0 h-40 w-40 rounded-full bg-aura-violet/10 blur-2xl dark:bg-aura-violet/15" aria-hidden />
           <SectionHeader
@@ -412,7 +454,8 @@ export default function DashboardPage() {
       )}
 
       {/* KPI strip — always visible */}
-      <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {dashView === "overview" && (
+        <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
           <div
             key={s.label}
@@ -426,10 +469,12 @@ export default function DashboardPage() {
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">{s.hint}</p>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
       {/* Practice rhythm — streak + weekly goal (client-side from session dates) */}
-      <div className="mb-10 grid gap-4 md:grid-cols-2">
+      {dashView === "overview" && (
+        <div className="mb-10 grid gap-4 md:grid-cols-2">
         <div className="glass-panel relative overflow-hidden rounded-2xl p-6 sm:p-7">
           <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-aura-coral/15 blur-2xl dark:bg-aura-coral/10" aria-hidden />
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Streak</p>
@@ -481,10 +526,12 @@ export default function DashboardPage() {
                 : `${WEEKLY_SESSION_GOAL - weekCount} more to hit the weekly bar.`}
           </p>
         </div>
-      </div>
+        </div>
+      )}
 
       {/* Momentum — always show panel (avoids layout jump while loading) */}
-      <div className="glass-panel-lg mb-10 min-w-0 overflow-hidden p-6 md:p-8">
+      {dashView === "overview" && (
+        <div className="glass-panel-lg mb-10 min-w-0 overflow-hidden p-6 md:p-8">
         <SectionHeader
           eyebrow="Momentum"
           title="Overall score trend"
@@ -545,7 +592,8 @@ export default function DashboardPage() {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      )}
 
       <div className="grid gap-10 lg:grid-cols-3 lg:gap-12">
         {/* Main column */}
