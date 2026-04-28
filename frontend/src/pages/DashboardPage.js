@@ -982,11 +982,18 @@ export default function DashboardPage() {
             </ul>
           </div>
 
-          <div className="glass-panel rounded-2xl p-6">
-            <h3 className="text-sm font-bold tracking-tight text-aura-ink">Practice signal</h3>
-            <p className="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-              Recruiters weight three things in the first minutes: clarity, confidence, and camera presence. Your dashboard tracks all three.
-            </p>
+          <details className="glass-panel rounded-2xl p-6">
+            <summary className="cursor-pointer list-none">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-sm font-bold tracking-tight text-aura-ink">Practice signal</h3>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400" aria-hidden>
+                  Toggle
+                </span>
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                Recruiters weight three things early: clarity, confidence, and camera presence.
+              </p>
+            </summary>
             <ul className="mt-4 space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <li className="flex gap-2">
                 <span className="text-emerald-500" aria-hidden>
@@ -1007,7 +1014,7 @@ export default function DashboardPage() {
                 <span>Rebuild eye contact as a habit before it is scored for real.</span>
               </li>
             </ul>
-          </div>
+          </details>
 
           {!loading && hasInterviews && (
             <div className="glass-panel rounded-2xl p-6">
