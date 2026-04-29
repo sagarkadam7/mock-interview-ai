@@ -203,7 +203,7 @@ function AppShell() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AuthProvider>
           <ConfirmProvider>
             <AppShell />
@@ -218,3 +218,4 @@ export default function App() {
     </ErrorBoundary>
   );
 }
+

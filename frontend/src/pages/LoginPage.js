@@ -17,6 +17,7 @@ export default function LoginPage() {
 
   const submit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError("");
     setLoading(true);
     try {
@@ -149,3 +150,7 @@ export default function LoginPage() {
     </div>
   );
 }
+
+
+
+

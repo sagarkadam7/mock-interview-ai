@@ -5,6 +5,22 @@ import api, { logoutUser } from "../utils/api";
 
 const AuthContext = createContext(null);
 
+// Dedupe /auth/me so dev StrictMode or fast reloads can't spam the backend.
+const ME_TTL_MS = 10_000;
+let inFlightMe = null;
+let lastMeAt = 0;
+
+async function fetchMe() {
+  const now = Date.now();
+  if (!inFlightMe && now - lastMeAt > ME_TTL_MS) {
+    lastMeAt = now;
+    inFlightMe = api.get("/auth/me").finally(() => {
+      inFlightMe = null;
+    });
+  }
+  return inFlightMe || api.get("/auth/me");
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,8 +53,8 @@ export function AuthProvider({ children }) {
 
     (async () => {
       try {
-        const { data } = await api.get("/auth/me");
-        setUser(data);
+        const res = await fetchMe();
+        setUser(res.data);
       } catch {
         /* not logged in */
       } finally {
@@ -74,4 +90,3 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
-
