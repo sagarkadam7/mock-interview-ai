@@ -6,23 +6,47 @@ const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
 
-function createApp({ env = process.env } = {}) {
-  const app = express();
-  app.set("trust proxy", 1);
-  const startedAt = Date.now();
-
-  const rawOrigins = env.FRONTEND_ORIGINS || "http://localhost:3000";
-  const allowedOrigins = rawOrigins
+function parseOrigins(rawOrigins) {
+  return String(rawOrigins || "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+function buildCspConnectSrc(allowedOrigins) {
+  const defaults = ["'self'"];
+  const extra = allowedOrigins.filter((origin) => /^https?:\/\//i.test(origin));
+  return [...new Set([...defaults, ...extra])];
+}
+
+function createApp({ env = process.env } = {}) {
+  const app = express();
+  app.disable("x-powered-by");
+  app.set("trust proxy", 1);
+  const startedAt = Date.now();
+
+  const allowedOrigins = parseOrigins(env.FRONTEND_ORIGINS || "http://localhost:3000");
+  const cspConnectSrc = buildCspConnectSrc(allowedOrigins);
 
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: "cross-origin" },
-      contentSecurityPolicy: false,
+      referrerPolicy: { policy: "no-referrer" },
+      hsts: String(env.NODE_ENV || "").toLowerCase() === "production",
+      contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+          connectSrc: cspConnectSrc,
+          imgSrc: ["'self'", "data:", "blob:"],
+          scriptSrc: ["'self'"],
+          objectSrc: ["'none'"],
+          frameAncestors: ["'none'"],
+          upgradeInsecureRequests: [],
+        },
+      },
     })
   );
+
   app.use(compression());
   app.use(cookieParser());
 
@@ -30,7 +54,8 @@ function createApp({ env = process.env } = {}) {
     cors({
       origin(origin, callback) {
         if (!origin) return callback(null, true);
-        return callback(null, allowedOrigins.includes(origin));
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error("CORS origin not allowed"));
       },
       credentials: true,
     })
@@ -71,7 +96,7 @@ function createApp({ env = process.env } = {}) {
   });
 
   app.get("/", (req, res) =>
-    res.json({ message: "Mock Interview API running ✅", ok: true, time: new Date().toISOString() })
+    res.json({ message: "Mock Interview API running ?", ok: true, time: new Date().toISOString() })
   );
 
   app.use((req, res) => {
@@ -89,6 +114,9 @@ function createApp({ env = process.env } = {}) {
           : err.message || "Upload failed.";
       return res.status(400).json({ message: msg });
     }
+    if (err.message === "CORS origin not allowed") {
+      return res.status(403).json({ message: "Origin not allowed." });
+    }
     // eslint-disable-next-line no-console
     console.error("Unhandled error:", err);
     if (res.headersSent) return next(err);
@@ -99,4 +127,3 @@ function createApp({ env = process.env } = {}) {
 }
 
 module.exports = { createApp };
-
