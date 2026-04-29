@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const pdfParse = require("pdf-parse");
 const rateLimit = require("express-rate-limit");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { generateText } = require("../utils/aiProvider");
 const Interview = require("../models/Interview");
 const { protect } = require("../middleware/auth");
 const { validateMongoId } = require("../middleware/validateMongoId");
@@ -32,12 +32,6 @@ const answerLimiter = rateLimit({
   message: { message: "Too many answer submissions. Slow down and try again." },
 });
 
-function getGeminiModel() {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error("GEMINI_API_KEY is not configured.");
-  const genAI = new GoogleGenerativeAI(key);
-  return genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || "gemini-2.0-flash" });
-}
 
 // ─── Multer config (PDF uploads) ─────────────────────────────
 const storage = multer.diskStorage({
@@ -107,9 +101,7 @@ Return ONLY a valid JSON array. No markdown, no explanation, no backticks, just 
   }
 ]`;
 
-  const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  const raw = result.response.text();
+    const raw = await generateText(prompt);
   const parsed = parseJsonFromAi(raw);
   const normalized = normalizeQuestions(parsed);
   if (!normalized) throw new Error("AI did not return a valid question list.");
@@ -133,9 +125,7 @@ Return ONLY valid JSON with no markdown or backticks:
   "improvements": "<1-2 sentences on how to improve>"
 }`;
 
-  const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  const raw = result.response.text();
+    const raw = await generateText(prompt);
   const parsed = parseJsonFromAi(raw);
   const normalized = normalizeFeedback(parsed);
   if (!normalized) throw new Error("AI did not return valid feedback.");
@@ -206,9 +196,7 @@ Return ONLY valid JSON with no markdown or backticks:
   "followUp": null | { "text": "<follow-up question ending with ?>", "hint": "<1-2 sentences what a strong follow-up should include>" }
 }`;
 
-  const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  const raw = result.response.text();
+    const raw = await generateText(prompt);
   const parsed = parseJsonFromAi(raw);
   const normalized = normalizeFeedback(parsed);
   if (!normalized) throw new Error("AI did not return valid feedback.");
@@ -631,3 +619,8 @@ router.delete("/:id", protect, validateMongoId("id"), async (req, res) => {
 });
 
 module.exports = router;
+
+
+
+
+
