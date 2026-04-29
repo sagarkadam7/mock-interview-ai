@@ -16,6 +16,11 @@ const { normalizeFeedback, normalizeQuestions } = require("../utils/aiSchemas");
 
 const router = express.Router();
 
+const MAX_ANSWER_CHARS = Number(process.env.MAX_ANSWER_CHARS) || 6000;
+const MAX_RESUME_CHARS = Number(process.env.MAX_RESUME_CHARS) || 12000;
+const MAX_JD_CHARS = Number(process.env.MAX_JD_CHARS) || 8000;
+
+
 const createInterviewLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: Number(process.env.CREATE_INTERVIEW_RATE_LIMIT_MAX) || 30,
@@ -96,8 +101,8 @@ Guidelines:
 - Persona affects tone: coach = supportive and clear; skeptical/bar_raiser = crisp, probing; friendly = warm.
 
 Job Role: ${jobRole}
-Resume: ${resumeText.slice(0, 3000)}
-Job Description: ${jdText ? jdText.slice(0, 2000) : "Not provided - use the job role and resume to infer requirements"}
+Resume: ${resumeText.slice(0, Math.min(resumeText.length, MAX_RESUME_CHARS))}
+Job Description: ${jdText ? jdText.slice(0, Math.min(jdText.length, MAX_JD_CHARS)) : "Not provided - use the job role and resume to infer requirements"}
 
 Return ONLY a valid JSON array. No markdown, no explanation, no backticks, just the raw array:
 [
@@ -496,6 +501,9 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
     if (!question) return res.status(404).json({ message: "Question not found." });
 
     const trimmedAnswer = (answer || "").trim();
+    if (trimmedAnswer.length > MAX_ANSWER_CHARS) {
+      return res.status(413).json({ message: `Answer is too long. Max ${MAX_ANSWER_CHARS} characters.` });
+    }
     const alreadyHasFollowUp = interview.questions.some(
       (q) => q.parentQuestionId && q.parentQuestionId.toString() === question._id.toString()
     );
@@ -631,3 +639,7 @@ router.delete("/:id", protect, validateMongoId("id"), async (req, res) => {
 });
 
 module.exports = router;
+
+
+
+
