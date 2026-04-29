@@ -5,23 +5,23 @@
 @layer base {
   :root {
     color-scheme: light;
-    --accent: #5B21B6;
-    --accent2: #E85547;
-    --indigo2: #5B21B6;
+    --accent: #4F46E5;
+    --accent2: #F43F5E;
+    --indigo2: #4F46E5;
     --green: #34d399;
     --amber: #fbbf24;
     --red: #f87171;
     --text2: #64748b;
     --text3: #94a3b8;
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-    --aura-page: #f1f4f8;
-    --aura-page-deep: #e6eaf2;
-    --aura-ink: #0f172a;
+    --aura-page: #F7F8FC;
+    --aura-page-deep: #EEF1F7;
+    --aura-ink: #0B1220;
     --aura-card: #ffffff;
-    --aura-line: #e4e4e9;
-    --aura-muted: #556177;
-    --aura-cta: #121217;
-    --aura-frame: rgba(15, 23, 42, 0.06);
+    --aura-line: #E6E8F0;
+    --aura-muted: #5B667A;
+    --aura-cta: #0B1220;
+    --aura-frame: rgba(11, 18, 32, 0.06);
   }
 
   html.dark {
@@ -78,10 +78,10 @@
     inset: 0;
     z-index: 0;
     opacity: 1;
-    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,85,71, 0.09) 0%, transparent 55%),
-      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(91,33,182, 0.07) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(91,33,182, 0.05) 0%, transparent 45%),
-      radial-gradient(rgba(15, 23, 42, 0.055) 1px, transparent 1px);
+    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(244,63,94, 0.08) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(79,70,229, 0.07) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(79,70,229, 0.05) 0%, transparent 45%),
+      radial-gradient(rgba(11, 18, 32, 0.05) 1px, transparent 1px);
     background-size: auto, auto, auto, 40px 40px;
     background-repeat: no-repeat, no-repeat, no-repeat, repeat;
   }
@@ -101,7 +101,7 @@
   select:focus-visible,
   summary:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(91,33,182, 0.45);
+    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(79,70,229, 0.42);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -306,7 +306,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   }
   .progress-fill-bar {
     @apply h-full rounded-full bg-gradient-progress transition-[width] duration-500 ease-out-expo;
-    box-shadow: 0 0 12px rgba(91,33,182, 0.25);
+    box-shadow: 0 0 12px rgba(79,70,229, 0.22);
   }
 
   .spinner {
@@ -409,7 +409,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     opacity: 1;
     pointer-events: auto;
     outline: none;
-    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(91,33,182, 0.45), 0 12px 32px -8px rgba(15, 23, 42, 0.25);
+    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(79,70,229, 0.42), 0 12px 32px -8px rgba(15, 23, 42, 0.25);
   }
   @media (forced-colors: active) {
     .skip-link {
@@ -522,3 +522,4 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     }
   }
 }
+
