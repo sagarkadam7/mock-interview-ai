@@ -2,7 +2,7 @@ import axios from "axios";
 import { notifySessionExpired } from "./authSession";
 
 // Dev: setupProxy.js forwards /api to the backend (port 5001).
-const api = axios.create({ baseURL: "/api", timeout: 120000 });
+const api = axios.create({ baseURL: "/api", timeout: 120000, withCredentials: true });
 
 api.interceptors.request.use((config) => {
   try {
@@ -37,6 +37,7 @@ api.interceptors.response.use(
 // ── Auth ──────────────────────────────────────────────────────
 export const registerUser = (data) => api.post("/auth/register", data);
 export const loginUser = (data) => api.post("/auth/login", data);
+export const logoutUser = () => api.post("/auth/logout");
 
 // ── Interviews ────────────────────────────────────────────────
 export const createInterview = (formData) =>

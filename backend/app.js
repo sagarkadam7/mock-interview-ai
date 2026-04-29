@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const helmet = require("helmet");
 const compression = require("compression");
+const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
 
 function createApp({ env = process.env } = {}) {
@@ -23,6 +24,7 @@ function createApp({ env = process.env } = {}) {
     })
   );
   app.use(compression());
+  app.use(cookieParser());
 
   app.use(
     cors({
