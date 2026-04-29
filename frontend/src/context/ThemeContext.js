@@ -4,14 +4,14 @@ const STORAGE_KEY = "interviewai-theme";
 
 /** Marketing / landing inline-style palette (separate from Tailwind aura tokens). */
 export const PALETTE_LIGHT = {
-  ink: "#0a0a0f",
-  paper: "#fafaf8",
+  ink: "#0B1220",
+  paper: "#F7F8FC",
   card: "#ffffff",
-  band: "#0a0a0f",
-  coral: "#e85547",
-  violet: "#5b21b6",
+  band: "#0B1220",
+  coral: "#F43F5E",
+  violet: "#4F46E5",
   gold: "#c9a84c",
-  muted: "#6b7280",
+  muted: "#5B667A",
   border: "rgba(15,23,42,0.08)",
   dividerLine: "rgba(15,23,42,0.13)",
   marqueeText: "#9ca3af",
@@ -53,7 +53,7 @@ export function ThemeProvider({ children }) {
     document.documentElement.classList.toggle("dark", theme === "dark");
     const meta = typeof document !== "undefined" ? document.querySelector('meta[name="theme-color"]') : null;
     if (meta) {
-      meta.setAttribute("content", theme === "dark" ? "#06070c" : "#f1f4f8");
+      meta.setAttribute("content", theme === "dark" ? "#06070c" : "#F7F8FC");
     }
     try {
       localStorage.setItem(STORAGE_KEY, theme);
@@ -84,3 +84,4 @@ export function useTheme() {
   }
   return ctx;
 }
+

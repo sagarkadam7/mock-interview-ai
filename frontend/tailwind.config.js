@@ -11,8 +11,8 @@ module.exports = {
           ink: "var(--aura-ink)",
           card: "var(--aura-card)",
           line: "var(--aura-line)",
-          coral: "#E85547",
-          violet: "#5B21B6",
+          coral: "#F43F5E",
+          violet: "#4F46E5",
           muted: "var(--aura-muted)",
           cta: "var(--aura-cta)",
           frame: "var(--aura-frame)",
@@ -53,12 +53,12 @@ module.exports = {
         "lux-lg":
           "0 1px 0 0 rgba(255,255,255,0.92) inset, 0 4px 12px rgba(15,23,42,0.04), 0 32px 64px -20px rgba(15,23,42,0.12), 0 0 0 1px rgba(15,23,42,0.04)",
         "lux-nav": "0 8px 32px -8px rgba(15,23,42,0.08), 0 0 0 1px rgba(15,23,42,0.04)",
-        "glow-coral": "0 0 40px -6px rgba(232,85,71, 0.26)",
-        "glow-violet": "0 0 40px -6px rgba(91,33,182, 0.24)",
+        "glow-coral": "0 0 40px -6px rgba(244,63,94, 0.22)",
+        "glow-violet": "0 0 40px -6px rgba(79,70,229, 0.22)",
       },
       backgroundImage: {
-        "gradient-cta": "linear-gradient(135deg, #E85547 0%, #7C3AED 52%, #5B21B6 100%)",
-        "gradient-progress": "linear-gradient(90deg, #E85547, #5B21B6)",
+        "gradient-cta": "linear-gradient(135deg, #F43F5E 0%, #6366F1 52%, #4F46E5 100%)",
+        "gradient-progress": "linear-gradient(90deg, #F43F5E, #4F46E5)",
         "aura-dots":
           "radial-gradient(rgba(15,23,42,0.07) 1px, transparent 1px)",
       },
@@ -89,3 +89,4 @@ module.exports = {
   },
   plugins: [],
 };
+
