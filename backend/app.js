@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const helmet = require("helmet");
 const compression = require("compression");
+const crypto = require("crypto");
 const rateLimit = require("express-rate-limit");
 
 function createApp({ env = process.env } = {}) {
@@ -23,6 +24,35 @@ function createApp({ env = process.env } = {}) {
     })
   );
   app.use(compression());
+
+  // Attach request ID for API tracing across logs and client reports.
+  app.use((req, res, next) => {
+    const id = crypto.randomUUID();
+    req.requestId = id;
+    res.setHeader("x-request-id", id);
+    next();
+  });
+
+  // Lightweight API access logging with latency and request id.
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on("finish", () => {
+      if (!req.originalUrl.startsWith("/api")) return;
+      const meta = {
+        requestId: req.requestId,
+        method: req.method,
+        path: req.originalUrl,
+        status: res.statusCode,
+        durationMs: Date.now() - start,
+      };
+      if (res.statusCode >= 500) {
+        console.error("[api]", meta);
+      } else {
+        console.log("[api]", meta);
+      }
+    });
+    next();
+  });
 
   app.use(
     cors({
@@ -65,16 +95,17 @@ function createApp({ env = process.env } = {}) {
       ok: true,
       uptimeSec: Math.round((Date.now() - startedAt) / 1000),
       time: new Date().toISOString(),
+      requestId: req.requestId,
     });
   });
 
   app.get("/", (req, res) =>
-    res.json({ message: "Mock Interview API running ✅", ok: true, time: new Date().toISOString() })
+    res.json({ message: "Mock Interview API running ?", ok: true, time: new Date().toISOString() })
   );
 
   app.use((req, res) => {
     if (req.originalUrl.startsWith("/api")) {
-      return res.status(404).json({ message: "Not found." });
+      return res.status(404).json({ message: "Not found.", requestId: req.requestId });
     }
     res.status(404).type("text").send("Not found");
   });
@@ -85,16 +116,15 @@ function createApp({ env = process.env } = {}) {
         err.code === "LIMIT_FILE_SIZE"
           ? "File too large (max 5MB)."
           : err.message || "Upload failed.";
-      return res.status(400).json({ message: msg });
+      return res.status(400).json({ message: msg, requestId: req.requestId });
     }
     // eslint-disable-next-line no-console
-    console.error("Unhandled error:", err);
+    console.error("Unhandled error:", { requestId: req.requestId, message: err.message, stack: err.stack });
     if (res.headersSent) return next(err);
-    res.status(err.status || 500).json({ message: err.message || "Server error." });
+    res.status(err.status || 500).json({ message: err.message || "Server error.", requestId: req.requestId });
   });
 
   return app;
 }
 
 module.exports = { createApp };
-
