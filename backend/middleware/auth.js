@@ -1,11 +1,20 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { getAuthCookieName } = require("../utils/authCookie");
 
 const protect = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization?.startsWith("Bearer ")) {
     token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token && req.cookies) {
+    const cookieName = getAuthCookieName();
+    const cookieToken = req.cookies[cookieName];
+    if (typeof cookieToken === "string" && cookieToken.trim()) {
+      token = cookieToken.trim();
+    }
   }
 
   if (!token) {

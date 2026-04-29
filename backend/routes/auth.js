@@ -1,12 +1,17 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { setAuthCookie, clearAuthCookie } = require("../utils/authCookie");
 
 const router = express.Router();
 
 // Helper: generate JWT
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+function shouldIncludeTokenInBody() {
+  return String(process.env.AUTH_TOKEN_IN_BODY || "").toLowerCase() === "true";
+}
 
 // ── POST /api/auth/register ──────────────────────────────────
 router.post("/register", async (req, res) => {
@@ -46,13 +51,21 @@ router.post("/register", async (req, res) => {
         : undefined,
     });
 
-    res.status(201).json({
+    const token = generateToken(user._id);
+    setAuthCookie(res, token);
+
+    const payload = {
       _id: user._id,
       name: user.name,
       email: user.email,
       plan: user.plan || "free",
-      token: generateToken(user._id),
-    });
+    };
+
+    if (shouldIncludeTokenInBody()) {
+      payload.token = token;
+    }
+
+    res.status(201).json(payload);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -73,16 +86,30 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password." });
     }
 
-    res.json({
+    const token = generateToken(user._id);
+    setAuthCookie(res, token);
+
+    const payload = {
       _id: user._id,
       name: user.name,
       email: user.email,
       plan: user.plan || "free",
-      token: generateToken(user._id),
-    });
+    };
+
+    if (shouldIncludeTokenInBody()) {
+      payload.token = token;
+    }
+
+    res.json(payload);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+});
+
+// ── POST /api/auth/logout ────────────────────────────────────
+router.post("/logout", (req, res) => {
+  clearAuthCookie(res);
+  res.json({ ok: true });
 });
 
 // ── GET /api/auth/me ─────────────────────────────────────────

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { AUTH_SESSION_EXPIRED } from "../utils/authSession";
+import api, { logoutUser } from "../utils/api";
 
 const AuthContext = createContext(null);
 
@@ -8,7 +9,12 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    try {
+      await logoutUser();
+    } catch {
+      /* ignore */
+    }
     localStorage.removeItem("user");
     delete axios.defaults.headers.common["Authorization"];
     setUser(null);
@@ -19,13 +25,26 @@ export function AuthProvider({ children }) {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        setUser(parsed);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${parsed.token}`;
+        const { token, ...rest } = parsed || {};
+        setUser(rest);
+        if (token) {
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        }
       } catch {
         localStorage.removeItem("user");
       }
     }
-    setLoading(false);
+
+    (async () => {
+      try {
+        const { data } = await api.get("/auth/me");
+        setUser(data);
+      } catch {
+        /* not logged in */
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   useEffect(() => {
@@ -35,9 +54,14 @@ export function AuthProvider({ children }) {
   }, [logout]);
 
   const login = useCallback((userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    axios.defaults.headers.common["Authorization"] = `Bearer ${userData.token}`;
-    setUser(userData);
+    const { token, ...rest } = userData || {};
+    localStorage.setItem("user", JSON.stringify(rest));
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+    }
+    setUser(rest);
   }, []);
 
   return (
