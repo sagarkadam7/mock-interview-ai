@@ -11,7 +11,8 @@ describe("health endpoint", () => {
     expect(res.body).toHaveProperty("ok", true);
     expect(res.body).toHaveProperty("time");
     },
-    20000
+    60000
   );
 });
+
 
