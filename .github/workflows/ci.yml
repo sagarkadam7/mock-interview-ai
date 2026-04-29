@@ -42,3 +42,8 @@ jobs:
         working-directory: backend
         run: node -e "console.log('backend deps ok')"
 
+      - name: Backend npm audit (fail on high)
+        working-directory: backend
+        run: npm audit --audit-level=high
+
+
