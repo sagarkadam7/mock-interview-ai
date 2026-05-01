@@ -14,7 +14,7 @@ const navGhostActive =
   "!border-slate-300 !bg-white !text-aura-ink shadow-lux dark:!border-slate-500 dark:!bg-slate-800 dark:!text-white";
 
 const navCtaBtn =
-  "inline-flex items-center justify-center rounded-full border-0 bg-aura-ink px-4 py-1.5 text-xs font-bold text-white no-underline shadow-[0_2px_12px_-2px_rgba(15,23,42,0.35)] transition-[transform,background-color,box-shadow] duration-250 ease-out-expo hover:bg-zinc-800 hover:shadow-lg active:scale-[0.97] sm:px-4 sm:py-1.5 sm:text-xs md:px-5 md:py-2 md:text-[13px] dark:bg-slate-100 dark:text-slate-900 dark:shadow-[0_2px_12px_-2px_rgba(0,0,0,0.4)] dark:hover:bg-white";
+  "inline-flex items-center justify-center rounded-full border-0 bg-aura-ink px-4 py-1.5 text-xs font-bold text-aura-page no-underline shadow-md shadow-aura-ink/25 transition-[transform,background-color,box-shadow] duration-250 ease-out-expo hover:bg-zinc-800 hover:shadow-lg active:scale-[0.97] sm:px-4 sm:py-1.5 sm:text-xs md:px-5 md:py-2 md:text-[13px] dark:bg-slate-100 dark:text-slate-900 dark:shadow-black/25 dark:hover:bg-white";
 
 const profilePill =
   "mr-0.5 hidden items-center gap-2.5 rounded-full border border-slate-200/90 bg-white/95 py-1.5 pl-1.5 pr-4 shadow-sm backdrop-blur-sm transition-colors duration-250 dark:border-slate-600/80 dark:bg-slate-900/80 sm:flex";
@@ -65,7 +65,7 @@ export default function Navbar() {
   return (
     <nav
       aria-label="Primary"
-      className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-300 ease-out-expo dark:border-slate-800/80 dark:bg-slate-950/85"
+      className="sticky top-0 z-50 border-b border-aura-edge/80 bg-aura-page/85 shadow-[0_1px_0_0_rgba(10,10,15,0.04)] backdrop-blur-md backdrop-saturate-150 transition-[background-color,box-shadow,border-color] duration-300 ease-out-expo dark:border-slate-800/90 dark:bg-aura-dark/92 dark:shadow-[0_1px_0_0_rgba(255,255,255,0.06)]"
     >
       <div className="relative mx-auto flex h-[3.75rem] max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-10">
         <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4 md:gap-6">
@@ -106,7 +106,7 @@ export default function Navbar() {
           <button
             ref={btnRef}
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200/90 bg-white/90 text-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:border-slate-600/80 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800 lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200/90 bg-white/90 text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/40 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:border-slate-600/80 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-aura-dark lg:hidden"
             aria-expanded={menuOpen}
             aria-controls="mobile-nav-panel"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -127,7 +127,7 @@ export default function Navbar() {
                   {user.name.split(" ")[0]}
                 </span>
                 {(user.plan || "free") !== "free" && (
-                  <span className="ml-1 inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-700 dark:border-violet-500/40 dark:bg-violet-950/70 dark:text-violet-200">
+                  <span className="ml-1 inline-flex items-center rounded-full border border-aura-violet/35 bg-aura-violet/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-aura-violet dark:border-aura-violet/45 dark:bg-aura-violet/15 dark:text-violet-200">
                     Pro
                   </span>
                 )}

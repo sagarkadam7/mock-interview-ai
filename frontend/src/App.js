@@ -47,7 +47,7 @@ function PrivateRoute({ children }) {
         aria-label="Loading workspace"
       >
         <span className="spinner h-9 w-9" />
-        <p className="text-sm text-slate-600 dark:text-slate-400">Loading your workspace…</p>
+        <p className="text-sm text-aura-muted dark:text-slate-400">Loading your workspace…</p>
       </motion.div>
     );
   }
@@ -118,7 +118,12 @@ function AppShell() {
       <ScrollProgress />
       <AnnouncementBar />
       <Navbar />
-      <main id="main-content" tabIndex={-1} className="min-w-0 w-full flex-1 outline-none focus:outline-none">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        aria-label="Main content"
+        className="min-w-0 w-full flex-1 outline-none focus:outline-none"
+      >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={location.pathname}
