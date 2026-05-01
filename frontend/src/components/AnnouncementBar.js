@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 // Change ANNOUNCEMENT_ID any time you want all users to see the bar again.
-const ANNOUNCEMENT_ID = "v1-interactive-hero-2026-04";
+const ANNOUNCEMENT_ID = "v2-signal-ui-2026-05";
 const STORAGE_KEY = "ia.announcement.dismissed";
 
 const ANNOUNCEMENT = {
-  badge: "New",
-  message: "Interactive live-coaching demo is now on the homepage.",
-  cta: { label: "Try it", to: "/#main-content" },
+  badge: "Update",
+  message: "Sharper SIGNAL UI, faster builds, and a cleaner nav—try the live coaching demo on the homepage.",
+  cta: { label: "Open demo", to: "/#main-content" },
 };
 
 /**
@@ -40,7 +40,7 @@ export default function AnnouncementBar() {
     <div
       role="region"
       aria-label="Product announcement"
-      className="relative z-[55] border-b border-violet-500/20 bg-gradient-to-r from-aura-coral/10 via-fuchsia-500/10 to-aura-violet/10 text-aura-ink backdrop-blur-sm dark:border-violet-500/30 dark:text-slate-100"
+      className="relative z-[55] border-b border-aura-edge/90 bg-gradient-to-r from-aura-signal/10 via-aura-page to-aura-violet/10 text-aura-ink backdrop-blur-sm dark:border-slate-700/80 dark:from-aura-signal/15 dark:via-aura-dark dark:to-aura-violet/20 dark:text-slate-100"
     >
       <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 sm:px-6">
         <div className="flex min-w-0 items-center gap-2 sm:gap-3">
@@ -51,7 +51,7 @@ export default function AnnouncementBar() {
             {ANNOUNCEMENT.message}{" "}
             <Link
               to={ANNOUNCEMENT.cta.to}
-              className="font-bold text-violet-700 underline decoration-violet-400/60 underline-offset-4 hover:text-violet-900 dark:text-violet-300 dark:decoration-violet-500/60 dark:hover:text-violet-200"
+              className="font-bold text-aura-violet underline decoration-aura-violet/45 underline-offset-4 transition-colors hover:text-aura-signal hover:decoration-aura-signal/50 dark:text-violet-300 dark:decoration-aura-violet/50 dark:hover:text-violet-200"
             >
               {ANNOUNCEMENT.cta.label} →
             </Link>
