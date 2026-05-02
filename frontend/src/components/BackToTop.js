@@ -27,7 +27,7 @@ export default function BackToTop() {
       type="button"
       onClick={handleClick}
       aria-label="Back to top"
-      className={`fixed bottom-6 right-6 z-[70] inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white/90 text-slate-700 shadow-xl shadow-slate-900/10 backdrop-blur-md transition-all duration-300 ease-out hover:bg-white hover:text-aura-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/50 focus-visible:ring-offset-2 dark:border-slate-700/70 dark:bg-slate-900/90 dark:text-slate-300 dark:shadow-black/30 dark:hover:text-white ${
+      className={`fixed bottom-6 right-6 z-[70] inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white/90 text-slate-700 shadow-xl shadow-slate-900/10 backdrop-blur-md transition-all duration-300 ease-out motion-reduce:transition-none hover:bg-white hover:text-aura-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/50 focus-visible:ring-offset-2 dark:border-slate-700/70 dark:bg-slate-900/90 dark:text-slate-300 dark:shadow-black/30 dark:hover:text-white ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
       }`}
     >
