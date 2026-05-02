@@ -49,7 +49,7 @@ export default function CookieConsent() {
           We use essential cookies to keep you signed in and anonymous analytics to improve InterviewAI. Read our{" "}
           <Link
             to="/privacy"
-            className="font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 hover:text-violet-900 dark:text-violet-300"
+            className="font-semibold text-aura-violet underline decoration-aura-violet/40 underline-offset-4 hover:text-aura-ink dark:text-aura-violet dark:hover:text-slate-100"
           >
             Privacy Policy
           </Link>
@@ -67,6 +67,7 @@ export default function CookieConsent() {
         <button
           type="button"
           autoFocus
+          aria-label="Accept all cookies"
           onClick={() => persist("accepted")}
           className="flex-1 rounded-full bg-aura-ink px-4 py-2 text-xs font-bold text-white shadow-sm transition-transform hover:shadow-lg active:scale-[0.97] dark:bg-slate-100 dark:text-slate-900 sm:flex-none"
         >
