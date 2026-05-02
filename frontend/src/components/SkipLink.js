@@ -17,6 +17,12 @@ export default function SkipLink() {
           target.focus({ preventScroll: false });
         }
       }}
+      onKeyDown={(e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        e.preventDefault();
+        const target = document.getElementById("main-content");
+        if (target) target.focus({ preventScroll: false });
+      }}
     >
       Skip to main content
     </a>
