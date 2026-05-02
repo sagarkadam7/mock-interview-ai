@@ -38,6 +38,7 @@ export default function AnnouncementBar() {
 
   return (
     <div
+      id="site-announcement"
       role="region"
       aria-label="Product announcement"
       className="relative z-[55] border-b border-aura-edge/90 bg-gradient-to-r from-aura-signal/10 via-aura-page to-aura-violet/10 text-aura-ink backdrop-blur-sm dark:border-slate-700/80 dark:from-aura-signal/15 dark:via-aura-dark dark:to-aura-violet/20 dark:text-slate-100"
