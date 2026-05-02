@@ -14,7 +14,7 @@ const steps = [
   {
     step: "02",
     title: "Treat it like a real loop",
-    desc: "Turn on camera, speak out loud, and let the transcript + fillers guide the fix.",
+    desc: "Turn on camera, speak out loud, and let the live transcript and filler-word hints steer your next adjustment.",
     to: "/#how-it-works",
     cta: "See how it works →",
   },
