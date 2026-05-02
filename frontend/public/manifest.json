@@ -3,9 +3,9 @@
   "short_name": "InterviewAI",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0b10",
-  "theme_color": "#0a0b10",
-  "description": "Mock interviews with real-time AI coaching, speech analytics, and scorecards.",
+  "background_color": "#111118",
+  "theme_color": "#111118",
+  "description": "Mock interviews with real-time AI coaching, speech analytics, scorecards, and presence-aware feedback.",
   "icons": [
     { "src": "/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
