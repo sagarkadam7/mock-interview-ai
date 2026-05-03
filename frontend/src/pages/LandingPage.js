@@ -387,7 +387,8 @@ export default function LandingPage() {
       const link = document.createElement("link");
       link.id = "lp-fonts";
       link.rel = "stylesheet";
-      link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Mono:wght@400;500;600&display=swap";
+      link.href =
+        "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&display=swap";
       document.head.appendChild(link);
     }
   }, []);
