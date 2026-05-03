@@ -105,7 +105,7 @@ export default function SiteFooter() {
     >
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
         {/* Newsletter CTA */}
-        <div className="mb-14 grid gap-10 rounded-3xl border border-slate-200/80 bg-white/80 p-8 shadow-sm backdrop-blur-md dark:border-slate-700/70 dark:bg-slate-900/60 md:grid-cols-[1.2fr_1fr] md:items-center md:p-10">
+        <div className="mb-14 grid gap-10 rounded-3xl border border-slate-200/80 bg-white/80 p-8 shadow-sm backdrop-blur-md transition-[box-shadow,border-color,transform] duration-300 ease-out hover:border-violet-200/90 hover:shadow-[0_24px_60px_-28px_rgba(91,33,182,0.18)] dark:border-slate-700/70 dark:bg-slate-900/60 dark:hover:border-violet-500/35 dark:hover:shadow-[0_24px_60px_-28px_rgba(0,0,0,0.45)] md:grid-cols-[1.2fr_1fr] md:items-center md:p-10">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-violet-700 dark:text-violet-300">
               The Loop Newsletter
@@ -202,14 +202,14 @@ export default function SiteFooter() {
                     {l.external ? (
                       <a
                         href={l.to}
-                        className="text-sm font-medium text-slate-600 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-slate-100"
+                        className="text-sm font-medium text-slate-600 underline decoration-transparent decoration-2 underline-offset-4 transition-colors hover:text-aura-ink hover:decoration-violet-500/70 dark:text-slate-400 dark:hover:text-slate-100"
                       >
                         {l.label}
                       </a>
                     ) : (
                       <Link
                         to={l.to}
-                        className="text-sm font-medium text-slate-600 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-slate-100"
+                        className="text-sm font-medium text-slate-600 underline decoration-transparent decoration-2 underline-offset-4 transition-colors hover:text-aura-ink hover:decoration-violet-500/70 dark:text-slate-400 dark:hover:text-slate-100"
                       >
                         {l.label}
                       </Link>
