@@ -428,7 +428,7 @@ export default function LandingHero({ user }) {
               to={user ? "/dashboard" : "/register"}
               className="w-full rounded-full no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page sm:w-auto"
             >
-              <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-10 py-4 text-[15px] font-bold tracking-tight text-white shadow-[0_20px_50px_-12px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.12)_inset] transition-transform duration-250 ease-out-expo active:scale-[0.98] sm:w-auto sm:px-11">
+              <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-10 py-4 text-[15px] font-bold tracking-tight text-white shadow-[0_20px_50px_-12px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.12)_inset] transition-[transform,box-shadow] duration-300 ease-out-expo group-hover:shadow-[0_28px_64px_-14px_rgba(91,33,182,0.5),0_0_0_1px_rgba(255,255,255,0.14)_inset] active:scale-[0.98] sm:w-auto sm:px-11">
                 <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet opacity-100 transition-opacity duration-300 group-hover:opacity-100" />
                 <span className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent opacity-40" />
                 <span className="relative">{user ? "Open dashboard" : "Start free — no card"}</span>
