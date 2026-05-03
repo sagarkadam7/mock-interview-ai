@@ -61,6 +61,16 @@
     overscroll-behavior-x: none;
   }
 
+  ::selection {
+    background-color: rgba(79, 70, 229, 0.22);
+    color: var(--aura-ink);
+  }
+
+  html.dark ::selection {
+    background-color: rgba(167, 139, 250, 0.28);
+    color: var(--aura-ink);
+  }
+
   #root {
     min-height: 100vh;
     min-width: 0;
