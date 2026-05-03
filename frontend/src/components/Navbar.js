@@ -27,8 +27,16 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef(null);
   const btnRef = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -65,7 +73,11 @@ export default function Navbar() {
   return (
     <nav
       aria-label="Primary"
-      className="sticky top-0 z-50 border-b border-aura-edge/80 bg-aura-page/85 shadow-[0_1px_0_0_rgba(10,10,15,0.04)] backdrop-blur-md backdrop-saturate-150 transition-[background-color,box-shadow,border-color] duration-300 ease-out-expo dark:border-slate-800/90 dark:bg-aura-dark/92 dark:shadow-[0_1px_0_0_rgba(255,255,255,0.06)]"
+      className={`sticky top-0 z-50 border-b backdrop-blur-md backdrop-saturate-150 transition-[background-color,box-shadow,border-color] duration-300 ease-out-expo ${
+        scrolled
+          ? "border-slate-200/95 bg-aura-page/95 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12),0_1px_0_0_rgba(10,10,15,0.06)] dark:border-slate-800 dark:bg-aura-dark/96 dark:shadow-[0_12px_40px_-16px_rgba(0,0,0,0.45),0_1px_0_0_rgba(255,255,255,0.08)]"
+          : "border-aura-edge/80 bg-aura-page/85 shadow-[0_1px_0_0_rgba(10,10,15,0.04)] dark:border-slate-800/90 dark:bg-aura-dark/92 dark:shadow-[0_1px_0_0_rgba(255,255,255,0.06)]"
+      }`}
     >
       <div className="relative mx-auto flex h-[3.75rem] max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-10">
         <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4 md:gap-6">
