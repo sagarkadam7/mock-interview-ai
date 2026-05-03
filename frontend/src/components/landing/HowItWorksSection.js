@@ -4,7 +4,10 @@ import { HOW_STEPS } from "../../data/marketing";
 
 export default function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="scroll-mt-24 border-y border-slate-200/80 bg-gradient-to-b from-white via-slate-50/50 to-white py-24 dark:border-slate-800/80 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950 md:py-28">
+    <section
+      id="how-it-works"
+      className="scroll-mt-28 border-y border-slate-200/80 bg-gradient-to-b from-white via-slate-50/50 to-white py-24 dark:border-slate-800/80 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950 md:py-28"
+    >
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-16 text-center md:mb-20">
           <div className="section-eyebrow mx-auto mb-4">How it works</div>
