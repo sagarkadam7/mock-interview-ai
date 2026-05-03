@@ -356,8 +356,9 @@ export default function LandingHero({ user }) {
 
   return (
     <section
+      id="top"
       ref={heroRef}
-      className="relative flex min-h-[calc(100vh-3.5rem)] flex-col justify-center overflow-hidden px-5 pb-24 pt-14 sm:px-6 sm:pb-32 sm:pt-20 lg:min-h-[calc(100vh-3rem)] lg:pb-36 lg:pt-20"
+      className="relative flex min-h-[calc(100vh-3.5rem)] scroll-mt-20 flex-col justify-center overflow-hidden px-5 pb-24 pt-14 sm:px-6 sm:pb-32 sm:pt-20 lg:min-h-[calc(100vh-3rem)] lg:pb-36 lg:pt-20"
     >
       {/* Atmosphere */}
       <div
@@ -405,7 +406,7 @@ export default function LandingHero({ user }) {
 
           <motion.h1
             variants={item}
-            className="max-w-[22ch] font-sans text-[2.75rem] font-semibold leading-[0.96] tracking-[-0.042em] text-aura-ink sm:max-w-none sm:text-[3.25rem] sm:tracking-[-0.038em] md:text-6xl md:leading-[0.95] lg:text-[3.5rem] xl:text-[4.25rem]"
+            className="max-w-[22ch] text-balance font-sans text-[2.75rem] font-semibold leading-[0.98] tracking-[-0.042em] text-aura-ink sm:max-w-none sm:text-[3.25rem] sm:tracking-[-0.038em] md:text-6xl md:leading-[0.96] lg:text-[3.5rem] xl:text-[4.25rem]"
           >
             Turn interview
             <br />
@@ -416,7 +417,7 @@ export default function LandingHero({ user }) {
 
           <motion.p
             variants={item}
-            className="mx-auto mt-7 max-w-xl text-[15px] leading-[1.68] text-slate-600 dark:text-slate-400 sm:text-lg sm:leading-[1.65] lg:mx-0"
+            className="mx-auto mt-7 max-w-xl text-pretty text-[15px] leading-[1.68] text-slate-600 dark:text-slate-400 sm:text-lg sm:leading-[1.65] lg:mx-0"
           >
             A full-stack mock interview: questions grounded in your resume and JD, deterministic scoring, and{" "}
             <span className="font-medium text-slate-800 dark:text-slate-200">camera-aware presence coaching</span> so you walk into the real room already calibrated.
