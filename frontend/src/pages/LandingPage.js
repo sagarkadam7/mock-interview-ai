@@ -287,7 +287,11 @@ function CtaButton({ to, children }) {
   const { palette: C } = useTheme();
   const [hovered, setHovered] = useState(false);
   return (
-    <Link to={to} style={{ textDecoration: "none" }}>
+    <Link
+      to={to}
+      style={{ textDecoration: "none" }}
+      className="inline-flex rounded-full outline-none focus-visible:ring-2 focus-visible:ring-violet-500/55 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+    >
       <motion.span
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -326,7 +330,11 @@ function GhostButton({ to, children }) {
   const { palette: C } = useTheme();
   const [hovered, setHovered] = useState(false);
   return (
-    <Link to={to} style={{ textDecoration: "none" }}>
+    <Link
+      to={to}
+      style={{ textDecoration: "none" }}
+      className="inline-flex rounded-full outline-none focus-visible:ring-2 focus-visible:ring-violet-500/45 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+    >
       <span style={{
         display: "inline-flex",
         alignItems: "center",
