@@ -642,7 +642,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES GRID ── */}
-      <section style={{ maxWidth: 1200, margin: "0 auto", padding: "120px 24px" }}>
+      <section id="features" style={{ maxWidth: 1200, margin: "0 auto", padding: "120px 24px", scrollMarginTop: "5.5rem" }}>
         <div style={{ textAlign: "center", marginBottom: 72 }}>
           <SectionLabel>What's inside</SectionLabel>
           <h2 style={{
