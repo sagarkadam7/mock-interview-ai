@@ -96,7 +96,7 @@ function createApp({ env = process.env } = {}) {
   });
 
   app.get("/", (req, res) =>
-    res.json({ message: "Mock Interview API running ?", ok: true, time: new Date().toISOString() })
+    res.json({ message: "Mock Interview API running.", ok: true, time: new Date().toISOString() })
   );
 
   app.use((req, res) => {
