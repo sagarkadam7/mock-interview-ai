@@ -88,10 +88,12 @@ function createApp({ env = process.env } = {}) {
   app.use("/api/marketing", require("./routes/clientError"));
 
   app.get("/api/health", (req, res) => {
+    const version = String(env.APP_VERSION || env.npm_package_version || "").trim() || undefined;
     res.json({
       ok: true,
       uptimeSec: Math.round((Date.now() - startedAt) / 1000),
       time: new Date().toISOString(),
+      ...(version ? { version } : {}),
     });
   });
 
