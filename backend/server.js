@@ -8,6 +8,11 @@ const app = createApp();
 
 const PORT = process.env.PORT || 5000;
 
+if (!process.env.MONGO_URI) {
+  console.error("❌ MONGO_URI is not set. Copy backend/.env.example to backend/.env and configure MongoDB.");
+  process.exit(1);
+}
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
