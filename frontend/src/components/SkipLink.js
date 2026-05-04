@@ -10,6 +10,7 @@ export default function SkipLink() {
       href="#main-content"
       className="skip-link"
       data-testid="skip-link"
+      aria-label="Skip to main content"
       // Programmatically blur after activation so focus lands on <main> rather than the link.
       onClick={() => {
         const target = document.getElementById("main-content");
