@@ -1,8 +1,13 @@
 {
+  "id": "/",
   "name": "InterviewAI",
   "short_name": "InterviewAI",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "browser"],
+  "orientation": "any",
+  "categories": ["education", "productivity", "utilities"],
   "background_color": "#111118",
   "theme_color": "#111118",
   "description": "Mock interviews with real-time AI coaching, speech analytics, scorecards, and presence-aware feedback.",
