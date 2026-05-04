@@ -80,10 +80,16 @@ module.exports = {
           "0%, 100%": { opacity: "0.35", transform: "scale(1)" },
           "50%": { opacity: "0.55", transform: "scale(1.04)" },
         },
+        /** One third of track width = one logo set (track is 3× duplicated sets). */
+        "trust-logo-marquee": {
+          from: { transform: "translate3d(0, 0, 0)" },
+          to: { transform: "translate3d(-33.333333%, 0, 0)" },
+        },
       },
       animation: {
         "toast-in": "toast-in 0.42s cubic-bezier(0.16, 1, 0.3, 1) both",
         "hero-breathe": "hero-breathe 14s ease-in-out infinite",
+        "trust-logo-marquee": "trust-logo-marquee 20s linear infinite",
       },
     },
   },

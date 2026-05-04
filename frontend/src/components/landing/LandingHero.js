@@ -493,18 +493,19 @@ export default function LandingHero({ user }) {
               </div>
             </div>
 
-            <div className="w-full max-w-xl sm:max-w-none lg:max-w-none">
-              <div className="grid grid-cols-3 divide-x divide-slate-200/90 rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white/90 to-white/70 py-5 shadow-[0_1px_0_rgba(255,255,255,0.95)_inset,0_24px_48px_-28px_rgba(15,23,42,0.08)] backdrop-blur-md ring-1 ring-white/70 dark:divide-slate-700 dark:border-slate-700/90 dark:from-slate-900/70 dark:to-slate-950/80 dark:shadow-none dark:ring-slate-800/60 sm:py-6">
-                {statRows.map((row) => (
-                  <div key={row.l} className="flex flex-col items-center px-1 sm:px-2">
-                    <div className="font-display text-2xl font-semibold tabular-nums text-aura-ink sm:text-3xl">{row.v}</div>
-                    <div className="mt-2 max-w-[6.5rem] text-[9px] font-semibold uppercase leading-snug tracking-[0.2em] text-slate-500 dark:text-slate-400 sm:max-w-[10rem] sm:text-[10px] sm:tracking-[0.22em]">
-                      {row.l}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ul
+              className="mx-auto grid w-full max-w-xs grid-cols-3 gap-x-3 gap-y-1 text-center sm:mx-0 sm:max-w-sm sm:gap-x-5 lg:max-w-md"
+              aria-label="Session highlights"
+            >
+              {statRows.map((row) => (
+                <li key={row.l} className="flex min-w-0 flex-col items-center px-0.5 sm:px-1">
+                  <span className="font-display text-2xl font-semibold tabular-nums text-aura-ink sm:text-3xl">{row.v}</span>
+                  <span className="mt-1.5 text-[9px] font-semibold uppercase leading-snug tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-[10px] sm:tracking-[0.2em]">
+                    {row.l}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </motion.div>
         </motion.div>
 

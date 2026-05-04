@@ -446,67 +446,19 @@ export default function LandingPage() {
       {/* ── HERO (original component preserved) ── */}
       <LandingHero user={user} />
 
-      {/* ── TRUST STRIP ── */}
+      {/* ── TRUST STRIP: headline + marquee only, aligned to page grid ── */}
       <section
         aria-label="Trusted by"
         style={{
-          padding: "72px 24px 80px",
           background: C.paper,
-          position: "relative",
+          borderTop: `1px solid ${C.border}`,
+          borderBottom: `1px solid ${C.border}`,
         }}
       >
-        <div style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          borderRadius: 28,
-          border: `1px solid ${C.border}`,
-          background: C.card,
-          boxShadow: C.cardShadow,
-          padding: "40px 20px 36px",
-          position: "relative",
-          overflow: "hidden",
-        }}>
-          <div aria-hidden style={{
-            position: "absolute", top: 0, left: "12%", right: "12%", height: 1,
-            background: `linear-gradient(90deg, transparent, ${C.coral}40, ${C.violet}40, transparent)`,
-            opacity: 0.9,
-          }} />
-          <div style={{ textAlign: "center", marginBottom: 8 }}>
-            <span style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 10,
-              fontWeight: 600,
-              letterSpacing: "0.38em",
-              textTransform: "uppercase",
-              color: C.coral,
-            }}>
-              Social proof
-            </span>
+        <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+          <div className="w-full min-w-0">
+            <TrustLogoRail />
           </div>
-          <div style={{ textAlign: "center", marginBottom: 26 }}>
-            <p style={{
-              fontFamily: BODY_FONT_STACK,
-              fontSize: "clamp(1.35rem, 3vw, 1.75rem)",
-              fontWeight: 600,
-              fontStyle: "normal",
-              color: C.ink,
-              letterSpacing: "-0.02em",
-              margin: 0,
-            }}>
-              Trusted on campuses where interviews are a sport
-            </p>
-            <p style={{
-              margin: "12px auto 0",
-              fontFamily: BODY_FONT_STACK,
-              fontSize: 14,
-              color: C.muted,
-              maxWidth: 420,
-              lineHeight: 1.75,
-            }}>
-              Students and new grads use InterviewAI to rehearse with the same rigor as the real loop.
-            </p>
-          </div>
-          <TrustLogoRail />
         </div>
       </section>
 
