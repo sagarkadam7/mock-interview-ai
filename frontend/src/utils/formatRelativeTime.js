@@ -10,6 +10,12 @@ export function formatRelativeTime(input) {
 
   const diffMs = Date.now() - ts;
   if (diffMs < 0) {
+    const aheadSec = Math.floor(-diffMs / 1000);
+    if (aheadSec < 45) return "In a moment";
+    const aheadMin = Math.floor(aheadSec / 60);
+    if (aheadMin < 60) return aheadMin <= 1 ? "In 1 min" : `In ${aheadMin} min`;
+    const aheadHrs = Math.floor(aheadMin / 60);
+    if (aheadHrs < 24) return aheadHrs === 1 ? "In 1 hour" : `In ${aheadHrs} hours`;
     return date.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
   }
 
