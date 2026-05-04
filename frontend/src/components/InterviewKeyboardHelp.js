@@ -24,6 +24,7 @@ export default function InterviewKeyboardHelp({ open, onClose }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="kbd-help-title"
+          aria-describedby="kbd-help-desc"
           className="fixed inset-0 z-[120] flex items-end justify-center p-4 sm:items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -41,7 +42,9 @@ export default function InterviewKeyboardHelp({ open, onClose }) {
             <h2 id="kbd-help-title" className="font-display text-lg font-semibold tracking-tight text-aura-ink dark:text-slate-100">
               Session shortcuts
             </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Built for fast reps — fewer clicks between questions.</p>
+            <p id="kbd-help-desc" className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+              Built for fast reps — fewer clicks between questions.
+            </p>
             <ul className="mt-5 space-y-3">
               {rows.map((r) => (
                 <li key={r.keys} className="flex flex-col gap-1 rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
