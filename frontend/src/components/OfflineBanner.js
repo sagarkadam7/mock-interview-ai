@@ -24,6 +24,7 @@ export default function OfflineBanner() {
     <div
       role="status"
       aria-live="polite"
+      aria-atomic="true"
       aria-labelledby="offline-banner-title"
       className="fixed inset-x-3 bottom-20 z-[80] mx-auto max-w-md rounded-2xl border border-amber-200/80 bg-amber-50/95 px-4 py-3 text-amber-950 shadow-xl shadow-amber-900/5 backdrop-blur-md dark:border-amber-500/30 dark:bg-amber-950/90 dark:text-amber-50 sm:bottom-6"
     >
