@@ -4,7 +4,7 @@ Allow: /
 Disallow: /login
 Disallow: /register
 Disallow: /dashboard
+Disallow: /welcome
 Disallow: /interview
-Disallow: /report
 
 Sitemap: /sitemap.xml
