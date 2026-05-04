@@ -16,6 +16,13 @@ export default function NotFoundPage() {
 
   useEffect(() => {
     document.title = "Page not found · InterviewAI";
+    const meta = document.createElement("meta");
+    meta.setAttribute("name", "robots");
+    meta.setAttribute("content", "noindex, nofollow");
+    document.head.appendChild(meta);
+    return () => {
+      meta.remove();
+    };
   }, []);
 
   return (
