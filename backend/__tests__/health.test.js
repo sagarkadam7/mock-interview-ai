@@ -10,6 +10,20 @@ describe("health endpoint", () => {
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty("ok", true);
     expect(res.body).toHaveProperty("time");
+    expect(res.body).toHaveProperty("uptimeSec");
+    },
+    60000
+  );
+
+  test(
+    "GET /api/health includes version when APP_VERSION is set",
+    async () => {
+      const app = createApp({
+        env: { ...process.env, FRONTEND_ORIGINS: "http://localhost:3000", APP_VERSION: "test-1.2.3" },
+      });
+      const res = await request(app).get("/api/health");
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject({ ok: true, version: "test-1.2.3" });
     },
     60000
   );
