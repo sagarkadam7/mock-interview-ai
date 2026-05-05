@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const crypto = require("crypto");
 const helmet = require("helmet");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
@@ -24,6 +25,17 @@ function createApp({ env = process.env } = {}) {
   app.disable("x-powered-by");
   app.set("trust proxy", 1);
   const startedAt = Date.now();
+
+  app.use((req, res, next) => {
+    const incoming = req.headers["x-request-id"];
+    const requestId =
+      (typeof incoming === "string" && incoming.trim().slice(0, 128)) ||
+      (Array.isArray(incoming) && String(incoming[0] || "").trim().slice(0, 128)) ||
+      crypto.randomBytes(12).toString("hex");
+    req.requestId = requestId;
+    res.setHeader("x-request-id", requestId);
+    next();
+  });
 
   const allowedOrigins = parseOrigins(env.FRONTEND_ORIGINS || "http://localhost:3000");
   const cspConnectSrc = buildCspConnectSrc(allowedOrigins);
@@ -128,9 +140,9 @@ function createApp({ env = process.env } = {}) {
       return res.status(403).json({ message: "Origin not allowed." });
     }
     // eslint-disable-next-line no-console
-    console.error("Unhandled error:", err);
+    console.error("Unhandled error:", { requestId: req.requestId, message: err?.message, stack: err?.stack });
     if (res.headersSent) return next(err);
-    res.status(err.status || 500).json({ message: err.message || "Server error." });
+    res.status(err.status || 500).json({ message: err.message || "Server error.", requestId: req.requestId });
   });
 
   return app;
