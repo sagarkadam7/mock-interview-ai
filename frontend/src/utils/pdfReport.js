@@ -55,6 +55,13 @@ export function generatePDFReport(interview) {
     addLine(`Q${i + 1}: ${q.text}`, 12, true, [232, 234, 240]);
     y += 2;
 
+    if (q.questionType === "follow_up") {
+      addLine("Adaptive follow-up", 9, true, [200, 170, 255]);
+      if (q.hint) {
+        addLine(`Hint: ${q.hint}`, 9, false, [120, 128, 160]);
+      }
+    }
+
     const qScore = q.score !== null ? q.score : "-";
     const qColor = q.score >= 7 ? [34,197,94] : q.score >= 4 ? [245,158,11] : [239,68,68];
     addLine(`Score: ${qScore}/10`, 11, true, qColor);
