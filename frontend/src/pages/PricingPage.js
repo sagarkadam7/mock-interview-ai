@@ -12,13 +12,14 @@ const free = [
   "7 tailored questions per interview",
   "Gemini-powered feedback & scores",
   "Camera + speech analytics",
-  "Dashboard trends & PDF export",
+  "Basic dashboard + PDF export",
 ];
 
 const pro = [
   "Unlimited mock sessions",
   "Shareable report links (send to mentors)",
-  "Practice streaks + weekly goals",
+  "Practice streaks + weekly goals (accountability)",
+  "Momentum insights: readiness snapshot + trends",
   "Priority AI queue (future)",
   "Early access to new analytics",
 ];
