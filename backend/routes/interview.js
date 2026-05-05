@@ -535,21 +535,24 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
     if (confidenceScore !== undefined) question.confidenceScore = confidenceScore;
 
     let followUpInserted = false;
+    let followUpQuestion = null;
     if (allowAdaptiveFollowUp && feedback.followUp) {
       const idx = interview.questions.findIndex((q) => q._id.equals(question._id));
       if (idx !== -1) {
-        interview.questions.splice(idx + 1, 0, {
+        const inserted = {
           questionType: "follow_up",
           parentQuestionId: question._id,
           text: feedback.followUp.text,
           hint: feedback.followUp.hint,
           orderIndex: idx + 1,
-        });
+        };
+        interview.questions.splice(idx + 1, 0, inserted);
         interview.questions.forEach((q, i) => {
           q.orderIndex = i;
         });
         interview.markModified("questions");
         followUpInserted = true;
+        followUpQuestion = { text: inserted.text, hint: inserted.hint };
       }
     }
 
@@ -571,6 +574,7 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
       strengths: question.strengths,
       improvements: question.improvements,
       followUpInserted,
+      followUpQuestion,
       questions: interview.questions,
       interviewStatus: interview.status,
       firstAnsweredAt: interview.firstAnsweredAt,
