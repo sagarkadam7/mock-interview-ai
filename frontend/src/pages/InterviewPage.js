@@ -613,6 +613,14 @@ export default function InterviewPage() {
                   style={{ width: `${feedback.score * 10}%`, boxShadow: "0 0 16px rgba(91,33,182, 0.28)" }}
                 />
               </div>
+              {feedback.aiFallback ? (
+                <div className="mb-6 rounded-2xl border border-amber-300/50 bg-amber-50/80 p-4 text-amber-950 ring-1 ring-amber-200/70 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-50 dark:ring-amber-500/20">
+                  <div className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em]">Fallback coaching mode</div>
+                  <p className="text-sm leading-relaxed opacity-[0.92]">
+                    The AI response was temporarily unreliable, so we generated safe default coaching. You can tap Submit again to retry.
+                  </p>
+                </div>
+              ) : null}
               <p className="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-[15px]">{feedback.feedback}</p>
 
               {feedback.followUpInserted && (
