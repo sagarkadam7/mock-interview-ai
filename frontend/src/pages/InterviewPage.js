@@ -621,6 +621,21 @@ export default function InterviewPage() {
                   <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                     Based on your answer, the session added a targeted follow-up question next. Continue to drill deeper, then move on when you are ready.
                   </p>
+                  {feedback.followUpQuestion?.text ? (
+                    <div className="mt-4 rounded-xl border border-slate-200/80 bg-white/80 p-4 text-left shadow-sm ring-1 ring-white/60 dark:border-slate-700/80 dark:bg-slate-950/40 dark:ring-slate-800/40">
+                      <div className="mb-1 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                        Next question (preview)
+                      </div>
+                      <p className="text-sm font-semibold leading-relaxed text-aura-ink dark:text-slate-100">
+                        {feedback.followUpQuestion.text}
+                      </p>
+                      {feedback.followUpQuestion.hint ? (
+                        <p className="mt-2 text-[13px] leading-relaxed text-slate-600 dark:text-slate-300">
+                          <span className="font-semibold">Hint:</span> {feedback.followUpQuestion.hint}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
               )}
 
