@@ -59,6 +59,18 @@ export function generatePDFReport(interview) {
     const qColor = q.score >= 7 ? [34,197,94] : q.score >= 4 ? [245,158,11] : [239,68,68];
     addLine(`Score: ${qScore}/10`, 11, true, qColor);
 
+    const signals = [];
+    if (typeof q.eyeContactPct === "number") signals.push(`Eye ${q.eyeContactPct}%`);
+    if (typeof q.wordsPerMinute === "number" && q.wordsPerMinute > 0) {
+      signals.push(`Pace ${q.wordsPerMinute} wpm${q.paceLabel ? ` (${q.paceLabel})` : ""}`);
+    }
+    if (typeof q.fillerWordCount === "number") signals.push(`Fillers ${q.fillerWordCount}`);
+    if (typeof q.confidenceScore === "number") signals.push(`Conf ${q.confidenceScore}/10`);
+    if (typeof q.dominantEmotion === "string" && q.dominantEmotion.trim()) signals.push(`Tone ${q.dominantEmotion}`);
+    if (signals.length) {
+      addLine(`Signals: ${signals.join(" · ")}`, 9, false, [120, 128, 160]);
+    }
+
     if (q.answer) {
       addLine("Your Answer:", 10, true, [144, 151, 176]);
       addLine(q.answer.slice(0, 300) + (q.answer.length > 300 ? "…" : ""), 10, false, [93, 100, 128]);
