@@ -133,13 +133,25 @@ Return ONLY valid JSON with no markdown or backticks:
   "improvements": "<1-2 sentences on how to improve>"
 }`;
 
-  const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  const raw = result.response.text();
-  const parsed = parseJsonFromAi(raw);
-  const normalized = normalizeFeedback(parsed);
-  if (!normalized) throw new Error("AI did not return valid feedback.");
-  return normalized;
+  try {
+    const model = getGeminiModel();
+    const result = await model.generateContent(prompt);
+    const raw = result.response.text();
+    const parsed = parseJsonFromAi(raw);
+    const normalized = normalizeFeedback(parsed);
+    if (!normalized) throw new Error("AI did not return valid feedback.");
+    return normalized;
+  } catch (err) {
+    return {
+      score: 5,
+      feedback:
+        "We couldn’t reliably parse the model’s response this time. Your session was saved — please retry Submit to regenerate coaching.",
+      strengths: "Keep your answer structured and specific (STAR: situation, task, action, result).",
+      improvements: "Add numbers (scope, impact) and clarify your role/ownership in one sentence.",
+      followUp: null,
+      isFallback: true,
+    };
+  }
 }
 
 function buildDeliverySummary(body) {
@@ -206,13 +218,25 @@ Return ONLY valid JSON with no markdown or backticks:
   "followUp": null | { "text": "<follow-up question ending with ?>", "hint": "<1-2 sentences what a strong follow-up should include>" }
 }`;
 
-  const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  const raw = result.response.text();
-  const parsed = parseJsonFromAi(raw);
-  const normalized = normalizeFeedback(parsed);
-  if (!normalized) throw new Error("AI did not return valid feedback.");
-  return normalized;
+  try {
+    const model = getGeminiModel();
+    const result = await model.generateContent(prompt);
+    const raw = result.response.text();
+    const parsed = parseJsonFromAi(raw);
+    const normalized = normalizeFeedback(parsed);
+    if (!normalized) throw new Error("AI did not return valid feedback.");
+    return normalized;
+  } catch (err) {
+    return {
+      score: 5,
+      feedback:
+        "We couldn’t reliably parse the model’s response this time. Your session was saved — please retry Submit to regenerate coaching.",
+      strengths: "Keep your answer structured and specific (STAR: situation, task, action, result).",
+      improvements: "Add numbers (scope, impact) and clarify your role/ownership in one sentence.",
+      followUp: null,
+      isFallback: true,
+    };
+  }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -516,6 +540,7 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
     } else {
       feedback = { ...(await getAIFeedback(question.text, answer, question.hint)), followUp: null };
     }
+    const aiFallback = Boolean(feedback && feedback.isFallback);
 
     // Update the question
     question.answer = answer || "";
@@ -575,6 +600,7 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
       improvements: question.improvements,
       followUpInserted,
       followUpQuestion,
+      aiFallback,
       questions: interview.questions,
       interviewStatus: interview.status,
       firstAnsweredAt: interview.firstAnsweredAt,
