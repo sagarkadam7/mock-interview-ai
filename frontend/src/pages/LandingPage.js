@@ -144,14 +144,10 @@ function SectionLabel({ children }) {
       fontFamily: "'DM Mono', monospace",
       fontSize: 10,
       fontWeight: 600,
-      letterSpacing: "0.3em",
+      letterSpacing: "0.22em",
       textTransform: "uppercase",
-      color: C.coral,
-      border: `1px solid ${C.coral}33`,
-      borderRadius: 999,
-      padding: "5px 16px",
-      marginBottom: 28,
-      background: `${C.coral}14`,
+      color: C.muted,
+      marginBottom: 20,
     }}>
       {children}
     </span>
