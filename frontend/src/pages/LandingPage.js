@@ -708,21 +708,13 @@ function FinalCta({ user }) {
         textAlign: "center",
       }}
     >
-      {/* bg mesh */}
+      {/* bg mesh — single soft layer */}
       <div aria-hidden style={{
         position: "absolute", inset: 0,
         backgroundImage: `
-          radial-gradient(ellipse 85% 65% at 28% 45%, ${C.coral}18 0%, transparent 52%),
-          radial-gradient(ellipse 75% 60% at 78% 52%, ${C.violet}16 0%, transparent 55%),
-          radial-gradient(ellipse 50% 40% at 50% 100%, rgba(255,255,255,0.04) 0%, transparent 45%)
+          radial-gradient(ellipse 85% 65% at 28% 45%, ${C.coral}12 0%, transparent 52%),
+          radial-gradient(ellipse 75% 60% at 78% 52%, ${C.violet}10 0%, transparent 55%)
         `,
-        pointerEvents: "none",
-      }} />
-      {/* grid lines */}
-      <div aria-hidden style={{
-        position: "absolute", inset: 0,
-        backgroundImage: `linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)`,
-        backgroundSize: "80px 80px",
         pointerEvents: "none",
       }} />
 
@@ -735,12 +727,12 @@ function FinalCta({ user }) {
         <SectionLabel>Get started</SectionLabel>
         <h2 style={{
           fontFamily: "'Playfair Display', serif",
-          fontSize: "clamp(2.65rem, 6.5vw, 4.75rem)",
+          fontSize: "clamp(2.15rem, 5.5vw, 3.35rem)",
           fontWeight: 900,
           color: "white",
-          lineHeight: 1.02,
-          letterSpacing: "-0.035em",
-          marginBottom: 28,
+          lineHeight: 1.08,
+          letterSpacing: "-0.03em",
+          marginBottom: 22,
         }}>
           Ship the version of you<br />
           <span style={{ fontStyle: "italic", ...gradientTextStyle(C.coral, C.violet) }}>
@@ -749,14 +741,13 @@ function FinalCta({ user }) {
         </h2>
         <p style={{
           fontFamily: BODY_FONT_STACK,
-          fontSize: 18,
+          fontSize: 16,
           color: C.muted,
-          lineHeight: 1.85,
-          marginBottom: 48,
-          maxWidth: 520,
-          margin: "0 auto 52px",
+          lineHeight: 1.75,
+          maxWidth: 480,
+          margin: "0 auto 40px",
         }}>
-          Every session produces structured signal: where you looked, how you paced, what you said — and what to fix next. No vibes, no vague “be confident.”
+          Each session turns gaze, pace, and wording into clear next steps—so practice compounds instead of resetting.
         </p>
         <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
           <CtaButton to={user ? "/interview/new" : "/register"}>
@@ -765,16 +756,13 @@ function FinalCta({ user }) {
           <GhostButton to="/pricing">View pricing</GhostButton>
         </div>
 
-        {/* trust line */}
         <p style={{
-          marginTop: 40,
-          fontFamily: "'DM Mono', monospace",
-          fontSize: 11,
-          letterSpacing: "0.2em",
+          marginTop: 32,
+          fontFamily: BODY_FONT_STACK,
+          fontSize: 13,
           color: C.marqueeText,
-          textTransform: "uppercase",
         }}>
-          No credit card required · Free plan always available
+          No credit card required. Free plan stays available.
         </p>
       </motion.div>
     </section>
