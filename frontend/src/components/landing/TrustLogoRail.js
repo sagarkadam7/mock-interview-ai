@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useTheme } from "../../context/ThemeContext";
 
 /**
  * TrustLogoRail — 10x redesign
@@ -145,9 +146,14 @@ function usePrefersReducedMotion() {
 }
 
 /* ─── Logo card ─────────────────────────────────────────────── */
-function LogoCard({ logo, style = {}, tabIndex = -1 }) {
+function LogoCard({ logo, palette, theme, style = {}, tabIndex = -1 }) {
   const [hovered, setHovered] = useState(false);
   const tier = TIER_COLORS[logo.tier] || TIER_COLORS.State;
+  const idleBorder = theme === "dark" ? "rgba(255,255,255,0.08)" : palette.border;
+  const idleSurface = theme === "dark" ? "rgba(255,255,255,0.03)" : `${palette.ink}06`;
+  const glyphIdle = theme === "dark" ? "rgba(255,255,255,0.35)" : palette.muted;
+  const wordIdle = theme === "dark" ? "rgba(255,255,255,0.45)" : palette.muted;
+  const wordHover = theme === "dark" ? "#F5F0E8" : palette.ink;
 
   return (
     <div
@@ -167,15 +173,17 @@ function LogoCard({ logo, style = {}, tabIndex = -1 }) {
         borderRadius: "12px",
         border: hovered
           ? `1px solid ${tier.border}`
-          : "1px solid rgba(255,255,255,0.07)",
+          : `1px solid ${idleBorder}`,
         background: hovered
           ? `${tier.bg}`
-          : "rgba(255,255,255,0.03)",
+          : idleSurface,
         cursor: "default",
         transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
         transform: hovered ? "translateY(-4px)" : "translateY(0)",
         boxShadow: hovered
-          ? `0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px ${tier.border}`
+          ? theme === "dark"
+            ? `0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px ${tier.border}`
+            : `0 12px 28px rgba(15,23,42,0.08), 0 0 0 1px ${tier.border}`
           : "none",
         userSelect: "none",
         flexShrink: 0,
@@ -188,7 +196,7 @@ function LogoCard({ logo, style = {}, tabIndex = -1 }) {
         style={{
           width: "52px",
           height: "52px",
-          color: hovered ? tier.text : "rgba(255,255,255,0.35)",
+          color: hovered ? tier.text : glyphIdle,
           transition: "color 0.25s ease",
         }}
       >
@@ -202,7 +210,7 @@ function LogoCard({ logo, style = {}, tabIndex = -1 }) {
           fontWeight: 700,
           fontSize: "13px",
           letterSpacing: "0.12em",
-          color: hovered ? "#F5F0E8" : "rgba(255,255,255,0.45)",
+          color: hovered ? wordHover : wordIdle,
           transition: "color 0.25s ease",
         }}
       >
@@ -240,6 +248,7 @@ function LogoCard({ logo, style = {}, tabIndex = -1 }) {
 const DUPED = [...LOGOS, ...LOGOS];
 
 export default function TrustLogoRail() {
+  const { palette, theme } = useTheme();
   const reduced = usePrefersReducedMotion();
   const [mounted, setMounted] = useState(false);
 
@@ -286,7 +295,7 @@ export default function TrustLogoRail() {
   /* ── Section wrapper ── */
   const sectionStyle = {
     width: "100%",
-    padding: "64px 0 80px",
+    padding: "24px 0 32px",
     background: "transparent",
   };
 
@@ -295,76 +304,24 @@ export default function TrustLogoRail() {
     <div
       style={{
         textAlign: "center",
-        marginBottom: "28px",
+        marginBottom: "20px",
         opacity: mounted ? 1 : 0,
         transition: "opacity 0.5s ease",
       }}
     >
-      <span
+      <p
         style={{
-          display: "inline-block",
+          margin: 0,
           fontFamily: "Inter, sans-serif",
-          fontWeight: 600,
-          fontSize: "10px",
-          letterSpacing: "0.2em",
-          textTransform: "uppercase",
-          color: ACCENT,
-          border: `0.5px solid ${ACCENT}40`,
-          background: `${ACCENT}10`,
-          borderRadius: "999px",
-          padding: "5px 14px",
+          fontWeight: 500,
+          fontSize: "13px",
+          letterSpacing: "0.02em",
+          color: palette.muted,
+          lineHeight: 1.5,
         }}
       >
-        Social Proof
-      </span>
-    </div>
-  );
-
-  /* ── Divider stats ── */
-  const statsEl = (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        gap: "40px",
-        marginBottom: "56px",
-        flexWrap: "wrap",
-        opacity: mounted ? 1 : 0,
-        transition: "opacity 0.7s ease 0.25s",
-      }}
-    >
-      {[
-        { value: "8+", label: "Top Campuses" },
-        { value: "2,400+", label: "Mock Interviews" },
-        { value: "91%", label: "Offer Rate" },
-      ].map((s) => (
-        <div key={s.label} style={{ textAlign: "center" }}>
-          <div
-            style={{
-              fontFamily: "'Playfair Display', 'Georgia', serif",
-              fontWeight: 800,
-              fontSize: "26px",
-              color: ACCENT,
-              lineHeight: 1,
-            }}
-          >
-            {s.value}
-          </div>
-          <div
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "11px",
-              fontWeight: 500,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.35)",
-              marginTop: "6px",
-            }}
-          >
-            {s.label}
-          </div>
-        </div>
-      ))}
+        Used by candidates from strong engineering programs — not a generic question bank.
+      </p>
     </div>
   );
 
@@ -373,7 +330,6 @@ export default function TrustLogoRail() {
     return (
       <section style={sectionStyle} aria-label="University partners">
         {labelEl}
-        {statsEl}
         <div
           role="list"
           aria-label="Partner universities"
@@ -382,7 +338,7 @@ export default function TrustLogoRail() {
             flexWrap: "wrap",
             justifyContent: "center",
             gap: "16px",
-            padding: "0 24px",
+            padding: "0 8px",
           }}
         >
           {LOGOS.map((logo, i) => (
@@ -394,7 +350,7 @@ export default function TrustLogoRail() {
                 transition: `opacity 0.5s ease ${i * 0.07}s`,
               }}
             >
-              <LogoCard logo={logo} tabIndex={0} />
+              <LogoCard logo={logo} palette={palette} theme={theme} tabIndex={0} />
             </div>
           ))}
         </div>
@@ -405,7 +361,6 @@ export default function TrustLogoRail() {
   return (
     <section style={sectionStyle} aria-label="University partners">
       {labelEl}
-      {statsEl}
 
       {/* Marquee */}
       <div
@@ -433,34 +388,9 @@ export default function TrustLogoRail() {
 
         <div className="trust-marquee-track" aria-hidden="true">
           {DUPED.map((logo, i) => (
-            <LogoCard key={`${logo.name}-${i}`} logo={logo} />
+            <LogoCard key={`${logo.name}-${i}`} logo={logo} palette={palette} theme={theme} />
           ))}
         </div>
-      </div>
-
-      {/* Bottom flourish */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "36px",
-          gap: "6px",
-          opacity: mounted ? 0.4 : 0,
-          transition: "opacity 0.6s ease 0.5s",
-        }}
-      >
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            style={{
-              width: i === 2 ? "24px" : "6px",
-              height: "2px",
-              borderRadius: "1px",
-              background: i === 2 ? ACCENT : "rgba(255,255,255,0.3)",
-              transition: "width 0.3s ease",
-            }}
-          />
-        ))}
       </div>
     </section>
   );
