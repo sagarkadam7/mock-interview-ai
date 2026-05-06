@@ -23,35 +23,30 @@ const SiteFooter = lazy(() => import("../components/SiteFooter"));
 const FEATURES = [
   {
     num: "01",
-    icon: "◈",
     title: "Resume-aware AI",
     body: "Gemini analyzes your PDF and job description to generate hyper-specific technical questions — not boilerplate.",
     accent: "#e85547",
   },
   {
     num: "02",
-    icon: "◉",
     title: "Real-time eye tracking",
     body: "MediaPipe maps gaze at 30 fps so you build consistent camera contact under pressure.",
     accent: "#5b21b6",
   },
   {
     num: "03",
-    icon: "◆",
     title: "Live speech analytics",
     body: "Browser-native transcription flags filler words and measures words per minute instantly.",
     accent: "#e85547",
   },
   {
     num: "04",
-    icon: "◎",
     title: "Actionable scorecards",
     body: "Deterministic 0–10 scores plus structured feedback you can rehearse against.",
     accent: "#5b21b6",
   },
   {
     num: "05",
-    icon: "⎈",
     title: "Adaptive follow-ups",
     body: "When your answer has room to go deeper, Gemini may insert one sharp follow-up per primary question—probing metrics, ownership, or tradeoffs like a real loop.",
     accent: "#e85547",
@@ -233,44 +228,30 @@ function FeatureCard({ f, idx }) {
       style={{
         position: "relative",
         overflow: "hidden",
-        borderRadius: 24,
-        padding: "40px 36px",
+        borderRadius: 20,
+        padding: "28px 24px",
         background: C.card,
-        border: `1px solid ${hovered ? f.accent + "44" : C.border}`,
-        boxShadow: hovered ? `0 20px 60px ${f.accent}18` : C.cardShadow,
-        transition: "all 0.35s ease",
+        border: `1px solid ${hovered ? f.accent + "33" : C.border}`,
+        boxShadow: hovered ? `0 14px 40px ${f.accent}10` : C.cardShadow,
+        transition: "border-color 0.25s ease, box-shadow 0.25s ease",
         cursor: "default",
       }}
     >
-      {/* glow */}
-      <div style={{
-        position: "absolute", top: -40, right: -40, width: 180, height: 180,
-        borderRadius: "50%",
-        background: `radial-gradient(circle, ${f.accent}22, transparent 70%)`,
-        opacity: hovered ? 1 : 0,
-        transition: "opacity 0.4s ease",
-        pointerEvents: "none",
-      }} />
       <div style={{
         fontFamily: "'DM Mono', monospace",
         fontSize: 11,
         fontWeight: 700,
         color: f.accent,
-        letterSpacing: "0.2em",
-        marginBottom: 20,
-        opacity: 0.8,
-      }}>{f.num} ──</div>
-      <div style={{
-        fontSize: 32,
-        marginBottom: 16,
-        filter: `drop-shadow(0 2px 8px ${f.accent}33)`,
-      }}>{f.icon}</div>
+        letterSpacing: "0.18em",
+        marginBottom: 14,
+        opacity: 0.85,
+      }}>{f.num}</div>
       <h3 style={{
         fontFamily: BODY_FONT_STACK,
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: 700,
         color: C.ink,
-        marginBottom: 12,
+        marginBottom: 10,
         lineHeight: 1.25,
       }}>{f.title}</h3>
       <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.8, fontFamily: BODY_FONT_STACK }}>{f.body}</p>
