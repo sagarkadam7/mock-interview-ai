@@ -125,7 +125,7 @@ function gradientTextStyle(coral, violet, { angle = "135deg", fontStyle } = {}) 
 /* ─── GRAIN OVERLAY ──────────────────────────────────────────────────── */
 function Grain() {
   const { theme } = useTheme();
-  const opacity = theme === "dark" ? 0.055 : 0.028;
+  const opacity = theme === "dark" ? 0.035 : 0.018;
   return (
     <div aria-hidden style={{
       position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none",
