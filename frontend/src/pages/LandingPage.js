@@ -463,7 +463,7 @@ export default function LandingPage() {
         style={{
           maxWidth: 1200,
           margin: "0 auto",
-          padding: "24px 24px 96px",
+          padding: "56px 24px 72px",
         }}
       >
         <div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -513,7 +513,7 @@ export default function LandingPage() {
       <section
         id="core-architecture"
         style={{
-          padding: "120px 24px",
+          padding: "80px 24px",
           background: C.band,
           position: "relative",
           overflow: "hidden",
@@ -590,7 +590,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES GRID ── */}
-      <section id="features" style={{ maxWidth: 1200, margin: "0 auto", padding: "120px 24px", scrollMarginTop: "5.5rem" }}>
+      <section id="features" style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 24px", scrollMarginTop: "5.5rem" }}>
         <div style={{ textAlign: "center", marginBottom: 72 }}>
           <SectionLabel>What's inside</SectionLabel>
           <h2 style={{
@@ -738,7 +738,7 @@ function FinalCta({ user }) {
       style={{
         position: "relative",
         overflow: "hidden",
-        padding: "160px 24px 150px",
+        padding: "112px 24px 96px",
         background: C.band,
         textAlign: "center",
       }}
