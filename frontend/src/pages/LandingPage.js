@@ -532,14 +532,14 @@ export default function LandingPage() {
             background: "rgba(255,255,255,0.03)",
             backdropFilter: "blur(10px)",
           }}>
-            {/* header row */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 2fr 1fr",
-              gap: 24,
-              padding: "16px 32px",
-              borderBottom: "1px solid rgba(255,255,255,0.06)",
-            }}>
+            {/* header row — desktop table only; mobile uses stacked row labels */}
+            <div
+              className="hidden border-b border-white/[0.06] px-8 py-4 md:grid"
+              style={{
+                gridTemplateColumns: "minmax(0, 0.9fr) minmax(0, 1.45fr) minmax(0, 1fr)",
+                gap: 24,
+              }}
+            >
               {["Candidate outcome", "Experience layer", "What improves"].map(h => (
                 <span key={h} style={{
                   fontFamily: "'DM Mono', monospace",
@@ -552,7 +552,7 @@ export default function LandingPage() {
               ))}
             </div>
             {ENGINES.map((e, i) => (
-              <EngineRowDark key={e.label} e={e} idx={i} />
+              <EngineRowDark key={e.label} e={e} idx={i} isLast={i === ENGINES.length - 1} />
             ))}
           </div>
         </div>
@@ -640,7 +640,7 @@ export default function LandingPage() {
 }
 
 /* ─── ENGINE ROW DARK (inside dark section) ───────────────────────────── */
-function EngineRowDark({ e, idx }) {
+function EngineRowDark({ e, idx, isLast }) {
   const { palette: C } = useTheme();
   const [ref, visible] = useInView();
   const [hovered, setHovered] = useState(false);
@@ -652,16 +652,12 @@ function EngineRowDark({ e, idx }) {
       transition={{ duration: 0.5, delay: idx * 0.09 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 2fr 1fr",
-        alignItems: "center",
-        gap: 24,
-        padding: "28px 32px",
-        borderBottom: idx < 3 ? "1px solid rgba(255,255,255,0.05)" : "none",
-        background: hovered ? "rgba(255,255,255,0.04)" : "transparent",
-        transition: "background 0.25s ease",
-      }}
+      className={[
+        "grid grid-cols-1 gap-3 px-5 py-6 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.45fr)_minmax(0,1fr)] md:items-center md:gap-6 md:px-8 md:py-7",
+        !isLast && "border-b border-white/[0.05]",
+        hovered && "bg-white/[0.04]",
+        "transition-[background-color] duration-200",
+      ].filter(Boolean).join(" ")}
     >
       <span style={{
         fontFamily: "'DM Mono', monospace",
@@ -682,13 +678,15 @@ function EngineRowDark({ e, idx }) {
       }}>
         {e.name}
       </span>
-      <span style={{
-        fontSize: 13,
-        color: C.muted,
-        textAlign: "right",
-        fontFamily: BODY_FONT_STACK,
-        lineHeight: 1.7,
-      }}>
+      <span
+        className="text-left md:text-right"
+        style={{
+          fontSize: 13,
+          color: C.muted,
+          fontFamily: BODY_FONT_STACK,
+          lineHeight: 1.7,
+        }}
+      >
         {e.detail}
       </span>
     </motion.div>
