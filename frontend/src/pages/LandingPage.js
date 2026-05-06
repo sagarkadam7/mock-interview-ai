@@ -455,7 +455,7 @@ export default function LandingPage() {
           borderBottom: `1px solid ${C.border}`,
         }}
       >
-        <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
           <div className="w-full min-w-0">
             <TrustLogoRail />
           </div>
