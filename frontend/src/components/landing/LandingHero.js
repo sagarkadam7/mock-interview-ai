@@ -423,37 +423,42 @@ export default function LandingHero({ user }) {
             <span className="font-medium text-slate-800 dark:text-slate-200">camera-aware presence coaching</span> so you walk into the real room already calibrated.
           </motion.p>
 
-          <motion.div variants={item} className="mt-10 flex w-full max-w-lg flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 lg:justify-start">
-            <Link
-              to={user ? "/dashboard" : "/register"}
-              className="w-full rounded-full no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page sm:w-auto"
-            >
-              <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-10 py-4 text-[15px] font-bold tracking-tight text-white shadow-[0_20px_50px_-12px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.12)_inset] transition-[transform,box-shadow] duration-300 ease-out-expo group-hover:shadow-[0_28px_64px_-14px_rgba(91,33,182,0.5),0_0_0_1px_rgba(255,255,255,0.14)_inset] active:scale-[0.98] sm:w-auto sm:px-11">
-                <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet opacity-100 transition-opacity duration-300 group-hover:opacity-100" />
-                <span className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent opacity-40" />
-                <span className="relative">{user ? "Open dashboard" : "Start free — no card"}</span>
-                <span className="relative transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5" aria-hidden>
-                  →
+          <motion.div variants={item} className="mt-10 flex w-full max-w-lg flex-col gap-4 sm:max-w-none lg:max-w-xl">
+            <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:justify-start">
+              <Link
+                to={user ? "/dashboard" : "/register"}
+                className="w-full rounded-full no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page sm:w-auto"
+              >
+                <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-10 py-4 text-[15px] font-bold tracking-tight text-white shadow-[0_20px_50px_-12px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.12)_inset] transition-[transform,box-shadow] duration-300 ease-out-expo group-hover:shadow-[0_28px_64px_-14px_rgba(91,33,182,0.5),0_0_0_1px_rgba(255,255,255,0.14)_inset] active:scale-[0.98] sm:w-auto sm:px-11">
+                  <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet opacity-100 transition-opacity duration-300 group-hover:opacity-100" />
+                  <span className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent opacity-40" />
+                  <span className="relative">{user ? "Open dashboard" : "Start free — no card"}</span>
+                  <span className="relative transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5" aria-hidden>
+                    →
+                  </span>
                 </span>
-              </span>
-            </Link>
-            {!user && (
-              <Link to="/login" className="w-full no-underline sm:w-auto">
-                <span className="btn-secondary w-full justify-center py-4 sm:inline-flex sm:w-auto sm:px-8">Sign in</span>
               </Link>
-            )}
-            <button
-              type="button"
-              onClick={() => setVideoOpen(true)}
-              className="btn-outline w-full justify-center py-4 font-semibold sm:inline-flex sm:w-auto sm:px-8"
-            >
-              Watch demo
-            </button>
-            {user && (
-              <Link to="/interview/new" className="w-full no-underline sm:w-auto">
-                <span className="btn-outline w-full justify-center py-4 font-semibold sm:inline-flex sm:w-auto sm:px-8">New interview</span>
-              </Link>
-            )}
+              {!user && (
+                <Link to="/login" className="w-full no-underline sm:w-auto">
+                  <span className="btn-secondary inline-flex w-full justify-center py-3.5 sm:inline-flex sm:w-auto sm:px-8">Sign in</span>
+                </Link>
+              )}
+              {user && (
+                <Link to="/interview/new" className="w-full no-underline sm:w-auto">
+                  <span className="btn-outline inline-flex w-full justify-center py-3.5 font-semibold sm:w-auto sm:px-8">New interview</span>
+                </Link>
+              )}
+            </div>
+            <div className="flex justify-center sm:justify-start">
+              <button
+                type="button"
+                onClick={() => setVideoOpen(true)}
+                className="inline-flex items-center gap-2 border-0 bg-transparent px-1 py-1 text-sm font-semibold text-slate-600 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-aura-ink hover:decoration-aura-violet/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:text-slate-400 dark:decoration-slate-600 dark:hover:text-white"
+              >
+                <span aria-hidden>▶</span>
+                Watch demo
+              </button>
+            </div>
           </motion.div>
 
           <motion.div variants={item} className="mt-5 flex flex-col items-center gap-3 sm:flex-row sm:gap-6 lg:items-start">
