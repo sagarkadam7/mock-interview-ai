@@ -338,18 +338,6 @@ function GhostButton({ to, children }) {
   );
 }
 
-/* ─── DIVIDER ────────────────────────────────────────────────────────── */
-function Divider() {
-  const { palette: C } = useTheme();
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 24, padding: "0 0 0 0", opacity: 0.35 }}>
-      <div style={{ flex: 1, height: 1, background: `linear-gradient(to right, transparent, ${C.dividerLine})` }} />
-      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: "0.4em", color: C.muted, textTransform: "uppercase" }}>✦</span>
-      <div style={{ flex: 1, height: 1, background: `linear-gradient(to left, transparent, ${C.dividerLine})` }} />
-    </div>
-  );
-}
-
 /* ─── PAGE ───────────────────────────────────────────────────────────── */
 export default function LandingPage() {
   const { user } = useAuth();
@@ -600,8 +588,6 @@ export default function LandingPage() {
           {FEATURES.map((f, i) => <FeatureCard key={f.num} f={f} idx={i} />)}
         </div>
       </section>
-
-      <Divider />
 
       {/* ── COMPARISON (original) ── */}
       <Suspense fallback={null}>
