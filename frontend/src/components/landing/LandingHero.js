@@ -391,19 +391,6 @@ export default function LandingHero({ user }) {
           animate="visible"
           className="flex flex-col items-center text-center lg:col-span-6 lg:items-start lg:pr-2 lg:text-left"
         >
-          <motion.div variants={item} className="mb-7 inline-flex items-center gap-2.5">
-            <span
-              className="inline-flex items-center gap-2.5 rounded-full border border-slate-200/90 bg-white/90 px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-600 shadow-[0_1px_0_rgba(255,255,255,1)_inset,0_16px_40px_-18px_rgba(15,23,42,0.12)] backdrop-blur-md ring-1 ring-white/90 dark:border-slate-600/80 dark:bg-slate-900/85 dark:text-slate-300 dark:shadow-none dark:ring-slate-700/50"
-              role="status"
-            >
-              <span className="relative flex h-2 w-2" aria-hidden>
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/45 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.22)]" />
-              </span>
-              Gemini · MediaPipe · live coaching
-            </span>
-          </motion.div>
-
           <motion.h1
             variants={item}
             className="max-w-[22ch] text-balance font-sans text-[2.75rem] font-semibold leading-[0.98] tracking-[-0.042em] text-aura-ink sm:max-w-none sm:text-[3.25rem] sm:tracking-[-0.038em] md:text-6xl md:leading-[0.96] lg:text-[3.5rem] xl:text-[4.25rem]"
