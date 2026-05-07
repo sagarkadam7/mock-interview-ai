@@ -931,7 +931,9 @@ export default function DashboardPage() {
                       hidden: { opacity: 0, y: 12 },
                       show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } },
                     }}
-                    className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white/90 p-1 shadow-lux transition-[box-shadow,border-color] duration-350 ease-out-expo hover:border-slate-300/95 hover:shadow-[0_32px_64px_-24px_rgba(15,23,42,0.12)] dark:border-slate-700/80 dark:bg-slate-900/50 dark:hover:border-slate-600/80 dark:hover:shadow-[0_32px_64px_-24px_rgba(0,0,0,0.45)]"
+                    whileHover={{ y: -2 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                    className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white/90 p-1 shadow-lux transition-[box-shadow,border-color] duration-350 ease-out-expo hover:border-violet-200/80 hover:shadow-[0_32px_64px_-24px_rgba(91,33,182,0.18)] dark:border-slate-700/80 dark:bg-slate-900/50 dark:hover:border-violet-500/40 dark:hover:shadow-[0_32px_64px_-24px_rgba(0,0,0,0.45)]"
                   >
                     <div
                       className={`flex flex-col rounded-[0.9rem] bg-gradient-to-br from-white/80 to-slate-50/30 ${
