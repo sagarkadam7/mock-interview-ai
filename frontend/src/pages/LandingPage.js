@@ -180,19 +180,24 @@ function Marquee({ items, speed = 30 }) {
 function StatCard({ value, label, delay = 0 }) {
   const { palette: C } = useTheme();
   const [ref, visible] = useInView();
+  const [hovered, setHovered] = useState(false);
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 24 }}
       animate={visible ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, delay }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         background: C.card,
-        border: `1px solid ${C.border}`,
+        border: `1px solid ${hovered ? `${C.violet}33` : C.border}`,
         borderRadius: 20,
         padding: "32px 28px",
         textAlign: "center",
-        boxShadow: C.cardShadow,
+        boxShadow: hovered ? `0 18px 48px -16px ${C.violet}26, 0 1px 0 0 rgba(255,255,255,0.06) inset` : C.cardShadow,
+        transform: hovered ? "translateY(-2px)" : "translateY(0)",
+        transition: "transform 0.28s cubic-bezier(0.16,1,0.3,1), box-shadow 0.28s ease, border-color 0.28s ease",
       }}
     >
       <div
