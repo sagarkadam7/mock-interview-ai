@@ -278,6 +278,22 @@ function CtaButton({ to, children }) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         whileTap={{ scale: 0.97 }}
+        animate={
+          hovered
+            ? { boxShadow: `0 20px 60px ${C.coral}55, 0 0 0 1px ${C.coral}33` }
+            : {
+                boxShadow: [
+                  `0 8px 32px ${C.coral}26`,
+                  `0 12px 40px ${C.coral}3d`,
+                  `0 8px 32px ${C.coral}26`,
+                ],
+              }
+        }
+        transition={
+          hovered
+            ? { duration: 0.3 }
+            : { duration: 2.6, ease: "easeInOut", repeat: Infinity }
+        }
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -293,10 +309,6 @@ function CtaButton({ to, children }) {
           fontWeight: 700,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          boxShadow: hovered
-            ? `0 20px 60px ${C.coral}55, 0 0 0 1px ${C.coral}33`
-            : `0 8px 32px ${C.coral}33`,
-          transition: "all 0.3s ease",
           cursor: "pointer",
         }}
       >
