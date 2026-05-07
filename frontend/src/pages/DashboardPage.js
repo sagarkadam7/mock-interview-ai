@@ -91,10 +91,10 @@ function DashboardSkeleton() {
 }
 
 const statMeta = [
-  { label: "Sessions", key: "total", hint: "All time", accent: "text-violet-600 dark:text-violet-400", icon: "◇" },
-  { label: "Completed", key: "done", hint: "Scored & closed", accent: "text-emerald-600 dark:text-emerald-400", icon: "✓" },
-  { label: "In flight", key: "active", hint: "Draft or live", accent: "text-amber-600 dark:text-amber-400", icon: "◆" },
-  { label: "Avg score", key: "avg", hint: "Completed only", accent: "text-rose-600 dark:text-rose-400", icon: "◎" },
+  { label: "Sessions", key: "total", hint: "All time", accent: "text-violet-600 dark:text-violet-400", icon: "◇", help: "Total interviews you've created — drafts, live, and scored." },
+  { label: "Completed", key: "done", hint: "Scored & closed", accent: "text-emerald-600 dark:text-emerald-400", icon: "✓", help: "Sessions you finished and that received a final score." },
+  { label: "In flight", key: "active", hint: "Draft or live", accent: "text-amber-600 dark:text-amber-400", icon: "◆", help: "Sessions you started but haven't completed yet." },
+  { label: "Avg score", key: "avg", hint: "Completed only", accent: "text-rose-600 dark:text-rose-400", icon: "◎", help: "Mean overall score across your completed sessions." },
 ];
 
 const RUNWAY_STEPS = [
@@ -278,10 +278,10 @@ export default function DashboardPage() {
   const greeting = greetingForNow();
 
   const stats = [
-    { label: statMeta[0].label, value: interviews.length, hint: statMeta[0].hint, accent: statMeta[0].accent, icon: statMeta[0].icon, filter: "all" },
-    { label: statMeta[1].label, value: completed.length, hint: statMeta[1].hint, accent: statMeta[1].accent, icon: statMeta[1].icon, filter: "completed" },
-    { label: statMeta[2].label, value: inProgress.length, hint: statMeta[2].hint, accent: statMeta[2].accent, icon: statMeta[2].icon, filter: "in_progress" },
-    { label: statMeta[3].label, value: avgScore ?? "—", hint: statMeta[3].hint, accent: statMeta[3].accent, icon: statMeta[3].icon, filter: null },
+    { label: statMeta[0].label, value: interviews.length, hint: statMeta[0].hint, accent: statMeta[0].accent, icon: statMeta[0].icon, filter: "all", help: statMeta[0].help },
+    { label: statMeta[1].label, value: completed.length, hint: statMeta[1].hint, accent: statMeta[1].accent, icon: statMeta[1].icon, filter: "completed", help: statMeta[1].help },
+    { label: statMeta[2].label, value: inProgress.length, hint: statMeta[2].hint, accent: statMeta[2].accent, icon: statMeta[2].icon, filter: "in_progress", help: statMeta[2].help },
+    { label: statMeta[3].label, value: avgScore ?? "—", hint: statMeta[3].hint, accent: statMeta[3].accent, icon: statMeta[3].icon, filter: null, help: statMeta[3].help },
   ];
 
   const hasInterviews = interviews.length > 0;
@@ -488,7 +488,7 @@ export default function DashboardPage() {
               key={s.label}
               type={clickable ? "button" : undefined}
               onClick={onActivate}
-              title={clickable ? `Show ${s.label.toLowerCase()} sessions` : "Average score across completed sessions"}
+              title={`${s.help}${clickable ? " Click to filter the sessions list." : ""}`}
               className={`glass-panel interactive-lift relative flex flex-col overflow-hidden rounded-2xl p-6 text-left sm:p-7 ${
                 clickable ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page" : ""
               }`}
