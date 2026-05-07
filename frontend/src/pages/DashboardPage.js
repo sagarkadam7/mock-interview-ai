@@ -277,12 +277,14 @@ export default function DashboardPage() {
       confLast: confTrend.slice(-8),
     };
   }, [interviews]);
+  const scoredCompleted = completed.filter((i) => i.overallScore !== null);
   const avgScore =
-    completed.filter((i) => i.overallScore !== null).length > 0
-      ? (
-          completed.filter((i) => i.overallScore !== null).reduce((s, i) => s + i.overallScore, 0) /
-          completed.filter((i) => i.overallScore !== null).length
-        ).toFixed(1)
+    scoredCompleted.length > 0
+      ? (scoredCompleted.reduce((s, i) => s + i.overallScore, 0) / scoredCompleted.length).toFixed(1)
+      : null;
+  const bestScore =
+    scoredCompleted.length > 0
+      ? scoredCompleted.reduce((max, i) => (i.overallScore > max ? i.overallScore : max), -Infinity)
       : null;
 
   const firstName = user?.name?.split(" ")[0] || "Candidate";
@@ -292,7 +294,15 @@ export default function DashboardPage() {
     { label: statMeta[0].label, value: interviews.length, hint: statMeta[0].hint, accent: statMeta[0].accent, icon: statMeta[0].icon, filter: "all", help: statMeta[0].help },
     { label: statMeta[1].label, value: completed.length, hint: statMeta[1].hint, accent: statMeta[1].accent, icon: statMeta[1].icon, filter: "completed", help: statMeta[1].help },
     { label: statMeta[2].label, value: inProgress.length, hint: statMeta[2].hint, accent: statMeta[2].accent, icon: statMeta[2].icon, filter: "in_progress", help: statMeta[2].help },
-    { label: statMeta[3].label, value: avgScore ?? "—", hint: statMeta[3].hint, accent: statMeta[3].accent, icon: statMeta[3].icon, filter: null, help: statMeta[3].help },
+    {
+      label: statMeta[3].label,
+      value: avgScore ?? "—",
+      hint: bestScore !== null ? `Best ${bestScore}/10` : statMeta[3].hint,
+      accent: statMeta[3].accent,
+      icon: statMeta[3].icon,
+      filter: null,
+      help: statMeta[3].help,
+    },
   ];
 
   const hasInterviews = interviews.length > 0;
