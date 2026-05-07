@@ -203,9 +203,20 @@ export default function DashboardPage() {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const tag = e.target?.tagName?.toLowerCase?.();
       if (tag === "input" || tag === "textarea" || tag === "select") return;
-      if (e.key?.toLowerCase?.() === "n") {
+      const key = e.key?.toLowerCase?.();
+      if (key === "n") {
         e.preventDefault();
         navigate("/interview/new");
+        return;
+      }
+      if (key === "/") {
+        const search = document.getElementById("dashboard-session-search");
+        if (search) {
+          e.preventDefault();
+          setDashView("sessions");
+          search.focus();
+          search.select?.();
+        }
       }
     };
     window.addEventListener("keydown", onKey);
