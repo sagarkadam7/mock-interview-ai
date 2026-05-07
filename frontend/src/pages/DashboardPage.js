@@ -701,13 +701,16 @@ export default function DashboardPage() {
                   Your first session defines the <span className="italic text-gradient">baseline</span>
                 </h2>
                 <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-                  We tailor technical questions to your resume, score answers deterministically, and coach gaze and pace in real time — so every rep sharpens the same skills you need on camera with a hiring manager.
+                  Questions tailored to your résumé, deterministic scoring, and live coaching for gaze and pace — so every rep sharpens the same skills you need with a real hiring manager.
                 </p>
-                <Link to="/interview/new" className="mt-8 inline-block no-underline">
-                  <span className="btn-cta inline-flex px-10 py-4 text-[15px] shadow-[0_14px_44px_-10px_rgba(15,23,42,0.35)] dark:shadow-[0_14px_44px_-10px_rgba(0,0,0,0.5)]">
-                    Start your first interview <span aria-hidden>→</span>
-                  </span>
-                </Link>
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <Link to="/interview/new" className="inline-block no-underline">
+                    <span className="btn-cta inline-flex px-10 py-4 text-[15px] shadow-[0_14px_44px_-10px_rgba(15,23,42,0.35)] dark:shadow-[0_14px_44px_-10px_rgba(0,0,0,0.5)]">
+                      Start your first interview <span aria-hidden>→</span>
+                    </span>
+                  </Link>
+                  <span className="text-xs text-slate-500 dark:text-slate-500">~12 minutes · no card required</span>
+                </div>
               </div>
 
               <div className="glass-panel-lg overflow-hidden rounded-3xl p-6 sm:p-8">
