@@ -802,7 +802,7 @@ function FinalCta({ user }) {
           fontSize: 13,
           color: C.marqueeText,
         }}>
-          No credit card required. Free plan stays available.
+          Free plan available — no credit card, cancel any time. Your first session takes ~12 minutes.
         </p>
       </motion.div>
     </section>
