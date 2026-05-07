@@ -217,6 +217,11 @@ export default function DashboardPage() {
           search.focus();
           search.select?.();
         }
+        return;
+      }
+      if (key === "c" && !e.shiftKey) {
+        e.preventDefault();
+        setDashDensity((d) => (d === "compact" ? "comfy" : "compact"));
       }
     };
     window.addEventListener("keydown", onKey);
@@ -466,6 +471,11 @@ export default function DashboardPage() {
           <span className="inline-flex items-center gap-1.5">
             <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] dark:border-slate-700 dark:bg-slate-900">/</kbd>
             <span>search</span>
+          </span>
+          <span aria-hidden className="hidden text-slate-300 dark:text-slate-600 sm:inline">·</span>
+          <span className="hidden items-center gap-1.5 sm:inline-flex">
+            <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] dark:border-slate-700 dark:bg-slate-900">c</kbd>
+            <span>compact</span>
           </span>
         </p>
       </div>
