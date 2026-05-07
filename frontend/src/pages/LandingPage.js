@@ -704,8 +704,9 @@ function EngineRowDark({ e, idx, isLast }) {
         fontSize: 10,
         letterSpacing: "0.25em",
         textTransform: "uppercase",
-        color: C.coral,
+        color: hovered ? C.coral : `${C.coral}cc`,
         fontWeight: 600,
+        transition: "color 0.25s ease",
       }}>
         {e.label}
       </span>
@@ -715,6 +716,8 @@ function EngineRowDark({ e, idx, isLast }) {
         fontWeight: 600,
         color: "white",
         fontStyle: "normal",
+        textShadow: hovered ? `0 0 24px ${C.violet}55` : "none",
+        transition: "text-shadow 0.3s ease",
       }}>
         {e.name}
       </span>
