@@ -320,7 +320,7 @@ export default function TrustLogoRail() {
           lineHeight: 1.5,
         }}
       >
-        Used by candidates from strong engineering programs — not a generic question bank.
+        Trusted by candidates rehearsing for top engineering programs — not a generic question bank.
       </p>
     </div>
   );
@@ -328,7 +328,7 @@ export default function TrustLogoRail() {
   /* ── Rail ── */
   if (reduced) {
     return (
-      <section style={sectionStyle} aria-label="University partners">
+      <section style={sectionStyle} aria-label="Candidates from these engineering programs practice with InterviewAI">
         {labelEl}
         <div
           role="list"
@@ -359,7 +359,7 @@ export default function TrustLogoRail() {
   }
 
   return (
-    <section style={sectionStyle} aria-label="University partners">
+    <section style={sectionStyle} aria-label="Candidates from these engineering programs practice with InterviewAI">
       {labelEl}
 
       {/* Marquee */}
