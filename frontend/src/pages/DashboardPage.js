@@ -141,6 +141,7 @@ export default function DashboardPage() {
   });
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessionSort, setSessionSort] = useState("newest");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [starredOnly, setStarredOnly] = useState(false);
   const [deleting, setDeleting] = useState(null);
   const [quickstart, setQuickstart] = useState(() => {
@@ -277,10 +278,10 @@ export default function DashboardPage() {
   const greeting = greetingForNow();
 
   const stats = [
-    { label: statMeta[0].label, value: interviews.length, hint: statMeta[0].hint, accent: statMeta[0].accent, icon: statMeta[0].icon },
-    { label: statMeta[1].label, value: completed.length, hint: statMeta[1].hint, accent: statMeta[1].accent, icon: statMeta[1].icon },
-    { label: statMeta[2].label, value: inProgress.length, hint: statMeta[2].hint, accent: statMeta[2].accent, icon: statMeta[2].icon },
-    { label: statMeta[3].label, value: avgScore ?? "—", hint: statMeta[3].hint, accent: statMeta[3].accent, icon: statMeta[3].icon },
+    { label: statMeta[0].label, value: interviews.length, hint: statMeta[0].hint, accent: statMeta[0].accent, icon: statMeta[0].icon, filter: "all" },
+    { label: statMeta[1].label, value: completed.length, hint: statMeta[1].hint, accent: statMeta[1].accent, icon: statMeta[1].icon, filter: "completed" },
+    { label: statMeta[2].label, value: inProgress.length, hint: statMeta[2].hint, accent: statMeta[2].accent, icon: statMeta[2].icon, filter: "in_progress" },
+    { label: statMeta[3].label, value: avgScore ?? "—", hint: statMeta[3].hint, accent: statMeta[3].accent, icon: statMeta[3].icon, filter: null },
   ];
 
   const hasInterviews = interviews.length > 0;
@@ -292,7 +293,9 @@ export default function DashboardPage() {
         return qTokens.length === 0 ? true : qTokens.every((t) => haystack.includes(t));
       })
     : interviews;
-  const filteredSessions = starredOnly ? queryFiltered.filter((iv) => iv.starred) : queryFiltered;
+  const statusFiltered =
+    statusFilter === "all" ? queryFiltered : queryFiltered.filter((iv) => iv.status === statusFilter);
+  const filteredSessions = starredOnly ? statusFiltered.filter((iv) => iv.starred) : statusFiltered;
 
   const sortedSessions = useMemo(() => {
     const list = [...filteredSessions];
@@ -471,19 +474,34 @@ export default function DashboardPage() {
       {/* KPI strip — always visible */}
       {dashView === "overview" && (
         <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((s) => (
-          <div
-            key={s.label}
-            className="glass-panel interactive-lift relative flex flex-col overflow-hidden rounded-2xl p-6 text-left sm:p-7"
-          >
-            <span className="absolute right-4 top-4 text-2xl opacity-[0.1] dark:opacity-[0.15]" aria-hidden>
-              {s.icon}
-            </span>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">{s.label}</p>
-            <div className={`mt-2 font-sans text-3xl font-extrabold tabular-nums tracking-tight ${s.accent}`}>{s.value}</div>
-            <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">{s.hint}</p>
-          </div>
-        ))}
+        {stats.map((s) => {
+          const clickable = s.filter !== null;
+          const Tag = clickable ? "button" : "div";
+          const onActivate = clickable
+            ? () => {
+                setStatusFilter(s.filter);
+                setDashView("sessions");
+              }
+            : undefined;
+          return (
+            <Tag
+              key={s.label}
+              type={clickable ? "button" : undefined}
+              onClick={onActivate}
+              title={clickable ? `Show ${s.label.toLowerCase()} sessions` : "Average score across completed sessions"}
+              className={`glass-panel interactive-lift relative flex flex-col overflow-hidden rounded-2xl p-6 text-left sm:p-7 ${
+                clickable ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page" : ""
+              }`}
+            >
+              <span className="absolute right-4 top-4 text-2xl opacity-[0.1] dark:opacity-[0.15]" aria-hidden>
+                {s.icon}
+              </span>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">{s.label}</p>
+              <div className={`mt-2 font-sans text-3xl font-extrabold tabular-nums tracking-tight ${s.accent}`}>{s.value}</div>
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">{s.hint}</p>
+            </Tag>
+          );
+        })}
         </div>
       )}
 
@@ -764,8 +782,19 @@ export default function DashboardPage() {
                   <h2 className="text-lg font-bold tracking-tight text-aura-ink">Sessions</h2>
                   <span className="text-xs font-medium text-slate-500 dark:text-slate-400 sm:mt-1 sm:block">
                     {interviews.length} total
-                    {q || starredOnly ? ` · ${filteredSessions.length} shown` : ""}
+                    {q || starredOnly || statusFilter !== "all" ? ` · ${filteredSessions.length} shown` : ""}
                   </span>
+                  {statusFilter !== "all" ? (
+                    <button
+                      type="button"
+                      onClick={() => setStatusFilter("all")}
+                      className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-2.5 py-0.5 text-[11px] font-semibold text-violet-800 transition-colors hover:bg-violet-100 dark:border-violet-500/30 dark:bg-violet-950/45 dark:text-violet-200 dark:hover:bg-violet-950/70"
+                      title="Clear status filter"
+                    >
+                      {statusFilter === "completed" ? "Completed only" : "In flight only"}
+                      <span aria-hidden>×</span>
+                    </button>
+                  ) : null}
                 </div>
                 <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
                   <input
