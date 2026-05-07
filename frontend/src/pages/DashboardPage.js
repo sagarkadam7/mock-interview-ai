@@ -567,7 +567,17 @@ export default function DashboardPage() {
             <>
               <div className="glass-panel relative overflow-hidden rounded-2xl p-6 sm:p-7">
                 <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-aura-coral/15 blur-2xl dark:bg-aura-coral/10" aria-hidden />
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Streak</p>
+                <div className="flex items-center justify-between">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Streak</p>
+                  {!loading && practiceStreak >= 3 ? (
+                    <span
+                      className="inline-flex items-center gap-1 rounded-full border border-amber-300/70 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-900 dark:border-amber-500/35 dark:bg-amber-950/45 dark:text-amber-100"
+                      title="Three or more days in a row — keep it going"
+                    >
+                      <span aria-hidden>🔥</span> On fire
+                    </span>
+                  ) : null}
+                </div>
                 <div className="mt-3 flex flex-wrap items-end gap-2">
                   <span className="font-brand text-4xl font-semibold tabular-nums tracking-tight text-aura-ink dark:text-white">
                     {loading ? "—" : practiceStreak}
