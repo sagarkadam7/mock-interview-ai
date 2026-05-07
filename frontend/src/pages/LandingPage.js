@@ -50,6 +50,7 @@ const FEATURES = [
     title: "Adaptive follow-ups",
     body: "When your answer has room to go deeper, Gemini may insert one sharp follow-up per primary question—probing metrics, ownership, or tradeoffs like a real loop.",
     accent: "#e85547",
+    badge: "New",
   },
 ];
 
@@ -247,15 +248,32 @@ function FeatureCard({ f, idx }) {
         cursor: "default",
       }}
     >
-      <div style={{
-        fontFamily: "'DM Mono', monospace",
-        fontSize: 11,
-        fontWeight: 700,
-        color: f.accent,
-        letterSpacing: "0.18em",
-        marginBottom: 14,
-        opacity: 0.85,
-      }}>{f.num}</div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
+        <span style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 11,
+          fontWeight: 700,
+          color: f.accent,
+          letterSpacing: "0.18em",
+          opacity: 0.85,
+        }}>{f.num}</span>
+        {f.badge ? (
+          <span style={{
+            display: "inline-flex",
+            alignItems: "center",
+            padding: "2px 8px",
+            borderRadius: 999,
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: f.accent,
+            background: `${f.accent}1a`,
+            border: `1px solid ${f.accent}33`,
+          }}>{f.badge}</span>
+        ) : null}
+      </div>
       <h3 style={{
         fontFamily: BODY_FONT_STACK,
         fontSize: 20,
