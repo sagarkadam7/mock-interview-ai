@@ -222,12 +222,17 @@ function FeatureCard({ f, idx }) {
   const { palette: C } = useTheme();
   const [ref, visible] = useInView();
   const [hovered, setHovered] = useState(false);
+  const reduceMotion = useReducedMotion();
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 36 }}
-      animate={visible ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: idx * 0.1 }}
+      initial={{ opacity: 0, y: reduceMotion ? 0 : 36, scale: reduceMotion ? 1 : 0.985 }}
+      animate={visible ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{
+        duration: reduceMotion ? 0.2 : 0.65,
+        delay: reduceMotion ? 0 : idx * 0.09,
+        ease: [0.16, 1, 0.3, 1],
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
