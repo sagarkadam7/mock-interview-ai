@@ -446,8 +446,17 @@ export default function DashboardPage() {
             </button>
           ))}
         </div>
-        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-          Tip: press <span className="rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] dark:border-slate-700 dark:bg-slate-900">n</span> to start a new session
+        <p className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span className="hidden sm:inline">Shortcuts:</span>
+          <span className="inline-flex items-center gap-1.5">
+            <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] dark:border-slate-700 dark:bg-slate-900">n</kbd>
+            <span>new session</span>
+          </span>
+          <span aria-hidden className="text-slate-300 dark:text-slate-600">·</span>
+          <span className="inline-flex items-center gap-1.5">
+            <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] dark:border-slate-700 dark:bg-slate-900">/</kbd>
+            <span>search</span>
+          </span>
         </p>
       </div>
 
