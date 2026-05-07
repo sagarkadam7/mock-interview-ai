@@ -406,8 +406,8 @@ export default function LandingHero({ user }) {
             variants={item}
             className="mx-auto mt-7 max-w-xl text-pretty text-[15px] leading-[1.68] text-slate-600 dark:text-slate-400 sm:text-lg sm:leading-[1.65] lg:mx-0"
           >
-            A full-stack mock interview: questions grounded in your resume and JD, deterministic scoring, and{" "}
-            <span className="font-medium text-slate-800 dark:text-slate-200">camera-aware presence coaching</span> so you walk into the real room already calibrated.
+            A complete mock loop — questions grounded in your résumé and JD, deterministic scoring, and{" "}
+            <span className="font-medium text-slate-800 dark:text-slate-200">camera-aware presence coaching</span> — so you walk into the real room already calibrated.
           </motion.p>
 
           <motion.div variants={item} className="mt-10 flex w-full max-w-lg flex-col gap-4 sm:max-w-none lg:max-w-xl">
