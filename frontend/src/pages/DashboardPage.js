@@ -1103,7 +1103,21 @@ export default function DashboardPage() {
 
           {!loading && hasInterviews && (
             <div className="glass-panel rounded-2xl p-6">
-              <h3 className="text-sm font-bold tracking-tight text-aura-ink">Recent</h3>
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-sm font-bold tracking-tight text-aura-ink">Recent</h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDashView("sessions");
+                    setStatusFilter("all");
+                    setStarredOnly(false);
+                    setSessionQuery("");
+                  }}
+                  className="text-[11px] font-semibold uppercase tracking-wider text-violet-700 hover:text-violet-900 dark:text-violet-300 dark:hover:text-violet-100"
+                >
+                  View all →
+                </button>
+              </div>
               <ul className="mt-3 space-y-3">
                 {recent.map((iv) => (
                   <li key={iv._id}>
