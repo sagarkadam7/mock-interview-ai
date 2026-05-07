@@ -85,53 +85,20 @@ export const PERSONAS = [
   },
 ];
 
-/** Landing: collaborative note from founders (tabbed on the site) */
-export const FOUNDERS_NOTE = {
-  eyebrow: "From the team",
+/** Landing: editorial note from founder (Sagar Kadam) */
+export const FOUNDER_LETTER = {
+  eyebrow: "Founder's note",
   headline: "Practice with signal, not scripts",
-  opening:
-    "We've all been on both sides of the table—the nervous candidate rehearsing in their head, and the hiring manager hoping for a real spark instead of a polished script. We built this together because interview prep should sharpen who you are, not flatten you into talking points.",
-  founders: [
-    {
-      id: "sagar",
-      firstName: "Sagar",
-      pillar: "Signal",
-      pillarDetail: "Authenticity",
-      initials: "SG",
-      note:
-        "If your answer could belong to anyone in the stack, the room goes quiet—we care about the signal only you can bring, and practice that makes that obvious to you before it is to them.",
-    },
-    {
-      id: "samiksha",
-      firstName: "Samiksha",
-      pillar: "Live cues",
-      pillarDetail: "Speech & gaze",
-      initials: "SM",
-      note:
-        "Words are only part of the story; how you pace yourself and hold the camera matters, and you deserve feedback while the moment still feels real—not only after you watch a recording alone.",
-    },
-    {
-      id: "niranjan",
-      firstName: "Niranjan",
-      pillar: "Scorecard",
-      pillarDetail: "Data-driven growth",
-      initials: "NR",
-      note:
-        "Vague encouragement doesn't compound—we focus on scores and breakdowns you can compare across sessions, so improvement is something you track, not something you hope happened.",
-    },
-    {
-      id: "sampada",
-      firstName: "Sampada",
-      pillar: "Personalized context",
-      pillarDetail: "Résumé & JD",
-      initials: "SP",
-      note:
-        "Generic question banks waste your time; grounding every rep in your résumé and the job description keeps practice honest, specific, and worth repeating.",
-    },
+  lead:
+    "The strongest candidates I know do not cram answers — they learn how they sound and look when the stakes are real.",
+  paragraphs: [
+    "Mock Interview AI came from watching friends grind random question lists while their real stories sat untouched on the page. I wanted a tool that respects your résumé and the job description you paste in: something that feels closer to a sharp mock than a skim through a chatbot.",
+    "We paired Gemini with live speech and gaze cues so you get specificity and self-awareness in one sitting — where you ramble, where you look away, and where your answers land on a scorecard you can iterate on, not vague encouragement.",
+    "If this helps you walk into your next round calmer and more deliberate, that is why I built it. Thank you for trusting us with your practice.",
   ],
-  signOff:
-    "We still believe the strongest rounds feel like dialogue, not theater. Thank you for trusting us with your rehearsal—we're in your corner.",
-  signOffAttribution: "Sagar, Samiksha, Niranjan, and Sampada",
+  asideQuote: "Your next round deserves rehearsal that respects your story.",
+  name: "Sagar Kadam",
+  role: "Founder",
 };
 
 export const TESTIMONIALS = [
