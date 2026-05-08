@@ -124,6 +124,28 @@ function Grain() {
   );
 }
 
+/* ─── EDITORIAL DIVIDER ──────────────────────────────────────────────── */
+function EditorialDivider() {
+  const { palette: C } = useTheme();
+  return (
+    <div
+      aria-hidden
+      style={{
+        maxWidth: 1120,
+        margin: "0 auto",
+        padding: "0 24px",
+      }}
+    >
+      <div
+        style={{
+          height: 1,
+          background: `linear-gradient(90deg, transparent, ${C.border} 18%, ${C.border} 82%, transparent)`,
+        }}
+      />
+    </div>
+  );
+}
+
 /* ─── SECTION LABEL ──────────────────────────────────────────────────── */
 function SectionLabel({ children }) {
   const { palette: C } = useTheme();
@@ -482,6 +504,8 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <EditorialDivider />
+
       {/* ── HOW IT WORKS (original) ── */}
       <Suspense fallback={null}>
         <HowItWorksSection />
@@ -590,6 +614,8 @@ export default function LandingPage() {
           {FEATURES.map((f, i) => <FeatureCard key={f.num} f={f} idx={i} />)}
         </div>
       </section>
+
+      <EditorialDivider />
 
       {/* ── COMPARISON (original) ── */}
       <Suspense fallback={null}>
