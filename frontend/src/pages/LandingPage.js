@@ -533,26 +533,20 @@ export default function LandingPage() {
           pointerEvents: "none",
         }} />
 
-        <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
-          <div style={{ marginBottom: 72 }}>
+        <div style={{ maxWidth: 1120, margin: "0 auto", position: "relative", zIndex: 2 }}>
+          <div style={{ marginBottom: 56, maxWidth: 720 }}>
             <SectionLabel>Outcome engine</SectionLabel>
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(2.2rem, 5vw, 3.75rem)",
-              fontWeight: 900,
+              fontSize: "clamp(1.85rem, 3.6vw, 2.65rem)",
+              fontWeight: 600,
               color: "white",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              marginBottom: 20,
+              lineHeight: 1.18,
+              letterSpacing: "-0.018em",
+              margin: 0,
             }}>
-              Practice loops built for<br />
-              <span style={gradientTextStyle(C.coral, C.violet, { angle: "90deg", fontStyle: "italic" })}>
-                measurable interview wins.
-              </span>
+              Four signals every loop runs through, before you walk into the real one.
             </h2>
-            <p style={{ fontFamily: BODY_FONT_STACK, fontSize: 17, color: C.muted, maxWidth: 620, lineHeight: 1.8 }}>
-              InterviewAI turns each session into immediate coaching signals so you improve clarity, confidence, and executive presence in one pass.
-            </p>
           </div>
 
           {/* table */}
