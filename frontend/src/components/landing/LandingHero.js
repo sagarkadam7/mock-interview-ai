@@ -448,41 +448,33 @@ export default function LandingHero({ user }) {
             </div>
           </motion.div>
 
-          <motion.div variants={item} className="mt-5 flex flex-col items-center gap-3 sm:flex-row sm:gap-6 lg:items-start">
+          <motion.div variants={item} className="mt-5 flex justify-center lg:justify-start">
             <a
               href="#how-it-works"
-              className="group inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-white"
+              className="group inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-white"
             >
               See the full loop
               <span className="transition-transform duration-300 ease-out-expo group-hover:translate-x-1" aria-hidden>
                 ↓
               </span>
             </a>
-            <span className="hidden h-4 w-px bg-slate-200 dark:bg-slate-700 sm:block" aria-hidden />
-            <p className="text-center text-[13px] text-slate-500 dark:text-slate-500 sm:text-left">
-              <span className="text-amber-500/90" aria-hidden>
-                ★★★★★
-              </span>{" "}
-              <span className="text-slate-600 dark:text-slate-400">Built for depth, not generic banks</span>
-            </p>
           </motion.div>
 
-          <motion.div variants={item} className="mt-12 flex flex-col items-center gap-6 sm:mt-14 lg:items-start">
+          <motion.div variants={item} className="mt-14 flex flex-col items-center gap-6 lg:items-start">
             <div className="flex items-center gap-4">
-              <div className="flex -space-x-2.5" aria-hidden>
-                {proofAvatars.map((a) => (
+              <div className="flex -space-x-2" aria-hidden>
+                {proofAvatars.slice(0, 4).map((a) => (
                   <div
                     key={a.initials}
-                    className={`flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br ${a.tone} text-[10px] font-bold text-white shadow-md dark:border-slate-900`}
+                    className={`flex h-7 w-7 items-center justify-center rounded-full border border-white bg-gradient-to-br ${a.tone} text-[9px] font-semibold text-white dark:border-slate-900`}
                   >
                     {a.initials}
                   </div>
                 ))}
               </div>
-              <div className="text-left">
-                <p className="text-sm font-semibold tracking-tight text-aura-ink">Practiced by serious candidates</p>
-                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-500">Campus hires · returning offers · role switches</p>
-              </div>
+              <p className="text-left text-[13px] text-slate-500 dark:text-slate-500">
+                Used by candidates rehearsing real loops, not benchmarks.
+              </p>
             </div>
 
             <ul
