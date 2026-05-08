@@ -5,9 +5,8 @@ import InteractiveHeroDemo from "./InteractiveHeroDemo";
 import VideoModal from "../VideoModal";
 
 const statRows = [
-  { v: "7", l: "Tailored Qs" },
-  { v: "Live", l: "Speech + gaze" },
-  { v: "PDF", l: "Export reports" },
+  { v: "7", l: "Questions tailored to your résumé" },
+  { v: "Live", l: "Speech + gaze, every answer" },
 ];
 
 const energyBars = [
@@ -478,13 +477,13 @@ export default function LandingHero({ user }) {
             </div>
 
             <ul
-              className="mx-auto grid w-full max-w-xs grid-cols-3 gap-x-3 gap-y-1 text-center sm:mx-0 sm:max-w-sm sm:gap-x-5 lg:max-w-md"
+              className="mx-auto grid w-full max-w-md grid-cols-2 gap-x-8 text-left sm:mx-0 lg:max-w-lg"
               aria-label="Session highlights"
             >
               {statRows.map((row) => (
-                <li key={row.l} className="flex min-w-0 flex-col items-center px-0.5 sm:px-1">
-                  <span className="font-display text-2xl font-semibold tabular-nums text-aura-ink sm:text-3xl">{row.v}</span>
-                  <span className="mt-1.5 text-[9px] font-semibold uppercase leading-snug tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-[10px] sm:tracking-[0.2em]">
+                <li key={row.l} className="flex min-w-0 flex-col items-start gap-1 border-l border-slate-200 pl-4 dark:border-slate-700/70">
+                  <span className="font-display text-[1.7rem] font-medium italic tabular-nums tracking-tight text-aura-ink">{row.v}</span>
+                  <span className="text-[12px] leading-snug text-slate-500 dark:text-slate-400">
                     {row.l}
                   </span>
                 </li>
