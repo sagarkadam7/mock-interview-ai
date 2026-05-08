@@ -80,10 +80,9 @@ const ENGINES = [
 const TRUST_MARKS = ["IIT", "NIT", "SPPU", "VIT", "BITS", "IIIT"];
 
 const STATS = [
-  { value: "94%", label: "report more confidence after 3 sessions" },
-  { value: "2.4×", label: "faster offer rate vs. uncoached peers" },
-  { value: "<80ms", label: "real-time feedback latency" },
-  { value: "10k+", label: "interviews analyzed" },
+  { value: "7", label: "questions tailored to your résumé and target role" },
+  { value: "30 fps", label: "live gaze + presence telemetry as you speak" },
+  { value: "0–10", label: "deterministic rubric scoring per answer" },
 ];
 
 const BODY_FONT_STACK = "Inter, ui-sans-serif, system-ui, -apple-system, sans-serif";
