@@ -296,39 +296,27 @@ function CtaButton({ to, children }) {
       <motion.span
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        whileTap={{ scale: 0.97 }}
-        animate={
-          hovered
-            ? { boxShadow: `0 20px 60px ${C.coral}55, 0 0 0 1px ${C.coral}33` }
-            : {
-                boxShadow: [
-                  `0 8px 32px ${C.coral}26`,
-                  `0 12px 40px ${C.coral}3d`,
-                  `0 8px 32px ${C.coral}26`,
-                ],
-              }
-        }
-        transition={
-          hovered
-            ? { duration: 0.3 }
-            : { duration: 2.6, ease: "easeInOut", repeat: Infinity }
-        }
+        whileTap={{ scale: 0.98 }}
         style={{
           display: "inline-flex",
           alignItems: "center",
-          gap: 8,
-          padding: "16px 36px",
+          gap: 10,
+          padding: "16px 34px",
           borderRadius: 999,
           background: hovered
             ? `linear-gradient(135deg, ${C.violet}, ${C.coral})`
             : `linear-gradient(135deg, ${C.coral}, ${C.violet})`,
           color: "white",
-          fontFamily: "'DM Mono', monospace",
-          fontSize: 13,
-          fontWeight: 700,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
+          fontFamily: BODY_FONT_STACK,
+          fontSize: 14,
+          fontWeight: 600,
+          letterSpacing: "-0.005em",
+          textTransform: "none",
           cursor: "pointer",
+          boxShadow: hovered
+            ? `0 18px 48px ${C.coral}40, 0 0 0 1px ${C.coral}26`
+            : `0 8px 28px ${C.coral}24`,
+          transition: "box-shadow 0.3s ease, background 0.3s ease",
         }}
       >
         {children}
@@ -351,16 +339,16 @@ function GhostButton({ to, children }) {
       <span style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 8,
-        padding: "15px 32px",
+        gap: 10,
+        padding: "15px 30px",
         borderRadius: 999,
-        border: `1.5px solid ${hovered ? C.ink : C.border}`,
+        border: `1px solid ${hovered ? C.ink : C.border}`,
         color: hovered ? C.ink : C.muted,
-        fontFamily: "'DM Mono', monospace",
-        fontSize: 12,
-        fontWeight: 600,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
+        fontFamily: BODY_FONT_STACK,
+        fontSize: 14,
+        fontWeight: 500,
+        letterSpacing: "-0.005em",
+        textTransform: "none",
         transition: "all 0.25s ease",
         cursor: "pointer",
         background: hovered ? `${C.ink}05` : "transparent",
