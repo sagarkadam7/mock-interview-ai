@@ -755,32 +755,33 @@ function FinalCta({ user }) {
         transition={{ duration: 0.7 }}
         style={{ position: "relative", zIndex: 2, maxWidth: 720, margin: "0 auto" }}
       >
-        <SectionLabel>Get started</SectionLabel>
+        <SectionLabel>Begin</SectionLabel>
         <h2 style={{
           fontFamily: "'Playfair Display', serif",
-          fontSize: "clamp(2.15rem, 5.5vw, 3.35rem)",
-          fontWeight: 900,
+          fontSize: "clamp(2rem, 4.4vw, 2.85rem)",
+          fontWeight: 600,
           color: "white",
-          lineHeight: 1.08,
-          letterSpacing: "-0.03em",
-          marginBottom: 22,
+          lineHeight: 1.18,
+          letterSpacing: "-0.02em",
+          margin: "0 auto 24px",
+          maxWidth: 720,
         }}>
-          Ship the version of you<br />
-          <span style={{ fontStyle: "italic", ...gradientTextStyle(C.coral, C.violet) }}>
-            who closes the loop
+          Walk into the next round{" "}
+          <span style={{ fontStyle: "italic", color: C.coral }}>
+            already calibrated.
           </span>
         </h2>
         <p style={{
           fontFamily: BODY_FONT_STACK,
-          fontSize: 16,
+          fontSize: 15.5,
           color: C.muted,
           lineHeight: 1.75,
-          maxWidth: 480,
+          maxWidth: 520,
           margin: "0 auto 40px",
         }}>
-          Each session turns gaze, pace, and wording into clear next steps—so practice compounds instead of resetting.
+          One session takes about twelve minutes. The signal compounds.
         </p>
-        <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
           <CtaButton to={user ? "/interview/new" : "/register"}>
             {user ? "Start new interview" : "Create free account"}
           </CtaButton>
@@ -788,12 +789,12 @@ function FinalCta({ user }) {
         </div>
 
         <p style={{
-          marginTop: 32,
+          marginTop: 28,
           fontFamily: BODY_FONT_STACK,
-          fontSize: 13,
+          fontSize: 12.5,
           color: C.marqueeText,
         }}>
-          Free plan available — no credit card, cancel any time. Your first session takes ~12 minutes.
+          Free plan, no card, cancel any time.
         </p>
       </motion.div>
     </section>
