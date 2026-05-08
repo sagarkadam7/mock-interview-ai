@@ -202,17 +202,19 @@ function StatCard({ value, label, delay = 0 }) {
     >
       <div
         style={{
-          fontFamily: BODY_FONT_STACK,
-          fontSize: "clamp(2rem, 4vw, 3rem)",
-          fontWeight: 800,
-          lineHeight: 1.1,
-          marginBottom: 8,
-          ...gradientTextStyle(C.coral, C.violet),
+          fontFamily: "'Playfair Display', serif",
+          fontStyle: "italic",
+          fontSize: "clamp(2.25rem, 4vw, 2.85rem)",
+          fontWeight: 600,
+          lineHeight: 1.05,
+          letterSpacing: "-0.02em",
+          marginBottom: 12,
+          color: C.ink,
         }}
       >
         {value}
       </div>
-      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.65, fontFamily: BODY_FONT_STACK }}>{label}</p>
+      <p style={{ fontSize: 13.5, color: C.muted, lineHeight: 1.7, fontFamily: BODY_FONT_STACK }}>{label}</p>
     </motion.div>
   );
 }
@@ -469,39 +471,29 @@ export default function LandingPage() {
       {/* ── STATS BAND ── */}
       <section
         style={{
-          maxWidth: 1200,
+          maxWidth: 1120,
           margin: "0 auto",
-          padding: "56px 24px 72px",
+          padding: "72px 24px 88px",
         }}
       >
-        <div style={{ textAlign: "center", marginBottom: 48 }}>
-          <SectionLabel>Outcomes</SectionLabel>
+        <div style={{ textAlign: "center", marginBottom: 56, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
+          <SectionLabel>The product, in three numbers</SectionLabel>
           <h2 style={{
             fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-            fontWeight: 800,
+            fontSize: "clamp(1.5rem, 3.2vw, 2rem)",
+            fontWeight: 600,
             color: C.ink,
-            letterSpacing: "-0.02em",
-            margin: "0 0 12px",
-            lineHeight: 1.15,
+            letterSpacing: "-0.018em",
+            margin: 0,
+            lineHeight: 1.25,
           }}>
-            Numbers that match how you <span style={{ fontStyle: "italic", ...gradientTextStyle(C.coral, C.violet) }}>actually feel</span> after reps
+            What every session actually gives you.
           </h2>
-          <p style={{
-            fontFamily: BODY_FONT_STACK,
-            fontSize: 15,
-            color: C.muted,
-            maxWidth: 520,
-            margin: "0 auto",
-            lineHeight: 1.75,
-          }}>
-            Confidence compounds when feedback is specific, fast, and tied to your materials — not a random quiz.
-          </p>
         </div>
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: 22,
+          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+          gap: 20,
         }}>
           {STATS.map((s, i) => <StatCard key={s.value} {...s} delay={i * 0.08} />)}
         </div>
