@@ -23,32 +23,26 @@ const SiteFooter = lazy(() => import("../components/SiteFooter"));
 const FEATURES = [
   {
     num: "01",
-    title: "Resume-aware AI",
-    body: "Gemini analyzes your PDF and job description to generate hyper-specific technical questions — not boilerplate.",
+    title: "Résumé-aware questions",
+    body: "Every prompt is grounded in your PDF and the job description you paste — never a generic question bank.",
     accent: "#e85547",
   },
   {
     num: "02",
-    title: "Real-time eye tracking",
-    body: "MediaPipe maps gaze at 30 fps so you build consistent camera contact under pressure.",
+    title: "Camera presence telemetry",
+    body: "Gaze and posture are measured at 30 fps so you rebuild composure before the room does it for you.",
     accent: "#5b21b6",
   },
   {
     num: "03",
-    title: "Live speech analytics",
-    body: "Browser-native transcription flags filler words and measures words per minute instantly.",
-    accent: "#e85547",
-  },
-  {
-    num: "04",
-    title: "Actionable scorecards",
-    body: "Deterministic 0–10 scores plus structured feedback you can rehearse against.",
+    title: "Deterministic scorecards",
+    body: "Structured 0–10 feedback you can rehearse against — strengths, gaps, and a clear next step per answer.",
     accent: "#5b21b6",
   },
   {
-    num: "05",
+    num: "04",
     title: "Adaptive follow-ups",
-    body: "When your answer has room to go deeper, Gemini may insert one sharp follow-up per primary question—probing metrics, ownership, or tradeoffs like a real loop.",
+    body: "When an answer has room to go deeper, Gemini probes metrics, ownership, or tradeoffs — once, sharply.",
     accent: "#e85547",
     badge: "New",
   },
@@ -584,31 +578,25 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES GRID ── */}
-      <section id="features" style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 24px", scrollMarginTop: "5.5rem" }}>
-        <div style={{ textAlign: "center", marginBottom: 72 }}>
+      <section id="features" style={{ maxWidth: 1120, margin: "0 auto", padding: "96px 24px", scrollMarginTop: "5.5rem" }}>
+        <div style={{ textAlign: "center", marginBottom: 64, maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
           <SectionLabel>What's inside</SectionLabel>
           <h2 style={{
             fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
-            fontWeight: 900,
+            fontSize: "clamp(1.85rem, 3.6vw, 2.65rem)",
+            fontWeight: 600,
             color: C.ink,
-            lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-            marginBottom: 20,
+            lineHeight: 1.2,
+            letterSpacing: "-0.018em",
+            margin: 0,
           }}>
-            Everything to{" "}
-            <span style={{ fontStyle: "italic", ...gradientTextStyle(C.coral, C.violet) }}>
-              land the offer
-            </span>
+            Four primitives. One sharper round.
           </h2>
-          <p style={{ fontFamily: BODY_FONT_STACK, fontSize: 17, color: C.muted, maxWidth: 480, margin: "0 auto", lineHeight: 1.8 }}>
-            No generic question banks. Every question is grounded in your story.
-          </p>
         </div>
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: 24,
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+          gap: 20,
         }}>
           {FEATURES.map((f, i) => <FeatureCard key={f.num} f={f} idx={i} />)}
         </div>
