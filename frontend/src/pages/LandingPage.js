@@ -131,12 +131,13 @@ function SectionLabel({ children }) {
     <span style={{
       display: "inline-block",
       fontFamily: "'DM Mono', monospace",
-      fontSize: 10,
-      fontWeight: 600,
-      letterSpacing: "0.22em",
+      fontSize: 10.5,
+      fontWeight: 500,
+      letterSpacing: "0.16em",
       textTransform: "uppercase",
       color: C.muted,
-      marginBottom: 20,
+      opacity: 0.75,
+      marginBottom: 18,
     }}>
       {children}
     </span>
