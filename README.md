@@ -88,8 +88,27 @@ Frontend runs on `http://localhost:3000`.
 
 You can deploy the backend to any Node-compatible platform (Render/Fly/EC2) and the frontend to any static host (Vercel/Netlify).
 
+### Render (free tier)
+
+This repo includes a [`render.yaml`](render.yaml) **Blueprint** with two services: a **Web Service** (API) and a **Static Site** (CRA build).
+
+1. Push the repo to GitHub, open [Render](https://render.com) → **New** → **Blueprint** → select the repo.
+2. **Web Service (`interviewai-api`)** — in **Environment**, set at least:
+   - `MONGO_URI` — MongoDB Atlas connection string
+   - `JWT_SECRET` — long random string
+   - `GEMINI_API_KEY` — if your deployment uses Gemini
+   - `FRONTEND_ORIGINS` — your static site URL, e.g. `https://interviewai-web.onrender.com` (comma-separate multiple origins)
+   - Blueprint already sets `NODE_ENV`, `AUTH_TOKEN_IN_BODY=true`, and `SESSION_COOKIE_SECURE=true` for split-origin auth.
+3. After the API URL is live (e.g. `https://interviewai-api.onrender.com`), set on the **static site**:
+   - `REACT_APP_BACKEND_URL` — same origin **without** a trailing slash (e.g. `https://interviewai-api.onrender.com`)
+4. **Redeploy the static site** whenever you change `REACT_APP_*` (values are baked in at build time).
+
+Local equivalents: see `backend/.env.example` and `frontend/.env.example`.
+
+**Notes:** Free web services sleep after idle traffic; first request after sleep can take ~30–60s. For local dev, leave `REACT_APP_BACKEND_URL` unset so the app keeps using `/api` + `setupProxy.js`.
+
 - **Backend**: set env vars, run `npm install`, start with `npm start`
-- **Frontend**: configure API base URL (or proxy), run `npm run build`, serve `/build`
+- **Frontend**: optional `REACT_APP_BACKEND_URL` for production API origin; run `npm run build`, serve `/build`
 
 ## Notes
 

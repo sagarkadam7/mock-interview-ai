@@ -102,58 +102,98 @@ export default function InteractiveHeroDemo() {
   const showTranscript = phase === "transcribing" || phase === "insights";
 
   return (
-    <div
-      className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-lg xl:max-w-xl"
-      aria-label="InterviewAI live coaching demo"
-      role="region"
-    >
-      <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white/95 to-slate-50/90 p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.28)] ring-1 ring-white/70 backdrop-blur-lg dark:border-slate-800/80 dark:from-slate-900/90 dark:to-slate-950/90 dark:ring-slate-700/50 sm:p-7">
-        {/* Ambient glow */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-gradient-to-br from-aura-coral/25 to-aura-violet/20 blur-3xl"
-        />
+    <div className="relative mx-auto w-full max-w-none lg:mx-0" aria-label="InterviewAI live coaching demo" role="region">
+      {/* Outer rim — reads as a deliberate “device” frame */}
+      <div
+        className="relative overflow-hidden rounded-[1.35rem] bg-gradient-to-br from-white via-white to-slate-50/95 p-[1px] shadow-lux-lg dark:from-slate-800 dark:via-slate-900 dark:to-slate-950"
+        style={{
+          boxShadow:
+            "0 1px 0 0 rgba(255,255,255,0.95) inset, 0 40px 90px -40px rgba(79,70,229,0.18), 0 28px 70px -48px rgba(244,63,94,0.12), 0 0 0 1px rgba(15,23,42,0.04)",
+        }}
+      >
+        <div className="relative overflow-hidden rounded-[1.3rem] border border-slate-200/75 bg-gradient-to-br from-white/98 to-slate-50/92 p-6 backdrop-blur-xl dark:border-slate-700/65 dark:from-slate-900/95 dark:to-slate-950/92 sm:p-8">
+          {/* Ambient glow + top sheen */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-gradient-to-br from-aura-coral/30 to-aura-violet/25 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent dark:via-white/10"
+          />
 
-        {/* Header */}
-        <div className="relative flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.18)]" aria-hidden />
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
-              Live coaching demo
-            </span>
-          </div>
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">
-            Try it →
-          </span>
-        </div>
-
-        {/* Mic button area */}
-        <div className="relative mt-7 flex flex-col items-center">
-          <button
-            type="button"
-            onClick={phase === "idle" || phase === "insights" ? startDemo : resetDemo}
-            disabled={phase === "recording" || phase === "transcribing"}
-            aria-pressed={phase === "recording"}
-            aria-label={phase === "idle" || phase === "insights" ? "Start microphone demo" : "Reset demo"}
-            className={`group relative inline-flex h-24 w-24 items-center justify-center rounded-full transition-transform duration-300 ease-out focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-aura-violet/40 ${
-              phase === "idle" || phase === "insights" ? "hover:scale-[1.04] active:scale-[0.97]" : ""
-            }`}
-          >
-            {/* Outer pulsing ring during recording */}
-            {phase === "recording" && (
-              <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-rose-500/25" />
-            )}
-            {/* Inner gradient */}
-            <span
+          {/* Header */}
+          <div className="relative">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="inline-flex h-2 w-2 shrink-0 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.2)]" aria-hidden />
+                <span className="truncate font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
+                  Live coaching demo
+                </span>
+              </div>
+              <span className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">
+                Try it →
+              </span>
+            </div>
+            <div
+              className="mt-3 h-1 w-full overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-800/90"
               aria-hidden
-              className={`absolute inset-0 rounded-full bg-gradient-to-br transition-all duration-500 ${
-                phase === "recording"
-                  ? "from-rose-500 to-red-600 shadow-[0_16px_48px_-8px_rgba(244,63,94,0.6)]"
-                  : "from-aura-coral to-aura-violet shadow-[0_16px_48px_-8px_rgba(91,33,182,0.45)]"
-              }`}
-            />
-            {/* Icon */}
-            <svg viewBox="0 0 24 24" fill="none" className="relative h-9 w-9 text-white" aria-hidden>
+            >
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet"
+                initial={false}
+                animate={{
+                  width:
+                    phase === "idle"
+                      ? "18%"
+                      : phase === "recording"
+                        ? `${28 + (elapsedSec / 3) * 52}%`
+                        : phase === "transcribing"
+                          ? "88%"
+                          : "100%",
+                }}
+                transition={{ duration: phase === "recording" ? 0.15 : 0.45, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </div>
+          </div>
+
+          {/* Mic button area */}
+          <div className="relative mt-8 flex flex-col items-center">
+            <div className="relative grid place-items-center">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-[-14px] rounded-full border border-slate-200/60 dark:border-slate-600/50"
+              />
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-[-28px] rounded-full border border-slate-200/35 opacity-70 dark:border-slate-600/30"
+              />
+              <button
+                type="button"
+                onClick={phase === "idle" || phase === "insights" ? startDemo : resetDemo}
+                disabled={phase === "recording" || phase === "transcribing"}
+                aria-pressed={phase === "recording"}
+                aria-label={phase === "idle" || phase === "insights" ? "Start microphone demo" : "Reset demo"}
+                className={`group relative inline-flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full transition-transform duration-300 ease-out focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-aura-violet/40 ${
+                  phase === "idle" || phase === "insights" ? "hover:scale-[1.04] active:scale-[0.97]" : ""
+                }`}
+              >
+                {phase === "recording" && (
+                  <span aria-hidden className="absolute inset-[-6px] animate-ping rounded-full bg-rose-500/20" />
+                )}
+                <span
+                  aria-hidden
+                  className={`absolute inset-0 rounded-full bg-gradient-to-br transition-all duration-500 ${
+                    phase === "recording"
+                      ? "from-rose-500 to-red-600 shadow-[0_20px_56px_-10px_rgba(244,63,94,0.55)]"
+                      : "from-aura-coral to-aura-violet shadow-[0_20px_56px_-10px_rgba(79,70,229,0.42)]"
+                  }`}
+                />
+                <span
+                  aria-hidden
+                  className="absolute inset-[3px] rounded-full bg-gradient-to-br from-white/35 via-transparent to-transparent opacity-50"
+                />
+                <svg viewBox="0 0 24 24" fill="none" className="relative h-10 w-10 text-white" aria-hidden>
               <path
                 d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"
                 fill="currentColor"
@@ -163,9 +203,10 @@ export default function InteractiveHeroDemo() {
                 fill="currentColor"
                 opacity="0.85"
               />
-            </svg>
-          </button>
-          <p className="mt-4 text-center text-[13px] font-medium text-slate-600 dark:text-slate-400" aria-live="polite">
+                </svg>
+              </button>
+            </div>
+          <p className="mt-5 max-w-[260px] text-center text-[13px] font-medium leading-snug text-slate-600 dark:text-slate-400 sm:max-w-[320px]" aria-live="polite">
             {phase === "idle" && "Tap the mic to hear a sample answer coached in real time."}
             {phase === "recording" && `Listening · ${elapsedSec.toFixed(1)}s / 3.0s`}
             {phase === "transcribing" && "Transcribing with real-time speech analytics…"}
@@ -174,7 +215,7 @@ export default function InteractiveHeroDemo() {
         </div>
 
         {/* Transcript panel */}
-        <div className="relative mt-6 rounded-2xl border border-slate-200/80 bg-white/80 p-4 dark:border-slate-700/80 dark:bg-slate-900/70 sm:p-5">
+        <div className="relative mt-7 rounded-2xl border border-slate-200/85 bg-white/85 p-4 shadow-[0_12px_40px_-28px_rgba(15,23,42,0.2)] dark:border-slate-700/80 dark:bg-slate-900/75 sm:p-5">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
               Real-time transcript
@@ -190,7 +231,7 @@ export default function InteractiveHeroDemo() {
             )}
           </div>
 
-          <p className="mt-3 min-h-[4.5rem] text-[15px] leading-relaxed text-slate-800 dark:text-slate-100">
+          <p className="mt-3 min-h-[5.25rem] text-[15px] leading-relaxed text-slate-800 dark:text-slate-100 sm:min-h-[5.5rem]">
             {!showTranscript && (
               <span className="text-slate-400 dark:text-slate-500">Your transcript will appear here…</span>
             )}
@@ -235,7 +276,7 @@ export default function InteractiveHeroDemo() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.4 }}
-              className="mt-5 grid grid-cols-3 gap-2"
+              className="mt-6 grid grid-cols-3 gap-2 sm:gap-3"
               role="status"
               aria-label="Live coaching insights"
             >
@@ -246,7 +287,7 @@ export default function InteractiveHeroDemo() {
               ].map((m) => (
                 <div
                   key={m.k}
-                  className="rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5 text-center dark:border-slate-700/80 dark:bg-slate-900/60"
+                  className="rounded-xl border border-slate-200/85 bg-white/90 px-3 py-2.5 text-center shadow-sm dark:border-slate-700/80 dark:bg-slate-900/65"
                 >
                   <div className={`font-display text-lg font-bold tabular-nums ${m.tone}`}>{m.v}</div>
                   <div className="mt-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
@@ -257,6 +298,7 @@ export default function InteractiveHeroDemo() {
             </motion.div>
           )}
         </AnimatePresence>
+        </div>
       </div>
     </div>
   );

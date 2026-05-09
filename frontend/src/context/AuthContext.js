@@ -55,7 +55,9 @@ export function AuthProvider({ children }) {
 
   const login = useCallback((userData) => {
     const { token, ...rest } = userData || {};
-    localStorage.setItem("user", JSON.stringify(rest));
+    // Persist token when the API sends it (e.g. AUTH_TOKEN_IN_BODY on split-origin deploys).
+    const stored = token ? { ...rest, token } : rest;
+    localStorage.setItem("user", JSON.stringify(stored));
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } else {

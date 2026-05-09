@@ -1,8 +1,13 @@
 import axios from "axios";
 import { notifySessionExpired } from "./authSession";
 
-// Dev: setupProxy.js forwards /api to the backend (port 5001).
-const api = axios.create({ baseURL: "/api", timeout: 120000, withCredentials: true });
+// Dev: `setupProxy.js` forwards `/api` to the backend.
+// Production (e.g. Render): set `REACT_APP_BACKEND_URL` to your API origin, no trailing slash
+// (e.g. https://your-api.onrender.com). Axios will call `https://your-api.onrender.com/api/...`.
+const backendOrigin = (process.env.REACT_APP_BACKEND_URL || "").trim().replace(/\/$/, "");
+const apiBaseURL = backendOrigin ? `${backendOrigin}/api` : "/api";
+
+const api = axios.create({ baseURL: apiBaseURL, timeout: 120000, withCredentials: true });
 
 api.interceptors.request.use((config) => {
   try {

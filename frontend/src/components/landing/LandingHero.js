@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import InteractiveHeroDemo from "./InteractiveHeroDemo";
@@ -9,10 +9,6 @@ const statRows = [
   { v: "Live", l: "Speech + gaze, every answer" },
 ];
 
-const energyBars = [
-  18, 24, 22, 28, 26, 34, 30, 38, 34, 44, 40, 52, 48, 58, 54, 66, 62, 70, 64, 74, 68, 78, 70, 82, 74, 80, 72, 76,
-];
-
 const proofAvatars = [
   { initials: "AR", tone: "from-violet-500 to-fuchsia-500" },
   { initials: "SK", tone: "from-aura-coral to-amber-500" },
@@ -21,301 +17,11 @@ const proofAvatars = [
   { initials: "DN", tone: "from-rose-500 to-orange-500" },
 ];
 
-function HeroShowcase({ reduceMotion }) {
-  const [score, setScore] = useState(reduceMotion ? 8.6 : 0);
-
-  useEffect(() => {
-    if (reduceMotion) return;
-    const start = performance.now();
-    const duration = 1200;
-    const from = 0;
-    const to = 8.6;
-
-    let raf = 0;
-    const tick = (now) => {
-      const t = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const v = from + (to - from) * eased;
-      setScore(Math.round(v * 10) / 10);
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [reduceMotion]);
-
-  const followUpText = "What tradeoff did you reject — and why?";
-  const followUpCharCount = followUpText.length;
-
-  const cardStyle = useMemo(
-    () => ({
-      ["--cardBg"]: "#161012",
-      ["--cardBg2"]: "#1a1314",
-      ["--borderGlow"]: "rgba(255,80,80,0.25)",
-      ["--muted"]: "#6b6460",
-      ["--pink"]: "#e8609a",
-      ["--barBottom"]: "#c0456a",
-      ["--barMid"]: "#e8609a",
-      ["--barTop"]: "#9b6fdc",
-      ["--track"]: "#2a2228",
-      ["--pillBg"]: "#1e1820",
-      ["--pillBorder"]: "#2e2a30",
-    }),
-    []
-  );
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: reduceMotion ? 0 : 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: reduceMotion ? 0.2 : 0.95, ease: [0.16, 1, 0.3, 1], delay: reduceMotion ? 0 : 0.14 }}
-      className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-lg xl:max-w-xl"
-    >
-      <style>{`
-        .lux-scorecard {
-          width: 100%;
-          max-width: 540px;
-          padding: 24px;
-          box-sizing: border-box;
-          border-radius: 16px;
-          background: radial-gradient(120% 120% at 20% 0%, rgba(232,96,154,0.14) 0%, transparent 55%),
-            radial-gradient(120% 120% at 90% 12%, rgba(155,111,220,0.12) 0%, transparent 55%),
-            linear-gradient(180deg, var(--cardBg) 0%, var(--cardBg2) 100%);
-          border: 1px solid var(--borderGlow);
-          box-shadow: 0 0 60px rgba(220, 60, 80, 0.12), 0 0 120px rgba(180, 50, 200, 0.08);
-          transform: perspective(1100px) rotateX(7deg) rotateY(-10deg);
-          transform-origin: center;
-        }
-        @media (max-width: 640px) {
-          .lux-scorecard {
-            transform: none;
-            padding: 18px;
-          }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .lux-scorecard { transform: none; }
-        }
-        .lux-pulse-dot {
-          animation: luxPulse 1.5s ease-in-out infinite;
-          box-shadow: 0 0 12px rgba(40,200,100,0.45);
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .lux-pulse-dot { animation: none; opacity: 1; }
-        }
-        @keyframes luxPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.35; }
-        }
-        .lux-energy-bar { transform-origin: bottom; }
-        .lux-typewriter {
-          width: calc(var(--chars) * 1ch);
-          max-width: 100%;
-          overflow: hidden;
-          white-space: nowrap;
-          border-right: 2px solid rgba(232,96,154,0.7);
-          animation: luxType 1.25s steps(var(--chars)) both;
-          animation-delay: 1s;
-        }
-        .lux-typewriter--static {
-          animation: none;
-          width: auto;
-          max-width: 100%;
-          white-space: normal;
-          border-right: none;
-        }
-        @keyframes luxType { from { width: 0ch; } to { width: calc(var(--chars) * 1ch); } }
-        @media (prefers-reduced-motion: reduce) {
-          .lux-typewriter:not(.lux-typewriter--static) { animation: none; }
-        }
-        .lux-metric-pill {
-          transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .lux-metric-pill:hover {
-          border-color: #555555;
-          box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
-        }
-      `}</style>
-
-      <motion.div
-        style={cardStyle}
-        initial={{ opacity: 0, y: reduceMotion ? 0 : 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: reduceMotion ? 0.15 : 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="lux-scorecard relative mx-auto select-none"
-        aria-label="Live interview scorecard mock"
-      >
-        {/* Top bar */}
-        <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
-          <div className="flex shrink-0 items-center gap-2">
-            <span className="h-[10px] w-[10px] rounded-full" style={{ background: "#ff5f57" }} aria-hidden />
-            <span className="h-[10px] w-[10px] rounded-full" style={{ background: "#febc2e" }} aria-hidden />
-            <span className="h-[10px] w-[10px] rounded-full" style={{ background: "#28c840" }} aria-hidden />
-          </div>
-          <div
-            className="min-w-0 flex-1 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.28em] sm:text-[11px] sm:tracking-[0.32em]"
-            style={{ color: "var(--muted)" }}
-          >
-            LIVE SESSION · SCORECARD
-          </div>
-          <div
-            className="inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] sm:text-[11px] sm:tracking-[0.14em]"
-            style={{ background: "rgba(40,200,100,0.12)", borderColor: "#28c840", color: "#28c840" }}
-          >
-            <span className="lux-pulse-dot h-2 w-2 rounded-full" style={{ background: "#28c840" }} aria-hidden />
-            STREAMING
-          </div>
-        </div>
-
-        <div className="mt-5 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }} />
-
-        {/* Section 1 */}
-        <div className="mt-5 flex items-start justify-between gap-6">
-          <div>
-            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.32em]" style={{ color: "var(--muted)" }}>
-              LIVE MOCK INTERVIEW
-            </div>
-            <div className="mt-2 text-[15px] font-semibold text-white">Score + presence + adaptive follow-ups</div>
-          </div>
-
-          <div className="relative grid h-16 w-16 place-items-center rounded-full" aria-label="Composite score">
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background:
-                  "conic-gradient(from 210deg, rgba(232,96,154,0.0) 0%, rgba(232,96,154,0.9) 35%, rgba(155,111,220,0.9) 70%, rgba(232,96,154,0.0) 100%)",
-                filter: "blur(0px)",
-                opacity: 0.55,
-              }}
-              aria-hidden
-            />
-            <div
-              className="absolute inset-[2px] rounded-full"
-              style={{
-                border: "2px solid #e8609a",
-                boxShadow: "0 0 16px rgba(232,96,154,0.5)",
-                background: "rgba(0,0,0,0.25)",
-              }}
-              aria-hidden
-            />
-            <div className="relative font-display text-[22px] font-semibold text-white tabular-nums">
-              {score.toFixed(1)}
-            </div>
-          </div>
-        </div>
-
-        {/* Section 2 */}
-        <div className="mt-6">
-          <div className="flex items-center justify-between font-mono text-[10px] font-bold uppercase tracking-[0.32em]" style={{ color: "var(--muted)" }}>
-            <span>ENERGY</span>
-            <span>LAST 30S</span>
-          </div>
-
-          <div className="mt-3 flex h-20 min-w-0 items-end justify-between gap-0.5 sm:gap-1">
-            {energyBars.map((h, i) => (
-              <motion.div
-                key={i}
-                className="lux-energy-bar min-w-[2px] max-w-[10px] flex-1"
-                initial={reduceMotion ? false : { scaleY: 0 }}
-                animate={{ scaleY: 1 }}
-                transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : i * 0.02, ease: [0.16, 1, 0.3, 1] }}
-                style={{
-                  height: `${h}px`,
-                  borderRadius: "3px 3px 0 0",
-                  background: `linear-gradient(180deg, var(--barTop) 0%, var(--barMid) 45%, var(--barBottom) 100%)`,
-                  opacity: 0.95,
-                }}
-                aria-hidden
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Section 3 */}
-        <div className="mt-6 flex flex-wrap gap-3">
-          {[
-            ["GAZE", "78%"],
-            ["PACE", "142 wpm"],
-            ["FILLERS", "Low"],
-          ].map(([k, v]) => (
-            <div
-              key={k}
-              className="lux-metric-pill group inline-flex cursor-default items-center gap-3 rounded-full border px-4 py-2"
-              style={{ background: "var(--pillBg)", borderColor: "var(--pillBorder)" }}
-            >
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                {k}
-              </span>
-              <span className="font-mono text-[11px] font-bold text-white">{v}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Section 4 */}
-        <div
-          className="mt-6 grid gap-4 rounded-2xl border p-4"
-          style={{ background: "#1c1618", borderColor: "#2a2228" }}
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            {/* Rubric */}
-            <div>
-              <div className="font-mono text-[10px] font-bold uppercase tracking-[0.32em]" style={{ color: "var(--muted)" }}>
-                RUBRIC
-              </div>
-              <div className="mt-3 space-y-3">
-                {[
-                  ["Structure", 80, "#4ade80"],
-                  ["Clarity", 60, "#a855f7"],
-                  ["Depth", 45, "#f59e0b"],
-                ].map(([label, pct, color], idx) => (
-                  <div key={label}>
-                    <div className="mb-1 flex items-center justify-between">
-                      <span className="text-[13px] font-semibold text-white">{label}</span>
-                      <span className="font-mono text-[11px] font-bold" style={{ color: "rgba(255,255,255,0.7)" }}>
-                        {pct}%
-                      </span>
-                    </div>
-                    <div className="h-[5px] w-full overflow-hidden rounded-full" style={{ background: "var(--track)" }}>
-                      <motion.div
-                        className="h-full rounded-full"
-                        style={{ background: color }}
-                        initial={reduceMotion ? false : { width: "0%" }}
-                        animate={{ width: `${pct}%` }}
-                        transition={{ duration: reduceMotion ? 0 : 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.35 + idx * 0.08 }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Follow-up */}
-            <div className="relative">
-              <div className="font-mono text-[9px] font-bold uppercase tracking-[0.32em]" style={{ color: "var(--muted)" }}>
-                ADAPTIVE FOLLOW-UP
-              </div>
-              <div className="mt-3 flex gap-3">
-                <div className="mt-1 h-10 w-[2px] rounded-full" style={{ background: "var(--pink)" }} aria-hidden />
-                <div className="min-w-0">
-                  <div
-                    className={`lux-typewriter italic ${reduceMotion ? "lux-typewriter--static" : ""}`}
-                    style={{ ["--chars"]: followUpCharCount, color: "#e8e0ec", fontSize: 13, lineHeight: 1.4 }}
-                    aria-label="Follow-up question"
-                  >
-                    {followUpText}
-                  </div>
-                  <div className="mt-2 text-[12px]" style={{ color: "rgba(255,255,255,0.55)" }}>
-                    Explain the constraint, alternatives, and measurable impact.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Removed floating placeholders (looked like glitches). */}
-    </motion.div>
-  );
-}
+const capabilityChips = [
+  { label: "Résumé + JD grounded", icon: "◆" },
+  { label: "Deterministic scoring", icon: "◇" },
+  { label: "Presence-aware coaching", icon: "○" },
+];
 
 export default function LandingHero({ user }) {
   const heroRef = useRef(null);
@@ -357,24 +63,35 @@ export default function LandingHero({ user }) {
     <section
       id="top"
       ref={heroRef}
-      className="relative flex min-h-[calc(100vh-3.5rem)] scroll-mt-20 flex-col justify-center overflow-hidden px-5 pb-24 pt-14 sm:px-6 sm:pb-32 sm:pt-20 lg:min-h-[calc(100vh-3rem)] lg:pb-36 lg:pt-20"
+      className="relative flex min-h-[calc(100vh-3.5rem)] scroll-mt-20 flex-col justify-center overflow-hidden px-4 pb-24 pt-14 sm:px-6 sm:pb-32 sm:pt-16 md:px-8 lg:min-h-[calc(100vh-3rem)] lg:px-10 lg:pb-28 lg:pt-16 xl:px-14 2xl:px-20"
     >
       {/* Atmosphere */}
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-500"
         style={{
-          background: `radial-gradient(ellipse 980px 720px at var(--mx,50%) var(--my,38%), rgba(232,85,71,0.22), transparent 55%),
+          background: `radial-gradient(ellipse 70% 55% at 0% 45%, rgba(91,33,182,0.09), transparent 50%),
+            radial-gradient(ellipse 65% 50% at 100% 35%, rgba(232,85,71,0.1), transparent 52%),
+            radial-gradient(ellipse 980px 720px at var(--mx,50%) var(--my,38%), rgba(232,85,71,0.22), transparent 55%),
             radial-gradient(ellipse 560px 520px at 88% 12%, rgba(91,33,182,0.14), transparent 52%),
             radial-gradient(ellipse 520px 480px at 8% 92%, rgba(91,33,182,0.09), transparent 50%)`,
         }}
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.45]"
+        className="pointer-events-none absolute inset-0 opacity-[0.55] dark:opacity-[0.4]"
         style={{
-          backgroundImage: `linear-gradient(rgba(15,23,42,0.032) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.032) 1px, transparent 1px)`,
-          backgroundSize: "64px 64px",
+          backgroundImage: `linear-gradient(rgba(15,23,42,0.038) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.038) 1px, transparent 1px)`,
+          backgroundSize: "52px 52px",
         }}
+        aria-hidden
+      />
+      {/* Soft structural arcs — reads as “product UI” depth, not empty whitespace */}
+      <div
+        className="pointer-events-none absolute -left-[min(28%,420px)] top-1/2 hidden h-[min(88vh,820px)] w-[min(88vh,820px)] -translate-y-1/2 rounded-[50%] border border-slate-200/60 dark:border-slate-700/40 lg:block"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -right-[min(22%,320px)] top-[18%] hidden h-[520px] w-[520px] rounded-[50%] border border-slate-200/45 dark:border-slate-700/35 xl:block"
         aria-hidden
       />
       <div
@@ -383,16 +100,32 @@ export default function LandingHero({ user }) {
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-aura-page via-aura-page/80 to-transparent dark:from-[#0a0b10] dark:via-[#0a0b10]/80" aria-hidden />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-12 lg:gap-x-16 lg:gap-y-8">
+      <div className="relative z-10 mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-10 sm:gap-12 md:grid-cols-2 md:gap-x-8 md:gap-y-10 md:items-start lg:gap-x-10 xl:gap-x-14 2xl:gap-x-16">
         <motion.div
           variants={container}
           initial="hidden"
           animate="visible"
-          className="flex flex-col items-center text-center lg:col-span-6 lg:items-start lg:pr-2 lg:text-left"
+          className="flex min-w-0 flex-col items-center text-center lg:items-start lg:pr-2 lg:text-left xl:pr-4"
         >
+          <motion.div
+            variants={item}
+            className="mb-6 inline-flex flex-wrap items-center justify-center gap-2 lg:justify-start"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/75 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 shadow-sm backdrop-blur-md dark:border-slate-700/80 dark:bg-slate-900/55 dark:text-slate-300">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.2)]" />
+              </span>
+              Live rehearsal studio
+            </span>
+            <span className="hidden rounded-full border border-slate-200/80 bg-slate-50/90 px-3 py-1.5 text-[11px] font-medium text-slate-500 backdrop-blur-sm sm:inline-flex dark:border-slate-700/70 dark:bg-slate-900/40 dark:text-slate-400">
+              Built for real hiring loops
+            </span>
+          </motion.div>
+
           <motion.h1
             variants={item}
-            className="max-w-[22ch] text-balance font-sans text-[2.75rem] font-semibold leading-[0.98] tracking-[-0.042em] text-aura-ink sm:max-w-none sm:text-[3.25rem] sm:tracking-[-0.038em] md:text-6xl md:leading-[0.96] lg:text-[3.5rem] xl:text-[4.25rem]"
+            className="w-full min-w-0 text-balance font-sans text-[2.85rem] font-semibold leading-[1.02] tracking-[-0.04em] text-aura-ink sm:text-[3.35rem] sm:tracking-[-0.038em] md:text-6xl md:leading-[0.98] lg:text-[3.45rem] lg:leading-[0.97] xl:text-[4.35rem] xl:tracking-[-0.042em]"
           >
             Turn interview
             <br />
@@ -403,13 +136,31 @@ export default function LandingHero({ user }) {
 
           <motion.p
             variants={item}
-            className="mx-auto mt-7 max-w-xl text-pretty text-[15px] leading-[1.68] text-slate-600 dark:text-slate-400 sm:text-lg sm:leading-[1.65] lg:mx-0"
+            className="mx-auto mt-6 w-full max-w-xl text-pretty text-[15px] leading-[1.72] text-slate-600 dark:text-slate-400 sm:mt-7 sm:max-w-2xl sm:text-[17px] sm:leading-[1.68] lg:mx-0 lg:max-w-none xl:max-w-2xl"
           >
             A complete mock loop — questions grounded in your résumé and JD, deterministic scoring, and{" "}
             <span className="font-medium text-slate-800 dark:text-slate-200">camera-aware presence coaching</span> — so you walk into the real room already calibrated.
           </motion.p>
 
-          <motion.div variants={item} className="mt-10 flex w-full max-w-lg flex-col gap-4 sm:max-w-none lg:max-w-xl">
+          <motion.ul
+            variants={item}
+            className="mx-auto mt-6 flex w-full max-w-none flex-wrap justify-center gap-2 sm:gap-2.5 lg:mx-0 lg:justify-start"
+            aria-label="Product capabilities"
+          >
+            {capabilityChips.map((c) => (
+              <li
+                key={c.label}
+                className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/85 bg-white/60 px-3 py-1.5 text-[12px] font-medium text-slate-700 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_8px_24px_-16px_rgba(15,23,42,0.12)] backdrop-blur-sm dark:border-slate-600/60 dark:bg-slate-900/45 dark:text-slate-200"
+              >
+                <span className="select-none text-[10px] text-aura-violet/80 dark:text-violet-300/90" aria-hidden>
+                  {c.icon}
+                </span>
+                {c.label}
+              </li>
+            ))}
+          </motion.ul>
+
+          <motion.div variants={item} className="mt-9 flex w-full max-w-none flex-col gap-4">
             <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:justify-start">
               <Link
                 to={user ? "/dashboard" : "/register"}
@@ -435,66 +186,81 @@ export default function LandingHero({ user }) {
                 </Link>
               )}
             </div>
-            <div className="flex justify-center sm:justify-start">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-start sm:gap-6">
               <button
                 type="button"
                 onClick={() => setVideoOpen(true)}
-                className="inline-flex items-center gap-2 border-0 bg-transparent px-1 py-1 text-sm font-semibold text-slate-600 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-aura-ink hover:decoration-aura-violet/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:text-slate-400 dark:decoration-slate-600 dark:hover:text-white"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition-[color,box-shadow,border-color] hover:border-slate-300 hover:text-aura-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:border-slate-600/70 dark:bg-slate-900/50 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-white sm:inline-flex sm:border-0 sm:bg-transparent sm:px-1 sm:py-1 sm:shadow-none sm:underline sm:decoration-slate-300 sm:decoration-2 sm:underline-offset-4 sm:backdrop-blur-none dark:sm:decoration-slate-600"
               >
-                <span aria-hidden>▶</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-aura-violet dark:from-aura-coral/25 dark:to-aura-violet/25 sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent" aria-hidden>
+                  ▶
+                </span>
                 Watch demo
               </button>
+              <a
+                href="#how-it-works"
+                className="group inline-flex items-center justify-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-white sm:justify-start"
+              >
+                See the full loop
+                <span className="transition-transform duration-300 ease-out-expo group-hover:translate-x-1" aria-hidden>
+                  →
+                </span>
+              </a>
             </div>
           </motion.div>
 
-          <motion.div variants={item} className="mt-5 flex justify-center lg:justify-start">
-            <a
-              href="#how-it-works"
-              className="group inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-white"
-            >
-              See the full loop
-              <span className="transition-transform duration-300 ease-out-expo group-hover:translate-x-1" aria-hidden>
-                ↓
-              </span>
-            </a>
-          </motion.div>
-
-          <motion.div variants={item} className="mt-14 flex flex-col items-center gap-6 lg:items-start">
-            <div className="flex items-center gap-4">
+          <motion.div variants={item} className="mt-12 flex flex-col items-center gap-6 border-t border-slate-200/80 pt-10 dark:border-slate-700/60 lg:items-start">
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <div className="flex -space-x-2" aria-hidden>
                 {proofAvatars.slice(0, 4).map((a) => (
                   <div
                     key={a.initials}
-                    className={`flex h-7 w-7 items-center justify-center rounded-full border border-white bg-gradient-to-br ${a.tone} text-[9px] font-semibold text-white dark:border-slate-900`}
+                    className={`flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br ${a.tone} text-[9px] font-semibold text-white shadow-md dark:border-slate-900`}
                   >
                     {a.initials}
                   </div>
                 ))}
               </div>
-              <p className="text-left text-[13px] text-slate-500 dark:text-slate-500">
-                Used by candidates rehearsing real loops, not benchmarks.
-              </p>
+              <div className="text-center sm:text-left">
+                <p className="text-[13px] font-medium text-slate-700 dark:text-slate-300">Used by candidates rehearsing real loops</p>
+                <p className="mt-0.5 text-[12px] text-slate-500 dark:text-slate-500">Not generic question banks — calibrated to your story.</p>
+              </div>
             </div>
 
             <ul
-              className="mx-auto grid w-full max-w-md grid-cols-2 gap-x-8 text-left sm:mx-0 lg:max-w-lg"
+              className="mx-auto grid w-full max-w-none grid-cols-2 gap-x-6 gap-y-2 text-left sm:mx-0 sm:max-w-md lg:max-w-none"
               aria-label="Session highlights"
             >
               {statRows.map((row) => (
-                <li key={row.l} className="flex min-w-0 flex-col items-start gap-1 border-l border-slate-200 pl-4 dark:border-slate-700/70">
-                  <span className="font-display text-[1.7rem] font-medium italic tabular-nums tracking-tight text-aura-ink">{row.v}</span>
-                  <span className="text-[12px] leading-snug text-slate-500 dark:text-slate-400">
-                    {row.l}
-                  </span>
+                <li
+                  key={row.l}
+                  className="relative flex min-w-0 flex-col items-start gap-1.5 rounded-r-xl bg-gradient-to-r from-slate-50/90 to-transparent py-1.5 pl-5 dark:from-slate-900/50 dark:to-transparent"
+                >
+                  <span
+                    className="absolute left-0 top-2 bottom-2 w-[3px] rounded-full bg-gradient-to-b from-aura-coral to-aura-violet"
+                    aria-hidden
+                  />
+                  <span className="font-display text-[1.85rem] font-medium italic tabular-nums tracking-tight text-aura-ink md:text-[2rem]">{row.v}</span>
+                  <span className="text-[12px] leading-snug text-slate-500 dark:text-slate-400">{row.l}</span>
                 </li>
               ))}
             </ul>
           </motion.div>
         </motion.div>
 
-        <div className="lg:col-span-6 lg:pl-2">
-          {/* Interactive demo lets visitors experience the core value (filler detection) in the hero */}
-          <InteractiveHeroDemo />
+        <div className="relative z-[2] min-w-0 w-full md:sticky md:top-24 md:self-start lg:top-28 lg:pl-2 xl:pl-4">
+          <motion.div
+            className="w-full"
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: reduceMotion ? 0.15 : 0.55,
+              ease: [0.16, 1, 0.3, 1],
+              delay: reduceMotion ? 0 : 0.08,
+            }}
+          >
+            <InteractiveHeroDemo />
+          </motion.div>
         </div>
       </div>
 
