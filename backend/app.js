@@ -98,6 +98,7 @@ function createApp({ env = process.env } = {}) {
   app.use("/api/billing", require("./routes/billing"));
   app.use("/api/interview", require("./routes/interview"));
   app.use("/api/share", require("./routes/share"));
+  app.use("/api/admin", require("./routes/admin"));
   app.use("/api/marketing", require("./routes/marketing"));
   app.use("/api/marketing", require("./routes/clientError"));
 

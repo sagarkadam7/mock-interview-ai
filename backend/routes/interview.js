@@ -13,6 +13,7 @@ const { validateMongoId } = require("../middleware/validateMongoId");
 const { assertCanCreateInterview, bumpMonthlyInterviewUsage } = require("../middleware/planLimits");
 const { parseJsonFromAi } = require("../utils/parseAiJson");
 const { normalizeFeedback, normalizeQuestions } = require("../utils/aiSchemas");
+const { logAction } = require("../utils/logger");
 
 const router = express.Router();
 
@@ -326,6 +327,13 @@ router.post(
         }
         throw err;
       }
+
+      logAction(
+        req.user._id,
+        "INTERVIEW_STARTED",
+        { interviewId: interview._id, jobRole, targetCompany, interviewMode, level, persona, timeboxMin: Number(timeboxMin || 0) },
+        req
+      );
       res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
     } catch (err) {
       console.error("Create interview error:", err.message);
@@ -592,6 +600,19 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
     }
 
     await interview.save();
+
+    logAction(
+      req.user._id,
+      "FEEDBACK_GENERATED",
+      {
+        interviewId: interview._id,
+        questionId,
+        score: question.score,
+        followUpInserted,
+        aiFallback,
+      },
+      req
+    );
 
     res.json({
       score: question.score,

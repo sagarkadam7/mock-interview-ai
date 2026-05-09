@@ -2,6 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { setAuthCookie, clearAuthCookie } = require("../utils/authCookie");
+const { logAction } = require("../utils/logger");
 
 const router = express.Router();
 
@@ -54,6 +55,8 @@ router.post("/register", async (req, res) => {
     const token = generateToken(user._id);
     setAuthCookie(res, token);
 
+    logAction(user._id, "USER_REGISTER", { email: user.email }, req);
+
     const payload = {
       _id: user._id,
       name: user.name,
@@ -88,6 +91,8 @@ router.post("/login", async (req, res) => {
 
     const token = generateToken(user._id);
     setAuthCookie(res, token);
+
+    logAction(user._id, "USER_LOGIN", { email: user.email }, req);
 
     const payload = {
       _id: user._id,
