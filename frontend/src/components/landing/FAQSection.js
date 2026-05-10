@@ -13,7 +13,13 @@ function Item({ item, open, onToggle, idx }) {
         aria-expanded={open}
         aria-controls={`${id}-panel`}
         onClick={onToggle}
-        className="flex w-full items-start justify-between gap-4 py-5 text-left transition-colors hover:text-violet-800 dark:hover:text-violet-300"
+        onKeyDown={(e) => {
+          if (e.key === "Escape" && open) {
+            e.preventDefault();
+            onToggle();
+          }
+        }}
+        className="flex w-full items-start justify-between gap-4 rounded-xl py-5 text-left transition-colors hover:text-violet-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:text-violet-300 dark:focus-visible:ring-violet-500/50 dark:focus-visible:ring-offset-slate-950"
       >
         <span className="text-[15px] font-semibold text-aura-ink">{item.q}</span>
         <span className={`mt-0.5 shrink-0 text-slate-400 transition-transform duration-200 dark:text-slate-500 ${open ? "rotate-180" : ""}`} aria-hidden>
