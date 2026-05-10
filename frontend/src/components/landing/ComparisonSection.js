@@ -76,6 +76,9 @@ export default function ComparisonSection() {
         >
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] border-collapse text-sm">
+              <caption className="visually-hidden">
+                Comparison of InterviewAI versus a generic AI chatbot and a human interview coach across product capabilities.
+              </caption>
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/95 text-left dark:border-slate-700 dark:bg-slate-800/60">
                   <th className="px-4 py-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400 sm:px-6">
