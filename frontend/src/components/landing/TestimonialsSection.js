@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { TESTIMONIALS } from "../../data/marketing";
 
 // Deterministic avatar tone per name so quotes feel identifiable.
@@ -35,6 +35,7 @@ function StarRating({ value = 5 }) {
 }
 
 export default function TestimonialsSection() {
+  const reduceMotion = useReducedMotion();
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(0);
@@ -52,10 +53,10 @@ export default function TestimonialsSection() {
 
   // Auto-advance unless user is hovering or focus is within the carousel.
   useEffect(() => {
-    if (paused) return;
+    if (paused || reduceMotion) return;
     timerRef.current = setTimeout(() => setIdx((i) => (i + 1) % TESTIMONIALS.length), AUTO_ADVANCE_MS);
     return () => clearTimeout(timerRef.current);
-  }, [paused, idx]);
+  }, [paused, idx, reduceMotion]);
 
   // Keyboard shortcuts when carousel region is focused.
   const handleKey = (e) => {
