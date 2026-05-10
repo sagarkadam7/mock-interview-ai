@@ -449,6 +449,23 @@ export default function LandingPage() {
     if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }));
   }, [location.hash, reduceMotion]);
 
+  useEffect(() => {
+    const id = "lp-jsonld-website";
+    if (document.getElementById(id)) return;
+    const script = document.createElement("script");
+    script.id = id;
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "InterviewAI",
+      description: "Résumé-aware mock interviews with live presence coaching and structured scorecards.",
+      url: window.location.origin,
+    });
+    document.head.appendChild(script);
+    return () => document.getElementById(id)?.remove();
+  }, []);
+
   return (
     <div style={{ background: C.paper, color: C.ink, overflowX: "hidden", minHeight: "100vh" }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
