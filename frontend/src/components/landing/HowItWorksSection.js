@@ -6,12 +6,13 @@ export default function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
+      aria-labelledby="how-it-works-heading"
       className="scroll-mt-28 border-y border-slate-200/80 bg-gradient-to-b from-white via-slate-50/50 to-white py-24 dark:border-slate-800/80 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950 md:py-28"
     >
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-16 text-center md:mb-20">
           <div className="section-eyebrow mx-auto mb-4">How it works</div>
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+          <h2 id="how-it-works-heading" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
             From resume to <span className="text-gradient italic">report</span> in one flow
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
