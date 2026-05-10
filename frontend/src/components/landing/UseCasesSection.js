@@ -35,11 +35,15 @@ const USE_CASES = [
 
 export default function UseCasesSection() {
   return (
-    <section id="use-cases" className="relative border-y border-slate-200/80 bg-white py-24 dark:border-slate-800/80 dark:bg-slate-950 md:py-28">
+    <section
+      id="use-cases"
+      aria-labelledby="use-cases-heading"
+      className="relative scroll-mt-28 border-y border-slate-200/80 bg-white py-24 dark:border-slate-800/80 dark:bg-slate-950 md:py-28"
+    >
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-14 text-center md:mb-16">
           <div className="section-eyebrow mx-auto mb-4">Use cases</div>
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+          <h2 id="use-cases-heading" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
             Built for every high-signal interview
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
