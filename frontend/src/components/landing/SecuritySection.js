@@ -17,7 +17,7 @@ const technicalControls = [
 
 export default function SecuritySection() {
   return (
-    <section className="relative py-24 md:py-28">
+    <section id="trust-privacy" className="relative scroll-mt-24 py-24 md:py-28">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-transparent dark:via-slate-900/40" aria-hidden />
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mb-14 text-center md:mb-16">
@@ -55,7 +55,7 @@ export default function SecuritySection() {
         </div>
         <div className="mx-auto mt-8 max-w-4xl rounded-2xl border border-slate-200/80 bg-white/70 p-5 backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/60">
           <details>
-            <summary className="cursor-pointer list-none text-sm font-semibold text-aura-ink">
+            <summary className="cursor-pointer list-none rounded-lg text-sm font-semibold text-aura-ink outline-none transition-colors hover:text-violet-800 focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:text-violet-200 dark:focus-visible:ring-violet-500/50 dark:focus-visible:ring-offset-slate-900">
               View security controls
             </summary>
             <ul className="mt-4 space-y-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
