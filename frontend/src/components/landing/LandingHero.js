@@ -30,7 +30,7 @@ export default function LandingHero({ user }) {
 
   useEffect(() => {
     const hero = heroRef.current;
-    if (!hero) return;
+    if (!hero || reduceMotion) return;
     const onMove = (e) => {
       const { left, top, width, height } = hero.getBoundingClientRect();
       const x = (e.clientX - left) / width;
@@ -40,7 +40,7 @@ export default function LandingHero({ user }) {
     };
     hero.addEventListener("mousemove", onMove);
     return () => hero.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [reduceMotion]);
 
   const container = {
     hidden: { opacity: 0 },
