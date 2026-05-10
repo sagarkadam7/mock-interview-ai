@@ -33,7 +33,7 @@ const OUTCOMES = [
 
 export default function QuoteWallSection() {
   return (
-    <section id="outcomes" className="relative py-24 md:py-28">
+    <section id="outcomes" aria-labelledby="outcomes-heading" className="relative scroll-mt-24 py-24 md:py-28">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-1/2 h-[min(80%,520px)] -translate-y-1/2 bg-gradient-to-r from-orange-50/45 via-transparent to-violet-50/40 blur-3xl dark:from-orange-950/20 dark:to-violet-950/25"
@@ -41,7 +41,7 @@ export default function QuoteWallSection() {
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mb-14 text-center md:mb-16">
           <div className="section-eyebrow mx-auto mb-4">Outcomes</div>
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+          <h2 id="outcomes-heading" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
             Proof that feels like <span className="italic text-gradient">signal</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
