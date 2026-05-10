@@ -106,7 +106,10 @@ function PlanCard({ plan, index }) {
       </ul>
 
       <div className="relative mt-8">
-        <Link to={plan.cta.to} className="no-underline">
+        <Link
+          to={plan.cta.to}
+          className="no-underline rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-violet-500/50 dark:focus-visible:ring-offset-slate-950"
+        >
           <span
             className={`inline-flex w-full items-center justify-center rounded-full px-8 py-3.5 text-[14px] font-bold tracking-tight no-underline transition-transform duration-200 ease-out active:scale-[0.98] ${
               isPro
@@ -129,7 +132,10 @@ function PlanCard({ plan, index }) {
 
 export default function PricingTeaserSection() {
   return (
-    <section className="border-y border-slate-200/80 bg-gradient-to-b from-slate-50/80 to-white py-24 dark:border-slate-800/80 dark:from-slate-900 dark:to-slate-950 md:py-28">
+    <section
+      id="pricing"
+      className="scroll-mt-24 border-y border-slate-200/80 bg-gradient-to-b from-slate-50/80 to-white py-24 dark:border-slate-800/80 dark:from-slate-900 dark:to-slate-950 md:py-28"
+    >
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-14 text-center">
           <div className="section-eyebrow mx-auto mb-4">Pricing</div>
@@ -152,7 +158,7 @@ export default function PricingTeaserSection() {
         <div className="mt-10 text-center">
           <Link
             to="/pricing"
-            className="font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 hover:text-violet-900 dark:text-violet-300 dark:decoration-violet-500/60 dark:hover:text-violet-200"
+            className="rounded-md font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 outline-none hover:text-violet-900 focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-violet-300 dark:decoration-violet-500/60 dark:hover:text-violet-200 dark:focus-visible:ring-violet-500/50 dark:focus-visible:ring-offset-slate-950"
           >
             Compare plans & roadmap →
           </Link>
