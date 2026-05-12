@@ -44,7 +44,7 @@ const emotionEmoji = { happy: "😊", neutral: "😐", sad: "😔", fearful: "�
 
 function StatCard({ label, value, sub, colorClass }) {
   return (
-    <div className="glass-panel rounded-2xl p-6 text-center ring-1 ring-white/40">
+    <div className="glass-panel rounded-2xl p-6 text-center ring-1 ring-white/40 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-slate-200/80 hover:shadow-md dark:hover:border-slate-600/50 dark:hover:shadow-lg dark:hover:shadow-black/25">
       <div className={`mb-1 font-sans text-3xl font-bold tracking-tight ${colorClass || "text-violet-600"}`}>{value ?? "—"}</div>
       <div className="text-xs font-medium text-slate-500 dark:text-slate-400">{label}</div>
       {sub && <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{sub}</div>}
