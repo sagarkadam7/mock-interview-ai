@@ -95,13 +95,18 @@ function EmotionBar({ emotions }) {
 
 function QuestionCard({ question, index }) {
   const [open, setOpen] = useState(index === 0);
+  const panelId = `report-q-panel-${index}`;
+  const headerId = `report-q-header-${index}`;
 
   return (
     <div className="glass-panel overflow-hidden rounded-3xl transition-all duration-300 hover:border-slate-300">
       <button
         type="button"
+        id={headerId}
+        aria-expanded={open}
+        aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-start justify-between gap-4 border-none bg-transparent p-6 text-left transition-all duration-300 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 md:p-8"
+        className="flex w-full items-start justify-between gap-4 border-none bg-transparent p-6 text-left transition-all duration-300 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 md:p-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-violet-400/80 dark:focus-visible:ring-violet-500/60"
       >
         <div className="flex min-w-0 flex-1 items-start gap-3.5">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-600 shadow-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
@@ -126,12 +131,19 @@ function QuestionCard({ question, index }) {
           {question.eyeContactPct !== null && (
             <span className={`text-xs font-medium ${eyeColor(question.eyeContactPct)}`}>👁 {question.eyeContactPct}%</span>
           )}
-          <span className="text-aura-muted">{open ? "▲" : "▼"}</span>
+          <span className="text-aura-muted" aria-hidden>
+            {open ? "▲" : "▼"}
+          </span>
         </div>
       </button>
 
       {open && (
-        <div className="flex flex-col gap-4 border-t border-slate-100 px-6 pb-6 pt-2 md:px-8 md:pb-8">
+        <div
+          id={panelId}
+          role="region"
+          aria-labelledby={headerId}
+          className="flex flex-col gap-4 border-t border-slate-100 px-6 pb-6 pt-2 md:px-8 md:pb-8"
+        >
           {(question.eyeContactPct !== null ||
             question.wordsPerMinute > 0 ||
             question.fillerWordCount !== null ||
