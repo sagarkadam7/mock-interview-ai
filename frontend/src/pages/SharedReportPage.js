@@ -304,6 +304,8 @@ export default function SharedReportPage() {
   const questionScores = (interview.questions || []).map((q) => q.score).filter((s) => typeof s === "number");
   const eyeTrend = (interview.questions || []).map((q) => q.eyeContactPct).filter((p) => typeof p === "number");
   const nextRepsBullets = buildNextRepsFromInterview(interview);
+  const totalQuestions = interview.questions?.length || 0;
+  const answeredPct = totalQuestions > 0 ? Math.round((answered.length / totalQuestions) * 100) : 0;
 
   return (
     <div className="page-shell min-h-screen max-w-6xl">
@@ -320,6 +322,23 @@ export default function SharedReportPage() {
             <p className="mt-1 text-sm text-aura-muted">
               {answered.length}/{interview.questions?.length || 0} questions answered
             </p>
+            {totalQuestions > 0 ? (
+              <div
+                className="mt-2 max-w-xs"
+                role="progressbar"
+                aria-valuenow={answeredPct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={`Session completion: ${answered.length} of ${totalQuestions} questions answered`}
+              >
+                <div className="h-2 overflow-hidden rounded-full bg-slate-200/90 dark:bg-slate-700/90">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-[width] duration-500 ease-out"
+                    style={{ width: `${answeredPct}%` }}
+                  />
+                </div>
+              </div>
+            ) : null}
           </div>
           {overall !== null && (
             <div className="text-center">
