@@ -735,14 +735,21 @@ export default function ReportPage() {
         </div>
 
         {overall !== null && (
-          <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50/90 px-5 py-4 text-[15px] leading-relaxed text-slate-700 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200">
-            {overall >= 8
-              ? "🌟 Outstanding performance! You're interview-ready."
-              : overall >= 6
-                ? "👍 Good job overall! Focus on the improvement areas below."
-                : overall >= 4
-                  ? "📈 You're on the right track. Review the feedback carefully."
-                  : "💪 Keep practicing! Every session makes you better."}
+          <div
+            role="status"
+            aria-live="polite"
+            className="mb-8 rounded-2xl border border-slate-200 bg-slate-50/90 px-5 py-5 text-[15px] leading-relaxed text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200"
+          >
+            <h3 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">At a glance</h3>
+            <p className="m-0">
+              {overall >= 8
+                ? "🌟 Outstanding performance! You're interview-ready."
+                : overall >= 6
+                  ? "👍 Good job overall! Focus on the improvement areas below."
+                  : overall >= 4
+                    ? "📈 You're on the right track. Review the feedback carefully."
+                    : "💪 Keep practicing! Every session makes you better."}
+            </p>
           </div>
         )}
 
