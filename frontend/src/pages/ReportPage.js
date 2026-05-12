@@ -11,7 +11,7 @@ import { RadarChart, Sparkline } from "../components/Charts";
 
 function ReportPageSkeleton() {
   return (
-    <div className="page-shell min-h-screen max-w-6xl" aria-busy="true" aria-label="Loading report">
+    <div className="page-shell min-h-screen max-w-6xl" aria-busy="true" aria-live="polite" aria-label="Loading report">
       <div className="glass-panel-lg mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
         <div className="mb-10 flex flex-wrap items-start justify-between gap-8">
           <div className="min-w-0 flex-1 space-y-4">
@@ -34,7 +34,21 @@ function ReportPageSkeleton() {
           ))}
         </div>
       </div>
-      <p className="text-center text-sm font-medium text-slate-500 dark:text-slate-400">Preparing your report…</p>
+      <div className="mx-auto max-w-md text-center">
+        <p className="text-sm font-semibold text-aura-ink dark:text-slate-200">Building your scorecard…</p>
+        <p className="mt-1.5 text-xs leading-relaxed text-aura-muted dark:text-slate-400">
+          Pulling per-question scores, delivery metrics, and coaching highlights.
+        </p>
+        <div className="mt-4 flex justify-center gap-1.5" aria-hidden>
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="h-1.5 w-1.5 rounded-full bg-violet-400/80 motion-safe:animate-bounce"
+              style={{ animationDelay: `${i * 120}ms` }}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
