@@ -69,10 +69,18 @@ function StatCard({ label, value, sub, colorClass }) {
   );
 }
 
-function MiniBar({ value, max, barClass }) {
+function MiniBar({ value, max, barClass, label }) {
   const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
+  const valuenow = Math.round(pct);
   return (
-    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700/80">
+    <div
+      className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700/80"
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={valuenow}
+      aria-label={label || "Progress"}
+    >
       <div className={`h-full rounded-full transition-all duration-500 ${barClass || "bg-aura-violet"}`} style={{ width: `${pct}%` }} />
     </div>
   );
@@ -92,6 +100,7 @@ function EmotionBar({ emotions }) {
           <MiniBar
             value={v}
             max={1}
+            label={`${k} expression share`}
             barClass={
               k === "happy" || k === "neutral"
                 ? "bg-emerald-500"
