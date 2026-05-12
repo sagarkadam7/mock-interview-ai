@@ -380,6 +380,26 @@ export default function SharedReportPage() {
               <h2 className="text-xl font-bold tracking-tight text-aura-ink">Coaching snapshot</h2>
               <p className="mt-1 text-sm text-aura-muted">Larger shape = better performance for that dimension.</p>
             </div>
+            <div className="max-w-[min(100%,260px)] rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 text-left dark:border-slate-600/60 dark:bg-slate-800/50">
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">How to read</div>
+              <ul className="space-y-2 text-xs leading-snug text-slate-600 dark:text-slate-400">
+                <li>
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Eye</span> — higher is better
+                </li>
+                <li>
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Conf</span> — confidence (ML), higher is better
+                </li>
+                <li>
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Pace</span> — aim near 130–170 wpm
+                </li>
+                <li>
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Fill</span> — filler words; lower is better
+                </li>
+                <li>
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Overall</span> — blended content score
+                </li>
+              </ul>
+            </div>
           </div>
           <RadarChart metrics={radarMetrics} stroke="#E85547" fill="rgba(91,33,182,0.14)" />
         </div>
