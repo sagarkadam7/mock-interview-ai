@@ -428,13 +428,22 @@ export default function ReportPage() {
 
   return (
     <div className="page-shell min-h-screen max-w-6xl">
+      <a
+        href="#report-questions"
+        className="absolute left-[-9999px] top-4 z-[100] rounded-xl border border-violet-200 bg-white px-4 py-2.5 text-sm font-semibold text-violet-800 shadow-md outline-none ring-violet-400 transition-shadow focus:left-4 focus:top-4 focus:ring-2 dark:border-violet-500/40 dark:bg-slate-900 dark:text-violet-200"
+      >
+        Skip to question breakdown
+      </a>
+      <main aria-labelledby="report-title">
       <div className="glass-panel-lg relative mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/50 via-transparent to-orange-50/30 opacity-90" aria-hidden />
         <div className="relative mb-10 flex flex-wrap items-start justify-between gap-8">
           <div className="min-w-0 flex-1">
             <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Session report</div>
             <div className="flex flex-wrap items-start gap-3">
-              <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">{interview.jobRole}</h1>
+              <h1 id="report-title" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+                {interview.jobRole}
+              </h1>
               <button
                 type="button"
                 onClick={onToggleStar}
@@ -840,7 +849,9 @@ export default function ReportPage() {
         ) : null}
       </div>
 
-      <h2 className="mb-4 text-xl font-bold tracking-tight text-aura-ink">Question-by-question breakdown</h2>
+      <h2 id="report-questions" tabIndex={-1} className="mb-4 scroll-mt-6 text-xl font-bold tracking-tight text-aura-ink outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page rounded-sm">
+        Question-by-question breakdown
+      </h2>
       <div className="flex flex-col gap-4">
         {interview.questions.map((q, i) => (
           <QuestionCard key={q._id} question={q} index={i} />
@@ -854,6 +865,7 @@ export default function ReportPage() {
           </button>
         </Link>
       </div>
+      </main>
     </div>
   );
 }
