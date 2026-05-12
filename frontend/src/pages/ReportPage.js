@@ -912,16 +912,19 @@ export default function ReportPage() {
         </section>
 
         {shareUrl ? (
-          <div className="mt-4 flex flex-col gap-2 rounded-2xl border border-slate-200/90 bg-white/80 p-4 text-sm dark:border-slate-700/80 dark:bg-slate-900/50 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-violet-200/80 bg-gradient-to-br from-violet-50/50 to-white p-4 text-sm shadow-sm dark:border-violet-500/25 dark:from-violet-950/30 dark:to-slate-900/50 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Share link</div>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-violet-700 dark:text-violet-300">Share link ready</div>
               <div className="truncate font-mono text-[13px] text-slate-700 dark:text-slate-200">{shareUrl}</div>
+              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                Anyone with this link can view this scorecard. It does not include your private prep notes.
+              </p>
             </div>
-            <div className="flex shrink-0 flex-wrap gap-2">
-              <button type="button" className="btn-outline px-4 py-2 text-xs" disabled={copying} onClick={() => copyText(shareUrl, "Share link copied")}>
+            <div className="flex shrink-0 flex-wrap gap-2 sm:pt-0.5">
+              <button type="button" className="btn-outline px-4 py-2 text-xs min-h-[40px]" disabled={copying} onClick={() => copyText(shareUrl, "Share link copied")}>
                 Copy
               </button>
-              <a className="btn-outline inline-flex items-center px-4 py-2 text-xs no-underline" href={shareUrl} target="_blank" rel="noreferrer">
+              <a className="btn-outline inline-flex min-h-[40px] items-center px-4 py-2 text-xs no-underline" href={shareUrl} target="_blank" rel="noreferrer">
                 Open
               </a>
             </div>
