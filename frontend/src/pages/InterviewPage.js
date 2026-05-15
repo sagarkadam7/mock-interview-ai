@@ -6,6 +6,7 @@ import { getApiErrorMessage } from "../utils/apiError";
 import { useConfirm } from "../context/ConfirmContext";
 import CameraRecorder, { renderTranscriptWithFillerHighlights } from "../components/CameraRecorder";
 import InterviewKeyboardHelp from "../components/InterviewKeyboardHelp";
+import PrepBriefPanel from "../components/PrepBriefPanel";
 
 const scoreColor = (s) => (s >= 7 ? "text-emerald-600" : s >= 4 ? "text-amber-600" : "text-rose-600");
 const eyeColor = (p) => (p > 70 ? "text-emerald-600" : p > 40 ? "text-amber-600" : "text-rose-600");
@@ -743,6 +744,13 @@ export default function InterviewPage() {
         </div>
 
         <aside className="w-full shrink-0 space-y-4 xl:sticky xl:top-24 xl:w-[420px] xl:self-start">
+          <PrepBriefPanel
+            interviewId={id}
+            prepBrief={interview.prepBrief}
+            onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
+            defaultOpen={!interview.prepBrief || interview.prepBrief.status !== "ready"}
+          />
+
           {!feedback && (
             <div className="rounded-2xl border border-slate-200/90 bg-white/90 p-4 text-sm leading-snug text-slate-600 shadow-sm ring-1 ring-white/80 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:ring-slate-800/50">
               <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">How this works</p>
