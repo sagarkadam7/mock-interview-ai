@@ -52,6 +52,7 @@ export const HOW_STEPS = [
 
 export const COMPARISON_ROWS = [
   { label: "Questions tied to your resume & JD", us: true, chatbot: false, coach: "Sometimes" },
+  { label: "AI Prep Brief (resume–JD match & gap analysis)", us: "Pro", chatbot: false, coach: "Manual" },
   { label: "Real-time speech + filler analytics", us: true, chatbot: "Rare", coach: false },
   { label: "Camera presence coaching", us: true, chatbot: false, coach: "Subjective" },
   { label: "Adaptive follow-up questions", us: true, chatbot: "Scripted", coach: true },

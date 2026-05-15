@@ -17,6 +17,7 @@ const free = [
 
 const pro = [
   "Unlimited mock sessions",
+  "AI Prep Brief — resume vs JD fit, gaps & STAR stories",
   "Shareable report links (send to mentors)",
   "Practice streaks + weekly goals (accountability)",
   "Momentum insights: readiness snapshot + trends",
