@@ -13,6 +13,7 @@ const { validateMongoId } = require("../middleware/validateMongoId");
 const { assertCanCreateInterview, bumpMonthlyInterviewUsage } = require("../middleware/planLimits");
 const { parseJsonFromAi } = require("../utils/parseAiJson");
 const { normalizeFeedback, normalizeQuestions } = require("../utils/aiSchemas");
+const { generatePrepBrief } = require("../utils/generatePrepBrief");
 const { logAction } = require("../utils/logger");
 
 const router = express.Router();
@@ -31,6 +32,14 @@ const answerLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: "Too many answer submissions. Slow down and try again." },
+});
+
+const prepBriefLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: Number(process.env.PREP_BRIEF_RATE_LIMIT_MAX) || 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many prep brief requests. Try again later." },
 });
 
 function getGeminiModel() {
@@ -417,6 +426,80 @@ router.patch("/:id/meta", protect, validateMongoId("id"), async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// ════════════════════════════════════════════════════════════════
+// AI Prep Brief: resume vs JD fit analysis (Pro)
+// POST /api/interview/:id/prep-brief
+// ════════════════════════════════════════════════════════════════
+router.post(
+  "/:id/prep-brief",
+  protect,
+  prepBriefLimiter,
+  validateMongoId("id"),
+  async (req, res) => {
+    try {
+      const plan = (req.user.plan || "free").toLowerCase();
+      if (plan !== "pro" && plan !== "team") {
+        return res.status(402).json({
+          message:
+            "AI Prep Brief is a Pro feature. Upgrade to see resume vs job-description fit, gaps, and stories to rehearse.",
+          code: "PREP_BRIEF_PRO_ONLY",
+        });
+      }
+
+      const interview = await Interview.findById(req.params.id);
+      if (!interview) return res.status(404).json({ message: "Interview not found." });
+      if (interview.userId.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ message: "Not authorized." });
+      }
+
+      const force = String(req.query.force || "").toLowerCase() === "true";
+      if (interview.prepBrief?.status === "ready" && !force) {
+        return res.json({ prepBrief: interview.prepBrief });
+      }
+
+      const resumeText = (interview.resumeText || "").trim();
+      if (resumeText.length < 50) {
+        return res.status(400).json({ message: "Resume text is too short for prep analysis." });
+      }
+
+      const brief = await generatePrepBrief({
+        jobRole: interview.jobRole,
+        targetCompany: interview.targetCompany,
+        resumeText,
+        jdText: interview.jdText || "",
+        settings: {
+          level: interview.level,
+          interviewMode: interview.interviewMode,
+          persona: interview.persona,
+        },
+      });
+
+      interview.prepBrief = {
+        status: "ready",
+        ...brief,
+        generatedAt: new Date(),
+      };
+      await interview.save();
+
+      logAction(req.user._id, "PREP_BRIEF_GENERATED", { interviewId: interview._id, matchScore: brief.matchScore }, req);
+
+      res.json({ prepBrief: interview.prepBrief });
+    } catch (err) {
+      console.error("Prep brief error:", err.message);
+      try {
+        const interview = await Interview.findById(req.params.id);
+        if (interview && interview.userId?.toString() === req.user._id?.toString()) {
+          interview.prepBrief = { ...(interview.prepBrief || {}), status: "failed" };
+          await interview.save();
+        }
+      } catch {
+        /* ignore */
+      }
+      res.status(err.status || 500).json({ message: err.message || "Failed to generate prep brief." });
+    }
+  }
+);
 
 // ════════════════════════════════════════════════════════════════
 // Duplicate session: same resume/JD/settings, newly generated questions (counts toward plan).
