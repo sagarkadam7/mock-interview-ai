@@ -59,6 +59,24 @@ const interviewSchema = new mongoose.Schema(
     avgFillerWords: { type: Number, default: null },
     avgPace:        { type: Number, default: null },
     avgConfidence:  { type: Number, default: null },
+    /** AI resume-vs-JD prep analysis (Pro). Optional — existing sessions work without it. */
+    prepBrief: {
+      status:       { type: String, enum: ["none", "ready", "failed"], default: "none" },
+      matchScore:   { type: Number, default: null, min: 0, max: 100 },
+      summary:      { type: String, default: "" },
+      strengths:    { type: [String], default: [] },
+      gaps: [{
+        area:     { type: String, default: "" },
+        severity: { type: String, enum: ["low", "medium", "high"], default: "medium" },
+        tip:      { type: String, default: "" },
+      }],
+      starStories: [{
+        title:  { type: String, default: "" },
+        prompt: { type: String, default: "" },
+      }],
+      focusTips:   { type: [String], default: [] },
+      generatedAt: { type: Date, default: null },
+    },
     questions: [questionSchema],
   },
   { timestamps: true }
