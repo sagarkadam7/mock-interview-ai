@@ -56,6 +56,8 @@ export const patchInterviewMeta = (id, data) => api.patch(`/interview/${id}/meta
 export const duplicateInterview = (id) => api.post(`/interview/${id}/duplicate`);
 export const submitAnswer = (id, data) => api.post(`/interview/${id}/answer`, data);
 export const deleteInterview = (id) => api.delete(`/interview/${id}`);
+export const generatePrepBrief = (id, { force = false } = {}) =>
+  api.post(`/interview/${id}/prep-brief${force ? "?force=true" : ""}`);
 
 // ── Billing / Plan ────────────────────────────────────────────
 export const getBillingMe = () => api.get("/billing/me");
