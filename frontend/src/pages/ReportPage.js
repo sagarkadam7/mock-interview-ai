@@ -8,6 +8,7 @@ import { buildNextRepsFromInterview, getSessionCoachingFocus } from "../utils/pr
 import { formatRelativeTime } from "../utils/formatRelativeTime";
 import { formatSessionWallDuration } from "../utils/formatSessionDuration";
 import { RadarChart, Sparkline } from "../components/Charts";
+import PrepBriefPanel from "../components/PrepBriefPanel";
 
 function ReportPageSkeleton() {
   return (
@@ -570,6 +571,15 @@ export default function ReportPage() {
             colorClass={
               interview.avgFillerWords <= 2 ? "text-emerald-600" : interview.avgFillerWords <= 5 ? "text-amber-600" : "text-rose-600"
             }
+          />
+        </div>
+
+        <div className="mb-8">
+          <PrepBriefPanel
+            interviewId={id}
+            prepBrief={interview.prepBrief}
+            onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
+            defaultOpen={interview.prepBrief?.status === "ready"}
           />
         </div>
 
