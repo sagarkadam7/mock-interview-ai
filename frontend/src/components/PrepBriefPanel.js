@@ -166,10 +166,43 @@ function PrepBriefEmpty({ readOnly, isPro, loading, onGenerate }) {
       <p className="text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
         Get a match score, gap analysis, and STAR stories to rehearse — tailored to this role and JD before you hit record.
       </p>
+      <ul className="grid gap-2 text-[12px] text-slate-500 dark:text-slate-400 sm:grid-cols-2">
+        <li className="flex items-center gap-2 rounded-lg border border-violet-100/80 bg-violet-50/40 px-2.5 py-2 dark:border-violet-500/15 dark:bg-violet-950/20">
+          <span className="text-violet-500" aria-hidden>◎</span>
+          Fit score
+        </li>
+        <li className="flex items-center gap-2 rounded-lg border border-violet-100/80 bg-violet-50/40 px-2.5 py-2 dark:border-violet-500/15 dark:bg-violet-950/20">
+          <span className="text-violet-500" aria-hidden>◎</span>
+          Gap tips
+        </li>
+        <li className="flex items-center gap-2 rounded-lg border border-violet-100/80 bg-violet-50/40 px-2.5 py-2 dark:border-violet-500/15 dark:bg-violet-950/20 sm:col-span-2">
+          <span className="text-violet-500" aria-hidden>◎</span>
+          STAR stories from your resume
+        </li>
+      </ul>
+      {loading ? (
+        <div
+          className="space-y-2.5 rounded-xl border border-violet-200/60 bg-violet-50/30 p-4 dark:border-violet-500/20 dark:bg-violet-950/25"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          <div className="skeleton-line h-3 w-full rounded-md" />
+          <div className="skeleton-line h-3 w-[88%] rounded-md" />
+          <div className="skeleton-line mx-auto h-16 w-16 rounded-full" />
+          <p className="text-center text-xs font-medium text-violet-700 dark:text-violet-300">Analyzing resume vs job description…</p>
+        </div>
+      ) : null}
       {!readOnly &&
         (isPro ? (
-          <button type="button" className="btn-cta w-full justify-center py-2.5 text-sm" onClick={onGenerate} disabled={loading}>
-            {loading ? "Analyzing resume…" : "Generate prep brief"}
+          <button type="button" className="btn-cta w-full justify-center gap-2 py-2.5 text-sm" onClick={onGenerate} disabled={loading} aria-busy={loading}>
+            {loading ? (
+              <>
+                <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden />
+                Analyzing resume…
+              </>
+            ) : (
+              "Generate prep brief"
+            )}
           </button>
         ) : (
           <PrepBriefUpgrade />
