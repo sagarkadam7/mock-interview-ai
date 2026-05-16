@@ -5,10 +5,48 @@ import { useAuth } from "../context/AuthContext";
 import { generatePrepBrief } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 
+function matchScoreStroke(score) {
+  if (score >= 75) return "#10b981";
+  if (score >= 50) return "#f59e0b";
+  return "#f43f5e";
+}
+
 function matchScoreRingClass(score) {
   if (score >= 75) return "from-emerald-500 to-emerald-600";
   if (score >= 50) return "from-amber-500 to-amber-600";
   return "from-rose-500 to-rose-600";
+}
+
+function MatchScoreRing({ score }) {
+  const r = 30;
+  const c = 2 * Math.PI * r;
+  const offset = c * (1 - Math.min(Math.max(score, 0), 100) / 100);
+  const stroke = matchScoreStroke(score);
+  const ringClass = matchScoreRingClass(score);
+
+  return (
+    <div className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center" aria-label={`Resume match score ${score} percent`}>
+      <svg width="72" height="72" viewBox="0 0 72 72" className="-rotate-90" aria-hidden>
+        <circle cx="36" cy="36" r={r} fill="none" stroke="currentColor" strokeWidth="5" className="text-slate-200/90 dark:text-slate-700/80" />
+        <circle
+          cx="36"
+          cy="36"
+          r={r}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="5"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
+          className="transition-[stroke-dashoffset] duration-700 ease-out"
+        />
+      </svg>
+      <div className={`absolute inset-2 flex flex-col items-center justify-center rounded-full bg-gradient-to-br ${ringClass} text-white shadow-inner`}>
+        <span className="font-display text-xl font-bold tabular-nums leading-none">{score}</span>
+        <span className="text-[8px] font-bold uppercase tracking-wider opacity-90">match</span>
+      </div>
+    </div>
+  );
 }
 
 function severityBadge(severity) {
@@ -153,18 +191,11 @@ function PrepBriefUpgrade() {
 
 function PrepBriefContent({ brief, readOnly, isPro, loading, onRegenerate }) {
   const score = brief.matchScore;
-  const ringClass = matchScoreRingClass(score);
 
   return (
     <div className="space-y-4">
       <div className="flex items-start gap-4">
-        <div
-          className={`flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-2xl bg-gradient-to-br ${ringClass} text-white shadow-md`}
-          aria-label={`Resume match score ${score} percent`}
-        >
-          <span className="font-display text-2xl font-bold tabular-nums leading-none">{score}</span>
-          <span className="text-[9px] font-bold uppercase tracking-wider opacity-90">match</span>
-        </div>
+        <MatchScoreRing score={score} />
         <p className="flex-1 text-[13px] leading-relaxed text-slate-700 dark:text-slate-300">{brief.summary}</p>
       </div>
 
