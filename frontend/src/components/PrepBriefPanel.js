@@ -50,22 +50,37 @@ export default function PrepBriefPanel({ interviewId, prepBrief, onBriefUpdate, 
     }
   };
 
+  const panelId = `prep-brief-${interviewId}`;
+  const headerId = `${panelId}-header`;
+
   return (
-    <div className="rounded-2xl border border-violet-200/80 bg-gradient-to-br from-violet-50/40 via-white/95 to-white/90 shadow-sm ring-1 ring-violet-100/60 dark:border-violet-500/25 dark:from-violet-950/30 dark:via-slate-900/90 dark:to-slate-950/90 dark:ring-violet-900/30">
+    <div
+      className="rounded-2xl border border-violet-200/80 bg-gradient-to-br from-violet-50/40 via-white/95 to-white/90 shadow-sm ring-1 ring-violet-100/60 dark:border-violet-500/25 dark:from-violet-950/30 dark:via-slate-900/90 dark:to-slate-950/90 dark:ring-violet-900/30"
+      id={panelId}
+    >
       <button
         type="button"
-        className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left"
+        className="flex w-full items-center justify-between gap-3 rounded-2xl px-4 py-3.5 text-left transition-colors hover:bg-violet-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 focus-visible:ring-offset-2 dark:hover:bg-violet-950/30 dark:focus-visible:ring-offset-slate-950"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
+        aria-controls={`${panelId}-body`}
+        id={headerId}
       >
         <PrepBriefHeader isReady={isReady} brief={brief} />
-        <span className="shrink-0 text-slate-400" aria-hidden>
-          {open ? "▲" : "▼"}
+        <span
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-violet-200/80 bg-white/90 text-slate-500 transition-transform duration-200 dark:border-violet-500/30 dark:bg-slate-900/80 dark:text-slate-400 ${open ? "rotate-180" : ""}`}
+          aria-hidden
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </span>
       </button>
 
       {open ? (
         <PrepBriefBody
+          id={`${panelId}-body`}
+          labelledBy={headerId}
           isReady={isReady}
           brief={brief}
           readOnly={readOnly}
@@ -90,9 +105,14 @@ function PrepBriefHeader({ isReady, brief }) {
   );
 }
 
-function PrepBriefBody({ isReady, brief, readOnly, isPro, loading, onGenerate, onRegenerate }) {
+function PrepBriefBody({ id, labelledBy, isReady, brief, readOnly, isPro, loading, onGenerate, onRegenerate }) {
   return (
-    <div className="border-t border-violet-200/60 px-4 pb-4 pt-1 dark:border-violet-800/40">
+    <div
+      id={id}
+      role="region"
+      aria-labelledby={labelledBy}
+      className="border-t border-violet-200/60 px-4 pb-4 pt-1 dark:border-violet-800/40"
+    >
       {!isReady ? (
         <PrepBriefEmpty readOnly={readOnly} isPro={isPro} loading={loading} onGenerate={onGenerate} />
       ) : (
