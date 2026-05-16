@@ -574,14 +574,29 @@ export default function ReportPage() {
           />
         </div>
 
-        <div className="mb-8">
-          <PrepBriefPanel
-            interviewId={id}
-            prepBrief={interview.prepBrief}
-            onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
-            defaultOpen={interview.prepBrief?.status === "ready"}
-          />
-        </div>
+        <section className="mb-8" aria-labelledby="report-prep-brief-heading">
+          <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-violet-600 dark:text-violet-300">Before you practiced</span>
+              <h2 id="report-prep-brief-heading" className="mt-1 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+                Resume prep brief
+              </h2>
+            </div>
+            {interview.prepBrief?.status === "ready" && interview.prepBrief?.matchScore != null ? (
+              <span className="rounded-full border border-violet-200/80 bg-violet-50/80 px-3 py-1 text-xs font-semibold tabular-nums text-violet-800 dark:border-violet-500/30 dark:bg-violet-950/40 dark:text-violet-200">
+                {interview.prepBrief.matchScore}% fit
+              </span>
+            ) : null}
+          </div>
+          <div className="glass-panel rounded-3xl p-4 ring-1 ring-violet-200/40 dark:ring-violet-500/20 md:p-5">
+            <PrepBriefPanel
+              interviewId={id}
+              prepBrief={interview.prepBrief}
+              onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
+              defaultOpen={interview.prepBrief?.status === "ready"}
+            />
+          </div>
+        </section>
 
         {(peerAvgScore != null && scoreVsPeer != null) || weakPrimary.length > 0 ? (
           <div className="mb-8 grid gap-4 md:grid-cols-2">
