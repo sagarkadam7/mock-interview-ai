@@ -141,10 +141,23 @@ export default function PricingPage() {
           </div>
           <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">Unlimited practice + shareable signal. Built for serious prep loops.</p>
           <ul className="mt-8 space-y-3">
-            {pro.map((x) => (
-              <li key={x} className="flex gap-3 text-sm text-slate-700 dark:text-slate-300">
-                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs text-violet-700 ring-1 ring-violet-200/80 dark:bg-violet-950/55 dark:text-violet-200 dark:ring-violet-800/50">
-                  ✦
+            {pro.map((x, i) => (
+              <li
+                key={x}
+                className={`flex gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
+                  i === 1
+                    ? "border border-violet-300/50 bg-violet-50/60 text-slate-800 ring-1 ring-violet-200/60 dark:border-violet-500/35 dark:bg-violet-950/35 dark:text-slate-100 dark:ring-violet-800/40"
+                    : "text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                <span
+                  className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs ring-1 ${
+                    i === 1
+                      ? "bg-violet-600 text-white ring-violet-500/50 dark:bg-violet-500 dark:ring-violet-400/40"
+                      : "bg-violet-100 text-violet-700 ring-violet-200/80 dark:bg-violet-950/55 dark:text-violet-200 dark:ring-violet-800/50"
+                  }`}
+                >
+                  {i === 1 ? "★" : "✦"}
                 </span>
                 {x}
               </li>

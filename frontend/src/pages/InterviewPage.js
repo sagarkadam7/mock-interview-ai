@@ -744,12 +744,16 @@ export default function InterviewPage() {
         </div>
 
         <aside className="w-full shrink-0 space-y-4 xl:sticky xl:top-24 xl:w-[420px] xl:self-start">
-          <PrepBriefPanel
-            interviewId={id}
-            prepBrief={interview.prepBrief}
-            onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
-            defaultOpen={!interview.prepBrief || interview.prepBrief.status !== "ready"}
-          />
+          <div className="relative rounded-[1.15rem] bg-gradient-to-br from-violet-400/45 via-white/20 to-aura-coral/35 p-[1px] shadow-md dark:from-violet-500/30 dark:via-slate-800/20 dark:to-aura-coral/25">
+            <div className="overflow-hidden rounded-[1.1rem]">
+              <PrepBriefPanel
+                interviewId={id}
+                prepBrief={interview.prepBrief}
+                onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
+                defaultOpen={!interview.prepBrief || interview.prepBrief.status !== "ready"}
+              />
+            </div>
+          </div>
 
           {!feedback && (
             <div className="rounded-2xl border border-slate-200/90 bg-white/90 p-4 text-sm leading-snug text-slate-600 shadow-sm ring-1 ring-white/80 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:ring-slate-800/50">
