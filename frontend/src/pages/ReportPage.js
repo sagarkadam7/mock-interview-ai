@@ -60,6 +60,44 @@ const eyeColor = (p) => (p > 70 ? "text-emerald-600" : p > 40 ? "text-amber-600"
 const paceColor = (l) => (l === "good" ? "text-emerald-600" : "text-amber-600");
 const emotionEmoji = { happy: "😊", neutral: "😐", sad: "😔", fearful: "😰", angry: "😠", disgusted: "🤢", surprised: "😲" };
 
+function overallScoreStroke(score) {
+  if (score >= 7) return "#10b981";
+  if (score >= 4) return "#f59e0b";
+  return "#f43f5e";
+}
+
+function ReportOverallRing({ score, ringClass, textClass }) {
+  const r = 42;
+  const c = 2 * Math.PI * r;
+  const pct = Math.min(Math.max(score, 0), 10) / 10;
+  const offset = c * (1 - pct);
+  const stroke = overallScoreStroke(score);
+
+  return (
+    <div className="relative mx-auto flex h-[104px] w-[104px] items-center justify-center" aria-hidden>
+      <svg width="104" height="104" viewBox="0 0 104 104" className="-rotate-90">
+        <circle cx="52" cy="52" r={r} fill="none" stroke="currentColor" strokeWidth="6" className="text-slate-200/90 dark:text-slate-700/80" />
+        <circle
+          cx="52"
+          cy="52"
+          r={r}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
+          className="transition-[stroke-dashoffset] duration-700 ease-out"
+        />
+      </svg>
+      <div className={`absolute inset-3 flex flex-col items-center justify-center rounded-full border-[3px] ${ringClass}`}>
+        <span className={`font-sans text-3xl font-bold leading-none tabular-nums ${textClass}`}>{score}</span>
+        <span className="text-[10px] text-aura-muted">/10</span>
+      </div>
+    </div>
+  );
+}
+
 function StatCard({ label, value, sub, colorClass }) {
   return (
     <div className="glass-panel rounded-2xl p-6 text-center ring-1 ring-white/40 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-slate-200/80 hover:shadow-md dark:hover:border-slate-600/50 dark:hover:shadow-lg dark:hover:shadow-black/25">
@@ -537,11 +575,8 @@ export default function ReportPage() {
           </div>
           {overall !== null && (
             <div className="text-center">
-              <div className={`mx-auto flex h-24 w-24 flex-col items-center justify-center rounded-full border-[3px] ${overallRing}`}>
-                <span className={`font-sans text-3xl font-bold leading-none ${overallText}`}>{overall}</span>
-                <span className="text-[10px] text-aura-muted">/10</span>
-              </div>
-              <p className="mt-2 text-[11px] text-aura-muted">AI content score</p>
+              <ReportOverallRing score={overall} ringClass={overallRing} textClass={overallText} />
+              <p className="mt-2 text-[11px] font-medium text-aura-muted">AI content score</p>
             </div>
           )}
         </div>
