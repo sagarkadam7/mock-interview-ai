@@ -185,16 +185,29 @@ function QuestionCard({ question, index }) {
         </div>
         <div className="flex shrink-0 items-center gap-4">
           {question.score !== null && (
-            <span className={`font-sans text-xl font-bold ${scoreColor(question.score)}`}>
+            <span
+              className={`inline-flex min-w-[3.25rem] items-center justify-center rounded-full border px-2.5 py-1 font-sans text-lg font-bold tabular-nums ${
+                question.score >= 7
+                  ? "border-emerald-200/80 bg-emerald-50 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950/40 dark:text-emerald-100"
+                  : question.score >= 4
+                    ? "border-amber-200/80 bg-amber-50 text-amber-900 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-100"
+                    : "border-rose-200/80 bg-rose-50 text-rose-800 dark:border-rose-500/30 dark:bg-rose-950/40 dark:text-rose-100"
+              }`}
+            >
               {question.score}
-              <span className="text-xs font-normal text-aura-muted">/10</span>
+              <span className="ml-0.5 text-xs font-semibold opacity-70">/10</span>
             </span>
           )}
           {question.eyeContactPct !== null && (
             <span className={`text-xs font-medium ${eyeColor(question.eyeContactPct)}`}>👁 {question.eyeContactPct}%</span>
           )}
-          <span className="text-aura-muted" aria-hidden>
-            {open ? "▲" : "▼"}
+          <span
+            className={`flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200/80 bg-white/90 text-slate-500 transition-transform duration-200 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-400 ${open ? "rotate-180" : ""}`}
+            aria-hidden
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </span>
         </div>
       </button>
