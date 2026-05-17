@@ -929,9 +929,13 @@ export default function ReportPage() {
           </ol>
         </div>
 
-        <section className="border-t border-slate-200/70 pt-8 dark:border-slate-700/50" aria-label="Report actions">
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Export &amp; next steps</p>
-          <div className="flex flex-wrap gap-3">
+        <section
+          className="rounded-3xl border border-slate-200/90 bg-gradient-to-br from-slate-50/90 via-white to-violet-50/30 p-5 shadow-sm ring-1 ring-white/60 dark:border-slate-700/80 dark:from-slate-900/90 dark:via-slate-950 dark:to-violet-950/20 dark:ring-slate-800/40 md:p-6"
+          aria-label="Report actions"
+        >
+          <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Export &amp; next steps</p>
+          <p className="mb-4 text-sm text-slate-600 dark:text-slate-400">Download, share, or run another session with the same setup.</p>
+          <div className="flex flex-wrap gap-2.5">
           <button
             type="button"
             className="btn-primary min-h-[44px] px-5 py-2.5"
@@ -1028,9 +1032,18 @@ export default function ReportPage() {
         ) : null}
       </div>
 
-      <h2 id="report-questions" tabIndex={-1} className="mb-4 scroll-mt-6 text-xl font-bold tracking-tight text-aura-ink outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page rounded-sm">
-        Question-by-question breakdown
-      </h2>
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3 scroll-mt-6">
+        <h2
+          id="report-questions"
+          tabIndex={-1}
+          className="text-xl font-bold tracking-tight text-aura-ink outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page rounded-sm dark:text-slate-100"
+        >
+          Question-by-question breakdown
+        </h2>
+        <span className="rounded-full border border-slate-200/90 bg-white/90 px-3 py-1 text-xs font-semibold tabular-nums text-slate-600 shadow-sm dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-300">
+          {interview.questions.length} question{interview.questions.length === 1 ? "" : "s"}
+        </span>
+      </div>
       <div className="flex flex-col gap-4">
         {interview.questions.map((q, i) => (
           <QuestionCard key={q._id} question={q} index={i} />
