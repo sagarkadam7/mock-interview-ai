@@ -843,10 +843,24 @@ export default function ReportPage() {
           <div
             role="status"
             aria-live="polite"
-            className="mb-8 rounded-2xl border border-slate-200 bg-slate-50/90 px-5 py-5 text-[15px] leading-relaxed text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200"
+            className={`mb-8 overflow-hidden rounded-2xl border bg-gradient-to-br px-5 py-5 text-[15px] leading-relaxed shadow-sm dark:text-slate-200 ${
+              overall >= 8
+                ? "border-emerald-200/80 from-emerald-50/80 via-white to-white dark:border-emerald-500/25 dark:from-emerald-950/30 dark:via-slate-900/80 dark:to-slate-950"
+                : overall >= 6
+                  ? "border-violet-200/80 from-violet-50/60 via-white to-white dark:border-violet-500/25 dark:from-violet-950/30 dark:via-slate-900/80 dark:to-slate-950"
+                  : overall >= 4
+                    ? "border-amber-200/80 from-amber-50/70 via-white to-white dark:border-amber-500/25 dark:from-amber-950/25 dark:via-slate-900/80 dark:to-slate-950"
+                    : "border-rose-200/80 from-rose-50/60 via-white to-white dark:border-rose-500/25 dark:from-rose-950/25 dark:via-slate-900/80 dark:to-slate-950"
+            }`}
           >
+            <div
+              className={`mb-3 h-1 w-full rounded-full ${
+                overall >= 8 ? "bg-emerald-400/60" : overall >= 6 ? "bg-violet-400/60" : overall >= 4 ? "bg-amber-400/60" : "bg-rose-400/60"
+              }`}
+              aria-hidden
+            />
             <h3 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">At a glance</h3>
-            <p className="m-0">
+            <p className="m-0 text-slate-700 dark:text-slate-200">
               {overall >= 8
                 ? "🌟 Outstanding performance! You're interview-ready."
                 : overall >= 6
