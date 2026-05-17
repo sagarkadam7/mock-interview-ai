@@ -101,8 +101,8 @@ function ReportOverallRing({ score, ringClass, textClass }) {
 function StatCard({ label, value, sub, colorClass }) {
   return (
     <div className="glass-panel rounded-2xl p-6 text-center ring-1 ring-white/40 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-slate-200/80 hover:shadow-md dark:hover:border-slate-600/50 dark:hover:shadow-lg dark:hover:shadow-black/25">
-      <div className={`mb-1 font-sans text-3xl font-bold tracking-tight ${colorClass || "text-violet-600"}`}>{value ?? "—"}</div>
-      <div className="text-xs font-medium text-slate-500 dark:text-slate-400">{label}</div>
+      <div className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{label}</div>
+      <div className={`font-sans text-3xl font-bold tracking-tight tabular-nums ${colorClass || "text-violet-600"}`}>{value ?? "—"}</div>
       {sub && <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{sub}</div>}
     </div>
   );
@@ -581,6 +581,15 @@ export default function ReportPage() {
           )}
         </div>
 
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Delivery</span>
+            <h2 className="mt-1 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Session metrics</h2>
+          </div>
+          <span className="rounded-full border border-slate-200/80 bg-slate-50/90 px-3 py-1 text-[11px] font-semibold text-slate-600 dark:border-slate-600 dark:bg-slate-800/80 dark:text-slate-300">
+            {answered.length}/{totalQuestions} answered
+          </span>
+        </div>
         <div className="mb-8 grid gap-3 sm:grid-cols-2">
           <StatCard
             label="Avg eye contact"
