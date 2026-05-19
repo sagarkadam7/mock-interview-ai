@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+const USE_CASE_ICONS = ["⌘", "◎", "◈", "✦"];
+
 const USE_CASES = [
   {
     title: "Software engineering",
@@ -59,11 +61,14 @@ export default function UseCasesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.45, delay: i * 0.06 }}
-              className="group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/90 p-8 shadow-sm ring-1 ring-white/60 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl dark:border-slate-700/70 dark:bg-slate-900/70 dark:ring-slate-700/50 md:p-10"
+              className="group relative overflow-hidden rounded-3xl border border-slate-200/80 border-l-[3px] border-l-transparent bg-white/90 p-8 shadow-sm ring-1 ring-white/60 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-l-violet-500 hover:shadow-xl hover:shadow-violet-500/10 dark:border-slate-700/70 dark:bg-slate-900/70 dark:ring-slate-700/50 dark:hover:border-l-violet-400 md:p-10"
             >
-              <div aria-hidden className={`pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gradient-to-br ${u.accent} blur-3xl`} />
+              <div aria-hidden className={`pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gradient-to-br ${u.accent} opacity-60 blur-3xl transition-opacity duration-500 group-hover:opacity-100`} />
 
               <div className="relative">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50 text-lg text-violet-700 shadow-inner transition-transform duration-300 group-hover:scale-105 dark:border-slate-700 dark:from-slate-800 dark:to-slate-900 dark:text-violet-300" aria-hidden>
+                  {USE_CASE_ICONS[i % USE_CASE_ICONS.length]}
+                </div>
                 <h3 className="text-xl font-bold tracking-tight text-aura-ink dark:text-slate-100">{u.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{u.desc}</p>
                 <ul className="mt-6 space-y-2 text-sm text-slate-700 dark:text-slate-300">
