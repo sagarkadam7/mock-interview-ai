@@ -645,10 +645,11 @@ export default function LandingPage() {
             <div
               className="hidden border-b border-white/[0.06] px-8 py-4 md:grid"
               style={{
-                gridTemplateColumns: "minmax(0, 0.9fr) minmax(0, 1.45fr) minmax(0, 1fr)",
+                gridTemplateColumns: "auto minmax(0, 0.9fr) minmax(0, 1.45fr) minmax(0, 1fr)",
                 gap: 24,
               }}
             >
+              <span aria-hidden style={{ width: 28 }} />
               {["Candidate outcome", "Experience layer", "What improves"].map(h => (
                 <span key={h} style={{
                   fontFamily: "'DM Mono', monospace",
@@ -758,12 +759,33 @@ function EngineRowDark({ e, idx, isLast }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={[
-        "grid grid-cols-1 gap-3 px-5 py-6 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.45fr)_minmax(0,1fr)] md:items-center md:gap-6 md:px-8 md:py-7",
+        "grid grid-cols-1 gap-3 px-5 py-6 md:grid-cols-[auto_minmax(0,0.9fr)_minmax(0,1.45fr)_minmax(0,1fr)] md:items-center md:gap-6 md:px-8 md:py-7",
         !isLast && "border-b border-white/[0.05]",
         hovered && "bg-white/[0.04]",
         "transition-[background-color] duration-200",
       ].filter(Boolean).join(" ")}
     >
+      <span
+        className="hidden md:inline-flex"
+        style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 10,
+          fontWeight: 700,
+          letterSpacing: "0.12em",
+          color: hovered ? "white" : "rgba(255,255,255,0.35)",
+          width: 28,
+          height: 28,
+          borderRadius: 8,
+          border: `1px solid ${hovered ? `${C.coral}55` : "rgba(255,255,255,0.12)"}`,
+          background: hovered ? `${C.coral}18` : "rgba(255,255,255,0.04)",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all 0.25s ease",
+        }}
+        aria-hidden
+      >
+        {String(idx + 1).padStart(2, "0")}
+      </span>
       <span style={{
         fontFamily: "'DM Mono', monospace",
         fontSize: 10,
