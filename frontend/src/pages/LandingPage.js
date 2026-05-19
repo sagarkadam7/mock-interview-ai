@@ -194,10 +194,11 @@ function Marquee({ items, speed = 30 }) {
 }
 
 /* ─── STAT CARD ──────────────────────────────────────────────────────── */
-function StatCard({ value, label, delay = 0 }) {
+function StatCard({ value, label, delay = 0, accentIndex = 0 }) {
   const { palette: C } = useTheme();
   const [ref, visible] = useInView();
   const [hovered, setHovered] = useState(false);
+  const accent = accentIndex % 2 === 0 ? C.coral : C.violet;
   return (
     <motion.div
       ref={ref}
@@ -207,16 +208,34 @@ function StatCard({ value, label, delay = 0 }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
+        position: "relative",
+        overflow: "hidden",
         background: C.card,
-        border: `1px solid ${hovered ? `${C.violet}33` : C.border}`,
+        border: `1px solid ${hovered ? `${accent}44` : C.border}`,
         borderRadius: 20,
         padding: "32px 28px",
         textAlign: "center",
-        boxShadow: hovered ? `0 18px 48px -16px ${C.violet}26, 0 1px 0 0 rgba(255,255,255,0.06) inset` : C.cardShadow,
-        transform: hovered ? "translateY(-2px)" : "translateY(0)",
+        boxShadow: hovered ? `0 18px 48px -16px ${accent}28, 0 1px 0 0 rgba(255,255,255,0.06) inset` : C.cardShadow,
+        transform: hovered ? "translateY(-3px)" : "translateY(0)",
         transition: "transform 0.28s cubic-bezier(0.16,1,0.3,1), box-shadow 0.28s ease, border-color 0.28s ease",
       }}
     >
+      <motion.div
+        aria-hidden
+        initial={{ scaleX: 0 }}
+        animate={visible ? { scaleX: 1 } : {}}
+        transition={{ duration: 0.6, delay: delay + 0.15, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 3,
+          transformOrigin: "left center",
+          background: `linear-gradient(90deg, ${accent}, ${accentIndex % 2 === 0 ? C.violet : C.coral})`,
+          opacity: hovered ? 1 : 0.85,
+        }}
+      />
       <div
         style={{
           fontFamily: "'Playfair Display', serif",
@@ -523,8 +542,22 @@ export default function LandingPage() {
           maxWidth: 1120,
           margin: "0 auto",
           padding: "72px 24px 88px",
+          position: "relative",
         }}
       >
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "8%",
+            width: "min(90%, 640px)",
+            height: "55%",
+            transform: "translateX(-50%)",
+            background: `radial-gradient(ellipse at center, ${C.violet}08 0%, transparent 70%)`,
+            pointerEvents: "none",
+          }}
+        />
         <div style={{ textAlign: "center", marginBottom: 56, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
           <SectionLabel>The product, in three numbers</SectionLabel>
           <h2 style={{
@@ -544,7 +577,7 @@ export default function LandingPage() {
           gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
           gap: 20,
         }}>
-          {STATS.map((s, i) => <StatCard key={s.value} {...s} delay={i * 0.08} />)}
+          {STATS.map((s, i) => <StatCard key={s.value} {...s} delay={i * 0.08} accentIndex={i} />)}
         </div>
       </section>
 
