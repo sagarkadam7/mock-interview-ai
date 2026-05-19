@@ -3,9 +3,24 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const privacyPrinciples = [
-  { title: "Enterprise-grade privacy", desc: "Interview data is handled with strict access boundaries and secure-by-default controls." },
-  { title: "Candidate data ownership", desc: "You can remove your interview records directly from your dashboard whenever you choose." },
-  { title: "Policy transparency", desc: "Our commitments are documented clearly so teams can evaluate compliance quickly." },
+  {
+    title: "Enterprise-grade privacy",
+    desc: "Interview data is handled with strict access boundaries and secure-by-default controls.",
+    icon: "🔐",
+    accent: "from-violet-500/20 to-indigo-500/10",
+  },
+  {
+    title: "Candidate data ownership",
+    desc: "You can remove your interview records directly from your dashboard whenever you choose.",
+    icon: "👤",
+    accent: "from-emerald-500/20 to-teal-500/10",
+  },
+  {
+    title: "Policy transparency",
+    desc: "Our commitments are documented clearly so teams can evaluate compliance quickly.",
+    icon: "📋",
+    accent: "from-aura-coral/20 to-amber-500/10",
+  },
 ];
 
 const technicalControls = [
@@ -45,22 +60,39 @@ export default function SecuritySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: i * 0.05 }}
-              className="glass-panel rounded-2xl p-6"
+              className="group glass-panel relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-violet-500/10"
             >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-xs font-bold text-white shadow-md dark:bg-gradient-to-br dark:from-violet-600/90 dark:to-aura-coral/80 dark:ring-1 dark:ring-white/10">✓</div>
-              <h3 className="text-sm font-bold text-aura-ink">{b.title}</h3>
-              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">{b.desc}</p>
+              <div
+                aria-hidden
+                className={`pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br ${b.accent} opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100`}
+              />
+              <div className="relative">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50 text-lg shadow-sm transition-transform duration-300 group-hover:scale-105 dark:border-slate-700 dark:from-slate-800 dark:to-slate-900">
+                  <span aria-hidden>{b.icon}</span>
+                </div>
+                <h3 className="text-sm font-bold text-aura-ink dark:text-slate-100">{b.title}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">{b.desc}</p>
+              </div>
             </motion.div>
           ))}
         </div>
-        <div className="mx-auto mt-8 max-w-4xl rounded-2xl border border-slate-200/80 bg-white/70 p-5 backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/60">
-          <details>
-            <summary className="cursor-pointer list-none rounded-lg text-sm font-semibold text-aura-ink outline-none transition-colors hover:text-violet-800 focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:text-violet-200 dark:focus-visible:ring-violet-500/50 dark:focus-visible:ring-offset-slate-900">
-              View security controls
+        <div className="mx-auto mt-8 max-w-4xl rounded-2xl border border-slate-200/80 bg-white/70 p-5 backdrop-blur-sm transition-shadow duration-300 hover:shadow-md dark:border-slate-700/80 dark:bg-slate-900/60">
+          <details className="group">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg text-sm font-semibold text-aura-ink outline-none transition-colors hover:text-violet-800 focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:text-violet-200 dark:focus-visible:ring-violet-500/50 dark:focus-visible:ring-offset-slate-900">
+              <span>View security controls</span>
+              <span className="text-slate-400 transition-transform duration-200 group-open:rotate-180" aria-hidden>▼</span>
             </summary>
-            <ul className="mt-4 space-y-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
               {technicalControls.map((control) => (
-                <li key={control}>• {control}</li>
+                <li
+                  key={control}
+                  className="flex items-start gap-2.5 rounded-xl border border-slate-200/70 bg-white/60 px-3 py-2.5 text-sm leading-relaxed text-slate-600 dark:border-slate-700/70 dark:bg-slate-900/40 dark:text-slate-400"
+                >
+                  <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-[10px] text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300" aria-hidden>
+                    ✓
+                  </span>
+                  {control}
+                </li>
               ))}
             </ul>
           </details>
