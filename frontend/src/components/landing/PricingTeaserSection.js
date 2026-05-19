@@ -61,10 +61,10 @@ function PlanCard({ plan, index }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.55, delay: index * 0.08 }}
-      className={`group relative flex h-full flex-col overflow-hidden rounded-3xl border p-8 transition-shadow duration-300 md:p-10 ${
+      className={`group relative flex h-full flex-col overflow-hidden rounded-3xl border p-8 transition-all duration-300 ease-out md:p-10 ${
         isPro
-          ? "border-violet-300/80 bg-gradient-to-b from-white to-violet-50/60 shadow-xl shadow-purple-500/20 ring-2 ring-violet-400/60 dark:border-violet-500/40 dark:from-slate-900/90 dark:to-slate-900 dark:ring-violet-500/60 dark:shadow-purple-900/40"
-          : "border-slate-200/90 bg-white shadow-lg ring-1 ring-white/80 dark:border-slate-700/80 dark:bg-slate-900/70 dark:ring-slate-700/50"
+          ? "border-violet-300/80 bg-gradient-to-b from-white to-violet-50/60 shadow-xl shadow-purple-500/20 ring-2 ring-violet-400/60 hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-500/25 dark:border-violet-500/40 dark:from-slate-900/90 dark:to-slate-900 dark:ring-violet-500/60 dark:shadow-purple-900/40"
+          : "border-slate-200/90 bg-white shadow-lg ring-1 ring-white/80 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-xl dark:border-slate-700/80 dark:bg-slate-900/70 dark:ring-slate-700/50 dark:hover:border-slate-600"
       }`}
     >
       {isPro && (
@@ -152,6 +152,18 @@ export default function PricingTeaserSection() {
         <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-8">
           {PLANS.map((plan, i) => (
             <PlanCard key={plan.id} plan={plan} index={i} />
+          ))}
+        </div>
+
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-3" aria-label="Pricing guarantees">
+          {["No credit card on Starter", "14-day Pro trial", "Cancel anytime", "Fair-use unlimited"].map((pill) => (
+            <span
+              key={pill}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-3.5 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-600 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-slate-400"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
+              {pill}
+            </span>
           ))}
         </div>
 
