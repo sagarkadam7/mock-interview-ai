@@ -478,16 +478,43 @@ export default function LandingPage() {
       <section
         aria-label="Trusted by"
         style={{
-          background: C.paper,
+          position: "relative",
+          overflow: "hidden",
+          background: `linear-gradient(180deg, ${C.paper} 0%, ${C.band}08 50%, ${C.paper} 100%)`,
           borderTop: `1px solid ${C.border}`,
           borderBottom: `1px solid ${C.border}`,
         }}
       >
-        <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <motion.div
+          aria-hidden
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            backgroundImage: `
+              radial-gradient(ellipse 55% 80% at 12% 50%, ${C.coral}0c 0%, transparent 55%),
+              radial-gradient(ellipse 50% 70% at 88% 50%, ${C.violet}0a 0%, transparent 55%)
+            `,
+          }}
+        />
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="relative mx-auto w-full max-w-6xl px-5 py-12 sm:px-6 sm:py-14 lg:px-8"
+        >
+          <div className="mb-1 text-center">
+            <SectionLabel>Campus & engineering programs</SectionLabel>
+          </div>
           <div className="w-full min-w-0">
             <TrustLogoRail />
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── STATS BAND ── */}
