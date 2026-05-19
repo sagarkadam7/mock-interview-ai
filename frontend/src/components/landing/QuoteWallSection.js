@@ -58,10 +58,13 @@ export default function QuoteWallSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.45, delay: i * 0.06 }}
-                className="glass-panel-lg rounded-3xl p-7 md:p-8"
+                className="glass-panel-lg group rounded-3xl p-7 transition-shadow duration-300 hover:shadow-lg hover:shadow-violet-500/10 md:p-8"
               >
-                <blockquote className="text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
-                  “{q.quote}”
+                <span className="font-display text-4xl leading-none text-violet-400/30 transition-colors group-hover:text-violet-500/50 dark:text-violet-400/25" aria-hidden>
+                  &ldquo;
+                </span>
+                <blockquote className="-mt-2 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+                  {q.quote}
                 </blockquote>
                 <figcaption className="mt-6 border-t border-slate-200/80 pt-5 dark:border-slate-700/70">
                   <p className="font-semibold text-aura-ink dark:text-slate-100">{q.name}</p>
@@ -87,7 +90,7 @@ export default function QuoteWallSection() {
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
                 {OUTCOMES.map((m) => (
-                  <div key={m.k} className="rounded-2xl border border-slate-200/80 bg-white/70 p-5 dark:border-slate-700/70 dark:bg-slate-900/55">
+                  <div key={m.k} className="rounded-2xl border border-slate-200/80 bg-white/70 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-200/80 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/55 dark:hover:border-violet-500/40">
                     <div className="font-display text-2xl font-bold text-aura-ink dark:text-slate-100">{m.v}</div>
                     <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                       {m.k}
