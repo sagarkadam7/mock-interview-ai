@@ -3,10 +3,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FAQ_ITEMS } from "../../data/marketing";
 
+const FAQ_TOPICS = [
+  { id: "all", label: "All" },
+  { id: "privacy", label: "Privacy", test: /privacy|data|delete|record|secure/i },
+  { id: "product", label: "Product", test: /resume|question|score|session|interview/i },
+  { id: "tech", label: "Tech", test: /browser|camera|speech|chrome|https/i },
+];
+
 function Item({ item, open, onToggle, idx }) {
   const id = `faq-${idx}`;
   return (
-    <div className="border-b border-slate-200/90 last:border-0 dark:border-slate-700/80">
+    <div
+      className={`border-b border-slate-200/90 transition-[border-color,background-color] duration-200 last:border-0 dark:border-slate-700/80 ${
+        open ? "border-l-[3px] border-l-violet-500 bg-violet-50/40 pl-4 dark:border-l-violet-400 dark:bg-violet-950/20" : "border-l-[3px] border-l-transparent pl-4"
+      }`}
+    >
       <button
         type="button"
         id={`${id}-btn`}
@@ -50,12 +61,18 @@ export default function FAQSection({ limit = null }) {
   const baseItems = limit != null ? FAQ_ITEMS.slice(0, limit) : FAQ_ITEMS;
   const [openIdx, setOpenIdx] = useState(0);
   const [query, setQuery] = useState("");
+  const [topic, setTopic] = useState("all");
 
   const items = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return baseItems;
-    return baseItems.filter((x) => `${x.q} ${x.a}`.toLowerCase().includes(q));
-  }, [baseItems, query]);
+    const topicDef = FAQ_TOPICS.find((t) => t.id === topic);
+    return baseItems.filter((x) => {
+      const text = `${x.q} ${x.a}`;
+      const topicOk = topic === "all" || !topicDef?.test || topicDef.test.test(text);
+      const searchOk = !q || text.toLowerCase().includes(q);
+      return topicOk && searchOk;
+    });
+  }, [baseItems, query, topic]);
 
   return (
     <section id="faq" className="scroll-mt-24 border-t border-slate-200/80 bg-white py-24 dark:border-slate-800/80 dark:bg-slate-950 md:py-28">
@@ -64,6 +81,27 @@ export default function FAQSection({ limit = null }) {
           <div className="section-eyebrow mx-auto mb-4">FAQ</div>
           <h2 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">Answers before you sign up</h2>
           <p className="mx-auto mt-4 max-w-lg text-[15px] text-slate-600 dark:text-slate-400">Security, browsers, and how AI fits into real prep.</p>
+        </div>
+
+        <div className="mb-4 flex flex-wrap justify-center gap-2" role="group" aria-label="Filter FAQ by topic">
+          {FAQ_TOPICS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => {
+                setTopic(t.id);
+                setOpenIdx(0);
+              }}
+              className={`rounded-full px-3.5 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 ${
+                topic === t.id
+                  ? "bg-violet-600 text-white shadow-md shadow-violet-500/25 dark:bg-violet-500"
+                  : "border border-slate-200/90 bg-white/90 text-slate-600 hover:border-violet-300 hover:text-violet-700 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-400 dark:hover:text-violet-300"
+              }`}
+              aria-pressed={topic === t.id}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
 
         <div className="mb-6">
@@ -81,6 +119,7 @@ export default function FAQSection({ limit = null }) {
               onChange={(e) => {
                 setQuery(e.target.value);
                 setOpenIdx(-1);
+                setTopic("all");
               }}
               placeholder="Search: browsers, privacy, resume, eye contact…"
               className="w-full rounded-2xl border border-slate-200/90 bg-white/90 py-3 pl-10 pr-10 text-sm text-slate-800 shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:border-violet-400 focus:ring-2 focus:ring-violet-200 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-violet-500 dark:focus:ring-violet-500/30"
