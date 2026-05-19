@@ -38,7 +38,9 @@ export default function TestimonialsSection() {
   const reduceMotion = useReducedMotion();
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
   const timerRef = useRef(0);
+  const progressRef = useRef(0);
 
   const go = useCallback(
     (next) => {
@@ -53,9 +55,27 @@ export default function TestimonialsSection() {
 
   // Auto-advance unless user is hovering or focus is within the carousel.
   useEffect(() => {
-    if (paused || reduceMotion) return;
-    timerRef.current = setTimeout(() => setIdx((i) => (i + 1) % TESTIMONIALS.length), AUTO_ADVANCE_MS);
-    return () => clearTimeout(timerRef.current);
+    if (paused || reduceMotion) {
+      setProgress(0);
+      return undefined;
+    }
+    setProgress(0);
+    const tick = 50;
+    const step = tick / AUTO_ADVANCE_MS;
+    progressRef.current = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 1) return 1;
+        return p + step;
+      });
+    }, tick);
+    timerRef.current = setTimeout(() => {
+      setIdx((i) => (i + 1) % TESTIMONIALS.length);
+      setProgress(0);
+    }, AUTO_ADVANCE_MS);
+    return () => {
+      clearTimeout(timerRef.current);
+      clearInterval(progressRef.current);
+    };
   }, [paused, idx, reduceMotion]);
 
   // Keyboard shortcuts when carousel region is focused.
@@ -138,22 +158,38 @@ export default function TestimonialsSection() {
             </AnimatePresence>
           </div>
 
+          {/* Auto-advance progress */}
+          {!reduceMotion && (
+            <div className="relative mt-6 h-0.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-700/80" aria-hidden>
+              <motion.div
+                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-aura-coral to-aura-violet"
+                style={{ width: `${Math.min(progress, 1) * 100}%` }}
+                transition={{ duration: 0.05, ease: "linear" }}
+              />
+            </div>
+          )}
+
           {/* Controls */}
           <div className="mt-8 flex items-center justify-between">
-            <div className="flex gap-2" role="tablist" aria-label="Select testimonial">
-              {TESTIMONIALS.map((t, i) => (
-                <button
-                  key={t.name}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === idx}
-                  aria-label={`Testimonial ${i + 1} of ${TESTIMONIALS.length}`}
-                  onClick={() => go(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 ${
-                    i === idx ? "w-8 bg-aura-violet" : "w-2 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400"
-                  }`}
-                />
-              ))}
+            <div className="flex items-center gap-4">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400" aria-live="polite">
+                {idx + 1} / {TESTIMONIALS.length}
+              </span>
+              <div className="flex gap-2" role="tablist" aria-label="Select testimonial">
+                {TESTIMONIALS.map((t, i) => (
+                  <button
+                    key={t.name}
+                    type="button"
+                    role="tab"
+                    aria-selected={i === idx}
+                    aria-label={`Testimonial ${i + 1} of ${TESTIMONIALS.length}`}
+                    onClick={() => go(i)}
+                    className={`h-2 rounded-full transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 ${
+                      i === idx ? "w-8 bg-aura-violet" : "w-2 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <button
