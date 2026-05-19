@@ -281,10 +281,26 @@ function FeatureCard({ f, idx }) {
         background: C.card,
         border: `1px solid ${hovered ? f.accent + "33" : C.border}`,
         boxShadow: hovered ? `0 14px 40px ${f.accent}10` : C.cardShadow,
-        transition: "border-color 0.25s ease, box-shadow 0.25s ease",
+        transition: "border-color 0.25s ease, box-shadow 0.25s ease, transform 0.28s cubic-bezier(0.16,1,0.3,1)",
         cursor: "default",
+        transform: hovered ? "translateY(-2px)" : "translateY(0)",
       }}
     >
+      <motion.div
+        aria-hidden
+        initial={{ scaleX: 0 }}
+        animate={visible ? { scaleX: hovered ? 1 : 0.65 } : {}}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 2,
+          transformOrigin: "left center",
+          background: `linear-gradient(90deg, ${f.accent}, ${f.accent}88)`,
+        }}
+      />
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
         <span style={{
           fontFamily: "'DM Mono', monospace",
@@ -895,6 +911,7 @@ function FinalCta({ user }) {
         }}>
           Free plan, no card, cancel any time.
         </p>
+
       </motion.div>
     </section>
   );
