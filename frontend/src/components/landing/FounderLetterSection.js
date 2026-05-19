@@ -91,20 +91,25 @@ export default function FounderLetterSection() {
             transition={{ delay: reduceMotion ? 0 : 0.12 }}
             className="lg:col-span-5 lg:sticky lg:top-28"
           >
-            <div className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white/90 p-8 shadow-[0_20px_50px_-24px_rgba(15,23,42,0.12)] backdrop-blur-md dark:border-slate-700/80 dark:bg-slate-900/70 dark:shadow-[0_20px_50px_-24px_rgba(0,0,0,0.45)] md:p-10">
+            <div className="group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white/90 p-8 shadow-[0_20px_50px_-24px_rgba(15,23,42,0.12)] backdrop-blur-md transition-all duration-300 hover:border-violet-200/80 hover:shadow-[0_28px_60px_-20px_rgba(91,33,182,0.18)] dark:border-slate-700/80 dark:bg-slate-900/70 dark:shadow-[0_20px_50px_-24px_rgba(0,0,0,0.45)] dark:hover:border-violet-500/40 md:p-10">
+              <span className="absolute left-6 top-6 inline-flex items-center gap-1.5 rounded-full border border-slate-200/90 bg-white/90 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 shadow-sm dark:border-slate-600 dark:bg-slate-800/80 dark:text-slate-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
+                Founder note
+              </span>
               <div
-                className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-aura-coral/20 to-aura-violet/15 blur-3xl"
+                className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-aura-coral/20 to-aura-violet/15 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
                 aria-hidden
               />
               <div className="relative flex flex-col items-center text-center">
                 <div
-                  className="mb-8 flex h-20 w-20 items-center justify-center rounded-full border border-slate-200/95 bg-gradient-to-br from-white to-slate-50 text-xl font-semibold tracking-tight text-gradient shadow-inner dark:border-slate-600 dark:from-slate-800 dark:to-slate-900"
+                  className="mb-8 mt-6 flex h-20 w-20 items-center justify-center rounded-full border border-slate-200/95 bg-gradient-to-br from-white to-slate-50 text-xl font-semibold tracking-tight text-gradient shadow-inner ring-2 ring-white transition-transform duration-300 group-hover:scale-105 dark:border-slate-600 dark:from-slate-800 dark:to-slate-900 dark:ring-slate-800"
                   aria-hidden
                 >
                   SK
                 </div>
-                <blockquote className="text-lg font-medium leading-loose text-slate-700 dark:text-slate-300 md:text-xl">
-                  &ldquo;{FOUNDER_LETTER.asideQuote}&rdquo;
+                <span className="font-display text-5xl leading-none text-violet-400/25" aria-hidden>&ldquo;</span>
+                <blockquote className="-mt-4 text-lg font-medium leading-loose text-slate-700 dark:text-slate-300 md:text-xl">
+                  {FOUNDER_LETTER.asideQuote}
                 </blockquote>
                 <div className="mt-10 h-px w-12 bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" aria-hidden />
                 <p className="mt-8 font-semibold tracking-tight text-aura-ink">{FOUNDER_LETTER.name}</p>
