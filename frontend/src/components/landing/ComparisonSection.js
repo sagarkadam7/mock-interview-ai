@@ -79,8 +79,8 @@ export default function ComparisonSection() {
               <caption className="visually-hidden">
                 Comparison of InterviewAI versus a generic AI chatbot and a human interview coach across product capabilities.
               </caption>
-              <thead>
-                <tr className="border-b border-slate-200 bg-slate-50/95 text-left dark:border-slate-700 dark:bg-slate-800/60">
+              <thead className="sticky top-0 z-10">
+                <tr className="border-b border-slate-200 bg-slate-50/95 text-left shadow-sm backdrop-blur-md dark:border-slate-700 dark:bg-slate-800/90">
                   <th className="px-4 py-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400 sm:px-6">
                     Capability
                   </th>
@@ -103,7 +103,7 @@ export default function ComparisonSection() {
                 {COMPARISON_ROWS.map((row, idx) => (
                   <tr
                     key={row.label}
-                    className={`border-b border-slate-100 last:border-0 dark:border-slate-800/90 ${
+                    className={`border-b border-slate-100 transition-colors duration-200 last:border-0 hover:bg-violet-50/50 dark:border-slate-800/90 dark:hover:bg-violet-950/25 ${
                       idx % 2 === 0 ? "bg-white dark:bg-slate-950/40" : "bg-slate-50/60 dark:bg-slate-900/40"
                     }`}
                   >
