@@ -20,29 +20,49 @@ export default function HowItWorksSection() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {HOW_STEPS.map((step, i) => (
-            <motion.div
-              key={step.n}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.45, delay: i * 0.06 }}
-              className="group relative"
-            >
-              <div className="glass-panel-lg relative h-full overflow-hidden rounded-2xl p-6 md:p-7">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{step.n}</span>
-                <h3 className="mt-3 text-lg font-bold tracking-tight text-aura-ink">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{step.desc}</p>
-                {i < HOW_STEPS.length - 1 && (
-                  <div
-                    className="pointer-events-none absolute -right-3 top-1/2 hidden h-px w-6 -translate-y-1/2 bg-gradient-to-r from-slate-200 to-transparent dark:from-slate-600 lg:block"
-                    aria-hidden
-                  />
-                )}
-              </div>
-            </motion.div>
-          ))}
+        <div className="relative">
+          <motion.div
+            aria-hidden
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[2.75rem] hidden h-px origin-left bg-gradient-to-r from-aura-coral/50 via-violet-400/60 to-aura-violet/50 lg:block"
+          />
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {HOW_STEPS.map((step, i) => (
+              <motion.div
+                key={step.n}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.45, delay: i * 0.06 }}
+                className="group relative"
+              >
+                <div className="glass-panel-lg relative h-full overflow-hidden rounded-2xl p-6 transition-shadow duration-300 ease-out group-hover:shadow-xl group-hover:shadow-violet-500/10 md:p-7">
+                  <div className="mb-4 flex items-center gap-3">
+                    <span
+                      className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-violet-200/80 bg-gradient-to-br from-white to-violet-50 font-mono text-[11px] font-bold text-violet-700 shadow-sm ring-2 ring-white dark:border-violet-500/40 dark:from-slate-800 dark:to-slate-900 dark:text-violet-200 dark:ring-slate-950"
+                      aria-hidden
+                    >
+                      {step.n}
+                    </span>
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                      Step {i + 1}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{step.desc}</p>
+                  {i < HOW_STEPS.length - 1 && (
+                    <div
+                      className="pointer-events-none absolute -right-3 top-12 hidden h-px w-6 bg-gradient-to-r from-violet-300/80 to-transparent dark:from-violet-600/60 lg:block"
+                      aria-hidden
+                    />
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
