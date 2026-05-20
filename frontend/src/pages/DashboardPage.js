@@ -104,9 +104,9 @@ const RUNWAY_STEPS = [
 ];
 
 const SIDEBAR_LINKS = [
-  { to: "/pricing", label: "Plans & limits", sub: "Compare tiers" },
-  { to: "/faq", label: "FAQ", sub: "Product & privacy" },
-  { to: "/interview/new", label: "New interview", sub: "Start a session", primary: true },
+  { to: "/pricing", label: "Plans & limits", sub: "Compare tiers", icon: "◇" },
+  { to: "/faq", label: "FAQ", sub: "Product & privacy", icon: "?" },
+  { to: "/interview/new", label: "New interview", sub: "Start a session", primary: true, icon: "+" },
 ];
 
 function greetingForNow() {
@@ -1008,6 +1008,16 @@ export default function DashboardPage() {
                     transition={{ type: "spring", stiffness: 320, damping: 28 }}
                     className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white/90 p-1 shadow-lux transition-[box-shadow,border-color] duration-350 ease-out-expo hover:border-violet-200/80 hover:shadow-[0_32px_64px_-24px_rgba(91,33,182,0.18)] dark:border-slate-700/80 dark:bg-slate-900/50 dark:hover:border-violet-500/40 dark:hover:shadow-[0_32px_64px_-24px_rgba(0,0,0,0.45)]"
                   >
+                    <span
+                      className={`absolute inset-y-3 left-0 w-1 rounded-r-full ${
+                        iv.status === "completed"
+                          ? "bg-emerald-500"
+                          : iv.status === "in_progress"
+                            ? "bg-violet-500"
+                            : "bg-amber-500"
+                      }`}
+                      aria-hidden
+                    />
                     <div
                       className={`flex flex-col rounded-[0.9rem] bg-gradient-to-br from-white/80 to-slate-50/30 ${
                         isCompact ? "p-4" : "p-5"
@@ -1052,6 +1062,10 @@ export default function DashboardPage() {
                               </>
                             ) : null}
                           </p>
+                          <div className="mb-1 flex max-w-xl items-center justify-between text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+                            <span>Progress</span>
+                            <span>{Math.round(pct)}%</span>
+                          </div>
                           <div
                             className="progress-track max-w-xl"
                             role="progressbar"
@@ -1131,14 +1145,22 @@ export default function DashboardPage() {
                 <li key={item.to}>
                   <Link
                     to={item.to}
-                    className={`flex items-center justify-between rounded-xl px-3 py-3 text-sm font-medium no-underline transition-colors ${
+                    className={`group flex items-center justify-between gap-3 rounded-xl px-3 py-3 text-sm font-medium no-underline transition-all duration-200 hover:-translate-y-0.5 ${
                       item.primary
-                        ? "bg-gradient-to-r from-aura-coral/12 to-aura-violet/10 text-aura-ink hover:from-aura-coral/18 hover:to-aura-violet/14 dark:from-aura-coral/15 dark:to-aura-violet/12"
-                        : "text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/60"
+                        ? "bg-gradient-to-r from-aura-coral/12 to-aura-violet/10 text-aura-ink shadow-sm hover:from-aura-coral/18 hover:to-aura-violet/14 dark:from-aura-coral/15 dark:to-aura-violet/12"
+                        : "text-slate-600 hover:bg-slate-50 hover:shadow-sm dark:text-slate-400 dark:hover:bg-slate-800/60"
                     }`}
                   >
-                    <span>{item.label}</span>
-                    <span className="text-[11px] font-normal text-slate-400 dark:text-slate-500">{item.sub}</span>
+                    <span className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200/80 bg-white/75 text-xs font-black text-violet-700 transition-transform group-hover:scale-105 dark:border-slate-700 dark:bg-slate-900/60 dark:text-violet-300">
+                        {item.icon}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate">{item.label}</span>
+                        <span className="block text-[11px] font-normal text-slate-400 dark:text-slate-500">{item.sub}</span>
+                      </span>
+                    </span>
+                    <span className="text-slate-300 transition-transform group-hover:translate-x-0.5 dark:text-slate-600" aria-hidden>→</span>
                   </Link>
                 </li>
               ))}
