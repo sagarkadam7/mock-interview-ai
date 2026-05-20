@@ -566,8 +566,12 @@ export default function DashboardPage() {
       {dashView === "overview" && (
         <div className="mb-10 grid gap-4 md:grid-cols-2">
           {!isPro ? (
-            <div className="glass-panel relative overflow-hidden rounded-2xl p-6 sm:p-7 md:col-span-2">
+            <div className="glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet-500/10 sm:p-7 md:col-span-2">
+              <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral to-aura-violet" aria-hidden />
               <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-gradient-to-br from-aura-violet/20 to-aura-coral/10 blur-3xl" aria-hidden />
+              <span className="absolute right-5 top-5 rounded-full border border-violet-200/80 bg-violet-50 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-500/35 dark:bg-violet-950/45 dark:text-violet-200">
+                Pro
+              </span>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Practice rhythm</p>
               <h3 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Streaks + weekly goals</h3>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
@@ -592,7 +596,8 @@ export default function DashboardPage() {
             </div>
           ) : (
             <>
-              <div className="glass-panel relative overflow-hidden rounded-2xl p-6 sm:p-7">
+              <div className="glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-aura-coral/10 sm:p-7">
+                <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral to-amber-400" aria-hidden />
                 <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-aura-coral/15 blur-2xl dark:bg-aura-coral/10" aria-hidden />
                 <div className="flex items-center justify-between">
                   <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Streak</p>
@@ -623,7 +628,8 @@ export default function DashboardPage() {
                       : "Keep the chain: at least one completed session per calendar day."}
                 </p>
               </div>
-              <div className="glass-panel relative overflow-hidden rounded-2xl p-6 sm:p-7">
+              <div className="glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-aura-violet/10 sm:p-7">
+                <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-violet to-fuchsia-500" aria-hidden />
                 <div className="pointer-events-none absolute -bottom-10 -right-6 h-36 w-36 rounded-full bg-aura-violet/15 blur-2xl dark:bg-aura-violet/10" aria-hidden />
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Weekly goal</p>
                 <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
@@ -644,6 +650,11 @@ export default function DashboardPage() {
                     className="h-full rounded-full bg-gradient-to-r from-aura-coral to-aura-violet transition-[width] duration-500 ease-out"
                     style={{ width: loading ? "0%" : `${weekPct}%` }}
                   />
+                </div>
+                <div className="mt-2 flex justify-between font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+                  <span>0</span>
+                  <span>{weekPct}%</span>
+                  <span>{WEEKLY_SESSION_GOAL}</span>
                 </div>
                 <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
                   {loading
