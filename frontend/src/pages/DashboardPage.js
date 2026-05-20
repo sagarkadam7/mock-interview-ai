@@ -438,17 +438,28 @@ export default function DashboardPage() {
       <div className="mb-10 flex flex-wrap items-center justify-between gap-3">
         <div className="segmented-control">
           {[
-            { id: "sessions", label: "Sessions" },
-            { id: "overview", label: "Overview" },
+            { id: "sessions", label: "Sessions", icon: "▦", count: interviews.length },
+            { id: "overview", label: "Overview", icon: "◌", count: completed.length },
           ].map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => setDashView(t.id)}
-              className={`${dashView === t.id ? "segmented-pill segmented-pill-active" : "segmented-pill"}`}
+              className={`${dashView === t.id ? "segmented-pill segmented-pill-active" : "segmented-pill"} gap-2`}
               aria-pressed={dashView === t.id}
             >
-              {t.label}
+              <span aria-hidden>{t.icon}</span>
+              <span>{t.label}</span>
+              <span
+                className={`rounded-full px-1.5 py-0.5 font-mono text-[10px] ${
+                  dashView === t.id
+                    ? "bg-white/75 text-aura-ink dark:bg-slate-950/40 dark:text-white"
+                    : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                }`}
+                aria-label={`${t.count} ${t.label.toLowerCase()}`}
+              >
+                {t.count}
+              </span>
             </button>
           ))}
         </div>
