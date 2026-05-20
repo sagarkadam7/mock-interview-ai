@@ -899,6 +899,30 @@ export default function DashboardPage() {
                     </button>
                   ) : null}
                 </div>
+                <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter sessions by status">
+                  {[
+                    { id: "all", label: "All", count: interviews.length },
+                    { id: "completed", label: "Done", count: completed.length },
+                    { id: "in_progress", label: "Live", count: inProgress.length },
+                  ].map((filter) => (
+                    <button
+                      key={filter.id}
+                      type="button"
+                      onClick={() => setStatusFilter(filter.id)}
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all duration-200 ${
+                        statusFilter === filter.id
+                          ? "border-violet-300 bg-violet-600 text-white shadow-md shadow-violet-500/20 dark:border-violet-400/50 dark:bg-violet-500"
+                          : "border-slate-200/90 bg-white/80 text-slate-600 hover:border-violet-200 hover:text-violet-700 dark:border-slate-700/70 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:text-violet-300"
+                      }`}
+                      aria-pressed={statusFilter === filter.id}
+                    >
+                      {filter.label}
+                      <span className={`rounded-full px-1.5 py-0.5 font-mono text-[10px] ${statusFilter === filter.id ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}>
+                        {filter.count}
+                      </span>
+                    </button>
+                  ))}
+                </div>
                 <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
                   <input
                     type="checkbox"
