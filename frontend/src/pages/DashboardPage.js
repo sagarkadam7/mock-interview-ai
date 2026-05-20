@@ -671,7 +671,8 @@ export default function DashboardPage() {
 
       {/* Momentum — always show panel (avoids layout jump while loading) */}
       {dashView === "overview" && (
-        <div className="glass-panel-lg mb-10 min-w-0 overflow-hidden p-6 md:p-8">
+        <div className="glass-panel-lg relative mb-10 min-w-0 overflow-hidden p-6 md:p-8">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-aura-violet/10 blur-3xl dark:bg-aura-violet/15" aria-hidden />
         <SectionHeader
           eyebrow="Momentum"
           title="Overall score trend"
@@ -686,7 +687,7 @@ export default function DashboardPage() {
         {loading ? (
           <div className="h-[88px] w-full animate-pulse rounded-xl bg-slate-100/90 dark:bg-slate-800/60" aria-hidden />
         ) : scoreLast.length >= 2 ? (
-          <div className="min-w-0">
+          <div className="min-w-0 rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-inner dark:border-slate-700/70 dark:bg-slate-900/35">
             <Sparkline data={scoreLast} stroke="#5B21B6" fill="rgba(91,33,182,0.14)" />
           </div>
         ) : (
@@ -695,7 +696,8 @@ export default function DashboardPage() {
 
         {!loading && scoreLast.length >= 2 && (
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40">
+            <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40 dark:hover:border-emerald-500/35">
+              <span className="absolute inset-x-0 top-0 h-0.5 bg-emerald-500/80" aria-hidden />
               <div className="mb-2 flex items-center justify-between">
                 <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Eye contact</div>
                 <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{eyeLast.at(-1) != null ? `${eyeLast.at(-1)}%` : "—"}</div>
@@ -707,7 +709,8 @@ export default function DashboardPage() {
               )}
             </div>
 
-            <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40">
+            <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40 dark:hover:border-amber-500/35">
+              <span className="absolute inset-x-0 top-0 h-0.5 bg-amber-500/80" aria-hidden />
               <div className="mb-2 flex items-center justify-between">
                 <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Pace</div>
                 <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{paceLast.at(-1) != null ? `${paceLast.at(-1)} wpm` : "—"}</div>
@@ -719,7 +722,8 @@ export default function DashboardPage() {
               )}
             </div>
 
-            <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40">
+            <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-pink-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40 dark:hover:border-pink-500/35">
+              <span className="absolute inset-x-0 top-0 h-0.5 bg-pink-500/80" aria-hidden />
               <div className="mb-2 flex items-center justify-between">
                 <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Confidence</div>
                 <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{confLast.at(-1) != null ? `${confLast.at(-1)}/10` : "—"}</div>
