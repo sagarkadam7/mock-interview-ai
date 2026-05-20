@@ -357,7 +357,19 @@ export default function DashboardPage() {
   const isCompact = dashDensity === "compact";
 
   return (
-    <div className="page-shell relative min-h-screen max-w-7xl">
+    <div className="page-shell relative isolate min-h-screen max-w-7xl overflow-hidden">
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.45] dark:opacity-[0.18]"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(148,163,184,0.34) 1px, transparent 1px)",
+          backgroundSize: "30px 30px",
+          maskImage: "linear-gradient(to bottom, black 0%, black 58%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 58%, transparent 100%)",
+        }}
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute -left-32 top-10 -z-10 h-80 w-80 rounded-full bg-aura-coral/10 blur-3xl dark:bg-aura-coral/8" aria-hidden />
+      <div className="pointer-events-none absolute -right-28 top-80 -z-10 h-96 w-96 rounded-full bg-aura-violet/10 blur-3xl dark:bg-aura-violet/8" aria-hidden />
       {/* Hero */}
       <div className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-white to-slate-50/90 p-8 shadow-lux-lg ring-1 ring-white/80 dark:border-slate-700/80 dark:from-slate-900/90 dark:via-slate-950 dark:to-slate-900/80 dark:shadow-none dark:ring-slate-800/50 sm:p-10">
         <div
