@@ -393,6 +393,19 @@ export default function DashboardPage() {
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
               One place for every mock round — scores, presence metrics, and exports so you rehearse with intent, not hope.
             </p>
+            <div className="mt-6 flex flex-wrap items-center gap-2.5" aria-label="Dashboard status">
+              <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-slate-300">
+                <span className={`h-2 w-2 rounded-full ${isPro ? "bg-emerald-500" : "bg-amber-500"}`} aria-hidden />
+                {isPro ? "Pro workspace" : `${plan.toUpperCase()} plan`}
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-slate-300">
+                <span className="h-2 w-2 rounded-full bg-violet-500" aria-hidden />
+                {loading ? "Syncing sessions" : `${interviews.length} sessions synced`}
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-200/80 bg-violet-50/80 px-3 py-1.5 text-xs font-semibold text-violet-800 shadow-sm backdrop-blur-sm dark:border-violet-500/35 dark:bg-violet-950/45 dark:text-violet-200">
+                Press <kbd className="rounded bg-white/80 px-1.5 py-0.5 font-mono text-[10px] dark:bg-slate-900/80">n</kbd> for a new mock
+              </span>
+            </div>
           </div>
           <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-stretch xl:flex-row">
             <Link to="/interview/new" className="no-underline">
