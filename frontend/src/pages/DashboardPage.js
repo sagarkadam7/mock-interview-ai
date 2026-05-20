@@ -296,9 +296,9 @@ export default function DashboardPage() {
   const greeting = greetingForNow();
 
   const stats = [
-    { label: statMeta[0].label, value: interviews.length, hint: statMeta[0].hint, accent: statMeta[0].accent, icon: statMeta[0].icon, filter: "all", help: statMeta[0].help },
-    { label: statMeta[1].label, value: completed.length, hint: statMeta[1].hint, accent: statMeta[1].accent, icon: statMeta[1].icon, filter: "completed", help: statMeta[1].help },
-    { label: statMeta[2].label, value: inProgress.length, hint: statMeta[2].hint, accent: statMeta[2].accent, icon: statMeta[2].icon, filter: "in_progress", help: statMeta[2].help },
+    { label: statMeta[0].label, value: interviews.length, hint: statMeta[0].hint, accent: statMeta[0].accent, icon: statMeta[0].icon, filter: "all", help: statMeta[0].help, bar: "from-violet-500 to-fuchsia-500" },
+    { label: statMeta[1].label, value: completed.length, hint: statMeta[1].hint, accent: statMeta[1].accent, icon: statMeta[1].icon, filter: "completed", help: statMeta[1].help, bar: "from-emerald-500 to-teal-400" },
+    { label: statMeta[2].label, value: inProgress.length, hint: statMeta[2].hint, accent: statMeta[2].accent, icon: statMeta[2].icon, filter: "in_progress", help: statMeta[2].help, bar: "from-amber-500 to-orange-400" },
     {
       label: statMeta[3].label,
       value: avgScore ?? "—",
@@ -307,6 +307,7 @@ export default function DashboardPage() {
       icon: statMeta[3].icon,
       filter: null,
       help: statMeta[3].help,
+      bar: "from-rose-500 to-pink-500",
     },
   ];
 
@@ -531,16 +532,22 @@ export default function DashboardPage() {
               type={clickable ? "button" : undefined}
               onClick={onActivate}
               title={`${s.help}${clickable ? " Click to filter the sessions list." : ""}`}
-              className={`glass-panel interactive-lift relative flex flex-col overflow-hidden rounded-2xl p-6 text-left sm:p-7 ${
+              className={`glass-panel interactive-lift group relative flex flex-col overflow-hidden rounded-2xl p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/10 sm:p-7 ${
                 clickable ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page" : ""
               }`}
             >
+              <span className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${s.bar}`} aria-hidden />
               <span className="absolute right-4 top-4 text-2xl opacity-[0.1] dark:opacity-[0.15]" aria-hidden>
                 {s.icon}
               </span>
               <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">{s.label}</p>
               <div className={`mt-2 font-sans text-3xl font-extrabold tabular-nums tracking-tight ${s.accent}`}>{s.value}</div>
               <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">{s.hint}</p>
+              {clickable ? (
+                <span className="mt-4 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400 transition-colors group-hover:text-violet-600 dark:group-hover:text-violet-300">
+                  Filter sessions →
+                </span>
+              ) : null}
             </Tag>
           );
         })}
