@@ -356,6 +356,8 @@ export default function DashboardPage() {
   const weekCount = !loading ? countCompletedThisWeek(interviews) : 0;
   const weekPct = Math.min(100, Math.round((weekCount / WEEKLY_SESSION_GOAL) * 100));
   const isCompact = dashDensity === "compact";
+  const quickstartDone = Object.values(quickstart).filter(Boolean).length;
+  const quickstartPct = Math.round((quickstartDone / 3) * 100);
 
   return (
     <div className="page-shell relative isolate min-h-screen max-w-7xl overflow-hidden">
@@ -773,6 +775,18 @@ export default function DashboardPage() {
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                       This isn’t busywork — it improves transcript quality, pacing, and gaze coaching accuracy.
                     </p>
+                    <div className="mt-4 max-w-sm">
+                      <div className="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                        <span>Setup readiness</span>
+                        <span>{quickstartDone}/3</span>
+                      </div>
+                      <div className="h-2 overflow-hidden rounded-full bg-slate-200/90 dark:bg-slate-700/80">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-aura-coral to-aura-violet transition-[width] duration-500 ease-out"
+                          style={{ width: `${quickstartPct}%` }}
+                        />
+                      </div>
+                    </div>
                   </div>
                   <button
                     type="button"
@@ -790,7 +804,11 @@ export default function DashboardPage() {
                   ].map((x) => (
                     <label
                       key={x.id}
-                      className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-4 shadow-sm transition-colors hover:bg-white dark:border-slate-700/70 dark:bg-slate-900/45 dark:hover:bg-slate-900/60"
+                      className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 ${
+                        quickstart[x.id]
+                          ? "border-emerald-200 bg-emerald-50/70 dark:border-emerald-500/30 dark:bg-emerald-950/25"
+                          : "border-slate-200/80 bg-white/80 hover:bg-white dark:border-slate-700/70 dark:bg-slate-900/45 dark:hover:bg-slate-900/60"
+                      }`}
                     >
                       <input
                         type="checkbox"
