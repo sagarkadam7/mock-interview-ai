@@ -503,11 +503,19 @@ export default function DashboardPage() {
             title={readiness.headline}
             subtitle="Derived from your last few scored sessions — the kind of signal hiring loops actually weight alongside raw scores."
           />
-          <ul className="mt-5 space-y-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          <ul className="mt-6 grid gap-3 md:grid-cols-3">
             {readiness.bullets.map((line, i) => (
-              <li key={i} className="flex gap-3">
-                <span className="mt-0.5 font-mono text-xs font-bold text-aura-violet dark:text-violet-300">{String(i + 1).padStart(2, "0")}</span>
-                <span className="min-w-0">{line}</span>
+              <li
+                key={i}
+                className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/75 p-4 text-sm leading-relaxed text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/45 dark:text-slate-300 dark:hover:border-violet-500/35"
+              >
+                <span className="absolute -right-1 -top-3 font-display text-5xl font-bold text-slate-100 transition-colors group-hover:text-violet-100 dark:text-slate-800/80 dark:group-hover:text-violet-950/50" aria-hidden>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="relative block font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-aura-violet dark:text-violet-300">
+                  Signal {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="relative mt-2 block min-w-0">{line}</span>
               </li>
             ))}
           </ul>
