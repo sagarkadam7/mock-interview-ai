@@ -84,17 +84,22 @@ function DashboardSkeleton() {
   return (
     <div className="flex flex-col gap-4 lg:col-span-2" aria-busy="true" aria-label="Loading interviews">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="skeleton-row flex flex-wrap items-center gap-5 rounded-2xl md:flex-nowrap md:gap-6">
-          <div className="h-14 w-14 shrink-0 rounded-xl skeleton-line md:w-16" />
-          <div className="min-w-0 flex-1 space-y-3 py-1">
-            <div className="h-4 w-[75%] max-w-[220px] skeleton-line" />
-            <div className="h-3 w-[45%] max-w-[140px] skeleton-line" />
-            <div className="h-2 w-full max-w-lg skeleton-line opacity-80" />
+        <div key={i} className="skeleton-row relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/45">
+          <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral/40 via-violet-400/40 to-aura-violet/40" aria-hidden />
+          <div className="flex flex-wrap items-center gap-5 md:flex-nowrap md:gap-6">
+            <div className="h-14 w-14 shrink-0 rounded-2xl skeleton-line md:w-16" />
+            <div className="min-w-0 flex-1 space-y-3 py-1">
+              <div className="h-4 w-[75%] max-w-[220px] skeleton-line" />
+              <div className="h-3 w-[45%] max-w-[140px] skeleton-line" />
+              <div className="h-2 w-full max-w-lg skeleton-line opacity-80" />
+            </div>
+            <div className="h-10 w-24 shrink-0 rounded-full skeleton-line" />
           </div>
-          <div className="h-10 w-24 shrink-0 rounded-full skeleton-line" />
         </div>
       ))}
-      <p className="text-center text-sm font-medium text-slate-500 dark:text-slate-400">Syncing your workspace…</p>
+      <p className="rounded-full border border-slate-200/80 bg-white/70 px-4 py-2 text-center text-sm font-medium text-slate-500 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50 dark:text-slate-400">
+        Syncing your workspace…
+      </p>
     </div>
   );
 }
