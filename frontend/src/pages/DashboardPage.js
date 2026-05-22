@@ -786,6 +786,17 @@ export default function DashboardPage() {
                 <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
                   Questions tailored to your résumé, deterministic scoring, and live coaching for gaze and pace — so every rep sharpens the same skills you need with a real hiring manager.
                 </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {["Resume-aware", "Live gaze coaching", "PDF scorecard"].map((chip) => (
+                    <span
+                      key={chip}
+                      className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-slate-300"
+                    >
+                      <span className="h-1.5 w-1.5 rounded-full bg-violet-500" aria-hidden />
+                      {chip}
+                    </span>
+                  ))}
+                </div>
                 <div className="mt-8 flex flex-wrap items-center gap-4">
                   <Link to="/interview/new" className="inline-block no-underline">
                     <span className="btn-cta inline-flex px-10 py-4 text-[15px] shadow-[0_14px_44px_-10px_rgba(15,23,42,0.35)] dark:shadow-[0_14px_44px_-10px_rgba(0,0,0,0.5)]">
