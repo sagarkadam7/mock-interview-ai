@@ -1300,6 +1300,22 @@ export default function DashboardPage() {
           )}
         </aside>
       </div>
+
+      <div className="mt-12 rounded-3xl border border-slate-200/80 bg-white/70 p-5 shadow-sm backdrop-blur-sm dark:border-slate-700/70 dark:bg-slate-900/45">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Workspace summary</p>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              {completed.length} completed · {inProgress.length} in flight · {avgScore ? `${avgScore}/10 average` : "average unlocks after scoring"}
+            </p>
+          </div>
+          <Link to="/interview/new" className="no-underline">
+            <span className="inline-flex items-center justify-center rounded-full bg-aura-ink px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:-translate-y-0.5 dark:bg-slate-100 dark:text-slate-950">
+              Start another rep →
+            </span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
