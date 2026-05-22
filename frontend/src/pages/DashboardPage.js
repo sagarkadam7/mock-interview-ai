@@ -507,10 +507,19 @@ export default function DashboardPage() {
 
       {!loading && loadError && (
         <div
-          className="mb-8 flex flex-col gap-4 rounded-2xl border border-rose-200/90 bg-rose-50/95 p-5 shadow-sm dark:border-rose-500/30 dark:bg-rose-950/40 sm:flex-row sm:items-center sm:justify-between"
+          className="relative mb-8 flex flex-col gap-4 overflow-hidden rounded-2xl border border-rose-200/90 bg-gradient-to-br from-rose-50 via-white to-rose-50/70 p-5 shadow-sm dark:border-rose-500/30 dark:from-rose-950/40 dark:via-slate-950 dark:to-rose-950/25 sm:flex-row sm:items-center sm:justify-between"
           role="alert"
         >
-          <p className="text-sm font-medium text-rose-900 dark:text-rose-100">{loadError}</p>
+          <span className="absolute inset-y-0 left-0 w-1 bg-rose-500" aria-hidden />
+          <div className="flex items-start gap-3">
+            <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-sm font-black text-rose-700 dark:bg-rose-500/15 dark:text-rose-200" aria-hidden>
+              !
+            </span>
+            <div>
+              <p className="text-sm font-bold text-rose-950 dark:text-rose-100">Dashboard sync failed</p>
+              <p className="mt-1 text-sm font-medium text-rose-900/80 dark:text-rose-100/80">{loadError}</p>
+            </div>
+          </div>
           <button type="button" className="btn-primary shrink-0 py-2.5 text-sm" onClick={fetchInterviews}>
             Retry sync
           </button>
