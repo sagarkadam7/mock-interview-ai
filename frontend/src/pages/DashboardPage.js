@@ -881,13 +881,18 @@ export default function DashboardPage() {
                 ))}
               </div>
 
-              <details className="glass-panel-lg overflow-hidden rounded-3xl p-6 sm:p-8">
-                <summary className="cursor-pointer list-none">
-                  <span className="section-eyebrow mb-3">Before you start</span>
-                  <h3 className="text-xl font-bold tracking-tight text-aura-ink">A 60‑second setup that boosts your score</h3>
-                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                    Candidates who do these basics get cleaner transcripts, better pacing, and more accurate gaze coaching.
-                  </p>
+              <details className="group glass-panel-lg overflow-hidden rounded-3xl p-6 sm:p-8">
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
+                  <span>
+                    <span className="section-eyebrow mb-3">Before you start</span>
+                    <h3 className="text-xl font-bold tracking-tight text-aura-ink">A 60-second setup that boosts your score</h3>
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                      Candidates who do these basics get cleaner transcripts, better pacing, and more accurate gaze coaching.
+                    </p>
+                  </span>
+                  <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-transform group-open:rotate-180 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400" aria-hidden>
+                    ↓
+                  </span>
                 </summary>
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
                   {[
