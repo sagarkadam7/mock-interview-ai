@@ -1272,17 +1272,26 @@ export default function DashboardPage() {
                   View all →
                 </button>
               </div>
-              <ul className="mt-3 space-y-3">
+              <ul className="mt-4 space-y-2">
                 {recent.map((iv) => (
                   <li key={iv._id}>
                     <Link
                       to={iv.status === "completed" ? `/interview/${iv._id}/report` : `/interview/${iv._id}`}
-                      className="block rounded-lg py-1 no-underline transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                      className="group flex items-center gap-3 rounded-xl border border-slate-200/70 bg-white/65 p-3 no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-sm dark:border-slate-700/70 dark:bg-slate-900/35 dark:hover:border-violet-500/35"
                     >
-                      <span className="block truncate text-sm font-semibold text-aura-ink">{iv.jobRole}</span>
-                      <span className="text-[11px] text-slate-500 dark:text-slate-500" title={new Date(iv.createdAt).toISOString()}>
-                        {formatRelativeTime(iv.createdAt)}
+                      <span
+                        className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+                          iv.status === "completed" ? "bg-emerald-500" : iv.status === "in_progress" ? "bg-violet-500" : "bg-amber-500"
+                        }`}
+                        aria-hidden
+                      />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-semibold text-aura-ink transition-colors group-hover:text-violet-700 dark:group-hover:text-violet-300">{iv.jobRole}</span>
+                        <span className="text-[11px] text-slate-500 dark:text-slate-500" title={new Date(iv.createdAt).toISOString()}>
+                          {formatRelativeTime(iv.createdAt)}
+                        </span>
                       </span>
+                      <span className="text-slate-300 transition-transform group-hover:translate-x-0.5 dark:text-slate-600" aria-hidden>→</span>
                     </Link>
                   </li>
                 ))}
