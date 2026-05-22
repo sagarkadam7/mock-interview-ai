@@ -376,7 +376,7 @@ export default function DashboardPage() {
   return (
     <div className="page-shell relative isolate min-h-screen max-w-7xl overflow-hidden">
       <div
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.45] dark:opacity-[0.18]"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.18] dark:opacity-[0.1]"
         style={{
           backgroundImage: "radial-gradient(circle, rgba(148,163,184,0.34) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
@@ -385,32 +385,32 @@ export default function DashboardPage() {
         }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute -left-32 top-10 -z-10 h-80 w-80 rounded-full bg-aura-coral/10 blur-3xl dark:bg-aura-coral/8" aria-hidden />
-      <div className="pointer-events-none absolute -right-28 top-80 -z-10 h-96 w-96 rounded-full bg-aura-violet/10 blur-3xl dark:bg-aura-violet/8" aria-hidden />
+      <div className="pointer-events-none absolute -left-32 top-10 -z-10 h-72 w-72 rounded-full bg-aura-coral/[0.05] blur-3xl dark:bg-aura-coral/[0.04]" aria-hidden />
+      <div className="pointer-events-none absolute -right-28 top-80 -z-10 h-80 w-80 rounded-full bg-aura-violet/[0.05] blur-3xl dark:bg-aura-violet/[0.04]" aria-hidden />
       {/* Hero */}
-      <div className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-white to-slate-50/90 p-8 shadow-lux-lg ring-1 ring-white/80 dark:border-slate-700/80 dark:from-slate-900/90 dark:via-slate-950 dark:to-slate-900/80 dark:shadow-none dark:ring-slate-800/50 sm:p-10">
+      <div className="relative mb-7 overflow-hidden rounded-2xl border border-slate-200/90 bg-white/95 p-6 shadow-[0_16px_40px_-28px_rgba(15,23,42,0.25)] ring-1 ring-white/80 dark:border-slate-700/80 dark:bg-slate-900/80 dark:shadow-none dark:ring-slate-800/50 sm:p-7">
         <div
-          className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-gradient-to-br from-aura-coral/20 to-transparent blur-3xl dark:from-aura-coral/12"
+          className="pointer-events-none absolute -right-24 -top-28 h-64 w-64 rounded-full bg-gradient-to-br from-aura-coral/[0.08] to-transparent blur-3xl dark:from-aura-coral/[0.06]"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute -bottom-16 left-1/3 h-56 w-56 rounded-full bg-gradient-to-tr from-aura-violet/15 to-transparent blur-3xl dark:from-aura-violet/10"
+          className="pointer-events-none absolute -bottom-20 left-1/3 h-56 w-56 rounded-full bg-gradient-to-tr from-aura-violet/[0.07] to-transparent blur-3xl dark:from-aura-violet/[0.05]"
           aria-hidden
         />
-        <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
             <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">Workspace</p>
-            <h1 className="font-display text-3xl font-semibold italic tracking-tight text-aura-ink sm:text-4xl md:text-[2.65rem] md:leading-[1.05]">
+            <h1 className="font-display text-3xl font-semibold italic tracking-tight text-aura-ink sm:text-[2.15rem] sm:leading-tight md:text-[2.35rem]">
               {greeting},{" "}
               <span className="not-italic bg-gradient-to-r from-aura-coral to-aura-violet bg-clip-text text-transparent">{firstName}</span>
             </h1>
             {user?.email && (
               <p className="mt-2 max-w-lg truncate text-sm text-slate-500 dark:text-slate-400">{user.email}</p>
             )}
-            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+            <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
               One place for every mock round — scores, presence metrics, and exports so you rehearse with intent, not hope.
             </p>
-            <div className="mt-6 flex flex-wrap items-center gap-2.5" aria-label="Dashboard status">
+            <div className="mt-4 flex flex-wrap items-center gap-2" aria-label="Dashboard status">
               <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-slate-300">
                 <span className={`h-2 w-2 rounded-full ${isPro ? "bg-emerald-500" : "bg-amber-500"}`} aria-hidden />
                 {isPro ? "Pro workspace" : `${plan.toUpperCase()} plan`}
@@ -419,20 +419,11 @@ export default function DashboardPage() {
                 <span className="h-2 w-2 rounded-full bg-violet-500" aria-hidden />
                 {loading ? "Syncing sessions" : `${interviews.length} sessions synced`}
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-200/80 bg-violet-50/80 px-3 py-1.5 text-xs font-semibold text-violet-800 shadow-sm backdrop-blur-sm dark:border-violet-500/35 dark:bg-violet-950/45 dark:text-violet-200">
-                Press <kbd className="rounded bg-white/80 px-1.5 py-0.5 font-mono text-[10px] dark:bg-slate-900/80">n</kbd> for a new mock
-              </span>
             </div>
           </div>
-          <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-stretch xl:flex-row">
-            <div className="rounded-2xl border border-slate-200/90 bg-white/80 p-3 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/60 sm:min-w-[13rem]">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Next best action</p>
-              <p className="mt-1 text-sm font-semibold text-aura-ink dark:text-slate-100">
-                {completed.length > 0 ? "Review your latest scorecard" : "Create your baseline mock"}
-              </p>
-            </div>
+          <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center lg:justify-end">
             <Link to="/interview/new" className="no-underline">
-              <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3.5 text-sm font-bold text-white shadow-[0_16px_40px_-10px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.1)_inset] transition-transform duration-250 ease-out-expo active:scale-[0.98] sm:w-auto">
+              <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-7 py-3 text-sm font-bold text-white shadow-[0_12px_28px_-12px_rgba(91,33,182,0.5),0_0_0_1px_rgba(255,255,255,0.1)_inset] transition-transform duration-250 ease-out-expo active:scale-[0.98] sm:w-auto">
                 <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet" />
                 <span className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-50" />
                 <span className="relative">New interview</span>
@@ -442,11 +433,11 @@ export default function DashboardPage() {
               </span>
             </Link>
             <Link to="/pricing" className="no-underline">
-              <span className="btn-secondary inline-flex w-full justify-center py-3.5 text-sm sm:w-auto sm:px-6">View plans</span>
+              <span className="btn-secondary inline-flex w-full justify-center py-3 text-sm sm:w-auto sm:px-5">View plans</span>
             </Link>
             <button
               type="button"
-              className="btn-outline inline-flex w-full justify-center py-3.5 text-sm sm:w-auto sm:px-6"
+              className="btn-outline inline-flex w-full justify-center py-3 text-sm sm:w-auto sm:px-5"
               onClick={() => {
                 downloadPracticeBlockIcs({ title: "InterviewAI — practice block", minutes: 45, hoursFromNow: 2 });
                 toast.success("Calendar file downloaded — open it to add to your calendar app.");
