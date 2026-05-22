@@ -425,6 +425,12 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-stretch xl:flex-row">
+            <div className="rounded-2xl border border-slate-200/90 bg-white/80 p-3 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/60 sm:min-w-[13rem]">
+              <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Next best action</p>
+              <p className="mt-1 text-sm font-semibold text-aura-ink dark:text-slate-100">
+                {completed.length > 0 ? "Review your latest scorecard" : "Create your baseline mock"}
+              </p>
+            </div>
             <Link to="/interview/new" className="no-underline">
               <span className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3.5 text-sm font-bold text-white shadow-[0_16px_40px_-10px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.1)_inset] transition-transform duration-250 ease-out-expo active:scale-[0.98] sm:w-auto">
                 <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet" />
