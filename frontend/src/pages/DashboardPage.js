@@ -37,10 +37,19 @@ function ScoreDisplay({ score }) {
   }
   const color =
     score >= 7 ? "text-emerald-600 dark:text-emerald-400" : score >= 4 ? "text-amber-600 dark:text-amber-400" : "text-rose-600 dark:text-rose-400";
+  const ringColor = score >= 7 ? "#10b981" : score >= 4 ? "#f59e0b" : "#e11d48";
+  const pct = Math.max(0, Math.min(100, score * 10));
   return (
-    <div className="text-center">
-      <div className={`font-sans text-2xl font-extrabold leading-none tracking-tight ${color}`}>{score}</div>
-      <div className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">/10</div>
+    <div
+      className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 shadow-inner dark:bg-slate-950/70"
+      style={{ backgroundImage: `conic-gradient(${ringColor} ${pct}%, rgba(148,163,184,0.2) 0)` }}
+      aria-label={`Score ${score} out of 10`}
+    >
+      <div className="absolute inset-[3px] rounded-[0.85rem] bg-white dark:bg-slate-900" aria-hidden />
+      <div className="relative text-center">
+        <div className={`font-sans text-xl font-extrabold leading-none tracking-tight ${color}`}>{score}</div>
+        <div className="mt-0.5 text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">/10</div>
+      </div>
     </div>
   );
 }
