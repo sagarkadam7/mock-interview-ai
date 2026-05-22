@@ -1215,12 +1215,18 @@ export default function DashboardPage() {
             </ul>
           </div>
 
-          <details className="glass-panel rounded-2xl p-6">
+          <details className="group glass-panel relative overflow-hidden rounded-2xl p-6">
+            <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-violet-500" aria-hidden />
             <summary className="cursor-pointer list-none">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="text-sm font-bold tracking-tight text-aura-ink">Practice signal</h3>
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400" aria-hidden>
-                  Toggle
+                <span className="flex items-center gap-2">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:ring-emerald-500/30" aria-hidden>
+                    ✓
+                  </span>
+                  <h3 className="text-sm font-bold tracking-tight text-aura-ink">Practice signal</h3>
+                </span>
+                <span className="text-xs font-semibold text-slate-500 transition-transform group-open:rotate-180 dark:text-slate-400" aria-hidden>
+                  ↓
                 </span>
               </div>
               <p className="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
@@ -1228,20 +1234,20 @@ export default function DashboardPage() {
               </p>
             </summary>
             <ul className="mt-4 space-y-3 text-sm text-slate-600 dark:text-slate-400">
-              <li className="flex gap-2">
-                <span className="text-emerald-500" aria-hidden>
+              <li className="flex gap-3 rounded-xl bg-white/60 p-3 dark:bg-slate-900/35">
+                <span className="mt-0.5 text-emerald-500" aria-hidden>
                   ✓
                 </span>
                 <span>Ground every answer in metrics and tradeoffs, not buzzwords.</span>
               </li>
-              <li className="flex gap-2">
-                <span className="text-emerald-500" aria-hidden>
+              <li className="flex gap-3 rounded-xl bg-white/60 p-3 dark:bg-slate-900/35">
+                <span className="mt-0.5 text-emerald-500" aria-hidden>
                   ✓
                 </span>
                 <span>Keep WPM in a conversational band — we flag pace drift live.</span>
               </li>
-              <li className="flex gap-2">
-                <span className="text-emerald-500" aria-hidden>
+              <li className="flex gap-3 rounded-xl bg-white/60 p-3 dark:bg-slate-900/35">
+                <span className="mt-0.5 text-emerald-500" aria-hidden>
                   ✓
                 </span>
                 <span>Rebuild eye contact as a habit before it is scored for real.</span>
