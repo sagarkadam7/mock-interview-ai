@@ -869,9 +869,12 @@ export default function DashboardPage() {
                 {RUNWAY_STEPS.map((step) => (
                   <div
                     key={step.n}
-                    className="glass-panel rounded-2xl p-6 transition-[border-color,box-shadow] duration-350 ease-out-expo hover:border-slate-300/90 dark:hover:border-slate-600/80"
+                    className="glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-violet-200/80 hover:shadow-lg hover:shadow-violet-500/10 dark:hover:border-violet-500/35"
                   >
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{step.n}</span>
+                    <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral/70 to-aura-violet/70" aria-hidden />
+                    <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl border border-violet-200/80 bg-violet-50 font-mono text-[10px] font-bold text-violet-700 transition-transform group-hover:scale-105 dark:border-violet-500/35 dark:bg-violet-950/45 dark:text-violet-200">
+                      {step.n}
+                    </div>
                     <h3 className="mt-2 text-base font-bold tracking-tight text-aura-ink">{step.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{step.body}</p>
                   </div>
