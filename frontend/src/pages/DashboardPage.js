@@ -374,7 +374,7 @@ export default function DashboardPage() {
   const quickstartPct = Math.round((quickstartDone / 3) * 100);
 
   return (
-    <div className="page-shell relative isolate min-h-screen max-w-7xl overflow-hidden">
+    <div className="page-shell relative isolate min-h-screen overflow-hidden">
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-[0.18] dark:opacity-[0.1]"
         style={{
@@ -449,7 +449,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="mb-10 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="segmented-control">
           {[
             { id: "sessions", label: "Sessions", icon: "▦", count: interviews.length },
@@ -477,23 +477,13 @@ export default function DashboardPage() {
             </button>
           ))}
         </div>
-        <p className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
-          <span className="hidden sm:inline">Shortcuts:</span>
-          <span className="inline-flex items-center gap-1.5">
-            <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] dark:border-slate-700 dark:bg-slate-900">n</kbd>
-            <span>new session</span>
-          </span>
-          <span aria-hidden className="text-slate-300 dark:text-slate-600">·</span>
-          <span className="inline-flex items-center gap-1.5">
-            <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] dark:border-slate-700 dark:bg-slate-900">/</kbd>
-            <span>search</span>
-          </span>
-          <span aria-hidden className="hidden text-slate-300 dark:text-slate-600 sm:inline">·</span>
-          <span className="hidden items-center gap-1.5 sm:inline-flex">
-            <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] dark:border-slate-700 dark:bg-slate-900">c</kbd>
-            <span>compact</span>
-          </span>
-        </p>
+        <button
+          type="button"
+          className="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-500 shadow-sm transition-colors hover:text-aura-ink dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:text-slate-100"
+          onClick={() => setDashDensity((d) => (d === "compact" ? "comfy" : "compact"))}
+        >
+          {isCompact ? "Comfy view" : "Compact view"}
+        </button>
       </div>
 
       {!loading && loadError && (
