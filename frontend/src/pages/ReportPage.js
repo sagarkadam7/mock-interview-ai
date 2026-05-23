@@ -600,12 +600,12 @@ export default function ReportPage() {
           )}
         </div>
 
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-3 dark:border-slate-700/70 dark:bg-slate-900/40">
           <div>
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Delivery</span>
             <h2 className="mt-1 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Session metrics</h2>
           </div>
-          <span className="rounded-full border border-slate-200/80 bg-slate-50/90 px-3 py-1 text-[11px] font-semibold text-slate-600 dark:border-slate-600 dark:bg-slate-800/80 dark:text-slate-300">
+          <span className="rounded-full border border-violet-200/80 bg-violet-50/90 px-3 py-1 text-[11px] font-semibold text-violet-800 dark:border-violet-500/30 dark:bg-violet-950/40 dark:text-violet-200">
             {answered.length}/{totalQuestions} answered
           </span>
         </div>
