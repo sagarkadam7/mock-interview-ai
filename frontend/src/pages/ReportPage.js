@@ -161,9 +161,16 @@ function QuestionCard({ question, index }) {
   const [open, setOpen] = useState(index === 0);
   const panelId = `report-q-panel-${index}`;
   const headerId = `report-q-header-${index}`;
+  const scoreTone =
+    question.score >= 7
+      ? "from-emerald-500 to-teal-400"
+      : question.score >= 4
+        ? "from-amber-500 to-orange-400"
+        : "from-rose-500 to-pink-500";
 
   return (
-    <div className="glass-panel overflow-hidden rounded-3xl transition-all duration-300 hover:border-slate-300">
+    <div className="glass-panel relative overflow-hidden rounded-3xl transition-all duration-300 hover:border-slate-300">
+      {question.score !== null ? <span className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${scoreTone}`} aria-hidden /> : null}
       <button
         type="button"
         id={headerId}
@@ -173,12 +180,13 @@ function QuestionCard({ question, index }) {
         className="flex w-full items-start justify-between gap-4 border-none bg-transparent p-6 text-left transition-all duration-300 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 md:p-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-violet-400/80 dark:focus-visible:ring-violet-500/60"
       >
         <div className="flex min-w-0 flex-1 items-start gap-3.5">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-600 shadow-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
-            {index + 1}
+          <div className="flex h-9 w-9 shrink-0 flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white text-[10px] font-bold uppercase leading-none text-slate-500 shadow-sm dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <span className="text-[9px] tracking-wider">Q</span>
+            <span className="text-xs tabular-nums text-slate-800 dark:text-slate-100">{index + 1}</span>
           </div>
           <div className="min-w-0 flex-1 space-y-2">
             {question.questionType === "follow_up" && (
-              <span className="inline-block rounded-md border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-violet-700">
+              <span className="inline-block rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-violet-700 dark:border-violet-500/30 dark:bg-violet-950/35 dark:text-violet-200">
                 Adaptive follow-up
               </span>
             )}
@@ -201,7 +209,7 @@ function QuestionCard({ question, index }) {
             </span>
           )}
           {question.eyeContactPct !== null && (
-            <span className={`text-xs font-medium ${eyeColor(question.eyeContactPct)}`}>👁 {question.eyeContactPct}%</span>
+            <span className={`rounded-full bg-slate-50 px-2.5 py-1 text-xs font-semibold dark:bg-slate-800/70 ${eyeColor(question.eyeContactPct)}`}>👁 {question.eyeContactPct}%</span>
           )}
           <span
             className={`flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200/80 bg-white/90 text-slate-500 transition-transform duration-200 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-400 ${open ? "rotate-180" : ""}`}
