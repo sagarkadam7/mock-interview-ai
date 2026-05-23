@@ -3,120 +3,232 @@ import { buildNextRepsFromInterview } from "./practiceSignals";
 
 export function generatePDFReport(interview) {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
-  const W = 210; // A4 width
-  const margin = 20;
-  let y = margin;
+  const page = { w: 210, margin: 16, footerY: 282 };
+  const contentW = page.w - page.margin * 2;
+  const colors = {
+    ink: [15, 23, 42],
+    muted: [100, 116, 139],
+    faint: [226, 232, 240],
+    violet: [91, 33, 182],
+    coral: [232, 85, 71],
+    emerald: [5, 150, 105],
+    amber: [217, 119, 6],
+    rose: [225, 29, 72],
+  };
 
-  const addLine = (text, size = 11, bold = false, color = [232, 234, 240]) => {
+  let y = page.margin;
+
+  const clean = (value, fallback = "") =>
+    String(value ?? fallback)
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+      .replace(/[–—]/g, "-")
+      .replace(/…/g, "...")
+      .replace(/[•·]/g, "-")
+      .replace(/[^\x20-\x7E\n]/g, "")
+      .replace(/[ \t]+/g, " ")
+      .trim();
+
+  const setText = (size = 10, color = colors.ink, bold = false) => {
     doc.setFontSize(size);
     doc.setFont("helvetica", bold ? "bold" : "normal");
     doc.setTextColor(...color);
-    const lines = doc.splitTextToSize(text, W - margin * 2);
-    lines.forEach((line) => {
-      if (y > 270) { doc.addPage(); y = margin; }
-      doc.text(line, margin, y);
-      y += size * 0.5;
-    });
-    y += 2;
   };
 
-  const addRect = (fillColor, height = 10) => {
-    doc.setFillColor(...fillColor);
-    doc.rect(0, y - height, W, height + 4, "F");
-    y += 2;
+  const textLines = (text, width) => doc.splitTextToSize(clean(text), width);
+  const lineHeight = (size) => Math.max(size * 0.42, 4.2);
+
+  const ensureSpace = (height) => {
+    if (y + height <= page.footerY - 4) return;
+    doc.addPage();
+    y = page.margin;
   };
 
-  // ── Header ──
-  doc.setFillColor(13, 15, 20);
-  doc.rect(0, 0, W, 297, "F");
+  const addText = (text, { x = page.margin, width = contentW, size = 10, color = colors.ink, bold = false, after = 2 } = {}) => {
+    const lines = textLines(text, width);
+    const lh = lineHeight(size);
+    ensureSpace(lines.length * lh + after);
+    setText(size, color, bold);
+    doc.text(lines, x, y);
+    y += lines.length * lh + after;
+    return lines.length * lh + after;
+  };
 
-  doc.setFillColor(30, 33, 48);
-  doc.rect(0, 0, W, 50, "F");
+  const drawCard = (x, top, width, height, fill = [255, 255, 255], border = colors.faint) => {
+    doc.setFillColor(...fill);
+    doc.setDrawColor(...border);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(x, top, width, height, 3, 3, "FD");
+  };
 
-  y = 18;
-  addLine("AI Mock Interview Report", 22, true, [232, 234, 240]);
-  addLine(`Role: ${interview.jobRole}`, 13, false, [144, 151, 176]);
-  addLine(`Date: ${new Date(interview.createdAt).toLocaleDateString()}`, 11, false, [93, 100, 128]);
-  y += 8;
+  const scoreTone = (score) => {
+    if (typeof score !== "number") return colors.muted;
+    if (score >= 7) return colors.emerald;
+    if (score >= 4) return colors.amber;
+    return colors.rose;
+  };
 
-  // ── Overall score ──
-  const score = interview.overallScore;
-  const scoreColor = score >= 7 ? [34, 197, 94] : score >= 4 ? [245, 158, 11] : [239, 68, 68];
-  addLine(`Overall Score: ${score !== null ? score + " / 10" : "Incomplete"}`, 16, true, scoreColor);
-  y += 6;
+  const truncate = (text, limit) => {
+    const value = clean(text);
+    return value.length > limit ? `${value.slice(0, limit - 3)}...` : value;
+  };
 
-  // ── Questions ──
-  interview.questions.forEach((q, i) => {
-    if (y > 250) { doc.addPage(); y = margin; doc.setFillColor(13,15,20); doc.rect(0,0,W,297,"F"); }
+  const date = interview.createdAt
+    ? new Date(interview.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+    : "Unknown date";
+  const questions = Array.isArray(interview.questions) ? interview.questions : [];
+  const answered = questions.filter((q) => q.score !== null).length;
+  const overall = typeof interview.overallScore === "number" ? interview.overallScore : null;
 
-    y += 4;
-    doc.setFillColor(26, 29, 40);
-    doc.roundedRect(margin - 4, y - 6, W - margin * 2 + 8, 8, 2, 2, "F");
-    addLine(`Q${i + 1}: ${q.text}`, 12, true, [232, 234, 240]);
-    y += 2;
+  doc.setFillColor(248, 250, 252);
+  doc.rect(0, 0, page.w, 54, "F");
+  doc.setFillColor(...colors.violet);
+  doc.rect(0, 0, 5, 54, "F");
+  doc.setFillColor(...colors.coral);
+  doc.rect(5, 0, 2, 54, "F");
 
-    if (q.questionType === "follow_up") {
-      addLine("Adaptive follow-up", 9, true, [200, 170, 255]);
-      if (q.hint) {
-        addLine(`Hint: ${q.hint}`, 9, false, [120, 128, 160]);
-      }
-    }
+  y = 17;
+  addText("AI Mock Interview Report", { x: page.margin, width: 120, size: 20, bold: true, after: 3 });
+  addText(clean(interview.jobRole, "Interview session"), { x: page.margin, width: 128, size: 12, color: colors.muted, after: 2 });
+  addText(`${date} - ${answered}/${questions.length} questions answered`, { x: page.margin, width: 128, size: 9, color: colors.muted, after: 0 });
 
-    const qScore = q.score !== null ? q.score : "-";
-    const qColor = q.score >= 7 ? [34,197,94] : q.score >= 4 ? [245,158,11] : [239,68,68];
-    addLine(`Score: ${qScore}/10`, 11, true, qColor);
+  drawCard(156, 15, 36, 26, [255, 255, 255], [221, 214, 254]);
+  setText(8, colors.muted, true);
+  doc.text("OVERALL", 174, 23, { align: "center" });
+  setText(20, scoreTone(overall), true);
+  doc.text(overall !== null ? `${overall}/10` : "N/A", 174, 35, { align: "center" });
 
-    const signals = [];
-    if (typeof q.eyeContactPct === "number") signals.push(`Eye ${q.eyeContactPct}%`);
-    if (typeof q.wordsPerMinute === "number" && q.wordsPerMinute > 0) {
-      signals.push(`Pace ${q.wordsPerMinute} wpm${q.paceLabel ? ` (${q.paceLabel})` : ""}`);
-    }
-    if (typeof q.fillerWordCount === "number") signals.push(`Fillers ${q.fillerWordCount}`);
-    if (typeof q.confidenceScore === "number") signals.push(`Conf ${q.confidenceScore}/10`);
-    if (typeof q.dominantEmotion === "string" && q.dominantEmotion.trim()) signals.push(`Tone ${q.dominantEmotion}`);
-    if (signals.length) {
-      addLine(`Signals: ${signals.join(" · ")}`, 9, false, [120, 128, 160]);
-    }
-
-    if (q.answer) {
-      addLine("Your Answer:", 10, true, [144, 151, 176]);
-      addLine(q.answer.slice(0, 300) + (q.answer.length > 300 ? "…" : ""), 10, false, [93, 100, 128]);
-    }
-
-    if (q.feedback) {
-      addLine("Feedback:", 10, true, [108, 99, 255]);
-      addLine(q.feedback, 10, false, [144, 151, 176]);
-    }
-
-    if (q.strengths) {
-      addLine("Strengths:", 10, true, [34, 197, 94]);
-      addLine(q.strengths, 10, false, [144, 151, 176]);
-    }
-
-    if (q.improvements) {
-      addLine("Improvements:", 10, true, [245, 158, 11]);
-      addLine(q.improvements, 10, false, [144, 151, 176]);
-    }
-
-    y += 6;
-    doc.setDrawColor(42, 45, 58);
-    doc.line(margin, y, W - margin, y);
-    y += 6;
+  y = 66;
+  const metricGap = 4;
+  const metricW = (contentW - metricGap * 3) / 4;
+  const metrics = [
+    ["Eye contact", interview.avgEyeContact !== null ? `${interview.avgEyeContact}%` : "N/A"],
+    ["Confidence", interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : "N/A"],
+    ["Speech pace", interview.avgPace ? `${interview.avgPace} wpm` : "N/A"],
+    ["Fillers / Q", interview.avgFillerWords !== null ? `${interview.avgFillerWords}` : "N/A"],
+  ];
+  metrics.forEach(([label, value], i) => {
+    const x = page.margin + i * (metricW + metricGap);
+    drawCard(x, y, metricW, 24, [255, 255, 255], colors.faint);
+    setText(7, colors.muted, true);
+    doc.text(label.toUpperCase(), x + 4, y + 8);
+    setText(13, colors.ink, true);
+    doc.text(clean(value), x + 4, y + 17);
   });
+  y += 36;
 
-  // ── Next reps (matches in-app report) ──
-  y += 6;
-  addLine("YOUR NEXT REPS", 14, true, [200, 170, 255]);
-  addLine("Three focused actions before your next session.", 9, false, [120, 128, 160]);
+  addText("Next reps", { size: 14, bold: true, after: 1 });
+  addText("Three focused actions before your next session.", { size: 9, color: colors.muted, after: 4 });
   const reps = buildNextRepsFromInterview(interview);
   reps.forEach((line, i) => {
-    addLine(`${i + 1}. ${line}`, 10, false, [200, 205, 220]);
+    const lines = textLines(`${i + 1}. ${line}`, contentW - 10);
+    const h = Math.max(12, lines.length * 4.6 + 7);
+    ensureSpace(h + 3);
+    const top = y;
+    drawCard(page.margin, top, contentW, h, [248, 250, 252], colors.faint);
+    setText(9, colors.ink, false);
+    doc.text(lines, page.margin + 5, top + 7);
+    y = top + h + 3;
   });
-  y += 4;
 
-  // ── Footer ──
-  y = 285;
-  addLine("Generated by AI Mock Interview Platform • For practice purposes only", 8, false, [93, 100, 128]);
+  y += 5;
+  addText("Question breakdown", { size: 14, bold: true, after: 5 });
 
-  doc.save(`interview-report-${interview.jobRole.replace(/\s+/g, "-")}.pdf`);
+  questions.forEach((q, i) => {
+    const qText = truncate(q.text, 420);
+    const answer = q.answer ? truncate(q.answer, 520) : "";
+    const feedback = q.feedback ? truncate(q.feedback, 560) : "";
+    const strengths = q.strengths ? truncate(q.strengths, 280) : "";
+    const improvements = q.improvements ? truncate(q.improvements, 280) : "";
+    const signals = [];
+
+    if (q.questionType === "follow_up") signals.push("Adaptive follow-up");
+    if (typeof q.eyeContactPct === "number") signals.push(`Eye ${q.eyeContactPct}%`);
+    if (typeof q.wordsPerMinute === "number" && q.wordsPerMinute > 0) signals.push(`Pace ${q.wordsPerMinute} wpm`);
+    if (typeof q.fillerWordCount === "number") signals.push(`Fillers ${q.fillerWordCount}`);
+    if (typeof q.confidenceScore === "number") signals.push(`Confidence ${q.confidenceScore}/10`);
+
+    const qLines = textLines(qText, contentW - 42);
+    const signalLines = signals.length ? textLines(signals.join("  |  "), contentW - 22) : [];
+    const answerLines = answer ? textLines(answer, contentW - 22) : [];
+    const feedbackLines = feedback ? textLines(feedback, contentW - 22) : [];
+    const strengthsLines = strengths ? textLines(strengths, contentW / 2 - 17) : [];
+    const improvementsLines = improvements ? textLines(improvements, contentW / 2 - 17) : [];
+    const twoColH = Math.max(strengthsLines.length, improvementsLines.length) * 4.3 + (strengths || improvements ? 12 : 0);
+    const h =
+      16 +
+      qLines.length * 4.6 +
+      signalLines.length * 4.2 +
+      answerLines.length * 4.3 +
+      feedbackLines.length * 4.3 +
+      twoColH +
+      18;
+
+    ensureSpace(h + 6);
+    const top = y;
+    drawCard(page.margin, top, contentW, h, [255, 255, 255], colors.faint);
+    doc.setFillColor(...scoreTone(q.score));
+    doc.roundedRect(page.margin, top, 3, h, 2, 2, "F");
+
+    setText(8, colors.muted, true);
+    doc.text(`Q${i + 1}`, page.margin + 8, top + 8);
+    setText(11, colors.ink, true);
+    doc.text(qLines, page.margin + 8, top + 15);
+
+    setText(13, scoreTone(q.score), true);
+    doc.text(q.score !== null ? `${q.score}/10` : "N/A", page.w - page.margin - 8, top + 9, { align: "right" });
+
+    let innerY = top + 17 + qLines.length * 4.6;
+    if (signalLines.length) {
+      setText(8, colors.muted, false);
+      doc.text(signalLines, page.margin + 8, innerY);
+      innerY += signalLines.length * 4.2 + 4;
+    }
+
+    if (answerLines.length) {
+      setText(8, colors.muted, true);
+      doc.text("YOUR ANSWER", page.margin + 8, innerY);
+      innerY += 5;
+      setText(9, colors.ink, false);
+      doc.text(answerLines, page.margin + 8, innerY);
+      innerY += answerLines.length * 4.3 + 4;
+    }
+
+    if (feedbackLines.length) {
+      setText(8, colors.violet, true);
+      doc.text("AI FEEDBACK", page.margin + 8, innerY);
+      innerY += 5;
+      setText(9, colors.ink, false);
+      doc.text(feedbackLines, page.margin + 8, innerY);
+      innerY += feedbackLines.length * 4.3 + 5;
+    }
+
+    if (strengths || improvements) {
+      const colW = contentW / 2 - 6;
+      const leftX = page.margin + 8;
+      const rightX = page.margin + 8 + colW + 6;
+      setText(8, colors.emerald, true);
+      doc.text("STRENGTHS", leftX, innerY);
+      setText(8, colors.amber, true);
+      doc.text("IMPROVEMENTS", rightX, innerY);
+      setText(8.5, colors.ink, false);
+      if (strengthsLines.length) doc.text(strengthsLines, leftX, innerY + 5);
+      if (improvementsLines.length) doc.text(improvementsLines, rightX, innerY + 5);
+    }
+
+    y = top + h + 6;
+  });
+
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i += 1) {
+    doc.setPage(i);
+    doc.setDrawColor(...colors.faint);
+    doc.line(page.margin, page.footerY, page.w - page.margin, page.footerY);
+    setText(8, colors.muted, false);
+    doc.text("Generated by AI Mock Interview Platform - For practice purposes only", page.margin, page.footerY + 6);
+    doc.text(`Page ${i} of ${pageCount}`, page.w - page.margin, page.footerY + 6, { align: "right" });
+  }
+
+  const safeRole = clean(interview.jobRole, "interview").replace(/[^a-z0-9]+/gi, "-").replace(/(^-|-$)/g, "");
+  doc.save(`interview-report-${safeRole || "interview"}.pdf`);
 }
