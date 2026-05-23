@@ -526,13 +526,13 @@ export default function ReportPage() {
         Skip to question breakdown
       </a>
       <main aria-labelledby="report-title">
-      <div className="glass-panel-lg relative mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/50 via-transparent to-orange-50/30 opacity-90" aria-hidden />
-        <div className="relative mb-10 flex flex-wrap items-start justify-between gap-8">
+      <div className="glass-panel-lg relative mb-8 overflow-hidden p-6 sm:p-8">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/35 via-transparent to-orange-50/20 opacity-90" aria-hidden />
+        <div className="relative mb-8 flex flex-wrap items-start justify-between gap-6">
           <div className="min-w-0 flex-1">
             <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Session report</div>
             <div className="flex flex-wrap items-start gap-3">
-              <h1 id="report-title" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+              <h1 id="report-title" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-[2.35rem] md:leading-tight">
                 {interview.jobRole}
               </h1>
               <button
@@ -555,7 +555,7 @@ export default function ReportPage() {
                 {prepCompany || interview.targetCompany}
               </p>
             ) : null}
-            <p className="mt-1 text-sm text-aura-muted">
+            <p className="mt-2 text-sm text-aura-muted">
               {new Date(interview.createdAt).toLocaleDateString("en-IN", {
                 weekday: "long",
                 day: "numeric",
@@ -564,9 +564,16 @@ export default function ReportPage() {
               })}
               <span className="text-slate-400 dark:text-slate-500"> · {formatRelativeTime(interview.createdAt)}</span>
             </p>
-            <p className="mt-1 text-sm text-aura-muted">
-              {answered.length}/{interview.questions.length} questions answered
-            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+              <span className="rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 dark:border-slate-700/70 dark:bg-slate-900/60">
+                {answered.length}/{interview.questions.length} answered
+              </span>
+              {sessionWall ? (
+                <span className="rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 dark:border-slate-700/70 dark:bg-slate-900/60">
+                  {sessionWall} session
+                </span>
+              ) : null}
+            </div>
             {totalQuestions > 0 ? (
               <div
                 className="mt-2 max-w-xs"
@@ -583,9 +590,6 @@ export default function ReportPage() {
                   />
                 </div>
               </div>
-            ) : null}
-            {sessionWall ? (
-              <p className="mt-1 text-sm font-medium text-slate-600 dark:text-slate-400">Wall time in session: {sessionWall}</p>
             ) : null}
           </div>
           {overall !== null && (
