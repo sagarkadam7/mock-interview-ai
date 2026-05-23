@@ -99,9 +99,10 @@ function ReportOverallRing({ score, ringClass, textClass }) {
   );
 }
 
-function StatCard({ label, value, sub, colorClass }) {
+function StatCard({ label, value, sub, colorClass, accent = "from-violet-500 to-fuchsia-500" }) {
   return (
-    <div className="glass-panel rounded-2xl p-6 text-center ring-1 ring-white/40 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-slate-200/80 hover:shadow-md dark:hover:border-slate-600/50 dark:hover:shadow-lg dark:hover:shadow-black/25">
+    <div className="glass-panel group relative overflow-hidden rounded-2xl p-5 text-center ring-1 ring-white/40 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-slate-200/80 hover:shadow-md dark:hover:border-slate-600/50 dark:hover:shadow-lg dark:hover:shadow-black/25 sm:p-6">
+      <span className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${accent}`} aria-hidden />
       <div className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{label}</div>
       <div className={`font-sans text-3xl font-bold tracking-tight tabular-nums ${colorClass || "text-violet-600"}`}>{value ?? "—"}</div>
       {sub && <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{sub}</div>}
@@ -611,17 +612,20 @@ export default function ReportPage() {
             colorClass={
               interview.avgEyeContact > 70 ? "text-emerald-600" : interview.avgEyeContact > 40 ? "text-amber-600" : "text-rose-600"
             }
+            accent="from-emerald-500 to-teal-400"
           />
           <StatCard
             label="Avg confidence (ML)"
             value={interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : null}
             colorClass="text-violet-600"
+            accent="from-violet-500 to-fuchsia-500"
           />
           <StatCard
             label="Avg speech pace"
             value={interview.avgPace ? `${interview.avgPace} wpm` : null}
             sub={interview.avgPace ? (interview.avgPace >= 100 && interview.avgPace <= 180 ? "good pace" : "needs adjustment") : null}
             colorClass={interview.avgPace >= 100 && interview.avgPace <= 180 ? "text-emerald-600" : "text-amber-600"}
+            accent="from-amber-500 to-orange-400"
           />
           <StatCard
             label="Avg filler words / Q"
@@ -629,6 +633,7 @@ export default function ReportPage() {
             colorClass={
               interview.avgFillerWords <= 2 ? "text-emerald-600" : interview.avgFillerWords <= 5 ? "text-amber-600" : "text-rose-600"
             }
+            accent="from-rose-500 to-pink-500"
           />
         </div>
 
