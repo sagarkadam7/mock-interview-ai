@@ -227,7 +227,7 @@ function QuestionCard({ question, index }) {
           id={panelId}
           role="region"
           aria-labelledby={headerId}
-          className="flex flex-col gap-4 border-t border-slate-100 px-6 pb-6 pt-2 md:px-8 md:pb-8"
+          className="flex flex-col gap-4 border-t border-slate-100 bg-slate-50/35 px-6 pb-6 pt-4 dark:border-slate-800 dark:bg-slate-950/20 md:px-8 md:pb-8"
         >
           {(question.eyeContactPct !== null ||
             question.wordsPerMinute > 0 ||
@@ -235,20 +235,20 @@ function QuestionCard({ question, index }) {
             question.confidenceScore !== null) && (
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {question.eyeContactPct !== null && (
-                <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-800/70">
+                <div className="rounded-xl border border-slate-200/80 bg-white/85 p-3 text-center dark:border-slate-700/80 dark:bg-slate-900/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">👁 Eye</div>
                   <div className={`text-lg font-bold ${eyeColor(question.eyeContactPct)}`}>{question.eyeContactPct}%</div>
                 </div>
               )}
               {question.wordsPerMinute > 0 && (
-                <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-800/70">
+                <div className="rounded-xl border border-slate-200/80 bg-white/85 p-3 text-center dark:border-slate-700/80 dark:bg-slate-900/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">📊 Pace</div>
                   <div className={`text-sm font-bold ${paceColor(question.paceLabel)}`}>{question.wordsPerMinute} wpm</div>
                   <div className="text-[10px] capitalize text-aura-muted">{question.paceLabel}</div>
                 </div>
               )}
               {question.fillerWordCount !== null && (
-                <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-800/70">
+                <div className="rounded-xl border border-slate-200/80 bg-white/85 p-3 text-center dark:border-slate-700/80 dark:bg-slate-900/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">🗣 Fillers</div>
                   <div
                     className={`text-lg font-bold ${
@@ -260,7 +260,7 @@ function QuestionCard({ question, index }) {
                 </div>
               )}
               {question.confidenceScore !== null && (
-                <div className="rounded-xl border border-aura-violet/30 bg-aura-violet/10 p-3 text-center">
+                <div className="rounded-xl border border-aura-violet/30 bg-white/85 p-3 text-center dark:bg-slate-900/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-coral">⭐ Conf</div>
                   <div className="text-base font-bold text-aura-ink">{question.confidenceScore}/10</div>
                 </div>
@@ -269,14 +269,14 @@ function QuestionCard({ question, index }) {
           )}
 
           {question.dominantEmotion && (
-            <div>
+            <div className="rounded-2xl border border-slate-200/80 bg-white/85 p-4 dark:border-slate-700/80 dark:bg-slate-900/70">
               <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Expression analysis</div>
               <EmotionBar emotions={question.emotionScores} />
             </div>
           )}
 
           {question.answer ? (
-            <div>
+            <div className="rounded-2xl border border-slate-200/80 bg-white/85 p-4 dark:border-slate-700/80 dark:bg-slate-900/70">
               <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Your answer</div>
               <p className="text-sm italic leading-relaxed text-slate-700 dark:text-slate-300">&quot;{question.answer}&quot;</p>
               {question.fillerWords?.length > 0 && (
@@ -286,13 +286,13 @@ function QuestionCard({ question, index }) {
               )}
             </div>
           ) : (
-            <p className="text-sm italic text-aura-muted">No answer recorded.</p>
+            <p className="rounded-2xl border border-slate-200/80 bg-white/85 p-4 text-sm italic text-aura-muted dark:border-slate-700/80 dark:bg-slate-900/70">No answer recorded.</p>
           )}
 
           <div className="h-px bg-slate-100 dark:bg-slate-800/90" />
 
           {question.feedback && (
-            <div>
+            <div className="rounded-2xl border border-violet-200/70 bg-white/85 p-4 dark:border-violet-500/25 dark:bg-slate-900/70">
               <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-coral">AI Feedback</div>
               <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.feedback}</p>
             </div>
@@ -300,13 +300,13 @@ function QuestionCard({ question, index }) {
 
           <div className="grid gap-3 sm:grid-cols-2">
             {question.strengths && (
-              <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-4">
+              <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/10 p-4">
                 <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-400">✓ Strengths</div>
                 <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.strengths}</p>
               </div>
             )}
             {question.improvements && (
-              <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4">
+              <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4">
                 <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-400">↑ Improvements</div>
                 <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.improvements}</p>
               </div>
