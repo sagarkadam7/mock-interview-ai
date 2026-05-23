@@ -75,9 +75,9 @@ function ReportOverallRing({ score, ringClass, textClass }) {
   const stroke = overallScoreStroke(score);
 
   return (
-    <div className="relative mx-auto flex h-[104px] w-[104px] items-center justify-center" aria-hidden>
-      <svg width="104" height="104" viewBox="0 0 104 104" className="-rotate-90">
-        <circle cx="52" cy="52" r={r} fill="none" stroke="currentColor" strokeWidth="6" className="text-slate-200/90 dark:text-slate-700/80" />
+    <div className="relative mx-auto flex h-[112px] w-[112px] items-center justify-center rounded-full bg-white/80 shadow-sm ring-1 ring-slate-200/80 dark:bg-slate-900/70 dark:ring-slate-700/80" aria-hidden>
+      <svg width="104" height="104" viewBox="0 0 104 104" className="-rotate-90 drop-shadow-sm">
+        <circle cx="52" cy="52" r={r} fill="none" stroke="currentColor" strokeWidth="6" className="text-slate-200/90 dark:text-slate-700/70" />
         <circle
           cx="52"
           cy="52"
@@ -91,9 +91,9 @@ function ReportOverallRing({ score, ringClass, textClass }) {
           className="transition-[stroke-dashoffset] duration-700 ease-out"
         />
       </svg>
-      <div className={`absolute inset-3 flex flex-col items-center justify-center rounded-full border-[3px] ${ringClass}`}>
+      <div className={`absolute inset-4 flex flex-col items-center justify-center rounded-full border-[3px] shadow-inner ${ringClass}`}>
         <span className={`font-sans text-3xl font-bold leading-none tabular-nums ${textClass}`}>{score}</span>
-        <span className="text-[10px] text-aura-muted">/10</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-aura-muted">/10</span>
       </div>
     </div>
   );
