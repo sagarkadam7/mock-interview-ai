@@ -668,7 +668,8 @@ export default function ReportPage() {
         {(peerAvgScore != null && scoreVsPeer != null) || weakPrimary.length > 0 ? (
           <div className="mb-8 grid gap-4 md:grid-cols-2">
             {peerAvgScore != null && scoreVsPeer != null ? (
-              <div className="glass-panel rounded-3xl p-6 md:p-7">
+              <div className="glass-panel relative overflow-hidden rounded-3xl p-6 md:p-7">
+                <span className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-violet-500 to-fuchsia-500" aria-hidden />
                 <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Benchmark</span>
                 <h2 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">This session vs your average</h2>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
@@ -677,7 +678,7 @@ export default function ReportPage() {
                   <span className="font-bold tabular-nums text-violet-600 dark:text-violet-300">{peerAvgScore.toFixed(1)}</span>
                   <span className="text-aura-muted"> /10</span>
                 </p>
-                <p className="mt-4 text-2xl font-black tabular-nums tracking-tight text-aura-ink dark:text-white">
+                <p className="mt-4 inline-flex items-baseline rounded-2xl border border-slate-200/80 bg-slate-50/80 px-4 py-2 text-2xl font-black tabular-nums tracking-tight text-aura-ink dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-white">
                   {scoreVsPeer > 0 ? "+" : ""}
                   {scoreVsPeer}
                   <span className="ml-2 text-base font-semibold text-slate-500 dark:text-slate-400">vs avg</span>
@@ -692,7 +693,8 @@ export default function ReportPage() {
               </div>
             ) : null}
             {weakPrimary.length > 0 ? (
-              <div className="glass-panel rounded-3xl border border-amber-200/60 bg-amber-50/30 p-6 dark:border-amber-500/25 dark:bg-amber-950/20 md:p-7">
+              <div className="glass-panel relative overflow-hidden rounded-3xl border border-amber-200/60 bg-amber-50/25 p-6 dark:border-amber-500/25 dark:bg-amber-950/20 md:p-7">
+                <span className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-400 to-orange-500" aria-hidden />
                 <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-amber-800 dark:text-amber-200">Drill targets</span>
                 <h2 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Lowest-scoring primaries</h2>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Re-answer these out loud before your next mock — same STAR depth, sharper metrics.</p>
@@ -712,12 +714,11 @@ export default function ReportPage() {
                     Copy drill list
                   </button>
                 </div>
-                <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm text-slate-800 dark:text-slate-200">
+                <ol className="mt-4 list-none space-y-3 p-0 text-sm text-slate-800 dark:text-slate-200">
                   {weakPrimary.map((q) => (
-                    <li key={q._id} className="pl-1">
-                      <span className="font-semibold text-rose-700 dark:text-rose-300">{q.score}/10</span>
-                      <span className="text-slate-600 dark:text-slate-400"> — </span>
-                      <span>{q.text}</span>
+                    <li key={q._id} className="rounded-2xl border border-amber-200/70 bg-white/75 px-4 py-3 dark:border-amber-500/20 dark:bg-slate-900/45">
+                      <span className="mb-1 inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-xs font-bold tabular-nums text-rose-700 dark:bg-rose-950/30 dark:text-rose-300">{q.score}/10</span>
+                      <span className="block leading-snug">{q.text}</span>
                     </li>
                   ))}
                 </ol>
