@@ -13,8 +13,9 @@ import PrepBriefPanel from "../components/PrepBriefPanel";
 function ReportPageSkeleton() {
   return (
     <div className="page-shell min-h-screen max-w-6xl" aria-busy="true" aria-live="polite" aria-label="Loading report">
-      <div className="glass-panel-lg mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
-        <div className="mb-10 flex flex-wrap items-start justify-between gap-8">
+      <div className="glass-panel-lg relative mb-8 overflow-hidden p-6 sm:p-8">
+        <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral/40 via-violet-400/40 to-aura-violet/40" aria-hidden />
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-8">
           <div className="min-w-0 flex-1 space-y-4">
             <div className="h-3 w-24 skeleton-line" />
             <div className="h-9 w-[66%] max-w-md skeleton-line" />
@@ -23,19 +24,19 @@ function ReportPageSkeleton() {
           </div>
           <div className="h-24 w-24 shrink-0 rounded-full skeleton-line" />
         </div>
-        <div className="mb-8 grid gap-3 sm:grid-cols-2">
+        <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="h-28 rounded-2xl skeleton-line" />
           ))}
         </div>
-        <div className="mb-8 h-72 w-full max-w-2xl rounded-3xl skeleton-line mx-auto" />
+        <div className="mb-8 h-64 w-full max-w-2xl rounded-3xl skeleton-line mx-auto" />
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-36 w-full rounded-3xl skeleton-line" />
+            <div key={i} className="h-32 w-full rounded-2xl skeleton-line" />
           ))}
         </div>
       </div>
-      <div className="mx-auto max-w-md text-center">
+      <div className="mx-auto max-w-md rounded-2xl border border-slate-200/80 bg-white/70 px-5 py-4 text-center shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50">
         <p className="text-sm font-semibold text-aura-ink dark:text-slate-200">Building your scorecard…</p>
         <p className="mt-1.5 text-xs leading-relaxed text-aura-muted dark:text-slate-400">
           Pulling per-question scores, delivery metrics, and coaching highlights.
