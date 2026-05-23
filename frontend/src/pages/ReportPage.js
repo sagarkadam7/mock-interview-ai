@@ -942,15 +942,24 @@ export default function ReportPage() {
         </div>
 
         <section
-          className="rounded-3xl border border-slate-200/90 bg-gradient-to-br from-slate-50/90 via-white to-violet-50/30 p-5 shadow-sm ring-1 ring-white/60 dark:border-slate-700/80 dark:from-slate-900/90 dark:via-slate-950 dark:to-violet-950/20 dark:ring-slate-800/40 md:p-6"
+          className="rounded-3xl border border-slate-200/90 bg-white/90 p-5 shadow-sm ring-1 ring-white/60 dark:border-slate-700/80 dark:bg-slate-900/75 dark:ring-slate-800/40 md:p-6"
           aria-label="Report actions"
         >
-          <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Export &amp; next steps</p>
-          <p className="mb-4 text-sm text-slate-600 dark:text-slate-400">Download, share, or run another session with the same setup.</p>
-          <div className="flex flex-wrap gap-2.5">
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Export &amp; next steps</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Download, share, or run another session with the same setup.</p>
+            </div>
+            {shareUrl ? (
+              <span className="rounded-full border border-emerald-200/80 bg-emerald-50 px-3 py-1 text-[11px] font-semibold text-emerald-700 dark:border-emerald-500/25 dark:bg-emerald-950/35 dark:text-emerald-200">
+                Share ready
+              </span>
+            ) : null}
+          </div>
+          <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
           <button
             type="button"
-            className="btn-primary min-h-[44px] px-5 py-2.5"
+            className="btn-primary min-h-[44px] px-5 py-2.5 lg:col-span-2"
             onClick={() => {
               generatePDFReport(interview);
               toast.success("PDF saved to your downloads");
@@ -1010,13 +1019,13 @@ export default function ReportPage() {
               shareUrl ? "⎘ Copy share link" : "↗ Share report"
             )}
           </button>
-          <Link to="/interview/new">
-            <button type="button" className="btn-outline min-h-[44px] px-5 py-2.5">
+          <Link to="/interview/new" className="no-underline">
+            <button type="button" className="btn-outline min-h-[44px] w-full px-5 py-2.5">
               + New Interview
             </button>
           </Link>
-          <Link to="/dashboard">
-            <button type="button" className="btn-outline min-h-[44px] px-5 py-2.5">
+          <Link to="/dashboard" className="no-underline">
+            <button type="button" className="btn-outline min-h-[44px] w-full px-5 py-2.5">
               ← Dashboard
             </button>
           </Link>
