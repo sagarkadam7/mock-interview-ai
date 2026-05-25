@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { HOW_STEPS } from "../../data/marketing";
 
+const STEP_OUTPUTS = ["Role context", "Live answer", "Scorecard", "Next rep"];
+
 export default function HowItWorksSection() {
   return (
     <section
@@ -53,6 +55,10 @@ export default function HowItWorksSection() {
                   </div>
                   <h3 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">{step.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{step.desc}</p>
+                  <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/75 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/55 dark:text-slate-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-aura-coral" aria-hidden />
+                    {STEP_OUTPUTS[i]}
+                  </div>
                   {i < HOW_STEPS.length - 1 && (
                     <div
                       className="pointer-events-none absolute -right-3 top-12 hidden h-px w-6 bg-gradient-to-r from-violet-300/80 to-transparent dark:from-violet-600/60 lg:block"
