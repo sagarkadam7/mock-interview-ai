@@ -153,7 +153,16 @@ export default function FAQSection({ limit = null }) {
           </p>
         </div>
 
-        <div className="glass-panel-lg rounded-2xl px-6 md:px-10">
+        <div className="glass-panel-lg overflow-hidden rounded-2xl">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 bg-slate-50/70 px-6 py-4 dark:border-slate-700/80 dark:bg-slate-900/45 md:px-10">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+              {topic === "all" ? "All questions" : `${FAQ_TOPICS.find((t) => t.id === topic)?.label} questions`}
+            </span>
+            <span className="rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-700/80 dark:bg-slate-950/45 dark:text-slate-300">
+              {items.length} result{items.length === 1 ? "" : "s"}
+            </span>
+          </div>
+          <div className="px-6 md:px-10">
           {items.length ? (
             items.map((item, i) => (
               <Item
@@ -179,6 +188,7 @@ export default function FAQSection({ limit = null }) {
               </p>
             </div>
           )}
+          </div>
         </div>
 
         {limit != null && (
