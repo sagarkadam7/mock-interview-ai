@@ -89,6 +89,9 @@ export default function ComparisonSection() {
                       <span className="h-1.5 w-1.5 rounded-full bg-violet-500" aria-hidden />
                       InterviewAI
                     </span>
+                    <span className="mt-1.5 inline-flex rounded-full bg-violet-100 px-2 py-0.5 text-[8px] tracking-[0.18em] text-violet-700 dark:bg-violet-500/15 dark:text-violet-200">
+                      Full loop
+                    </span>
                     <span className="pointer-events-none absolute inset-x-3 -bottom-px h-[2px] bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet" aria-hidden />
                   </th>
                   <th className="px-3 py-4 text-center font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:px-5">
