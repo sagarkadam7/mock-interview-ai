@@ -30,6 +30,7 @@ const OUTCOMES = [
   { k: "Pace stabilization", v: "± 12 wpm" },
   { k: "Report exports", v: "10k+" },
 ];
+const METRIC_ACCENTS = ["bg-aura-coral", "bg-aura-violet", "bg-emerald-500", "bg-amber-500"];
 
 export default function QuoteWallSection() {
   return (
@@ -89,8 +90,9 @@ export default function QuoteWallSection() {
               </p>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                {OUTCOMES.map((m) => (
-                  <div key={m.k} className="rounded-2xl border border-slate-200/80 bg-white/70 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-200/80 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/55 dark:hover:border-violet-500/40">
+                {OUTCOMES.map((m, i) => (
+                  <div key={m.k} className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-200/80 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/55 dark:hover:border-violet-500/40">
+                    <span className={`absolute inset-x-0 top-0 h-1 ${METRIC_ACCENTS[i % METRIC_ACCENTS.length]}`} aria-hidden />
                     <div className="font-display text-2xl font-bold text-aura-ink dark:text-slate-100">{m.v}</div>
                     <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                       {m.k}
