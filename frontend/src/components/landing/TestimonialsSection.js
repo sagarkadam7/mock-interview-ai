@@ -175,6 +175,9 @@ export default function TestimonialsSection() {
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400" aria-live="polite">
                 {idx + 1} / {TESTIMONIALS.length}
               </span>
+              <span className="hidden rounded-full border border-slate-200/80 bg-white/70 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-slate-500 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50 dark:text-slate-400 sm:inline-flex">
+                Arrows to browse
+              </span>
               <div className="flex gap-2" role="tablist" aria-label="Select testimonial">
                 {TESTIMONIALS.map((t, i) => (
                   <button
