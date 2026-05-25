@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const USE_CASE_ICONS = ["⌘", "◎", "◈", "✦"];
+const BEST_FOR = ["Engineering loops", "Product cases", "Client rounds", "First interviews"];
 
 const USE_CASES = [
   {
@@ -68,6 +69,9 @@ export default function UseCasesSection() {
               <div className="relative">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50 text-lg text-violet-700 shadow-inner transition-transform duration-300 group-hover:scale-105 dark:border-slate-700 dark:from-slate-800 dark:to-slate-900 dark:text-violet-300" aria-hidden>
                   {USE_CASE_ICONS[i % USE_CASE_ICONS.length]}
+                </div>
+                <div className="mb-3 inline-flex rounded-full border border-slate-200/80 bg-white/75 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/55 dark:text-slate-400">
+                  Best for: {BEST_FOR[i]}
                 </div>
                 <h3 className="text-xl font-bold tracking-tight text-aura-ink dark:text-slate-100">{u.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{u.desc}</p>
