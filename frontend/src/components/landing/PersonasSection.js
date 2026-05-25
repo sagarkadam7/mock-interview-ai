@@ -81,10 +81,10 @@ export default function PersonasSection() {
                 </div>
 
                 {p.cta ? (
-                  <div className="relative mt-auto pt-6">
+                  <div className="relative mt-auto border-t border-slate-200/80 pt-5 dark:border-slate-700/70">
                     <Link
                       to={p.cta.to}
-                      className="group/cta inline-flex items-center gap-1.5 text-sm font-bold text-aura-ink no-underline transition-colors hover:text-aura-violet dark:text-slate-100 dark:hover:text-violet-300"
+                      className="group/cta inline-flex w-full items-center justify-between gap-3 rounded-2xl bg-slate-50/80 px-4 py-3 text-sm font-bold text-aura-ink no-underline transition-colors hover:bg-violet-50 hover:text-aura-violet dark:bg-slate-800/60 dark:text-slate-100 dark:hover:bg-violet-950/35 dark:hover:text-violet-300"
                     >
                       {p.cta.label}
                       <span
