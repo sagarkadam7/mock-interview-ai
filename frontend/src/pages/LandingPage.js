@@ -606,6 +606,11 @@ export default function LandingPage() {
         }}>
           {STATS.map((s, i) => <StatCard key={s.value} {...s} delay={i * 0.08} accentIndex={i} />)}
         </div>
+        <div className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-3 text-center text-xs font-medium text-slate-600 shadow-sm backdrop-blur-sm dark:border-slate-700/70 dark:bg-slate-900/50 dark:text-slate-300">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">Every mock includes</span>
+          <span className="hidden h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600 sm:inline-block" aria-hidden />
+          <span>tailored questions, live delivery signals, and a scorecard you can export.</span>
+        </div>
       </section>
 
       <EditorialDivider />
