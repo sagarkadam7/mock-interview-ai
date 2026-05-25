@@ -549,6 +549,17 @@ export default function LandingPage() {
           <div className="w-full min-w-0">
             <TrustLogoRail />
           </div>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-2" aria-label="Trust strip highlights">
+            {["Built for campus loops", "Resume-aware practice", "Private scorecards"].map((item) => (
+              <span
+                key={item}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/75 px-3 py-1.5 text-[11px] font-semibold text-slate-600 shadow-sm backdrop-blur-sm dark:border-slate-700/70 dark:bg-slate-900/55 dark:text-slate-300"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-violet-500" aria-hidden />
+                {item}
+              </span>
+            ))}
+          </div>
         </motion.div>
       </section>
 
