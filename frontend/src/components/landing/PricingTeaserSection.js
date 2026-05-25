@@ -67,6 +67,12 @@ function PlanCard({ plan, index }) {
           : "border-slate-200/90 bg-white shadow-lg ring-1 ring-white/80 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-xl dark:border-slate-700/80 dark:bg-slate-900/70 dark:ring-slate-700/50 dark:hover:border-slate-600"
       }`}
     >
+      <span
+        className={`absolute inset-x-0 top-0 h-1 ${
+          isPro ? "bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet" : "bg-gradient-to-r from-slate-300 to-slate-100 dark:from-slate-600 dark:to-slate-800"
+        }`}
+        aria-hidden
+      />
       {isPro && (
         <>
           {/* Extra glow element for emphasis */}
