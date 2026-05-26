@@ -41,9 +41,20 @@ export default function UseCasesSection() {
     <section
       id="use-cases"
       aria-labelledby="use-cases-heading"
-      className="relative scroll-mt-28 border-y border-slate-200/80 bg-white py-24 dark:border-slate-800/80 dark:bg-slate-950 md:py-28"
+      className="relative scroll-mt-28 overflow-hidden border-y border-slate-200/80 bg-white py-24 dark:border-slate-800/80 dark:bg-slate-950 md:py-28"
     >
-      <div className="mx-auto max-w-7xl px-6">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-60 dark:opacity-30"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg width='980' height='520' viewBox='0 0 980 520' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%235b21b6' stroke-opacity='.11' stroke-width='1.2'%3E%3Cpath d='M96 392 C230 230 352 470 492 292 S740 150 884 300'/%3E%3Cpath d='M136 132 C284 210 308 82 468 150 S690 248 828 112' stroke-dasharray='8 12'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.16'%3E%3Ccircle cx='96' cy='392' r='34'/%3E%3Ccircle cx='492' cy='292' r='28'/%3E%3Ccircle cx='884' cy='300' r='34'/%3E%3C/g%3E%3C/svg%3E\")",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "min(980px, 120vw) auto",
+        }}
+      />
+      <div className="relative mx-auto max-w-7xl px-6">
         <div className="mb-14 text-center md:mb-16">
           <div className="section-eyebrow mx-auto mb-4">Use cases</div>
           <h2 id="use-cases-heading" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
