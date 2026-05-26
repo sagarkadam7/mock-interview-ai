@@ -666,6 +666,19 @@ export default function LandingPage() {
           background: `radial-gradient(circle, ${C.violet}18, transparent 65%)`,
           pointerEvents: "none",
         }} />
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='960' height='520' viewBox='0 0 960 520' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='1'%3E%3Cpath d='M96 100H256V180H420V92H640V164H844'/%3E%3Cpath d='M96 356H248V292H420V420H664V332H844'/%3E%3Cpath d='M480 90V430M320 140V384M716 164V332' stroke-dasharray='10 14'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.18'%3E%3Ccircle cx='256' cy='180' r='5'/%3E%3Ccircle cx='420' cy='292' r='5'/%3E%3Ccircle cx='640' cy='164' r='5'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "min(960px, 118vw) auto",
+            opacity: 0.85,
+            pointerEvents: "none",
+          }}
+        />
 
         <div style={{ maxWidth: 1120, margin: "0 auto", position: "relative", zIndex: 2 }}>
           <div style={{ marginBottom: 56, maxWidth: 720 }}>
