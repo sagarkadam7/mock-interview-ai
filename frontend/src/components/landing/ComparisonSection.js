@@ -55,6 +55,17 @@ export default function ComparisonSection() {
         className="pointer-events-none absolute inset-x-0 top-1/2 h-[min(80%,480px)] -translate-y-1/2 bg-gradient-to-r from-violet-50/40 via-transparent to-orange-50/40 blur-3xl dark:from-violet-950/30 dark:to-orange-950/20"
         aria-hidden
       />
+      <div
+        className="pointer-events-none absolute inset-x-0 top-8 h-72 opacity-70 dark:opacity-35"
+        aria-hidden
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg width='820' height='300' viewBox='0 0 820 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%235b21b6' stroke-opacity='.12'%3E%3Crect x='96' y='64' width='164' height='116' rx='18'/%3E%3Crect x='128' y='92' width='164' height='116' rx='18'/%3E%3Crect x='554' y='76' width='172' height='124' rx='18'/%3E%3Cpath d='M158 126H246M158 148H224M584 116H690M584 140H664M584 164H704'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.15'%3E%3Ccircle cx='292' cy='92' r='16'/%3E%3Ccircle cx='554' cy='200' r='18'/%3E%3C/g%3E%3C/svg%3E\")",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "min(820px, 96vw) auto",
+        }}
+      />
       <div className="relative mx-auto max-w-6xl px-6">
         <div className="mb-12 text-center">
           <div className="section-eyebrow mx-auto mb-4">Why not a chatbot or a coach</div>
