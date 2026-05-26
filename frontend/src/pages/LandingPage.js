@@ -589,6 +589,20 @@ export default function LandingPage() {
             pointerEvents: "none",
           }}
         />
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: "18px 0 auto",
+            height: 320,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='820' height='320' viewBox='0 0 820 320' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%235b21b6' stroke-opacity='.12'%3E%3Ccircle cx='190' cy='160' r='92'/%3E%3Ccircle cx='190' cy='160' r='54'/%3E%3Ccircle cx='620' cy='148' r='106'/%3E%3Ccircle cx='620' cy='148' r='64'/%3E%3Cpath d='M282 160H512' stroke-dasharray='8 10'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.18'%3E%3Ccircle cx='282' cy='160' r='5'/%3E%3Ccircle cx='512' cy='160' r='5'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "min(820px, 96vw) auto",
+            opacity: 0.8,
+            pointerEvents: "none",
+          }}
+        />
         <div style={{ textAlign: "center", marginBottom: 56, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
           <SectionLabel>The product, in three numbers</SectionLabel>
           <h2 style={{
