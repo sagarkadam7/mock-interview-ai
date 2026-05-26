@@ -9,9 +9,20 @@ export default function HowItWorksSection() {
     <section
       id="how-it-works"
       aria-labelledby="how-it-works-heading"
-      className="scroll-mt-28 border-y border-slate-200/80 bg-gradient-to-b from-white via-slate-50/50 to-white py-24 dark:border-slate-800/80 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950 md:py-28"
+      className="relative scroll-mt-28 overflow-hidden border-y border-slate-200/80 bg-gradient-to-b from-white via-slate-50/50 to-white py-24 dark:border-slate-800/80 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950 md:py-28"
     >
-      <div className="mx-auto max-w-7xl px-6">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-10 h-72 opacity-70 dark:opacity-35"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg width='900' height='260' viewBox='0 0 900 260' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%235b21b6' stroke-opacity='.13' stroke-width='1.5'%3E%3Cpath d='M80 164 C210 68 310 196 438 110 S650 64 804 156'/%3E%3Cpath d='M128 88 H238 V150 H366' stroke-dasharray='7 9'/%3E%3Cpath d='M534 92 H642 V150 H770' stroke-dasharray='7 9'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.18'%3E%3Crect x='60' y='146' width='42' height='30' rx='9'/%3E%3Crect x='418' y='92' width='42' height='30' rx='9'/%3E%3Crect x='782' y='138' width='42' height='30' rx='9'/%3E%3C/g%3E%3C/svg%3E\")",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "min(900px, 96vw) auto",
+        }}
+      />
+      <div className="relative mx-auto max-w-7xl px-6">
         <div className="mb-16 text-center md:mb-20">
           <div className="section-eyebrow mx-auto mb-4">How it works</div>
           <h2 id="how-it-works-heading" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
