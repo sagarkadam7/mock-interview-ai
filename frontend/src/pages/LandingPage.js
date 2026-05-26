@@ -732,8 +732,21 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES GRID ── */}
-      <section id="features" style={{ maxWidth: 1120, margin: "0 auto", padding: "96px 24px", scrollMarginTop: "5.5rem" }}>
-        <div style={{ textAlign: "center", marginBottom: 64, maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
+      <section id="features" style={{ maxWidth: 1120, margin: "0 auto", padding: "96px 24px", scrollMarginTop: "5.5rem", position: "relative" }}>
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: "38px -80px auto",
+            height: 420,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='860' height='420' viewBox='0 0 860 420' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%235b21b6' stroke-opacity='.1' stroke-width='1'%3E%3Cpath d='M80 80H300V190H430V118H760'/%3E%3Cpath d='M120 318H330V238H520V316H760'/%3E%3Crect x='188' y='134' width='98' height='56' rx='14'/%3E%3Crect x='540' y='92' width='116' height='66' rx='16'/%3E%3Crect x='420' y='250' width='126' height='62' rx='16'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.14'%3E%3Ccircle cx='300' cy='190' r='5'/%3E%3Ccircle cx='520' cy='316' r='5'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "min(860px, 115vw) auto",
+            pointerEvents: "none",
+          }}
+        />
+        <div style={{ textAlign: "center", marginBottom: 64, maxWidth: 640, marginLeft: "auto", marginRight: "auto", position: "relative" }}>
           <SectionLabel>What's inside</SectionLabel>
           <h2 style={{
             fontFamily: "'Playfair Display', serif",
@@ -751,6 +764,7 @@ export default function LandingPage() {
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
           gap: 20,
+          position: "relative",
         }}>
           {FEATURES.map((f, i) => <FeatureCard key={f.num} f={f} idx={i} />)}
         </div>
