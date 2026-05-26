@@ -25,6 +25,17 @@ export default function PersonasSection() {
           backgroundSize: "28px 28px",
         }}
       />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-8 h-[420px] opacity-75 dark:opacity-30"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg width='920' height='420' viewBox='0 0 920 420' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%235b21b6' stroke-opacity='.11' stroke-width='1.3'%3E%3Cpath d='M144 300c30-70 92-110 158-110s128 40 158 110'/%3E%3Ccircle cx='302' cy='132' r='58'/%3E%3Cpath d='M530 302c34-76 102-120 174-120s140 44 174 120'/%3E%3Ccircle cx='704' cy='116' r='64'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.13'%3E%3Ccircle cx='214' cy='250' r='22'/%3E%3Ccircle cx='812' cy='242' r='24'/%3E%3C/g%3E%3C/svg%3E\")",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "min(920px, 118vw) auto",
+        }}
+      />
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mb-14 text-center md:mb-16">
           <div className="section-eyebrow mx-auto mb-4">Who it's for</div>
