@@ -59,12 +59,6 @@ export default function PersonasSection() {
                 transition={{ duration: 0.45, delay: i * 0.08 }}
                 className={`group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white/90 p-8 shadow-sm ring-1 ring-white/60 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:ring-2 ${a.ring} dark:border-slate-700/70 dark:bg-slate-900/70 dark:ring-slate-700/50`}
               >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute -right-2 -top-4 font-display text-7xl font-bold leading-none text-slate-100 transition-colors duration-300 group-hover:text-violet-100/80 dark:text-slate-800/80 dark:group-hover:text-violet-900/40"
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
                 {/* Ambient corner glow emerges on hover */}
                 <div
                   aria-hidden

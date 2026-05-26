@@ -977,40 +977,6 @@ function FinalCta({ user }) {
           Free plan, no card, cancel any time.
         </p>
 
-        <div
-          style={{
-            marginTop: 36,
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: 10,
-          }}
-          aria-label="Trust signals"
-        >
-          {["No credit card", "GDPR-minded", "Delete anytime", "12-min sessions"].map((badge) => (
-            <span
-              key={badge}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "6px 14px",
-                borderRadius: 999,
-                border: `1px solid rgba(255,255,255,0.12)`,
-                background: "rgba(255,255,255,0.06)",
-                fontFamily: "'DM Mono', monospace",
-                fontSize: 10,
-                fontWeight: 600,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: C.muted,
-              }}
-            >
-              <span style={{ color: C.coral, fontSize: 8 }} aria-hidden>●</span>
-              {badge}
-            </span>
-          ))}
-        </div>
       </motion.div>
     </section>
   );
