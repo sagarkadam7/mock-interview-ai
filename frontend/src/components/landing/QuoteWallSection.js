@@ -39,6 +39,17 @@ export default function QuoteWallSection() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-1/2 h-[min(80%,520px)] -translate-y-1/2 bg-gradient-to-r from-orange-50/45 via-transparent to-violet-50/40 blur-3xl dark:from-orange-950/20 dark:to-violet-950/25"
       />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-12 h-[420px] opacity-70 dark:opacity-30"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg width='920' height='420' viewBox='0 0 920 420' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%235b21b6' stroke-opacity='.11' stroke-width='1.4'%3E%3Cpath d='M118 100h210a36 36 0 0 1 36 36v72a36 36 0 0 1-36 36h-96l-62 54 16-54h-68a36 36 0 0 1-36-36v-72a36 36 0 0 1 36-36Z'/%3E%3Cpath d='M568 132h214a34 34 0 0 1 34 34v76a34 34 0 0 1-34 34h-76l-68 50 20-50h-90a34 34 0 0 1-34-34v-76a34 34 0 0 1 34-34Z'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.14'%3E%3Ccircle cx='174' cy='170' r='7'/%3E%3Ccircle cx='216' cy='170' r='7'/%3E%3Ccircle cx='258' cy='170' r='7'/%3E%3C/g%3E%3C/svg%3E\")",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "min(920px, 118vw) auto",
+        }}
+      />
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mb-14 text-center md:mb-16">
           <div className="section-eyebrow mx-auto mb-4">Outcomes</div>
