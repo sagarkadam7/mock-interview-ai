@@ -531,9 +531,13 @@ export default function LandingPage() {
             inset: 0,
             pointerEvents: "none",
             backgroundImage: `
+              url("data:image/svg+xml,%3Csvg width='760' height='180' viewBox='0 0 760 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%235b21b6' stroke-opacity='.16' stroke-width='1.2'%3E%3Cpath d='M46 112 C158 24 236 150 348 74 S542 28 706 114'/%3E%3Cpath d='M82 48 C186 96 244 18 336 62 S482 130 628 54'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.22'%3E%3Ccircle cx='46' cy='112' r='4'/%3E%3Ccircle cx='348' cy='74' r='4'/%3E%3Ccircle cx='706' cy='114' r='4'/%3E%3C/g%3E%3Cg fill='%235b21b6' fill-opacity='.2'%3E%3Ccircle cx='82' cy='48' r='3'/%3E%3Ccircle cx='336' cy='62' r='3'/%3E%3Ccircle cx='628' cy='54' r='3'/%3E%3C/g%3E%3C/svg%3E"),
               radial-gradient(ellipse 55% 80% at 12% 50%, ${C.coral}0c 0%, transparent 55%),
               radial-gradient(ellipse 50% 70% at 88% 50%, ${C.violet}0a 0%, transparent 55%)
             `,
+            backgroundPosition: "center, center, center",
+            backgroundRepeat: "no-repeat, no-repeat, no-repeat",
+            backgroundSize: "min(760px, 92vw) auto, auto, auto",
           }}
         />
         <motion.div
