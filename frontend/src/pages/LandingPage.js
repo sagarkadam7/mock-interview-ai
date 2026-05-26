@@ -919,9 +919,13 @@ function FinalCta({ user }) {
       <div aria-hidden style={{
         position: "absolute", inset: 0,
         backgroundImage: `
+          url("data:image/svg+xml,%3Csvg width='940' height='420' viewBox='0 0 940 420' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.1' stroke-width='1.2'%3E%3Cpath d='M120 288 C240 108 360 342 470 188 S690 80 820 254'/%3E%3Ccircle cx='256' cy='182' r='92'/%3E%3Ccircle cx='682' cy='210' r='118'/%3E%3Cpath d='M320 260h300' stroke-dasharray='10 14'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.16'%3E%3Ccircle cx='120' cy='288' r='7'/%3E%3Ccircle cx='470' cy='188' r='7'/%3E%3Ccircle cx='820' cy='254' r='7'/%3E%3C/g%3E%3C/svg%3E"),
           radial-gradient(ellipse 85% 65% at 28% 45%, ${C.coral}12 0%, transparent 52%),
           radial-gradient(ellipse 75% 60% at 78% 52%, ${C.violet}10 0%, transparent 55%)
         `,
+        backgroundPosition: "center, center, center",
+        backgroundRepeat: "no-repeat, no-repeat, no-repeat",
+        backgroundSize: "min(940px, 112vw) auto, auto, auto",
         pointerEvents: "none",
       }} />
 
