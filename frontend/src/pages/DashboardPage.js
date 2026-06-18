@@ -15,7 +15,6 @@ import { downloadPracticeBlockIcs } from "../utils/practiceCalendarIcs";
 
 const DASH_CHECKLIST_KEY = "ia.dashboard.quickstart.v1";
 const DASH_VIEW_KEY = "ia.dashboard.view.v1";
-const DASH_DENSITY_KEY = "ia.dashboard.density.v1";
 
 function StatusBadge({ status }) {
   const map = {
@@ -147,13 +146,6 @@ export default function DashboardPage() {
       return "sessions";
     }
   });
-  const [dashDensity, setDashDensity] = useState(() => {
-    try {
-      return localStorage.getItem(DASH_DENSITY_KEY) || "comfy";
-    } catch {
-      return "comfy";
-    }
-  });
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessionSort, setSessionSort] = useState("newest");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -183,14 +175,6 @@ export default function DashboardPage() {
       // ignore
     }
   }, [dashView]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(DASH_DENSITY_KEY, dashDensity);
-    } catch {
-      // ignore
-    }
-  }, [dashDensity]);
 
   const fetchInterviews = useCallback(() => {
     setLoading(true);
@@ -233,10 +217,6 @@ export default function DashboardPage() {
           search.select?.();
         }
         return;
-      }
-      if (key === "c" && !e.shiftKey) {
-        e.preventDefault();
-        setDashDensity((d) => (d === "compact" ? "comfy" : "compact"));
       }
     };
     window.addEventListener("keydown", onKey);
@@ -370,7 +350,6 @@ export default function DashboardPage() {
   const practiceStreak = !loading ? computePracticeStreak(interviews) : 0;
   const weekCount = !loading ? countCompletedThisWeek(interviews) : 0;
   const weekPct = Math.min(100, Math.round((weekCount / WEEKLY_SESSION_GOAL) * 100));
-  const isCompact = dashDensity === "compact";
   const quickstartDone = Object.values(quickstart).filter(Boolean).length;
   const quickstartPct = Math.round((quickstartDone / 3) * 100);
 
@@ -478,13 +457,6 @@ export default function DashboardPage() {
             </button>
           ))}
         </div>
-        <button
-          type="button"
-          className="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-500 shadow-sm transition-colors hover:text-aura-ink dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:text-slate-100"
-          onClick={() => setDashDensity((d) => (d === "compact" ? "comfy" : "compact"))}
-        >
-          {isCompact ? "Comfy view" : "Compact view"}
-        </button>
       </div>
 
       {!loading && loadError && (
@@ -1049,9 +1021,7 @@ export default function DashboardPage() {
                       aria-hidden
                     />
                     <div
-                      className={`flex flex-col rounded-[0.9rem] bg-gradient-to-br from-white/80 to-slate-50/30 ${
-                        isCompact ? "p-4" : "p-5"
-                      } dark:from-slate-900/60 dark:to-slate-950/40 md:flex-row md:items-stretch md:gap-0 ${isCompact ? "md:p-5" : "md:p-6"}`}
+                      className="flex flex-col rounded-[0.9rem] bg-gradient-to-br from-white/80 to-slate-50/30 p-5 dark:from-slate-900/60 dark:to-slate-950/40 md:flex-row md:items-stretch md:gap-0 md:p-6"
                     >
                       <Link
                         to={to}
