@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { createInterview } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
+import InterviewGenerationLoader from "../components/InterviewGenerationLoader";
 
 export default function NewInterviewPage() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export default function NewInterviewPage() {
   const [inputMode, setInputMode] = useState("paste");
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   const [error, setError] = useState("");
   const fileRef = useRef();
 
@@ -49,6 +51,7 @@ export default function NewInterviewPage() {
       );
     }
     setLoading(true);
+    setShowLoader(true);
     try {
       const fd = new FormData();
       fd.append("jobRole", jobRole.trim());
@@ -60,11 +63,14 @@ export default function NewInterviewPage() {
       if (inputMode === "upload") fd.append("resume", file);
       else fd.append("resumeText", resumeText.trim());
       const { data } = await createInterview(fd);
+      setLoading(false);
+      await new Promise((r) => setTimeout(r, 520));
       navigate(`/interview/${data.interviewId}`);
     } catch (err) {
       const msg = getApiErrorMessage(err);
       setError(msg);
       toast.error(msg);
+      setShowLoader(false);
     } finally {
       setLoading(false);
     }
@@ -332,22 +338,16 @@ export default function NewInterviewPage() {
           )}
         </div>
 
-        <button type="submit" className="btn-cta w-full py-4 text-[15px]" disabled={loading}>
-          {loading ? (
-            <>
-              <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" />{" "}
-              Generating questions… (10–20s)
-            </>
-          ) : (
-            "Generate interview questions →"
-          )}
+        <button
+          type="submit"
+          className="btn-cta w-full py-4 text-[15px]"
+          disabled={loading}
+          aria-busy={loading}
+        >
+          {loading ? "Preparing your session…" : "Generate interview questions →"}
         </button>
 
-        {loading && (
-          <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50 to-white px-5 py-5 text-center text-sm text-slate-600 shadow-inner dark:border-slate-700/80 dark:from-slate-900/80 dark:to-slate-950 dark:text-slate-300">
-            Reading your resume and generating seven questions. This usually takes 10–20 seconds.
-          </div>
-        )}
+        <AnimatePresence>{showLoader && <InterviewGenerationLoader active={loading} />}</AnimatePresence>
       </form>
     </div>
   );
