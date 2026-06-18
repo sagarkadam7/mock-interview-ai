@@ -1,44 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { PRICING_GUARANTEES, PRO_PLAN, STARTER_PLAN } from "../../data/pricing";
 
-// Two-tier pricing card set. Both cards stretch to the same height via
-// flex-col + h-full; the "Pro" card is emphasised with a violet ring + soft
-// shadow-xl shadow-purple-500/20 for a premium glow.
 const PLANS = [
+  { ...STARTER_PLAN, highlight: false },
   {
-    id: "starter",
-    name: "Starter",
-    price: "$0",
+    ...PRO_PLAN,
+    price: `$${PRO_PLAN.priceMonthly}`,
     cadence: "/ month",
-    tagline: "Everything you need to start rehearsing with structure.",
-    highlight: false,
-    cta: { label: "Create free account", to: "/register" },
-    perks: [
-      "Unlimited practice sessions (fair use)",
-      "Resume-aware question generation",
-      "Browser-native speech analytics",
-      "PDF report export",
-      "Dashboard history",
-    ],
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    price: "$19",
-    cadence: "/ month",
-    tagline: "For candidates chasing senior roles and tight loops.",
     highlight: true,
-    badge: "Most popular",
-    cta: { label: "Start 14-day Pro trial", to: "/register?plan=pro" },
-    perks: [
-      "Everything in Starter",
-      "Adaptive follow-up questions",
-      "Camera-based presence coaching",
-      "Advanced scorecards + benchmarks",
-      "Priority question generation",
-      "Shareable interview links",
-    ],
+    cta: PRO_PLAN.registerCta,
   },
 ];
 
@@ -75,7 +47,6 @@ function PlanCard({ plan, index }) {
       />
       {isPro && (
         <>
-          {/* Extra glow element for emphasis */}
           <div
             aria-hidden
             className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-gradient-to-br from-aura-violet/25 to-aura-coral/10 blur-3xl"
@@ -127,8 +98,8 @@ function PlanCard({ plan, index }) {
           </span>
         </Link>
         {isPro && (
-          <p className="mt-3 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            No credit card · Cancel anytime
+          <p className="mt-3 text-center text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+            Paid checkout coming soon — start free today.
           </p>
         )}
       </div>
@@ -146,15 +117,13 @@ export default function PricingTeaserSection() {
         <div className="mb-14 text-center">
           <div className="section-eyebrow mx-auto mb-4">Pricing</div>
           <h2 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
-            Start free. Upgrade when you're interviewing for real.
+            Start free. Upgrade when you&apos;re interviewing for real.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-            Every plan includes the full coaching experience. Pick Pro when you want adaptive follow-ups, presence
-            analytics, and benchmarks designed for senior loops.
+            Starter includes the full core loop. Pro adds unlimited sessions, prep briefs, and shareable reports when you&apos;re in active loops.
           </p>
         </div>
 
-        {/* grid with items-stretch so cards hit the same height */}
         <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-8">
           {PLANS.map((plan, i) => (
             <PlanCard key={plan.id} plan={plan} index={i} />
@@ -162,7 +131,7 @@ export default function PricingTeaserSection() {
         </div>
 
         <div className="mt-12 flex flex-wrap items-center justify-center gap-3" aria-label="Pricing guarantees">
-          {["No credit card on Starter", "14-day Pro trial", "Cancel anytime", "Fair-use unlimited"].map((pill) => (
+          {PRICING_GUARANTEES.map((pill) => (
             <span
               key={pill}
               className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-3.5 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-600 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-slate-400"

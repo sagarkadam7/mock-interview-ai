@@ -380,7 +380,7 @@ export default function InterviewPage() {
       <InterviewKeyboardHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
       <button
         type="button"
-        className="fixed bottom-5 right-5 z-[90] flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200/90 bg-white/95 text-sm font-bold text-slate-600 shadow-lg backdrop-blur-md transition-colors hover:border-violet-300 hover:text-violet-700 dark:border-slate-600 dark:bg-slate-900/95 dark:text-slate-300 dark:hover:text-violet-300 sm:bottom-8 sm:right-8"
+        className="fixed bottom-24 right-5 z-[90] flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200/90 bg-white/95 text-sm font-bold text-slate-600 shadow-lg backdrop-blur-md transition-colors hover:border-violet-300 hover:text-violet-700 dark:border-slate-600 dark:bg-slate-900/95 dark:text-slate-300 dark:hover:text-violet-300 sm:bottom-8 sm:right-8"
         onClick={() => setHelpOpen(true)}
         aria-label="Keyboard shortcuts"
         title="Shortcuts (?)"
@@ -533,7 +533,7 @@ export default function InterviewPage() {
         <div className="min-w-0 flex-1 space-y-6">
           <div
             ref={questionAnchorRef}
-            className="relative rounded-[1.35rem] bg-gradient-to-br from-aura-coral/70 via-white/40 to-aura-violet/70 p-[1px] shadow-[0_28px_64px_-24px_rgba(15,23,42,0.18)] dark:from-aura-coral/35 dark:via-slate-700/25 dark:to-aura-violet/45 dark:shadow-[0_32px_70px_-24px_rgba(0,0,0,0.55)]"
+            className="relative max-xl:sticky max-xl:top-20 max-xl:z-20 rounded-[1.35rem] bg-gradient-to-br from-aura-coral/70 via-white/40 to-aura-violet/70 p-[1px] shadow-[0_28px_64px_-24px_rgba(15,23,42,0.18)] dark:from-aura-coral/35 dark:via-slate-700/25 dark:to-aura-violet/45 dark:shadow-[0_32px_70px_-24px_rgba(0,0,0,0.55)]"
           >
             <div className="relative overflow-hidden rounded-[1.3rem] bg-white/95 p-6 shadow-lux-lg dark:bg-slate-950/95 md:p-8">
               <div

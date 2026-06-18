@@ -449,6 +449,8 @@ export default function ReportPage() {
   if (!interview) return null;
 
   const answered = interview.questions.filter((q) => q.score !== null);
+  const isIncomplete = interview.status !== "completed" || answered.length === 0;
+  const unansweredCount = interview.questions.filter((q) => q.score === null).length;
   const overall = interview.overallScore;
 
   const peerCompleted = peerList.filter(
@@ -534,6 +536,24 @@ export default function ReportPage() {
         Skip to question breakdown
       </a>
       <main aria-labelledby="report-title">
+      {isIncomplete ? (
+        <div
+          className="mb-6 flex flex-col gap-4 rounded-2xl border border-amber-200/90 bg-amber-50/90 p-5 shadow-sm dark:border-amber-500/35 dark:bg-amber-950/35 sm:flex-row sm:items-center sm:justify-between"
+          role="status"
+        >
+          <div>
+            <p className="text-sm font-bold text-amber-950 dark:text-amber-50">This session isn&apos;t finished yet</p>
+            <p className="mt-1 text-sm leading-relaxed text-amber-900/85 dark:text-amber-100/85">
+              {unansweredCount > 0
+                ? `${unansweredCount} question${unansweredCount === 1 ? "" : "s"} still need answers before your scorecard is complete.`
+                : "Complete every question to unlock the full report and benchmarks."}
+            </p>
+          </div>
+          <Link to={`/interview/${id}`} className="no-underline">
+            <span className="btn-primary whitespace-nowrap px-6 py-3">Continue interview →</span>
+          </Link>
+        </div>
+      ) : null}
       <div className="glass-panel-lg relative mb-8 overflow-hidden p-6 sm:p-8">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/35 via-transparent to-orange-50/20 opacity-90" aria-hidden />
         <div className="relative mb-8 flex flex-wrap items-start justify-between gap-6">

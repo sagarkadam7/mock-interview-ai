@@ -1,18 +1,33 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { registerUser } from "../utils/api";
 import AuthBrandPanel from "../components/AuthBrandPanel";
 import { getStoredUtm } from "../utils/utm";
+import {
+  captureSignupAttribution,
+  clearSignupAttribution,
+  getAttributionBannerLabel,
+  getSignupAttribution,
+} from "../utils/signupAttribution";
 
 export default function RegisterPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [attribution, setAttribution] = useState(() => getSignupAttribution());
+
+  useEffect(() => {
+    const captured = captureSignupAttribution(searchParams);
+    if (captured) setAttribution(captured);
+  }, [searchParams]);
+
+  const attributionLabel = useMemo(() => getAttributionBannerLabel(attribution), [attribution]);
 
   const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -25,6 +40,7 @@ export default function RegisterPage() {
       const utm = getStoredUtm();
       const { data } = await registerUser({ ...form, utm: utm || undefined });
       login(data);
+      clearSignupAttribution();
       navigate("/welcome");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed.");
@@ -61,6 +77,11 @@ export default function RegisterPage() {
           <div className="mb-8 text-center lg:text-left">
             <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink sm:text-[2rem]">Create your workspace</h1>
             <p className="mt-3 text-[15px] leading-relaxed text-aura-muted">Free account · no card required · start practicing in minutes.</p>
+            {attributionLabel ? (
+              <p className="mt-4 inline-flex rounded-full border border-violet-200/80 bg-violet-50/90 px-3 py-1.5 text-xs font-semibold text-violet-800 dark:border-violet-500/35 dark:bg-violet-950/40 dark:text-violet-200">
+                {attributionLabel}
+              </p>
+            ) : null}
           </div>
 
           <div className="glass-panel-lg p-8 sm:p-10">

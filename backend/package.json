@@ -15,7 +15,6 @@
     "format": "prettier --write \"**/*.{js,json,md}\""
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0",
     "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^2.4.3",
     "compression": "^1.8.1",

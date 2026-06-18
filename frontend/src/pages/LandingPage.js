@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { FAQ_ITEMS } from "../data/marketing";
 import LandingHero from "../components/landing/LandingHero";
 import TrustLogoRail from "../components/landing/TrustLogoRail";
+import LandingSectionSkeleton from "../components/landing/LandingSectionSkeleton";
 
 const HowItWorksSection = lazy(() => import("../components/landing/HowItWorksSection"));
 const ComparisonSection = lazy(() => import("../components/landing/ComparisonSection"));
@@ -634,12 +635,12 @@ export default function LandingPage() {
       <EditorialDivider />
 
       {/* ── HOW IT WORKS (original) ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton minHeight={360} />}>
         <HowItWorksSection />
       </Suspense>
 
       {/* ── USE CASES ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton minHeight={400} />}>
         <UseCasesSection />
       </Suspense>
 
@@ -733,6 +734,9 @@ export default function LandingPage() {
 
       {/* ── FEATURES GRID ── */}
       <section id="features" style={{ maxWidth: 1120, margin: "0 auto", padding: "96px 24px", scrollMarginTop: "5.5rem", position: "relative" }}>
+        <div id="whats-new" className="sr-only" aria-hidden>
+          What&apos;s new
+        </div>
         <div
           aria-hidden
           style={{
@@ -773,49 +777,49 @@ export default function LandingPage() {
       <EditorialDivider />
 
       {/* ── COMPARISON (original) ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton />}>
         <ComparisonSection />
       </Suspense>
 
       {/* ── FOUNDER LETTER (original) ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton />}>
         <FounderLetterSection />
       </Suspense>
 
       {/* ── PERSONAS (original) ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton />}>
         <PersonasSection />
       </Suspense>
 
       {/* ── QUOTE WALL + OUTCOMES ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton />}>
         <QuoteWallSection />
       </Suspense>
 
       {/* ── TESTIMONIALS (original) ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton />}>
         <TestimonialsSection />
       </Suspense>
 
       {/* ── PRICING (original) ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton />}>
         <PricingTeaserSection />
       </Suspense>
 
       {/* ── SECURITY (original) ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton />}>
         <SecuritySection />
       </Suspense>
 
       {/* ── FAQ (original) ── */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton />}>
         <FAQSection limit={4} />
       </Suspense>
 
       {/* ── FINAL CTA ── */}
       <FinalCta user={user} />
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<LandingSectionSkeleton />}>
         <SiteFooter />
       </Suspense>
     </div>

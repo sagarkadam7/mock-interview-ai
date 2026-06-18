@@ -141,7 +141,8 @@ export default function DashboardPage() {
   const [loadError, setLoadError] = useState("");
   const [dashView, setDashView] = useState(() => {
     try {
-      return localStorage.getItem(DASH_VIEW_KEY) || "sessions";
+      const stored = localStorage.getItem(DASH_VIEW_KEY) || "sessions";
+      return stored === "overview" ? "insights" : stored;
     } catch {
       return "sessions";
     }
@@ -453,7 +454,7 @@ export default function DashboardPage() {
         <div className="segmented-control">
           {[
             { id: "sessions", label: "Sessions", icon: "▦", count: interviews.length },
-            { id: "overview", label: "Overview", icon: "◌", count: completed.length },
+            { id: "insights", label: "Insights", icon: "◌", count: completed.length },
           ].map((t) => (
             <button
               key={t.id}
@@ -507,7 +508,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {dashView === "overview" && !loading && !loadError && readiness && (
+      {dashView === "insights" && !loading && !loadError && readiness && (
         <div className="glass-panel-lg relative mb-10 overflow-hidden rounded-3xl p-6 sm:p-8">
           <div className="pointer-events-none absolute -right-16 top-0 h-40 w-40 rounded-full bg-aura-violet/10 blur-2xl dark:bg-aura-violet/15" aria-hidden />
           <SectionHeader
@@ -535,7 +536,7 @@ export default function DashboardPage() {
       )}
 
       {/* KPI strip — always visible */}
-      {dashView === "overview" && (
+      {dashView === "insights" && (
         <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => {
           const clickable = s.filter !== null;
@@ -575,7 +576,7 @@ export default function DashboardPage() {
       )}
 
       {/* Practice rhythm — streak + weekly goal (client-side from session dates) */}
-      {dashView === "overview" && (
+      {dashView === "insights" && (
         <div className="mb-10 grid gap-4 md:grid-cols-2">
           {!isPro ? (
             <div className="glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet-500/10 sm:p-7 md:col-span-2">
@@ -682,7 +683,7 @@ export default function DashboardPage() {
       )}
 
       {/* Momentum — always show panel (avoids layout jump while loading) */}
-      {dashView === "overview" && (
+      {dashView === "insights" && (
         <div className="glass-panel-lg relative mb-10 min-w-0 overflow-hidden p-6 md:p-8">
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-aura-violet/10 blur-3xl dark:bg-aura-violet/15" aria-hidden />
         <SectionHeader
@@ -897,7 +898,7 @@ export default function DashboardPage() {
                 </div>
               </details>
             </div>
-          ) : (
+          ) : dashView === "sessions" ? (
             <motion.div
               className="flex flex-col gap-4"
               initial="hidden"
@@ -1162,6 +1163,14 @@ export default function DashboardPage() {
                 );
               })}
             </motion.div>
+          ) : (
+            <div className="glass-panel-lg rounded-3xl p-8 text-center text-sm text-slate-600 dark:text-slate-400">
+              <p className="font-semibold text-aura-ink dark:text-slate-200">Your session list is on the Sessions tab</p>
+              <p className="mt-2">Use Insights for trends and readiness. Switch to Sessions to browse and manage interviews.</p>
+              <button type="button" className="btn-primary mt-5" onClick={() => setDashView("sessions")}>
+                Open Sessions →
+              </button>
+            </div>
           )}
         </div>
 

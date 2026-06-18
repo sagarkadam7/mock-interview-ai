@@ -610,6 +610,34 @@ router.post("/:id/answer", protect, answerLimiter, validateMongoId("id"), async 
     const question = interview.questions.id(questionId);
     if (!question) return res.status(404).json({ message: "Question not found." });
 
+    const forceResubmit = String(req.query.force || "").toLowerCase() === "true";
+    if (question.score !== null && question.feedback && !forceResubmit) {
+      const alreadyHasFollowUp = interview.questions.some(
+        (q) => q.parentQuestionId && q.parentQuestionId.toString() === question._id.toString()
+      );
+      let followUpQuestion = null;
+      if (alreadyHasFollowUp) {
+        const followUp = interview.questions.find(
+          (q) => q.parentQuestionId && q.parentQuestionId.toString() === question._id.toString()
+        );
+        if (followUp) followUpQuestion = { text: followUp.text, hint: followUp.hint };
+      }
+      return res.json({
+        score: question.score,
+        feedback: question.feedback,
+        strengths: question.strengths,
+        improvements: question.improvements,
+        followUpInserted: alreadyHasFollowUp,
+        followUpQuestion,
+        aiFallback: false,
+        cached: true,
+        questions: interview.questions,
+        interviewStatus: interview.status,
+        firstAnsweredAt: interview.firstAnsweredAt,
+        completedAt: interview.completedAt,
+      });
+    }
+
     const trimmedAnswer = (answer || "").trim();
     const alreadyHasFollowUp = interview.questions.some(
       (q) => q.parentQuestionId && q.parentQuestionId.toString() === question._id.toString()

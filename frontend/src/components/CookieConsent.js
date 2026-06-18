@@ -28,6 +28,9 @@ export default function CookieConsent() {
     } catch {
       // Ignored — session-only consent still respected via state.
     }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("ia:cookie-consent", { detail: { value } }));
+    }
     setVisible(false);
   };
 

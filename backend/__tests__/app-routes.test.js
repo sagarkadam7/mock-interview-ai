@@ -7,7 +7,7 @@ describe("app routes", () => {
   test(
     "GET / returns JSON with ok true",
     async () => {
-      const app = createApp({ env: { ...process.env, ...baseEnv } });
+      const app = createApp({ env: { ...process.env, ...baseEnv }, getMongoHealth: () => ({ ok: true, state: "connected" }) });
       const res = await request(app).get("/");
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject({ ok: true });
@@ -20,7 +20,7 @@ describe("app routes", () => {
   test(
     "GET /api/missing returns 404 JSON",
     async () => {
-      const app = createApp({ env: { ...process.env, ...baseEnv } });
+      const app = createApp({ env: { ...process.env, ...baseEnv }, getMongoHealth: () => ({ ok: true, state: "connected" }) });
       const res = await request(app).get("/api/does-not-exist-xyz");
       expect(res.status).toBe(404);
       expect(res.body).toEqual({ message: "Not found." });

@@ -24,20 +24,27 @@ const FeedbackSchema = z
   })
   .strict();
 
+function ensureQuestionMark(text) {
+  const trimmed = String(text || "").trim();
+  if (!trimmed) return trimmed;
+  return trimmed.includes("?") ? trimmed : `${trimmed}?`;
+}
+
 function normalizeQuestions(value) {
   const parsed = z.array(QuestionSchema).safeParse(value);
   if (!parsed.success) return null;
 
   const normalized = parsed.data
-    .map((q) => ({
-      text: String(q.text || "")
-        .trim()
-        .slice(0, 500),
-      hint: String(q.hint || "")
-        .trim()
-        .slice(0, 600),
-    }))
-    .filter((q) => q.text.length >= 10 && q.text.includes("?"));
+    .map((q) => {
+      const text = ensureQuestionMark(String(q.text || "").trim()).slice(0, 500);
+      return {
+        text,
+        hint: String(q.hint || "")
+          .trim()
+          .slice(0, 600),
+      };
+    })
+    .filter((q) => q.text.length >= 10);
 
   return normalized.length ? normalized : null;
 }
@@ -49,16 +56,14 @@ function normalizeFeedback(value) {
   const scoreNum = Number(parsed.data.score);
   const followUp = parsed.data.followUp
     ? {
-        text: String(parsed.data.followUp.text || "")
-          .trim()
-          .slice(0, 500),
+        text: ensureQuestionMark(String(parsed.data.followUp.text || "").trim()).slice(0, 500),
         hint: String(parsed.data.followUp.hint || "")
           .trim()
           .slice(0, 600),
       }
     : null;
 
-  if (followUp && (followUp.text.length < 10 || !followUp.text.includes("?"))) {
+  if (followUp && followUp.text.length < 10) {
     return null;
   }
 

@@ -1,13 +1,20 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useMemo, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../utils/api";
 import AuthBrandPanel from "../components/AuthBrandPanel";
+import { isSafeInternalPath } from "../utils/signupAttribution";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const nextPath = useMemo(() => {
+    const next = searchParams.get("next");
+    return isSafeInternalPath(next) ? next : "/dashboard";
+  }, [searchParams]);
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +29,7 @@ export default function LoginPage() {
     try {
       const { data } = await loginUser(form);
       login(data);
-      navigate("/dashboard");
+      navigate(nextPath, { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Check your credentials.");
     } finally {
@@ -124,6 +131,15 @@ export default function LoginPage() {
                   required
                 />
               </div>
+              <p className="text-right text-xs">
+                <button
+                  type="button"
+                  className="font-semibold text-slate-500 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-aura-violet dark:text-slate-400 dark:hover:text-violet-300"
+                  onClick={() => toast("Password reset is coming soon. Contact support if you're locked out.")}
+                >
+                  Forgot password?
+                </button>
+              </p>
 
               <button type="submit" className="btn-cta mt-2 w-full" disabled={loading}>
                 {loading ? (

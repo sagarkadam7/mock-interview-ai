@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import InteractiveHeroDemo from "./InteractiveHeroDemo";
-import VideoModal from "../VideoModal";
+
+const DEMO_VIDEO_URL = String(process.env.REACT_APP_DEMO_VIDEO_URL || "").trim();
 
 const statRows = [
   { v: "7", l: "Questions tailored to your résumé" },
@@ -26,7 +27,6 @@ const capabilityChips = [
 export default function LandingHero({ user }) {
   const heroRef = useRef(null);
   const reduceMotion = useReducedMotion();
-  const [videoOpen, setVideoOpen] = useState(false);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -187,16 +187,29 @@ export default function LandingHero({ user }) {
               )}
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-start sm:gap-6">
-              <button
-                type="button"
-                onClick={() => setVideoOpen(true)}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition-[color,box-shadow,border-color] hover:border-slate-300 hover:text-aura-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:border-slate-600/70 dark:bg-slate-900/50 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-white sm:inline-flex sm:border-0 sm:bg-transparent sm:px-1 sm:py-1 sm:shadow-none sm:underline sm:decoration-slate-300 sm:decoration-2 sm:underline-offset-4 sm:backdrop-blur-none dark:sm:decoration-slate-600"
-              >
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-aura-violet dark:from-aura-coral/25 dark:to-aura-violet/25 sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent" aria-hidden>
-                  ▶
-                </span>
-                Watch demo
-              </button>
+              {DEMO_VIDEO_URL ? (
+                <a
+                  href={DEMO_VIDEO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition-[color,box-shadow,border-color] hover:border-slate-300 hover:text-aura-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:border-slate-600/70 dark:bg-slate-900/50 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-white sm:inline-flex sm:border-0 sm:bg-transparent sm:px-1 sm:py-1 sm:shadow-none sm:underline sm:decoration-slate-300 sm:decoration-2 sm:underline-offset-4 sm:backdrop-blur-none dark:sm:decoration-slate-600"
+                >
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-aura-violet dark:from-aura-coral/25 dark:to-aura-violet/25 sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent" aria-hidden>
+                    ▶
+                  </span>
+                  Watch demo
+                </a>
+              ) : (
+                <a
+                  href="#how-it-works"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition-[color,box-shadow,border-color] hover:border-slate-300 hover:text-aura-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:border-slate-600/70 dark:bg-slate-900/50 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-white sm:inline-flex sm:border-0 sm:bg-transparent sm:px-1 sm:py-1 sm:shadow-none sm:underline sm:decoration-slate-300 sm:decoration-2 sm:underline-offset-4 sm:backdrop-blur-none dark:sm:decoration-slate-600"
+                >
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-aura-violet dark:from-aura-coral/25 dark:to-aura-violet/25 sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent" aria-hidden>
+                    ▶
+                  </span>
+                  See how it works
+                </a>
+              )}
               <a
                 href="#how-it-works"
                 className="group inline-flex items-center justify-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-white sm:justify-start"
@@ -264,7 +277,6 @@ export default function LandingHero({ user }) {
         </div>
       </div>
 
-      <VideoModal open={videoOpen} onClose={() => setVideoOpen(false)} />
     </section>
   );
 }

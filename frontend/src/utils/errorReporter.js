@@ -1,5 +1,8 @@
+import { hasAnalyticsConsent } from "./monitoring";
+
 export function reportClientError(payload) {
   try {
+    if (!hasAnalyticsConsent()) return;
     // Best-effort fire-and-forget. Backend may or may not implement this endpoint.
     fetch("/api/marketing/client-error", {
       method: "POST",
@@ -14,6 +17,7 @@ export function reportClientError(payload) {
 
 export function installClientErrorReporter({ sampleRate = 1 } = {}) {
   if (typeof window === "undefined") return () => {};
+  if (!hasAnalyticsConsent()) return () => {};
   if (Math.random() > sampleRate) return () => {};
 
   const onError = (event, source, lineno, colno, error) => {

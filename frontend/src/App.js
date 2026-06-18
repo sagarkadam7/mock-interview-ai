@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, matchPath } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -17,21 +17,33 @@ import OfflineBanner from "./components/OfflineBanner";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import DashboardPage from "./pages/DashboardPage";
-import NewInterviewPage from "./pages/NewInterviewPage";
-import InterviewPage from "./pages/InterviewPage";
-import ReportPage from "./pages/ReportPage";
-import SharedReportPage from "./pages/SharedReportPage";
-import PricingPage from "./pages/PricingPage";
 import FAQPage from "./pages/FAQPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import WelcomePage from "./pages/WelcomePage";
+import SharedReportPage from "./pages/SharedReportPage";
 import { installClientErrorReporter } from "./utils/errorReporter";
+import { initMonitoring, onCookieConsentChanged } from "./utils/monitoring";
+
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const NewInterviewPage = lazy(() => import("./pages/NewInterviewPage"));
+const InterviewPage = lazy(() => import("./pages/InterviewPage"));
+const ReportPage = lazy(() => import("./pages/ReportPage"));
+const PricingPage = lazy(() => import("./pages/PricingPage"));
+
+function RouteFallback() {
+  return (
+    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3" aria-busy="true" aria-label="Loading page">
+      <span className="spinner h-8 w-8" />
+      <p className="text-sm text-aura-muted dark:text-slate-400">Loading…</p>
+    </div>
+  );
+}
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
   const reduceMotion = useReducedMotion();
 
   if (loading) {
@@ -52,7 +64,7 @@ function PrivateRoute({ children }) {
     );
   }
 
-  return user ? children : <Navigate to="/login" replace />;
+  return user ? children : <Navigate to={`/login?next=${encodeURIComponent(location.pathname + location.search)}`} replace />;
 }
 
 function PublicRoute({ children }) {
@@ -75,8 +87,17 @@ function AppShell() {
   const enterDur = reduceMotion ? 0.01 : 0.32;
 
   React.useEffect(() => {
-    const uninstall = installClientErrorReporter({ sampleRate: 1 });
-    return () => uninstall?.();
+    let uninstall = installClientErrorReporter({ sampleRate: 1 });
+    initMonitoring();
+    const stopConsentWatch = onCookieConsentChanged(() => {
+      uninstall?.();
+      initMonitoring();
+      uninstall = installClientErrorReporter({ sampleRate: 1 });
+    });
+    return () => {
+      uninstall?.();
+      stopConsentWatch?.();
+    };
   }, []);
 
   React.useEffect(() => {
@@ -135,7 +156,14 @@ function AppShell() {
           >
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/pricing" element={<PricingPage />} />
+              <Route
+                path="/pricing"
+                element={
+                  <Suspense fallback={<RouteFallback />}>
+                    <PricingPage />
+                  </Suspense>
+                }
+              />
               <Route path="/faq" element={<FAQPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />
@@ -160,7 +188,9 @@ function AppShell() {
                 path="/dashboard"
                 element={
                   <PrivateRoute>
-                    <DashboardPage />
+                    <Suspense fallback={<RouteFallback />}>
+                      <DashboardPage />
+                    </Suspense>
                   </PrivateRoute>
                 }
               />
@@ -176,7 +206,9 @@ function AppShell() {
                 path="/interview/new"
                 element={
                   <PrivateRoute>
-                    <NewInterviewPage />
+                    <Suspense fallback={<RouteFallback />}>
+                      <NewInterviewPage />
+                    </Suspense>
                   </PrivateRoute>
                 }
               />
@@ -184,7 +216,9 @@ function AppShell() {
                 path="/interview/:id"
                 element={
                   <PrivateRoute>
-                    <InterviewPage />
+                    <Suspense fallback={<RouteFallback />}>
+                      <InterviewPage />
+                    </Suspense>
                   </PrivateRoute>
                 }
               />
@@ -192,7 +226,9 @@ function AppShell() {
                 path="/interview/:id/report"
                 element={
                   <PrivateRoute>
-                    <ReportPage />
+                    <Suspense fallback={<RouteFallback />}>
+                      <ReportPage />
+                    </Suspense>
                   </PrivateRoute>
                 }
               />

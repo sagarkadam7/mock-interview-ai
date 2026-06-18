@@ -7,23 +7,11 @@ import { useAuth } from "../context/AuthContext";
 import { upgradePlan } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 
-const free = [
-  "3 mock sessions / month (free plan cap)",
-  "7 tailored questions per interview",
-  "Gemini-powered feedback & scores",
-  "Camera + speech analytics",
-  "Basic dashboard + PDF export",
-];
+import { PRO_BILLING_DISCLAIMER, PRO_PLAN, STARTER_PLAN } from "../data/pricing";
 
-const pro = [
-  "Unlimited mock sessions",
-  "AI Prep Brief — resume vs JD fit, gaps & STAR stories",
-  "Shareable report links (send to mentors)",
-  "Practice streaks + weekly goals (accountability)",
-  "Momentum insights: readiness snapshot + trends",
-  "Priority AI queue (future)",
-  "Early access to new analytics",
-];
+const free = STARTER_PLAN.perks;
+
+const pro = PRO_PLAN.perks;
 
 const soon = ["Team / cohort dashboards", "ATS integrations", "Custom rubrics per company"];
 const pricingFaq = [
@@ -40,11 +28,11 @@ export default function PricingPage() {
   const isPro = plan === "pro" || plan === "team";
   const ctaLabel = useMemo(() => {
     if (!user) return "Create free account →";
-    if (isPro) return "You’re on Pro";
+    if (isPro) return "You're on Pro";
     return "Upgrade to Pro (dev) →";
   }, [user, isPro]);
 
-  const proPrice = billing === "annual" ? 9 : 12;
+  const proPrice = billing === "annual" ? PRO_PLAN.priceAnnual : PRO_PLAN.priceMonthly;
   const proCadence = billing === "annual" ? "/ month · billed annually" : "/ month";
 
   return (
@@ -63,6 +51,10 @@ export default function PricingPage() {
           </Link>
           .
         </p>
+      </div>
+
+      <div className="mb-8 rounded-2xl border border-amber-200/80 bg-amber-50/80 px-5 py-4 text-sm leading-relaxed text-amber-950 dark:border-amber-500/30 dark:bg-amber-950/35 dark:text-amber-50">
+        {PRO_BILLING_DISCLAIMER}
       </div>
 
       <div className="mb-10 flex flex-col items-start justify-between gap-4 rounded-2xl border border-slate-200/80 bg-white/70 px-6 py-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/45 sm:flex-row sm:items-center">

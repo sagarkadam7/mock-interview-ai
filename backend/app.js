@@ -20,7 +20,32 @@ function buildCspConnectSrc(allowedOrigins) {
   return [...new Set([...defaults, ...extra])];
 }
 
-function createApp({ env = process.env } = {}) {
+function createCorsOriginChecker(allowedOrigins, { isProduction = false } = {}) {
+  const allowed = new Set(allowedOrigins);
+  return (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowed.has(origin)) return callback(null, true);
+    if (
+      !isProduction &&
+      (/^http:\/\/localhost:\d+$/i.test(origin) || /^http:\/\/127\.0\.0\.1:\d+$/i.test(origin))
+    ) {
+      return callback(null, true);
+    }
+    callback(new Error("CORS origin not allowed"));
+  };
+}
+
+function defaultMongoHealth() {
+  try {
+    const mongoose = require("mongoose");
+    const connected = mongoose.connection.readyState === 1;
+    return { ok: connected, state: connected ? "connected" : "disconnected" };
+  } catch {
+    return { ok: false, state: "unknown" };
+  }
+}
+
+function createApp({ env = process.env, getMongoHealth = defaultMongoHealth } = {}) {
   const app = express();
   app.disable("x-powered-by");
   app.set("trust proxy", 1);
@@ -70,10 +95,13 @@ function createApp({ env = process.env } = {}) {
   );
   app.use(cookieParser());
 
-  app.use(cors({
-    origin: 'https://interviewai-web-h2ht.onrender.com',
-    credentials: true
-  }));
+  const isProduction = String(env.NODE_ENV || "").toLowerCase() === "production";
+  app.use(
+    cors({
+      origin: createCorsOriginChecker(allowedOrigins, { isProduction }),
+      credentials: true,
+    })
+  );
 
   app.use(express.json({ limit: "1mb" }));
   app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -104,12 +132,15 @@ function createApp({ env = process.env } = {}) {
 
   app.get("/api/health", (req, res) => {
     const version = String(env.APP_VERSION || env.npm_package_version || "").trim() || undefined;
-    res.json({
-      ok: true,
+    const mongo = getMongoHealth();
+    const body = {
+      ok: mongo.ok,
+      mongo: mongo.state,
       uptimeSec: Math.round((Date.now() - startedAt) / 1000),
       time: new Date().toISOString(),
       ...(version ? { version } : {}),
-    });
+    };
+    res.status(mongo.ok ? 200 : 503).json(body);
   });
 
   app.get("/", (req, res) =>
@@ -143,4 +174,10 @@ function createApp({ env = process.env } = {}) {
   return app;
 }
 
-module.exports = { createApp };
+module.exports = {
+  createApp,
+  parseOrigins,
+  buildCspConnectSrc,
+  createCorsOriginChecker,
+  defaultMongoHealth,
+};

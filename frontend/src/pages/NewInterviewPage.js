@@ -13,7 +13,6 @@ export default function NewInterviewPage() {
   const [level, setLevel] = useState("mid");
   const [interviewMode, setInterviewMode] = useState("mixed");
   const [persona, setPersona] = useState("coach");
-  const [timeboxMin, setTimeboxMin] = useState(0);
   const [resumeText, setResumeText] = useState("");
   const [file, setFile] = useState(null);
   const [inputMode, setInputMode] = useState("paste");
@@ -54,7 +53,6 @@ export default function NewInterviewPage() {
       fd.append("level", level);
       fd.append("interviewMode", interviewMode);
       fd.append("persona", persona);
-      fd.append("timeboxMin", String(timeboxMin || 0));
       if (inputMode === "upload") fd.append("resume", file);
       else fd.append("resumeText", resumeText.trim());
       const { data } = await createInterview(fd);
@@ -145,20 +143,6 @@ export default function NewInterviewPage() {
                 <option value="friendly">Friendly</option>
                 <option value="skeptical">Skeptical</option>
                 <option value="bar_raiser">Bar raiser</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="label-field">Timebox (optional)</label>
-              <select
-                className="input-field"
-                value={String(timeboxMin)}
-                onChange={(e) => setTimeboxMin(Number(e.target.value))}
-              >
-                <option value="0">No timer</option>
-                <option value="2">2 min / question</option>
-                <option value="5">5 min / question</option>
-                <option value="10">10 min / question</option>
               </select>
             </div>
           </div>
