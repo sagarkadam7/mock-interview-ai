@@ -1,7 +1,13 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getInterview, getAllInterviews, createShareToken, patchInterviewMeta, duplicateInterview } from "../utils/api";
+import {
+  getInterview,
+  getAllInterviews,
+  createShareToken,
+  patchInterviewMeta,
+  duplicateInterview,
+} from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import { generatePDFReport } from "../utils/pdfReport";
 import { buildNextRepsFromInterview, getSessionCoachingFocus } from "../utils/practiceSignals";
@@ -12,9 +18,17 @@ import PrepBriefPanel from "../components/PrepBriefPanel";
 
 function ReportPageSkeleton() {
   return (
-    <div className="page-shell min-h-screen max-w-6xl" aria-busy="true" aria-live="polite" aria-label="Loading report">
+    <div
+      className="page-shell min-h-screen max-w-6xl"
+      aria-busy="true"
+      aria-live="polite"
+      aria-label="Loading report"
+    >
       <div className="glass-panel-lg relative mb-8 overflow-hidden p-6 sm:p-8">
-        <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral/40 via-violet-400/40 to-aura-violet/40" aria-hidden />
+        <span
+          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral/40 via-violet-400/40 to-aura-violet/40"
+          aria-hidden
+        />
         <div className="mb-8 flex flex-wrap items-start justify-between gap-8">
           <div className="min-w-0 flex-1 space-y-4">
             <div className="h-3 w-24 skeleton-line" />
@@ -59,7 +73,15 @@ const scoreColor = (s) =>
   s >= 7 ? "text-emerald-600" : s >= 4 ? "text-amber-600" : s !== null ? "text-rose-600" : "text-slate-400";
 const eyeColor = (p) => (p > 70 ? "text-emerald-600" : p > 40 ? "text-amber-600" : "text-rose-600");
 const paceColor = (l) => (l === "good" ? "text-emerald-600" : "text-amber-600");
-const emotionEmoji = { happy: "😊", neutral: "😐", sad: "😔", fearful: "😰", angry: "😠", disgusted: "🤢", surprised: "😲" };
+const emotionEmoji = {
+  happy: "😊",
+  neutral: "😐",
+  sad: "😔",
+  fearful: "😰",
+  angry: "😠",
+  disgusted: "🤢",
+  surprised: "😲",
+};
 
 function overallScoreStroke(score) {
   if (score >= 7) return "#10b981";
@@ -75,9 +97,20 @@ function ReportOverallRing({ score, ringClass, textClass }) {
   const stroke = overallScoreStroke(score);
 
   return (
-    <div className="relative mx-auto flex h-[112px] w-[112px] items-center justify-center rounded-full bg-white/80 shadow-sm ring-1 ring-slate-200/80 dark:bg-slate-900/70 dark:ring-slate-700/80" aria-hidden>
+    <div
+      className="relative mx-auto flex h-[112px] w-[112px] items-center justify-center rounded-full bg-white/80 shadow-sm ring-1 ring-slate-200/80 dark:bg-slate-900/70 dark:ring-slate-700/80"
+      aria-hidden
+    >
       <svg width="104" height="104" viewBox="0 0 104 104" className="-rotate-90 drop-shadow-sm">
-        <circle cx="52" cy="52" r={r} fill="none" stroke="currentColor" strokeWidth="6" className="text-slate-200/90 dark:text-slate-700/70" />
+        <circle
+          cx="52"
+          cy="52"
+          r={r}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="6"
+          className="text-slate-200/90 dark:text-slate-700/70"
+        />
         <circle
           cx="52"
           cy="52"
@@ -91,7 +124,9 @@ function ReportOverallRing({ score, ringClass, textClass }) {
           className="transition-[stroke-dashoffset] duration-700 ease-out"
         />
       </svg>
-      <div className={`absolute inset-4 flex flex-col items-center justify-center rounded-full border-[3px] shadow-inner ${ringClass}`}>
+      <div
+        className={`absolute inset-4 flex flex-col items-center justify-center rounded-full border-[3px] shadow-inner ${ringClass}`}
+      >
         <span className={`font-sans text-3xl font-bold leading-none tabular-nums ${textClass}`}>{score}</span>
         <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-aura-muted">/10</span>
       </div>
@@ -103,8 +138,14 @@ function StatCard({ label, value, sub, colorClass, accent = "from-violet-500 to-
   return (
     <div className="glass-panel group relative overflow-hidden rounded-2xl p-5 text-center ring-1 ring-white/40 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-slate-200/80 hover:shadow-md dark:hover:border-slate-600/50 dark:hover:shadow-lg dark:hover:shadow-black/25 sm:p-6">
       <span className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${accent}`} aria-hidden />
-      <div className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{label}</div>
-      <div className={`font-sans text-3xl font-bold tracking-tight tabular-nums ${colorClass || "text-violet-600"}`}>{value ?? "—"}</div>
+      <div className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+        {label}
+      </div>
+      <div
+        className={`font-sans text-3xl font-bold tracking-tight tabular-nums ${colorClass || "text-violet-600"}`}
+      >
+        {value ?? "—"}
+      </div>
       {sub && <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{sub}</div>}
     </div>
   );
@@ -122,7 +163,10 @@ function MiniBar({ value, max, barClass, label }) {
       aria-valuenow={valuenow}
       aria-label={label || "Progress"}
     >
-      <div className={`h-full rounded-full transition-all duration-500 ${barClass || "bg-aura-violet"}`} style={{ width: `${pct}%` }} />
+      <div
+        className={`h-full rounded-full transition-all duration-500 ${barClass || "bg-aura-violet"}`}
+        style={{ width: `${pct}%` }}
+      />
     </div>
   );
 }
@@ -170,7 +214,9 @@ function QuestionCard({ question, index }) {
 
   return (
     <div className="glass-panel relative overflow-hidden rounded-3xl transition-all duration-300 hover:border-slate-300">
-      {question.score !== null ? <span className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${scoreTone}`} aria-hidden /> : null}
+      {question.score !== null ? (
+        <span className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${scoreTone}`} aria-hidden />
+      ) : null}
       <button
         type="button"
         id={headerId}
@@ -190,7 +236,9 @@ function QuestionCard({ question, index }) {
                 Adaptive follow-up
               </span>
             )}
-            <p className="text-[15px] font-medium leading-snug tracking-tight text-aura-ink">{question.text}</p>
+            <p className="text-[15px] font-medium leading-snug tracking-tight text-aura-ink">
+              {question.text}
+            </p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-4">
@@ -209,14 +257,24 @@ function QuestionCard({ question, index }) {
             </span>
           )}
           {question.eyeContactPct !== null && (
-            <span className={`rounded-full bg-slate-50 px-2.5 py-1 text-xs font-semibold dark:bg-slate-800/70 ${eyeColor(question.eyeContactPct)}`}>👁 {question.eyeContactPct}%</span>
+            <span
+              className={`rounded-full bg-slate-50 px-2.5 py-1 text-xs font-semibold dark:bg-slate-800/70 ${eyeColor(question.eyeContactPct)}`}
+            >
+              👁 {question.eyeContactPct}%
+            </span>
           )}
           <span
             className={`flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200/80 bg-white/90 text-slate-500 transition-transform duration-200 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-400 ${open ? "rotate-180" : ""}`}
             aria-hidden
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M2.5 4.5L6 8L9.5 4.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </span>
         </div>
@@ -237,13 +295,17 @@ function QuestionCard({ question, index }) {
               {question.eyeContactPct !== null && (
                 <div className="rounded-xl border border-slate-200/80 bg-white/85 p-3 text-center dark:border-slate-700/80 dark:bg-slate-900/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">👁 Eye</div>
-                  <div className={`text-lg font-bold ${eyeColor(question.eyeContactPct)}`}>{question.eyeContactPct}%</div>
+                  <div className={`text-lg font-bold ${eyeColor(question.eyeContactPct)}`}>
+                    {question.eyeContactPct}%
+                  </div>
                 </div>
               )}
               {question.wordsPerMinute > 0 && (
                 <div className="rounded-xl border border-slate-200/80 bg-white/85 p-3 text-center dark:border-slate-700/80 dark:bg-slate-900/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">📊 Pace</div>
-                  <div className={`text-sm font-bold ${paceColor(question.paceLabel)}`}>{question.wordsPerMinute} wpm</div>
+                  <div className={`text-sm font-bold ${paceColor(question.paceLabel)}`}>
+                    {question.wordsPerMinute} wpm
+                  </div>
                   <div className="text-[10px] capitalize text-aura-muted">{question.paceLabel}</div>
                 </div>
               )}
@@ -252,7 +314,11 @@ function QuestionCard({ question, index }) {
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">🗣 Fillers</div>
                   <div
                     className={`text-lg font-bold ${
-                      question.fillerWordCount > 5 ? "text-rose-600" : question.fillerWordCount > 2 ? "text-amber-600" : "text-emerald-600"
+                      question.fillerWordCount > 5
+                        ? "text-rose-600"
+                        : question.fillerWordCount > 2
+                          ? "text-amber-600"
+                          : "text-emerald-600"
                     }`}
                   >
                     {question.fillerWordCount}
@@ -270,15 +336,21 @@ function QuestionCard({ question, index }) {
 
           {question.dominantEmotion && (
             <div className="rounded-2xl border border-slate-200/80 bg-white/85 p-4 dark:border-slate-700/80 dark:bg-slate-900/70">
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Expression analysis</div>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+                Expression analysis
+              </div>
               <EmotionBar emotions={question.emotionScores} />
             </div>
           )}
 
           {question.answer ? (
             <div className="rounded-2xl border border-slate-200/80 bg-white/85 p-4 dark:border-slate-700/80 dark:bg-slate-900/70">
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Your answer</div>
-              <p className="text-sm italic leading-relaxed text-slate-700 dark:text-slate-300">&quot;{question.answer}&quot;</p>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+                Your answer
+              </div>
+              <p className="text-sm italic leading-relaxed text-slate-700 dark:text-slate-300">
+                &quot;{question.answer}&quot;
+              </p>
               {question.fillerWords?.length > 0 && (
                 <p className="mt-2 text-xs text-aura-muted">
                   Filler words detected: {question.fillerWords.map((w) => `"${w}"`).join(", ")}
@@ -286,29 +358,43 @@ function QuestionCard({ question, index }) {
               )}
             </div>
           ) : (
-            <p className="rounded-2xl border border-slate-200/80 bg-white/85 p-4 text-sm italic text-aura-muted dark:border-slate-700/80 dark:bg-slate-900/70">No answer recorded.</p>
+            <p className="rounded-2xl border border-slate-200/80 bg-white/85 p-4 text-sm italic text-aura-muted dark:border-slate-700/80 dark:bg-slate-900/70">
+              No answer recorded.
+            </p>
           )}
 
           <div className="h-px bg-slate-100 dark:bg-slate-800/90" />
 
           {question.feedback && (
             <div className="rounded-2xl border border-violet-200/70 bg-white/85 p-4 dark:border-violet-500/25 dark:bg-slate-900/70">
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-coral">AI Feedback</div>
-              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.feedback}</p>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-coral">
+                AI Feedback
+              </div>
+              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                {question.feedback}
+              </p>
             </div>
           )}
 
           <div className="grid gap-3 sm:grid-cols-2">
             {question.strengths && (
               <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/10 p-4">
-                <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-400">✓ Strengths</div>
-                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.strengths}</p>
+                <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-400">
+                  ✓ Strengths
+                </div>
+                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                  {question.strengths}
+                </p>
               </div>
             )}
             {question.improvements && (
               <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4">
-                <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-400">↑ Improvements</div>
-                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.improvements}</p>
+                <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-400">
+                  ↑ Improvements
+                </div>
+                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                  {question.improvements}
+                </p>
               </div>
             )}
           </div>
@@ -427,8 +513,12 @@ export default function ReportPage() {
     return (
       <div className="page-shell min-h-screen max-w-3xl py-16 md:py-20">
         <div className="glass-panel-lg overflow-hidden p-6 sm:p-8">
-          <div className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Report unavailable</div>
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">We couldn’t load this report</h1>
+          <div className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+            Report unavailable
+          </div>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+            We couldn’t load this report
+          </h1>
           <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{loadError}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <button type="button" className="btn-cta px-8 py-3" onClick={loadReport}>
@@ -454,10 +544,15 @@ export default function ReportPage() {
   const overall = interview.overallScore;
 
   const peerCompleted = peerList.filter(
-    (row) => String(row._id) !== String(interview._id) && row.status === "completed" && typeof row.overallScore === "number"
+    (row) =>
+      String(row._id) !== String(interview._id) &&
+      row.status === "completed" &&
+      typeof row.overallScore === "number"
   );
   const peerAvgScore =
-    peerCompleted.length > 0 ? peerCompleted.reduce((s, r) => s + r.overallScore, 0) / peerCompleted.length : null;
+    peerCompleted.length > 0
+      ? peerCompleted.reduce((s, r) => s + r.overallScore, 0) / peerCompleted.length
+      : null;
   const scoreVsPeer =
     peerAvgScore != null && overall != null ? Math.round((overall - peerAvgScore) * 10) / 10 : null;
 
@@ -536,576 +631,715 @@ export default function ReportPage() {
         Skip to question breakdown
       </a>
       <main aria-labelledby="report-title">
-      {isIncomplete ? (
-        <div
-          className="mb-6 flex flex-col gap-4 rounded-2xl border border-amber-200/90 bg-amber-50/90 p-5 shadow-sm dark:border-amber-500/35 dark:bg-amber-950/35 sm:flex-row sm:items-center sm:justify-between"
-          role="status"
-        >
-          <div>
-            <p className="text-sm font-bold text-amber-950 dark:text-amber-50">This session isn&apos;t finished yet</p>
-            <p className="mt-1 text-sm leading-relaxed text-amber-900/85 dark:text-amber-100/85">
-              {unansweredCount > 0
-                ? `${unansweredCount} question${unansweredCount === 1 ? "" : "s"} still need answers before your scorecard is complete.`
-                : "Complete every question to unlock the full report and benchmarks."}
-            </p>
-          </div>
-          <Link to={`/interview/${id}`} className="no-underline">
-            <span className="btn-primary whitespace-nowrap px-6 py-3">Continue interview →</span>
-          </Link>
-        </div>
-      ) : null}
-      <div className="glass-panel-lg relative mb-8 overflow-hidden p-6 sm:p-8">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/35 via-transparent to-orange-50/20 opacity-90" aria-hidden />
-        <div className="relative mb-8 flex flex-wrap items-start justify-between gap-6">
-          <div className="min-w-0 flex-1">
-            <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Session report</div>
-            <div className="flex flex-wrap items-start gap-3">
-              <h1 id="report-title" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-[2.35rem] md:leading-tight">
-                {interview.jobRole}
-              </h1>
-              <button
-                type="button"
-                onClick={onToggleStar}
-                className={`mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg transition-colors ${
-                  sessionStarred
-                    ? "border-amber-300/80 bg-amber-50 text-amber-800 shadow-sm dark:border-amber-500/40 dark:bg-amber-950/50 dark:text-amber-100"
-                    : "border-slate-200/90 bg-white/90 text-slate-400 hover:border-violet-300 hover:text-violet-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-500 dark:hover:text-violet-300"
-                }`}
-                aria-pressed={sessionStarred}
-                aria-label={sessionStarred ? "Remove star from dashboard" : "Star this session on dashboard"}
-                title={sessionStarred ? "Starred on dashboard" : "Star on dashboard"}
-              >
-                {sessionStarred ? "★" : "☆"}
-              </button>
-            </div>
-            {(prepCompany || interview.targetCompany) ? (
-              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">
-                {prepCompany || interview.targetCompany}
+        {isIncomplete ? (
+          <div
+            className="mb-6 flex flex-col gap-4 rounded-2xl border border-amber-200/90 bg-amber-50/90 p-5 shadow-sm dark:border-amber-500/35 dark:bg-amber-950/35 sm:flex-row sm:items-center sm:justify-between"
+            role="status"
+          >
+            <div>
+              <p className="text-sm font-bold text-amber-950 dark:text-amber-50">
+                This session isn&apos;t finished yet
               </p>
-            ) : null}
-            <p className="mt-2 text-sm text-aura-muted">
-              {new Date(interview.createdAt).toLocaleDateString("en-IN", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-              <span className="text-slate-400 dark:text-slate-500"> · {formatRelativeTime(interview.createdAt)}</span>
-            </p>
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-              <span className="rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 dark:border-slate-700/70 dark:bg-slate-900/60">
-                {answered.length}/{interview.questions.length} answered
-              </span>
-              {sessionWall ? (
+              <p className="mt-1 text-sm leading-relaxed text-amber-900/85 dark:text-amber-100/85">
+                {unansweredCount > 0
+                  ? `${unansweredCount} question${unansweredCount === 1 ? "" : "s"} still need answers before your scorecard is complete.`
+                  : "Complete every question to unlock the full report and benchmarks."}
+              </p>
+            </div>
+            <Link to={`/interview/${id}`} className="no-underline">
+              <span className="btn-primary whitespace-nowrap px-6 py-3">Continue interview →</span>
+            </Link>
+          </div>
+        ) : null}
+        <div className="glass-panel-lg relative mb-8 overflow-hidden p-6 sm:p-8">
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/35 via-transparent to-orange-50/20 opacity-90"
+            aria-hidden
+          />
+          <div className="relative mb-8 flex flex-wrap items-start justify-between gap-6">
+            <div className="min-w-0 flex-1">
+              <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+                Session report
+              </div>
+              <div className="flex flex-wrap items-start gap-3">
+                <h1
+                  id="report-title"
+                  className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-[2.35rem] md:leading-tight"
+                >
+                  {interview.jobRole}
+                </h1>
+                <button
+                  type="button"
+                  onClick={onToggleStar}
+                  className={`mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg transition-colors ${
+                    sessionStarred
+                      ? "border-amber-300/80 bg-amber-50 text-amber-800 shadow-sm dark:border-amber-500/40 dark:bg-amber-950/50 dark:text-amber-100"
+                      : "border-slate-200/90 bg-white/90 text-slate-400 hover:border-violet-300 hover:text-violet-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-500 dark:hover:text-violet-300"
+                  }`}
+                  aria-pressed={sessionStarred}
+                  aria-label={
+                    sessionStarred ? "Remove star from dashboard" : "Star this session on dashboard"
+                  }
+                  title={sessionStarred ? "Starred on dashboard" : "Star on dashboard"}
+                >
+                  {sessionStarred ? "★" : "☆"}
+                </button>
+              </div>
+              {prepCompany || interview.targetCompany ? (
+                <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">
+                  {prepCompany || interview.targetCompany}
+                </p>
+              ) : null}
+              <p className="mt-2 text-sm text-aura-muted">
+                {new Date(interview.createdAt).toLocaleDateString("en-IN", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+                <span className="text-slate-400 dark:text-slate-500">
+                  {" "}
+                  · {formatRelativeTime(interview.createdAt)}
+                </span>
+              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
                 <span className="rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 dark:border-slate-700/70 dark:bg-slate-900/60">
-                  {sessionWall} session
+                  {answered.length}/{interview.questions.length} answered
+                </span>
+                {sessionWall ? (
+                  <span className="rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 dark:border-slate-700/70 dark:bg-slate-900/60">
+                    {sessionWall} session
+                  </span>
+                ) : null}
+              </div>
+              {totalQuestions > 0 ? (
+                <div
+                  className="mt-2 max-w-xs"
+                  role="progressbar"
+                  aria-valuenow={answeredPct}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={`Session completion: ${answered.length} of ${totalQuestions} questions answered`}
+                >
+                  <div className="h-2 overflow-hidden rounded-full bg-slate-200/90 dark:bg-slate-700/90">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-[width] duration-500 ease-out"
+                      style={{ width: `${answeredPct}%` }}
+                    />
+                  </div>
+                </div>
+              ) : null}
+            </div>
+            {overall !== null && (
+              <div className="text-center">
+                <ReportOverallRing score={overall} ringClass={overallRing} textClass={overallText} />
+                <p className="mt-2 text-[11px] font-medium text-aura-muted">AI content score</p>
+              </div>
+            )}
+          </div>
+
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-3 dark:border-slate-700/70 dark:bg-slate-900/40">
+            <div>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                Delivery
+              </span>
+              <h2 className="mt-1 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+                Session metrics
+              </h2>
+            </div>
+            <span className="rounded-full border border-violet-200/80 bg-violet-50/90 px-3 py-1 text-[11px] font-semibold text-violet-800 dark:border-violet-500/30 dark:bg-violet-950/40 dark:text-violet-200">
+              {answered.length}/{totalQuestions} answered
+            </span>
+          </div>
+          <div className="mb-8 grid gap-3 sm:grid-cols-2">
+            <StatCard
+              label="Avg eye contact"
+              value={interview.avgEyeContact !== null ? `${interview.avgEyeContact}%` : null}
+              colorClass={
+                interview.avgEyeContact > 70
+                  ? "text-emerald-600"
+                  : interview.avgEyeContact > 40
+                    ? "text-amber-600"
+                    : "text-rose-600"
+              }
+              accent="from-emerald-500 to-teal-400"
+            />
+            <StatCard
+              label="Avg confidence (ML)"
+              value={interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : null}
+              colorClass="text-violet-600"
+              accent="from-violet-500 to-fuchsia-500"
+            />
+            <StatCard
+              label="Avg speech pace"
+              value={interview.avgPace ? `${interview.avgPace} wpm` : null}
+              sub={
+                interview.avgPace
+                  ? interview.avgPace >= 100 && interview.avgPace <= 180
+                    ? "good pace"
+                    : "needs adjustment"
+                  : null
+              }
+              colorClass={
+                interview.avgPace >= 100 && interview.avgPace <= 180 ? "text-emerald-600" : "text-amber-600"
+              }
+              accent="from-amber-500 to-orange-400"
+            />
+            <StatCard
+              label="Avg filler words / Q"
+              value={interview.avgFillerWords !== null ? interview.avgFillerWords : null}
+              colorClass={
+                interview.avgFillerWords <= 2
+                  ? "text-emerald-600"
+                  : interview.avgFillerWords <= 5
+                    ? "text-amber-600"
+                    : "text-rose-600"
+              }
+              accent="from-rose-500 to-pink-500"
+            />
+          </div>
+
+          <section className="mb-8" aria-labelledby="report-prep-brief-heading">
+            <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+              <div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-violet-600 dark:text-violet-300">
+                  Before you practiced
+                </span>
+                <h2
+                  id="report-prep-brief-heading"
+                  className="mt-1 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100"
+                >
+                  Resume prep brief
+                </h2>
+              </div>
+              {interview.prepBrief?.status === "ready" && interview.prepBrief?.matchScore != null ? (
+                <span className="rounded-full border border-violet-200/80 bg-violet-50/80 px-3 py-1 text-xs font-semibold tabular-nums text-violet-800 dark:border-violet-500/30 dark:bg-violet-950/40 dark:text-violet-200">
+                  {interview.prepBrief.matchScore}% fit
                 </span>
               ) : null}
             </div>
-            {totalQuestions > 0 ? (
-              <div
-                className="mt-2 max-w-xs"
-                role="progressbar"
-                aria-valuenow={answeredPct}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label={`Session completion: ${answered.length} of ${totalQuestions} questions answered`}
-              >
-                <div className="h-2 overflow-hidden rounded-full bg-slate-200/90 dark:bg-slate-700/90">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-[width] duration-500 ease-out"
-                    style={{ width: `${answeredPct}%` }}
+            <div className="glass-panel rounded-3xl p-4 ring-1 ring-violet-200/40 dark:ring-violet-500/20 md:p-5">
+              <PrepBriefPanel
+                interviewId={id}
+                prepBrief={interview.prepBrief}
+                onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
+                defaultOpen={interview.prepBrief?.status === "ready"}
+              />
+            </div>
+          </section>
+
+          {(peerAvgScore != null && scoreVsPeer != null) || weakPrimary.length > 0 ? (
+            <div className="mb-8 grid gap-4 md:grid-cols-2">
+              {peerAvgScore != null && scoreVsPeer != null ? (
+                <div className="glass-panel relative overflow-hidden rounded-3xl p-6 md:p-7">
+                  <span
+                    className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-violet-500 to-fuchsia-500"
+                    aria-hidden
                   />
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                    Benchmark
+                  </span>
+                  <h2 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+                    This session vs your average
+                  </h2>
+                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                    Avg overall score across your other{" "}
+                    <span className="font-semibold text-aura-ink dark:text-slate-200">
+                      {peerCompleted.length}
+                    </span>{" "}
+                    completed session{peerCompleted.length === 1 ? "" : "s"}:{" "}
+                    <span className="font-bold tabular-nums text-violet-600 dark:text-violet-300">
+                      {peerAvgScore.toFixed(1)}
+                    </span>
+                    <span className="text-aura-muted"> /10</span>
+                  </p>
+                  <p className="mt-4 inline-flex items-baseline rounded-2xl border border-slate-200/80 bg-slate-50/80 px-4 py-2 text-2xl font-black tabular-nums tracking-tight text-aura-ink dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-white">
+                    {scoreVsPeer > 0 ? "+" : ""}
+                    {scoreVsPeer}
+                    <span className="ml-2 text-base font-semibold text-slate-500 dark:text-slate-400">
+                      vs avg
+                    </span>
+                  </p>
+                  <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">
+                    {scoreVsPeer >= 0.5
+                      ? "Ahead of your recent baseline — keep pressure on delivery."
+                      : scoreVsPeer <= -0.5
+                        ? "Below your recent baseline — mine the per-question feedback for the gap."
+                        : "Roughly on par with your recent baseline — tighten one axis next rep."}
+                  </p>
+                </div>
+              ) : null}
+              {weakPrimary.length > 0 ? (
+                <div className="glass-panel relative overflow-hidden rounded-3xl border border-amber-200/60 bg-amber-50/25 p-6 dark:border-amber-500/25 dark:bg-amber-950/20 md:p-7">
+                  <span
+                    className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-400 to-orange-500"
+                    aria-hidden
+                  />
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-amber-800 dark:text-amber-200">
+                    Drill targets
+                  </span>
+                  <h2 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+                    Lowest-scoring primaries
+                  </h2>
+                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                    Re-answer these out loud before your next mock — same STAR depth, sharper metrics.
+                  </p>
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                    <div className="text-xs font-medium text-amber-900/70 dark:text-amber-100/70">
+                      {weakPrimary.length} item{weakPrimary.length === 1 ? "" : "s"}
+                    </div>
+                    <button
+                      type="button"
+                      className="btn-outline border-amber-300/70 bg-white/80 px-4 py-2 text-xs text-amber-900 hover:bg-white dark:border-amber-500/30 dark:bg-slate-900/40 dark:text-amber-100"
+                      disabled={copying}
+                      onClick={() => {
+                        const text = weakPrimary
+                          .map((q, i) => `${i + 1}. ${q.score}/10 — ${q.text}`)
+                          .join("\n");
+                        copyText(text, "Drill targets copied");
+                      }}
+                    >
+                      Copy drill list
+                    </button>
+                  </div>
+                  <ol className="mt-4 list-none space-y-3 p-0 text-sm text-slate-800 dark:text-slate-200">
+                    {weakPrimary.map((q) => (
+                      <li
+                        key={q._id}
+                        className="rounded-2xl border border-amber-200/70 bg-white/75 px-4 py-3 dark:border-amber-500/20 dark:bg-slate-900/45"
+                      >
+                        <span className="mb-1 inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-xs font-bold tabular-nums text-rose-700 dark:bg-rose-950/30 dark:text-rose-300">
+                          {q.score}/10
+                        </span>
+                        <span className="block leading-snug">{q.text}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
+          <div className="glass-panel mb-8 rounded-3xl border border-violet-200/40 bg-white/85 p-6 dark:border-violet-500/20 dark:bg-slate-900/70 md:p-7">
+            <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <span className="section-eyebrow mb-2">Private prep zone</span>
+                <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+                  Your next real loop
+                </h2>
+                <p className="mt-1 max-w-2xl text-sm text-slate-600 dark:text-slate-400">
+                  Capture stories to tighten, questions to ask them, and reminders for the human round. Only
+                  you can see this — it is never included in share links.
+                </p>
+              </div>
+              <div className="flex flex-col items-start gap-2 sm:items-end">
+                <button
+                  type="button"
+                  className="btn-outline px-3 py-2 text-xs"
+                  disabled={!prepNotes.trim() || copying}
+                  onClick={() => copyText(prepNotes, "Prep notes copied")}
+                >
+                  Copy notes
+                </button>
+                <span
+                  className="rounded-full border border-slate-200/80 bg-slate-50/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-400"
+                  aria-live="polite"
+                >
+                  {notesStatus === "saving" && "Saving..."}
+                  {notesStatus === "saved" && "Saved"}
+                  {notesStatus === "error" && "Save failed"}
+                  {notesStatus === "idle" && "Private"}
+                </span>
+              </div>
+            </div>
+            <div className="mb-4 rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-700/80 dark:bg-slate-950/30">
+              <label htmlFor="prep-target-company" className="label-field">
+                Target company or team
+              </label>
+              <input
+                id="prep-target-company"
+                className="input-field max-w-xl"
+                value={prepCompany}
+                onChange={(e) => setPrepCompany(e.target.value.slice(0, 120))}
+                onBlur={onSaveCompany}
+                placeholder="e.g. Meta, Series B startup, client name"
+                maxLength={120}
+              />
+            </div>
+            <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-700/80 dark:bg-slate-950/30">
+              <label htmlFor="prep-notes" className="label-field">
+                Prep notes
+              </label>
+              <textarea
+                id="prep-notes"
+                className="input-field min-h-[140px] resize-y"
+                value={prepNotes}
+                onChange={(e) => setPrepNotes(e.target.value.slice(0, 8000))}
+                placeholder="What will you rehearse before the real interview? Metrics to add, weak follow-ups, questions for the panel…"
+                maxLength={8000}
+              />
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">
+                {prepNotes.length.toLocaleString()} / 8,000 · autosaves as you type
+              </p>
+            </div>
+          </div>
+
+          <div className="glass-panel mb-8 rounded-3xl p-6 md:p-8">
+            <div className="mb-6 flex flex-wrap items-start justify-between gap-6">
+              <div>
+                <span className="mb-3 inline-block rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted dark:border-slate-600 dark:bg-slate-800/80">
+                  Metric radar
+                </span>
+                <h2 className="text-xl font-bold tracking-tight text-aura-ink">Your coaching snapshot</h2>
+                <p className="mt-1 text-sm text-aura-muted">
+                  Larger shape = better performance for that dimension.
+                </p>
+              </div>
+              <div className="max-w-[min(100%,260px)] rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 text-left dark:border-slate-600/60 dark:bg-slate-800/50">
+                <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+                  How to read
+                </div>
+                <ul className="space-y-2 text-xs leading-snug text-slate-600 dark:text-slate-400">
+                  <li>
+                    <span className="font-semibold text-aura-ink dark:text-slate-200">Eye</span> — higher is
+                    better
+                  </li>
+                  <li>
+                    <span className="font-semibold text-aura-ink dark:text-slate-200">Conf</span> — confidence
+                    (ML), higher is better
+                  </li>
+                  <li>
+                    <span className="font-semibold text-aura-ink dark:text-slate-200">Pace</span> — aim near
+                    130–170 wpm
+                  </li>
+                  <li>
+                    <span className="font-semibold text-aura-ink dark:text-slate-200">Fill</span> — filler
+                    words; lower is better
+                  </li>
+                  <li>
+                    <span className="font-semibold text-aura-ink dark:text-slate-200">Overall</span> — blended
+                    content score
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <RadarChart metrics={radarMetrics} stroke="#E85547" fill="rgba(91,33,182,0.14)" />
+
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/90 p-5 dark:border-slate-700 dark:bg-slate-900/60">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-aura-coral">
+                    Next focus
+                  </div>
+                  <div className={`mb-1 font-sans text-xl font-extrabold ${focusDim.accentClass}`}>
+                    {focusDim.key}
+                  </div>
+                  <p className="max-w-md text-sm leading-relaxed text-aura-muted">{focusDim.msg}</p>
+                </div>
+                <div className="text-right">
+                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+                    Your score
+                  </div>
+                  <div className={`font-sans text-3xl font-black ${focusDim.accentClass}`}>
+                    {Math.round(focusDim.value * 10)}/10
+                  </div>
                 </div>
               </div>
-            ) : null}
+            </div>
           </div>
+
+          <div className="mb-8 grid gap-4 sm:grid-cols-2">
+            <div className="glass-panel rounded-2xl p-6">
+              <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+                Trends
+              </span>
+              <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Question score</h3>
+              {questionScores.length >= 2 ? (
+                <Sparkline data={questionScores} stroke="#5B21B6" fill="rgba(91,33,182,0.12)" />
+              ) : (
+                <p className="text-sm text-aura-muted">Not enough scores yet.</p>
+              )}
+            </div>
+            <div className="glass-panel rounded-2xl p-6">
+              <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+                Trends
+              </span>
+              <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Eye contact</h3>
+              {eyeTrend.length >= 2 ? (
+                <Sparkline data={eyeTrend} stroke="#34d399" fill="rgba(16,185,129,0.10)" />
+              ) : (
+                <p className="text-sm text-aura-muted">No eye contact data yet.</p>
+              )}
+            </div>
+          </div>
+
           {overall !== null && (
-            <div className="text-center">
-              <ReportOverallRing score={overall} ringClass={overallRing} textClass={overallText} />
-              <p className="mt-2 text-[11px] font-medium text-aura-muted">AI content score</p>
+            <div
+              role="status"
+              aria-live="polite"
+              className={`mb-8 overflow-hidden rounded-2xl border bg-gradient-to-br px-5 py-5 text-[15px] leading-relaxed shadow-sm dark:text-slate-200 ${
+                overall >= 8
+                  ? "border-emerald-200/80 from-emerald-50/80 via-white to-white dark:border-emerald-500/25 dark:from-emerald-950/30 dark:via-slate-900/80 dark:to-slate-950"
+                  : overall >= 6
+                    ? "border-violet-200/80 from-violet-50/60 via-white to-white dark:border-violet-500/25 dark:from-violet-950/30 dark:via-slate-900/80 dark:to-slate-950"
+                    : overall >= 4
+                      ? "border-amber-200/80 from-amber-50/70 via-white to-white dark:border-amber-500/25 dark:from-amber-950/25 dark:via-slate-900/80 dark:to-slate-950"
+                      : "border-rose-200/80 from-rose-50/60 via-white to-white dark:border-rose-500/25 dark:from-rose-950/25 dark:via-slate-900/80 dark:to-slate-950"
+              }`}
+            >
+              <div
+                className={`mb-3 h-1 w-full rounded-full ${
+                  overall >= 8
+                    ? "bg-emerald-400/60"
+                    : overall >= 6
+                      ? "bg-violet-400/60"
+                      : overall >= 4
+                        ? "bg-amber-400/60"
+                        : "bg-rose-400/60"
+                }`}
+                aria-hidden
+              />
+              <h3 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                At a glance
+              </h3>
+              <p className="m-0 text-slate-700 dark:text-slate-200">
+                {overall >= 8
+                  ? "🌟 Outstanding performance! You're interview-ready."
+                  : overall >= 6
+                    ? "👍 Good job overall! Focus on the improvement areas below."
+                    : overall >= 4
+                      ? "📈 You're on the right track. Review the feedback carefully."
+                      : "💪 Keep practicing! Every session makes you better."}
+              </p>
             </div>
           )}
+
+          <div className="mb-8 rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-violet-50/40 to-orange-50/30 p-6 shadow-inner dark:border-slate-700 dark:from-slate-900/90 dark:via-slate-950 dark:to-violet-950/25 md:p-8">
+            <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
+                  Next 7 minutes
+                </p>
+                <h2 className="mt-1 font-brand text-xl font-semibold tracking-tight text-aura-ink dark:text-white md:text-2xl">
+                  Your next reps
+                </h2>
+                <p className="mt-1 max-w-xl text-sm text-aura-muted">
+                  Close the loop while the session is still fresh — three focused actions, no new tooling.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className="btn-outline px-4 py-2 text-xs"
+                  disabled={copying}
+                  aria-busy={copying}
+                  onClick={() => {
+                    const dateStr = new Date(interview.createdAt).toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    });
+                    const text = [
+                      `InterviewAI — Session summary`,
+                      `Role: ${interview.jobRole}`,
+                      `Date: ${dateStr}`,
+                      `Overall: ${overall ?? "—"}/10`,
+                      `Next focus: ${focusDim.key} (${Math.round(focusDim.value * 10)}/10)`,
+                      "",
+                      "Next reps:",
+                      ...nextRepsBullets.map((x, i) => `${i + 1}. ${x}`),
+                    ].join("\n");
+                    copyText(text, "Session summary copied");
+                  }}
+                >
+                  Copy summary
+                </button>
+                <button
+                  type="button"
+                  className="btn-outline px-4 py-2 text-xs"
+                  disabled={copying}
+                  aria-busy={copying}
+                  onClick={() => {
+                    const text = nextRepsBullets.map((x, i) => `${i + 1}. ${x}`).join("\n");
+                    copyText(text, "Next reps copied");
+                  }}
+                >
+                  Copy reps
+                </button>
+              </div>
+            </div>
+            <ol className="list-none space-y-3 p-0">
+              {nextRepsBullets.map((line, idx) => (
+                <li
+                  key={idx}
+                  className="flex gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3.5 text-[15px] leading-snug text-slate-800 dark:border-slate-700/80 dark:bg-slate-900/50 dark:text-slate-100"
+                >
+                  <span className="font-mono text-xs font-bold tabular-nums text-aura-violet dark:text-violet-300">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0 flex-1">{line}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <section
+            className="rounded-3xl border border-slate-200/90 bg-white/90 p-5 shadow-sm ring-1 ring-white/60 dark:border-slate-700/80 dark:bg-slate-900/75 dark:ring-slate-800/40 md:p-6"
+            aria-label="Report actions"
+          >
+            <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                  Export &amp; next steps
+                </p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  Download, share, or run another session with the same setup.
+                </p>
+              </div>
+              {shareUrl ? (
+                <span className="rounded-full border border-emerald-200/80 bg-emerald-50 px-3 py-1 text-[11px] font-semibold text-emerald-700 dark:border-emerald-500/25 dark:bg-emerald-950/35 dark:text-emerald-200">
+                  Share ready
+                </span>
+              ) : null}
+            </div>
+            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
+              <button
+                type="button"
+                className="btn-primary min-h-[44px] px-5 py-2.5 lg:col-span-2"
+                onClick={() => {
+                  generatePDFReport(interview);
+                  toast.success("PDF saved to your downloads");
+                }}
+              >
+                ↓ Download PDF Report
+              </button>
+              <button
+                type="button"
+                className="btn-outline min-h-[44px] px-5 py-2.5"
+                disabled={duplicating}
+                aria-busy={duplicating}
+                title="Same resume, JD, and settings — new AI question set. Counts toward your monthly plan."
+                onClick={onDuplicateSession}
+              >
+                {duplicating ? (
+                  <>
+                    <span className="spinner h-4 w-4" /> Generating…
+                  </>
+                ) : (
+                  "⟲ Same setup, new questions"
+                )}
+              </button>
+              <button
+                type="button"
+                className="btn-outline min-h-[44px] px-5 py-2.5"
+                disabled={sharing}
+                aria-busy={sharing}
+                onClick={async () => {
+                  if (shareUrl) {
+                    copyText(shareUrl, "Share link copied");
+                    return;
+                  }
+                  try {
+                    setSharing(true);
+                    const { data } = await createShareToken(interview._id);
+                    const url = `${window.location.origin}/share/${data.token}`;
+                    setShareUrl(url);
+                    if (navigator.clipboard?.writeText) {
+                      await navigator.clipboard.writeText(url);
+                      toast.success("Share link copied");
+                    } else {
+                      window.prompt("Copy this link:", url);
+                    }
+                  } catch (err) {
+                    toast.error(getApiErrorMessage(err, "Couldn’t create a share link."));
+                  } finally {
+                    setSharing(false);
+                  }
+                }}
+              >
+                {sharing ? (
+                  <>
+                    <span className="spinner h-4 w-4" /> Creating link…
+                  </>
+                ) : shareUrl ? (
+                  "⎘ Copy share link"
+                ) : (
+                  "↗ Share report"
+                )}
+              </button>
+              <Link to="/interview/new" className="no-underline">
+                <button type="button" className="btn-outline min-h-[44px] w-full px-5 py-2.5">
+                  + New Interview
+                </button>
+              </Link>
+              <Link to="/dashboard" className="no-underline">
+                <button type="button" className="btn-outline min-h-[44px] w-full px-5 py-2.5">
+                  ← Dashboard
+                </button>
+              </Link>
+            </div>
+          </section>
+
+          {shareUrl ? (
+            <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-violet-200/80 bg-gradient-to-br from-violet-50/50 to-white p-4 text-sm shadow-sm dark:border-violet-500/25 dark:from-violet-950/30 dark:to-slate-900/50 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-violet-700 dark:text-violet-300">
+                  Share link ready
+                </div>
+                <div className="truncate font-mono text-[13px] text-slate-700 dark:text-slate-200">
+                  {shareUrl}
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                  Anyone with this link can view this scorecard. It does not include your private prep notes.
+                </p>
+              </div>
+              <div className="flex shrink-0 flex-wrap gap-2 sm:pt-0.5">
+                <button
+                  type="button"
+                  className="btn-outline px-4 py-2 text-xs min-h-[40px]"
+                  disabled={copying}
+                  onClick={() => copyText(shareUrl, "Share link copied")}
+                >
+                  Copy
+                </button>
+                <a
+                  className="btn-outline inline-flex min-h-[40px] items-center px-4 py-2 text-xs no-underline"
+                  href={shareUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open
+                </a>
+              </div>
+            </div>
+          ) : null}
         </div>
 
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-3 dark:border-slate-700/70 dark:bg-slate-900/40">
-          <div>
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Delivery</span>
-            <h2 className="mt-1 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Session metrics</h2>
-          </div>
-          <span className="rounded-full border border-violet-200/80 bg-violet-50/90 px-3 py-1 text-[11px] font-semibold text-violet-800 dark:border-violet-500/30 dark:bg-violet-950/40 dark:text-violet-200">
-            {answered.length}/{totalQuestions} answered
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3 scroll-mt-6">
+          <h2
+            id="report-questions"
+            tabIndex={-1}
+            className="text-xl font-bold tracking-tight text-aura-ink outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page rounded-sm dark:text-slate-100"
+          >
+            Question-by-question breakdown
+          </h2>
+          <span className="rounded-full border border-slate-200/90 bg-white/90 px-3 py-1 text-xs font-semibold tabular-nums text-slate-600 shadow-sm dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-300">
+            {interview.questions.length} question{interview.questions.length === 1 ? "" : "s"}
           </span>
         </div>
-        <div className="mb-8 grid gap-3 sm:grid-cols-2">
-          <StatCard
-            label="Avg eye contact"
-            value={interview.avgEyeContact !== null ? `${interview.avgEyeContact}%` : null}
-            colorClass={
-              interview.avgEyeContact > 70 ? "text-emerald-600" : interview.avgEyeContact > 40 ? "text-amber-600" : "text-rose-600"
-            }
-            accent="from-emerald-500 to-teal-400"
-          />
-          <StatCard
-            label="Avg confidence (ML)"
-            value={interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : null}
-            colorClass="text-violet-600"
-            accent="from-violet-500 to-fuchsia-500"
-          />
-          <StatCard
-            label="Avg speech pace"
-            value={interview.avgPace ? `${interview.avgPace} wpm` : null}
-            sub={interview.avgPace ? (interview.avgPace >= 100 && interview.avgPace <= 180 ? "good pace" : "needs adjustment") : null}
-            colorClass={interview.avgPace >= 100 && interview.avgPace <= 180 ? "text-emerald-600" : "text-amber-600"}
-            accent="from-amber-500 to-orange-400"
-          />
-          <StatCard
-            label="Avg filler words / Q"
-            value={interview.avgFillerWords !== null ? interview.avgFillerWords : null}
-            colorClass={
-              interview.avgFillerWords <= 2 ? "text-emerald-600" : interview.avgFillerWords <= 5 ? "text-amber-600" : "text-rose-600"
-            }
-            accent="from-rose-500 to-pink-500"
-          />
+        <div className="flex flex-col gap-4">
+          {interview.questions.map((q, i) => (
+            <QuestionCard key={q._id} question={q} index={i} />
+          ))}
         </div>
 
-        <section className="mb-8" aria-labelledby="report-prep-brief-heading">
-          <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
-            <div>
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-violet-600 dark:text-violet-300">Before you practiced</span>
-              <h2 id="report-prep-brief-heading" className="mt-1 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
-                Resume prep brief
-              </h2>
-            </div>
-            {interview.prepBrief?.status === "ready" && interview.prepBrief?.matchScore != null ? (
-              <span className="rounded-full border border-violet-200/80 bg-violet-50/80 px-3 py-1 text-xs font-semibold tabular-nums text-violet-800 dark:border-violet-500/30 dark:bg-violet-950/40 dark:text-violet-200">
-                {interview.prepBrief.matchScore}% fit
-              </span>
-            ) : null}
-          </div>
-          <div className="glass-panel rounded-3xl p-4 ring-1 ring-violet-200/40 dark:ring-violet-500/20 md:p-5">
-            <PrepBriefPanel
-              interviewId={id}
-              prepBrief={interview.prepBrief}
-              onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
-              defaultOpen={interview.prepBrief?.status === "ready"}
-            />
-          </div>
-        </section>
-
-        {(peerAvgScore != null && scoreVsPeer != null) || weakPrimary.length > 0 ? (
-          <div className="mb-8 grid gap-4 md:grid-cols-2">
-            {peerAvgScore != null && scoreVsPeer != null ? (
-              <div className="glass-panel relative overflow-hidden rounded-3xl p-6 md:p-7">
-                <span className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-violet-500 to-fuchsia-500" aria-hidden />
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Benchmark</span>
-                <h2 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">This session vs your average</h2>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                  Avg overall score across your other <span className="font-semibold text-aura-ink dark:text-slate-200">{peerCompleted.length}</span>{" "}
-                  completed session{peerCompleted.length === 1 ? "" : "s"}:{" "}
-                  <span className="font-bold tabular-nums text-violet-600 dark:text-violet-300">{peerAvgScore.toFixed(1)}</span>
-                  <span className="text-aura-muted"> /10</span>
-                </p>
-                <p className="mt-4 inline-flex items-baseline rounded-2xl border border-slate-200/80 bg-slate-50/80 px-4 py-2 text-2xl font-black tabular-nums tracking-tight text-aura-ink dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-white">
-                  {scoreVsPeer > 0 ? "+" : ""}
-                  {scoreVsPeer}
-                  <span className="ml-2 text-base font-semibold text-slate-500 dark:text-slate-400">vs avg</span>
-                </p>
-                <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">
-                  {scoreVsPeer >= 0.5
-                    ? "Ahead of your recent baseline — keep pressure on delivery."
-                    : scoreVsPeer <= -0.5
-                      ? "Below your recent baseline — mine the per-question feedback for the gap."
-                      : "Roughly on par with your recent baseline — tighten one axis next rep."}
-                </p>
-              </div>
-            ) : null}
-            {weakPrimary.length > 0 ? (
-              <div className="glass-panel relative overflow-hidden rounded-3xl border border-amber-200/60 bg-amber-50/25 p-6 dark:border-amber-500/25 dark:bg-amber-950/20 md:p-7">
-                <span className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-400 to-orange-500" aria-hidden />
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-amber-800 dark:text-amber-200">Drill targets</span>
-                <h2 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Lowest-scoring primaries</h2>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Re-answer these out loud before your next mock — same STAR depth, sharper metrics.</p>
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                  <div className="text-xs font-medium text-amber-900/70 dark:text-amber-100/70">
-                    {weakPrimary.length} item{weakPrimary.length === 1 ? "" : "s"}
-                  </div>
-                  <button
-                    type="button"
-                    className="btn-outline border-amber-300/70 bg-white/80 px-4 py-2 text-xs text-amber-900 hover:bg-white dark:border-amber-500/30 dark:bg-slate-900/40 dark:text-amber-100"
-                    disabled={copying}
-                    onClick={() => {
-                      const text = weakPrimary.map((q, i) => `${i + 1}. ${q.score}/10 — ${q.text}`).join("\n");
-                      copyText(text, "Drill targets copied");
-                    }}
-                  >
-                    Copy drill list
-                  </button>
-                </div>
-                <ol className="mt-4 list-none space-y-3 p-0 text-sm text-slate-800 dark:text-slate-200">
-                  {weakPrimary.map((q) => (
-                    <li key={q._id} className="rounded-2xl border border-amber-200/70 bg-white/75 px-4 py-3 dark:border-amber-500/20 dark:bg-slate-900/45">
-                      <span className="mb-1 inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-xs font-bold tabular-nums text-rose-700 dark:bg-rose-950/30 dark:text-rose-300">{q.score}/10</span>
-                      <span className="block leading-snug">{q.text}</span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-
-        <div className="glass-panel mb-8 rounded-3xl border border-violet-200/40 bg-white/85 p-6 dark:border-violet-500/20 dark:bg-slate-900/70 md:p-7">
-          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <span className="section-eyebrow mb-2">Private prep zone</span>
-              <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Your next real loop</h2>
-              <p className="mt-1 max-w-2xl text-sm text-slate-600 dark:text-slate-400">
-                Capture stories to tighten, questions to ask them, and reminders for the human round. Only you can see this — it is never included in share links.
-              </p>
-            </div>
-            <div className="flex flex-col items-start gap-2 sm:items-end">
-              <button
-                type="button"
-                className="btn-outline px-3 py-2 text-xs"
-                disabled={!prepNotes.trim() || copying}
-                onClick={() => copyText(prepNotes, "Prep notes copied")}
-              >
-                Copy notes
-              </button>
-              <span className="rounded-full border border-slate-200/80 bg-slate-50/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-400" aria-live="polite">
-                {notesStatus === "saving" && "Saving..."}
-                {notesStatus === "saved" && "Saved"}
-                {notesStatus === "error" && "Save failed"}
-                {notesStatus === "idle" && "Private"}
-              </span>
-            </div>
-          </div>
-          <div className="mb-4 rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-700/80 dark:bg-slate-950/30">
-            <label htmlFor="prep-target-company" className="label-field">
-              Target company or team
-            </label>
-            <input
-              id="prep-target-company"
-              className="input-field max-w-xl"
-              value={prepCompany}
-              onChange={(e) => setPrepCompany(e.target.value.slice(0, 120))}
-              onBlur={onSaveCompany}
-              placeholder="e.g. Meta, Series B startup, client name"
-              maxLength={120}
-            />
-          </div>
-          <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-700/80 dark:bg-slate-950/30">
-            <label htmlFor="prep-notes" className="label-field">
-              Prep notes
-            </label>
-            <textarea
-              id="prep-notes"
-              className="input-field min-h-[140px] resize-y"
-              value={prepNotes}
-              onChange={(e) => setPrepNotes(e.target.value.slice(0, 8000))}
-              placeholder="What will you rehearse before the real interview? Metrics to add, weak follow-ups, questions for the panel…"
-              maxLength={8000}
-            />
-            <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">{prepNotes.length.toLocaleString()} / 8,000 · autosaves as you type</p>
-          </div>
-        </div>
-
-        <div className="glass-panel mb-8 rounded-3xl p-6 md:p-8">
-          <div className="mb-6 flex flex-wrap items-start justify-between gap-6">
-            <div>
-              <span className="mb-3 inline-block rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted dark:border-slate-600 dark:bg-slate-800/80">
-                Metric radar
-              </span>
-              <h2 className="text-xl font-bold tracking-tight text-aura-ink">Your coaching snapshot</h2>
-              <p className="mt-1 text-sm text-aura-muted">Larger shape = better performance for that dimension.</p>
-            </div>
-            <div className="max-w-[min(100%,260px)] rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 text-left dark:border-slate-600/60 dark:bg-slate-800/50">
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">How to read</div>
-              <ul className="space-y-2 text-xs leading-snug text-slate-600 dark:text-slate-400">
-                <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Eye</span> — higher is better
-                </li>
-                <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Conf</span> — confidence (ML), higher is better
-                </li>
-                <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Pace</span> — aim near 130–170 wpm
-                </li>
-                <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Fill</span> — filler words; lower is better
-                </li>
-                <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Overall</span> — blended content score
-                </li>
-              </ul>
-            </div>
-          </div>
-          <RadarChart metrics={radarMetrics} stroke="#E85547" fill="rgba(91,33,182,0.14)" />
-
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/90 p-5 dark:border-slate-700 dark:bg-slate-900/60">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-aura-coral">Next focus</div>
-                <div className={`mb-1 font-sans text-xl font-extrabold ${focusDim.accentClass}`}>{focusDim.key}</div>
-                <p className="max-w-md text-sm leading-relaxed text-aura-muted">{focusDim.msg}</p>
-              </div>
-              <div className="text-right">
-                <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Your score</div>
-                <div className={`font-sans text-3xl font-black ${focusDim.accentClass}`}>{Math.round(focusDim.value * 10)}/10</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-8 grid gap-4 sm:grid-cols-2">
-          <div className="glass-panel rounded-2xl p-6">
-            <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
-            <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Question score</h3>
-            {questionScores.length >= 2 ? (
-              <Sparkline data={questionScores} stroke="#5B21B6" fill="rgba(91,33,182,0.12)" />
-            ) : (
-              <p className="text-sm text-aura-muted">Not enough scores yet.</p>
-            )}
-          </div>
-          <div className="glass-panel rounded-2xl p-6">
-            <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
-            <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Eye contact</h3>
-            {eyeTrend.length >= 2 ? (
-              <Sparkline data={eyeTrend} stroke="#34d399" fill="rgba(16,185,129,0.10)" />
-            ) : (
-              <p className="text-sm text-aura-muted">No eye contact data yet.</p>
-            )}
-          </div>
-        </div>
-
-        {overall !== null && (
-          <div
-            role="status"
-            aria-live="polite"
-            className={`mb-8 overflow-hidden rounded-2xl border bg-gradient-to-br px-5 py-5 text-[15px] leading-relaxed shadow-sm dark:text-slate-200 ${
-              overall >= 8
-                ? "border-emerald-200/80 from-emerald-50/80 via-white to-white dark:border-emerald-500/25 dark:from-emerald-950/30 dark:via-slate-900/80 dark:to-slate-950"
-                : overall >= 6
-                  ? "border-violet-200/80 from-violet-50/60 via-white to-white dark:border-violet-500/25 dark:from-violet-950/30 dark:via-slate-900/80 dark:to-slate-950"
-                  : overall >= 4
-                    ? "border-amber-200/80 from-amber-50/70 via-white to-white dark:border-amber-500/25 dark:from-amber-950/25 dark:via-slate-900/80 dark:to-slate-950"
-                    : "border-rose-200/80 from-rose-50/60 via-white to-white dark:border-rose-500/25 dark:from-rose-950/25 dark:via-slate-900/80 dark:to-slate-950"
-            }`}
-          >
-            <div
-              className={`mb-3 h-1 w-full rounded-full ${
-                overall >= 8 ? "bg-emerald-400/60" : overall >= 6 ? "bg-violet-400/60" : overall >= 4 ? "bg-amber-400/60" : "bg-rose-400/60"
-              }`}
-              aria-hidden
-            />
-            <h3 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">At a glance</h3>
-            <p className="m-0 text-slate-700 dark:text-slate-200">
-              {overall >= 8
-                ? "🌟 Outstanding performance! You're interview-ready."
-                : overall >= 6
-                  ? "👍 Good job overall! Focus on the improvement areas below."
-                  : overall >= 4
-                    ? "📈 You're on the right track. Review the feedback carefully."
-                    : "💪 Keep practicing! Every session makes you better."}
-            </p>
-          </div>
-        )}
-
-        <div className="mb-8 rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-violet-50/40 to-orange-50/30 p-6 shadow-inner dark:border-slate-700 dark:from-slate-900/90 dark:via-slate-950 dark:to-violet-950/25 md:p-8">
-          <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Next 7 minutes</p>
-              <h2 className="mt-1 font-brand text-xl font-semibold tracking-tight text-aura-ink dark:text-white md:text-2xl">Your next reps</h2>
-              <p className="mt-1 max-w-xl text-sm text-aura-muted">Close the loop while the session is still fresh — three focused actions, no new tooling.</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                className="btn-outline px-4 py-2 text-xs"
-                disabled={copying}
-                aria-busy={copying}
-                onClick={() => {
-                  const dateStr = new Date(interview.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-                  const text = [
-                    `InterviewAI — Session summary`,
-                    `Role: ${interview.jobRole}`,
-                    `Date: ${dateStr}`,
-                    `Overall: ${overall ?? "—"}/10`,
-                    `Next focus: ${focusDim.key} (${Math.round(focusDim.value * 10)}/10)`,
-                    "",
-                    "Next reps:",
-                    ...nextRepsBullets.map((x, i) => `${i + 1}. ${x}`),
-                  ].join("\n");
-                  copyText(text, "Session summary copied");
-                }}
-              >
-                Copy summary
-              </button>
-              <button
-                type="button"
-                className="btn-outline px-4 py-2 text-xs"
-                disabled={copying}
-                aria-busy={copying}
-                onClick={() => {
-                  const text = nextRepsBullets.map((x, i) => `${i + 1}. ${x}`).join("\n");
-                  copyText(text, "Next reps copied");
-                }}
-              >
-                Copy reps
-              </button>
-            </div>
-          </div>
-          <ol className="list-none space-y-3 p-0">
-            {nextRepsBullets.map((line, idx) => (
-              <li
-                key={idx}
-                className="flex gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3.5 text-[15px] leading-snug text-slate-800 dark:border-slate-700/80 dark:bg-slate-900/50 dark:text-slate-100"
-              >
-                <span className="font-mono text-xs font-bold tabular-nums text-aura-violet dark:text-violet-300">{String(idx + 1).padStart(2, "0")}</span>
-                <span className="min-w-0 flex-1">{line}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <section
-          className="rounded-3xl border border-slate-200/90 bg-white/90 p-5 shadow-sm ring-1 ring-white/60 dark:border-slate-700/80 dark:bg-slate-900/75 dark:ring-slate-800/40 md:p-6"
-          aria-label="Report actions"
-        >
-          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Export &amp; next steps</p>
-              <p className="text-sm text-slate-600 dark:text-slate-400">Download, share, or run another session with the same setup.</p>
-            </div>
-            {shareUrl ? (
-              <span className="rounded-full border border-emerald-200/80 bg-emerald-50 px-3 py-1 text-[11px] font-semibold text-emerald-700 dark:border-emerald-500/25 dark:bg-emerald-950/35 dark:text-emerald-200">
-                Share ready
-              </span>
-            ) : null}
-          </div>
-          <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
-          <button
-            type="button"
-            className="btn-primary min-h-[44px] px-5 py-2.5 lg:col-span-2"
-            onClick={() => {
-              generatePDFReport(interview);
-              toast.success("PDF saved to your downloads");
-            }}
-          >
-            ↓ Download PDF Report
-          </button>
-          <button
-            type="button"
-            className="btn-outline min-h-[44px] px-5 py-2.5"
-            disabled={duplicating}
-            aria-busy={duplicating}
-            title="Same resume, JD, and settings — new AI question set. Counts toward your monthly plan."
-            onClick={onDuplicateSession}
-          >
-            {duplicating ? (
-              <>
-                <span className="spinner h-4 w-4" /> Generating…
-              </>
-            ) : (
-              "⟲ Same setup, new questions"
-            )}
-          </button>
-          <button
-            type="button"
-            className="btn-outline min-h-[44px] px-5 py-2.5"
-            disabled={sharing}
-            aria-busy={sharing}
-            onClick={async () => {
-              if (shareUrl) {
-                copyText(shareUrl, "Share link copied");
-                return;
-              }
-              try {
-                setSharing(true);
-                const { data } = await createShareToken(interview._id);
-                const url = `${window.location.origin}/share/${data.token}`;
-                setShareUrl(url);
-                if (navigator.clipboard?.writeText) {
-                  await navigator.clipboard.writeText(url);
-                  toast.success("Share link copied");
-                } else {
-                  window.prompt("Copy this link:", url);
-                }
-              } catch (err) {
-                toast.error(getApiErrorMessage(err, "Couldn’t create a share link."));
-              } finally {
-                setSharing(false);
-              }
-            }}
-          >
-            {sharing ? (
-              <>
-                <span className="spinner h-4 w-4" /> Creating link…
-              </>
-            ) : (
-              shareUrl ? "⎘ Copy share link" : "↗ Share report"
-            )}
-          </button>
-          <Link to="/interview/new" className="no-underline">
-            <button type="button" className="btn-outline min-h-[44px] w-full px-5 py-2.5">
-              + New Interview
-            </button>
-          </Link>
-          <Link to="/dashboard" className="no-underline">
-            <button type="button" className="btn-outline min-h-[44px] w-full px-5 py-2.5">
-              ← Dashboard
+        <div className="py-12 text-center">
+          <Link to="/interview/new">
+            <button type="button" className="btn-primary px-8 py-3 text-[15px]">
+              Start Another Interview →
             </button>
           </Link>
         </div>
-        </section>
-
-        {shareUrl ? (
-          <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-violet-200/80 bg-gradient-to-br from-violet-50/50 to-white p-4 text-sm shadow-sm dark:border-violet-500/25 dark:from-violet-950/30 dark:to-slate-900/50 sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-violet-700 dark:text-violet-300">Share link ready</div>
-              <div className="truncate font-mono text-[13px] text-slate-700 dark:text-slate-200">{shareUrl}</div>
-              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                Anyone with this link can view this scorecard. It does not include your private prep notes.
-              </p>
-            </div>
-            <div className="flex shrink-0 flex-wrap gap-2 sm:pt-0.5">
-              <button type="button" className="btn-outline px-4 py-2 text-xs min-h-[40px]" disabled={copying} onClick={() => copyText(shareUrl, "Share link copied")}>
-                Copy
-              </button>
-              <a className="btn-outline inline-flex min-h-[40px] items-center px-4 py-2 text-xs no-underline" href={shareUrl} target="_blank" rel="noreferrer">
-                Open
-              </a>
-            </div>
-          </div>
-        ) : null}
-      </div>
-
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-3 scroll-mt-6">
-        <h2
-          id="report-questions"
-          tabIndex={-1}
-          className="text-xl font-bold tracking-tight text-aura-ink outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page rounded-sm dark:text-slate-100"
-        >
-          Question-by-question breakdown
-        </h2>
-        <span className="rounded-full border border-slate-200/90 bg-white/90 px-3 py-1 text-xs font-semibold tabular-nums text-slate-600 shadow-sm dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-300">
-          {interview.questions.length} question{interview.questions.length === 1 ? "" : "s"}
-        </span>
-      </div>
-      <div className="flex flex-col gap-4">
-        {interview.questions.map((q, i) => (
-          <QuestionCard key={q._id} question={q} index={i} />
-        ))}
-      </div>
-
-      <div className="py-12 text-center">
-        <Link to="/interview/new">
-          <button type="button" className="btn-primary px-8 py-3 text-[15px]">
-            Start Another Interview →
-          </button>
-        </Link>
-      </div>
       </main>
     </div>
   );

@@ -89,7 +89,15 @@ const useInView = (threshold = 0.15) => {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold });
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold }
+    );
     obs.observe(el);
     return () => obs.disconnect();
   }, [threshold]);
@@ -117,11 +125,17 @@ function Grain() {
   const { theme } = useTheme();
   const opacity = theme === "dark" ? 0.035 : 0.018;
   return (
-    <div aria-hidden style={{
-      position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none",
-      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-      opacity,
-    }} />
+    <div
+      aria-hidden
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 1,
+        pointerEvents: "none",
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+        opacity,
+      }}
+    />
   );
 }
 
@@ -151,17 +165,19 @@ function EditorialDivider() {
 function SectionLabel({ children }) {
   const { palette: C } = useTheme();
   return (
-    <span style={{
-      display: "inline-block",
-      fontFamily: "'DM Mono', monospace",
-      fontSize: 10.5,
-      fontWeight: 500,
-      letterSpacing: "0.16em",
-      textTransform: "uppercase",
-      color: C.muted,
-      opacity: 0.75,
-      marginBottom: 18,
-    }}>
+    <span
+      style={{
+        display: "inline-block",
+        fontFamily: "'DM Mono', monospace",
+        fontSize: 10.5,
+        fontWeight: 500,
+        letterSpacing: "0.16em",
+        textTransform: "uppercase",
+        color: C.muted,
+        opacity: 0.75,
+        marginBottom: 18,
+      }}
+    >
       {children}
     </span>
   );
@@ -172,22 +188,33 @@ function Marquee({ items, speed = 30 }) {
   const { palette: C } = useTheme();
   const doubled = [...items, ...items];
   return (
-    <div style={{ overflow: "hidden", position: "relative", WebkitMaskImage: "linear-gradient(to right,transparent,black 15%,black 85%,transparent)" }}>
+    <div
+      style={{
+        overflow: "hidden",
+        position: "relative",
+        WebkitMaskImage: "linear-gradient(to right,transparent,black 15%,black 85%,transparent)",
+      }}
+    >
       <motion.div
         animate={{ x: ["0%", "-50%"] }}
         transition={{ repeat: Infinity, ease: "linear", duration: speed, repeatType: "loop" }}
         style={{ display: "flex", gap: 64, whiteSpace: "nowrap", width: "max-content" }}
       >
         {doubled.map((item, i) => (
-          <span key={i} style={{
-            fontFamily: BODY_FONT_STACK,
-            fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
-            fontWeight: 600,
-            color: C.marqueeText,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            fontStyle: "normal",
-          }}>{item}</span>
+          <span
+            key={i}
+            style={{
+              fontFamily: BODY_FONT_STACK,
+              fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
+              fontWeight: 600,
+              color: C.marqueeText,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              fontStyle: "normal",
+            }}
+          >
+            {item}
+          </span>
         ))}
       </motion.div>
     </div>
@@ -216,9 +243,12 @@ function StatCard({ value, label, delay = 0, accentIndex = 0 }) {
         borderRadius: 20,
         padding: "32px 28px",
         textAlign: "center",
-        boxShadow: hovered ? `0 18px 48px -16px ${accent}28, 0 1px 0 0 rgba(255,255,255,0.06) inset` : C.cardShadow,
+        boxShadow: hovered
+          ? `0 18px 48px -16px ${accent}28, 0 1px 0 0 rgba(255,255,255,0.06) inset`
+          : C.cardShadow,
         transform: hovered ? "translateY(-3px)" : "translateY(0)",
-        transition: "transform 0.28s cubic-bezier(0.16,1,0.3,1), box-shadow 0.28s ease, border-color 0.28s ease",
+        transition:
+          "transform 0.28s cubic-bezier(0.16,1,0.3,1), box-shadow 0.28s ease, border-color 0.28s ease",
       }}
     >
       <motion.div
@@ -282,7 +312,8 @@ function FeatureCard({ f, idx }) {
         background: C.card,
         border: `1px solid ${hovered ? f.accent + "33" : C.border}`,
         boxShadow: hovered ? `0 14px 40px ${f.accent}10` : C.cardShadow,
-        transition: "border-color 0.25s ease, box-shadow 0.25s ease, transform 0.28s cubic-bezier(0.16,1,0.3,1)",
+        transition:
+          "border-color 0.25s ease, box-shadow 0.25s ease, transform 0.28s cubic-bezier(0.16,1,0.3,1)",
         cursor: "default",
         transform: hovered ? "translateY(-2px)" : "translateY(0)",
       }}
@@ -302,40 +333,60 @@ function FeatureCard({ f, idx }) {
           background: `linear-gradient(90deg, ${f.accent}, ${f.accent}88)`,
         }}
       />
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
-        <span style={{
-          fontFamily: "'DM Mono', monospace",
-          fontSize: 11,
-          fontWeight: 700,
-          color: f.accent,
-          letterSpacing: "0.18em",
-          opacity: 0.85,
-        }}>{f.num}</span>
-        {f.badge ? (
-          <span style={{
-            display: "inline-flex",
-            alignItems: "center",
-            padding: "2px 8px",
-            borderRadius: 999,
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+          marginBottom: 14,
+        }}
+      >
+        <span
+          style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 10,
+            fontSize: 11,
             fontWeight: 700,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
             color: f.accent,
-            background: `${f.accent}1a`,
-            border: `1px solid ${f.accent}33`,
-          }}>{f.badge}</span>
+            letterSpacing: "0.18em",
+            opacity: 0.85,
+          }}
+        >
+          {f.num}
+        </span>
+        {f.badge ? (
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              padding: "2px 8px",
+              borderRadius: 999,
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: f.accent,
+              background: `${f.accent}1a`,
+              border: `1px solid ${f.accent}33`,
+            }}
+          >
+            {f.badge}
+          </span>
         ) : null}
       </div>
-      <h3 style={{
-        fontFamily: BODY_FONT_STACK,
-        fontSize: 20,
-        fontWeight: 700,
-        color: C.ink,
-        marginBottom: 10,
-        lineHeight: 1.25,
-      }}>{f.title}</h3>
+      <h3
+        style={{
+          fontFamily: BODY_FONT_STACK,
+          fontSize: 20,
+          fontWeight: 700,
+          color: C.ink,
+          marginBottom: 10,
+          lineHeight: 1.25,
+        }}
+      >
+        {f.title}
+      </h3>
       <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.8, fontFamily: BODY_FONT_STACK }}>{f.body}</p>
     </motion.div>
   );
@@ -371,9 +422,7 @@ function CtaButton({ to, children }) {
           letterSpacing: "-0.005em",
           textTransform: "none",
           cursor: "pointer",
-          boxShadow: hovered
-            ? `0 18px 48px ${C.coral}40, 0 0 0 1px ${C.coral}26`
-            : `0 8px 28px ${C.coral}24`,
+          boxShadow: hovered ? `0 18px 48px ${C.coral}40, 0 0 0 1px ${C.coral}26` : `0 8px 28px ${C.coral}24`,
           transition: "box-shadow 0.3s ease, background 0.3s ease",
         }}
       >
@@ -394,25 +443,26 @@ function GhostButton({ to, children }) {
       style={{ textDecoration: "none" }}
       className="inline-flex rounded-full outline-none focus-visible:ring-2 focus-visible:ring-violet-500/45 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
     >
-      <span style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 10,
-        padding: "15px 30px",
-        borderRadius: 999,
-        border: `1px solid ${hovered ? C.ink : C.border}`,
-        color: hovered ? C.ink : C.muted,
-        fontFamily: BODY_FONT_STACK,
-        fontSize: 14,
-        fontWeight: 500,
-        letterSpacing: "-0.005em",
-        textTransform: "none",
-        transition: "all 0.25s ease",
-        cursor: "pointer",
-        background: hovered ? `${C.ink}05` : "transparent",
-      }}
-        onMouseEnter={e => e.currentTarget.style.borderColor = C.ink}
-        onMouseLeave={e => e.currentTarget.style.borderColor = C.border}
+      <span
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "15px 30px",
+          borderRadius: 999,
+          border: `1px solid ${hovered ? C.ink : C.border}`,
+          color: hovered ? C.ink : C.muted,
+          fontFamily: BODY_FONT_STACK,
+          fontSize: 14,
+          fontWeight: 500,
+          letterSpacing: "-0.005em",
+          textTransform: "none",
+          transition: "all 0.25s ease",
+          cursor: "pointer",
+          background: hovered ? `${C.ink}05` : "transparent",
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.borderColor = C.ink)}
+        onMouseLeave={(e) => (e.currentTarget.style.borderColor = C.border)}
       >
         {children}
       </span>
@@ -482,7 +532,10 @@ export default function LandingPage() {
     if (!location.hash) return;
     const id = location.hash.replace("#", "");
     const el = document.getElementById(id);
-    if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }));
+    if (el)
+      requestAnimationFrame(() =>
+        el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" })
+      );
   }, [location.hash, reduceMotion]);
 
   useEffect(() => {
@@ -554,7 +607,10 @@ export default function LandingPage() {
           <div className="w-full min-w-0">
             <TrustLogoRail />
           </div>
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-2" aria-label="Trust strip highlights">
+          <div
+            className="mt-7 flex flex-wrap items-center justify-center gap-2"
+            aria-label="Trust strip highlights"
+          >
             {["Built for campus loops", "Resume-aware practice", "Private scorecards"].map((item) => (
               <span
                 key={item}
@@ -604,30 +660,49 @@ export default function LandingPage() {
             pointerEvents: "none",
           }}
         />
-        <div style={{ textAlign: "center", marginBottom: 56, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: 56,
+            maxWidth: 560,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
           <SectionLabel>The product, in three numbers</SectionLabel>
-          <h2 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(1.5rem, 3.2vw, 2rem)",
-            fontWeight: 600,
-            color: C.ink,
-            letterSpacing: "-0.018em",
-            margin: 0,
-            lineHeight: 1.25,
-          }}>
+          <h2
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(1.5rem, 3.2vw, 2rem)",
+              fontWeight: 600,
+              color: C.ink,
+              letterSpacing: "-0.018em",
+              margin: 0,
+              lineHeight: 1.25,
+            }}
+          >
             What every session actually gives you.
           </h2>
         </div>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: 20,
-        }}>
-          {STATS.map((s, i) => <StatCard key={s.value} {...s} delay={i * 0.08} accentIndex={i} />)}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: 20,
+          }}
+        >
+          {STATS.map((s, i) => (
+            <StatCard key={s.value} {...s} delay={i * 0.08} accentIndex={i} />
+          ))}
         </div>
         <div className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-3 text-center text-xs font-medium text-slate-600 shadow-sm backdrop-blur-sm dark:border-slate-700/70 dark:bg-slate-900/50 dark:text-slate-300">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">Every mock includes</span>
-          <span className="hidden h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600 sm:inline-block" aria-hidden />
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
+            Every mock includes
+          </span>
+          <span
+            className="hidden h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600 sm:inline-block"
+            aria-hidden
+          />
           <span>tailored questions, live delivery signals, and a scorecard you can export.</span>
         </div>
       </section>
@@ -655,18 +730,32 @@ export default function LandingPage() {
         }}
       >
         {/* ambient orbs */}
-        <div aria-hidden style={{
-          position: "absolute", top: -120, left: "20%",
-          width: 600, height: 600, borderRadius: "50%",
-          background: `radial-gradient(circle, ${C.coral}18, transparent 65%)`,
-          pointerEvents: "none",
-        }} />
-        <div aria-hidden style={{
-          position: "absolute", bottom: -80, right: "15%",
-          width: 500, height: 500, borderRadius: "50%",
-          background: `radial-gradient(circle, ${C.violet}18, transparent 65%)`,
-          pointerEvents: "none",
-        }} />
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: -120,
+            left: "20%",
+            width: 600,
+            height: 600,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${C.coral}18, transparent 65%)`,
+            pointerEvents: "none",
+          }}
+        />
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            bottom: -80,
+            right: "15%",
+            width: 500,
+            height: 500,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${C.violet}18, transparent 65%)`,
+            pointerEvents: "none",
+          }}
+        />
         <div
           aria-hidden
           style={{
@@ -684,27 +773,31 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1120, margin: "0 auto", position: "relative", zIndex: 2 }}>
           <div style={{ marginBottom: 56, maxWidth: 720 }}>
             <SectionLabel>Outcome engine</SectionLabel>
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(1.85rem, 3.6vw, 2.65rem)",
-              fontWeight: 600,
-              color: "white",
-              lineHeight: 1.18,
-              letterSpacing: "-0.018em",
-              margin: 0,
-            }}>
+            <h2
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "clamp(1.85rem, 3.6vw, 2.65rem)",
+                fontWeight: 600,
+                color: "white",
+                lineHeight: 1.18,
+                letterSpacing: "-0.018em",
+                margin: 0,
+              }}
+            >
               Four signals every loop runs through, before you walk into the real one.
             </h2>
           </div>
 
           {/* table */}
-          <div style={{
-            border: `1px solid rgba(255,255,255,0.08)`,
-            borderRadius: 20,
-            overflow: "hidden",
-            background: "rgba(255,255,255,0.03)",
-            backdropFilter: "blur(10px)",
-          }}>
+          <div
+            style={{
+              border: `1px solid rgba(255,255,255,0.08)`,
+              borderRadius: 20,
+              overflow: "hidden",
+              background: "rgba(255,255,255,0.03)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
             {/* header row — desktop table only; mobile uses stacked row labels */}
             <div
               className="hidden border-b border-white/[0.06] px-8 py-4 md:grid"
@@ -714,15 +807,20 @@ export default function LandingPage() {
               }}
             >
               <span aria-hidden style={{ width: 28 }} />
-              {["Candidate outcome", "Experience layer", "What improves"].map(h => (
-                <span key={h} style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: 10,
-                  fontWeight: 600,
-                  letterSpacing: "0.3em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.3)",
-                }}>{h}</span>
+              {["Candidate outcome", "Experience layer", "What improves"].map((h) => (
+                <span
+                  key={h}
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 10,
+                    fontWeight: 600,
+                    letterSpacing: "0.3em",
+                    textTransform: "uppercase",
+                    color: "rgba(255,255,255,0.3)",
+                  }}
+                >
+                  {h}
+                </span>
               ))}
             </div>
             {ENGINES.map((e, i) => (
@@ -733,7 +831,16 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES GRID ── */}
-      <section id="features" style={{ maxWidth: 1120, margin: "0 auto", padding: "96px 24px", scrollMarginTop: "5.5rem", position: "relative" }}>
+      <section
+        id="features"
+        style={{
+          maxWidth: 1120,
+          margin: "0 auto",
+          padding: "96px 24px",
+          scrollMarginTop: "5.5rem",
+          position: "relative",
+        }}
+      >
         <div id="whats-new" className="sr-only" aria-hidden>
           What&apos;s new
         </div>
@@ -750,27 +857,42 @@ export default function LandingPage() {
             pointerEvents: "none",
           }}
         />
-        <div style={{ textAlign: "center", marginBottom: 64, maxWidth: 640, marginLeft: "auto", marginRight: "auto", position: "relative" }}>
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: 64,
+            maxWidth: 640,
+            marginLeft: "auto",
+            marginRight: "auto",
+            position: "relative",
+          }}
+        >
           <SectionLabel>What's inside</SectionLabel>
-          <h2 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(1.85rem, 3.6vw, 2.65rem)",
-            fontWeight: 600,
-            color: C.ink,
-            lineHeight: 1.2,
-            letterSpacing: "-0.018em",
-            margin: 0,
-          }}>
+          <h2
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(1.85rem, 3.6vw, 2.65rem)",
+              fontWeight: 600,
+              color: C.ink,
+              lineHeight: 1.2,
+              letterSpacing: "-0.018em",
+              margin: 0,
+            }}
+          >
             Four primitives. One sharper round.
           </h2>
         </div>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          gap: 20,
-          position: "relative",
-        }}>
-          {FEATURES.map((f, i) => <FeatureCard key={f.num} f={f} idx={i} />)}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: 20,
+            position: "relative",
+          }}
+        >
+          {FEATURES.map((f, i) => (
+            <FeatureCard key={f.num} f={f} idx={i} />
+          ))}
         </div>
       </section>
 
@@ -844,7 +966,9 @@ function EngineRowDark({ e, idx, isLast }) {
         !isLast && "border-b border-white/[0.05]",
         hovered && "bg-white/[0.04]",
         "transition-[background-color] duration-200",
-      ].filter(Boolean).join(" ")}
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <span
         className="hidden md:inline-flex"
@@ -867,26 +991,30 @@ function EngineRowDark({ e, idx, isLast }) {
       >
         {String(idx + 1).padStart(2, "0")}
       </span>
-      <span style={{
-        fontFamily: "'DM Mono', monospace",
-        fontSize: 10,
-        letterSpacing: "0.25em",
-        textTransform: "uppercase",
-        color: hovered ? C.coral : `${C.coral}cc`,
-        fontWeight: 600,
-        transition: "color 0.25s ease",
-      }}>
+      <span
+        style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 10,
+          letterSpacing: "0.25em",
+          textTransform: "uppercase",
+          color: hovered ? C.coral : `${C.coral}cc`,
+          fontWeight: 600,
+          transition: "color 0.25s ease",
+        }}
+      >
         {e.label}
       </span>
-      <span style={{
-        fontFamily: BODY_FONT_STACK,
-        fontSize: "clamp(1rem, 2vw, 1.2rem)",
-        fontWeight: 600,
-        color: "white",
-        fontStyle: "normal",
-        textShadow: hovered ? `0 0 24px ${C.violet}55` : "none",
-        transition: "text-shadow 0.3s ease",
-      }}>
+      <span
+        style={{
+          fontFamily: BODY_FONT_STACK,
+          fontSize: "clamp(1rem, 2vw, 1.2rem)",
+          fontWeight: 600,
+          color: "white",
+          fontStyle: "normal",
+          textShadow: hovered ? `0 0 24px ${C.violet}55` : "none",
+          transition: "text-shadow 0.3s ease",
+        }}
+      >
         {e.name}
       </span>
       <span
@@ -920,18 +1048,22 @@ function FinalCta({ user }) {
       }}
     >
       {/* bg mesh — single soft layer */}
-      <div aria-hidden style={{
-        position: "absolute", inset: 0,
-        backgroundImage: `
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `
           url("data:image/svg+xml,%3Csvg width='940' height='420' viewBox='0 0 940 420' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.1' stroke-width='1.2'%3E%3Cpath d='M120 288 C240 108 360 342 470 188 S690 80 820 254'/%3E%3Ccircle cx='256' cy='182' r='92'/%3E%3Ccircle cx='682' cy='210' r='118'/%3E%3Cpath d='M320 260h300' stroke-dasharray='10 14'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.16'%3E%3Ccircle cx='120' cy='288' r='7'/%3E%3Ccircle cx='470' cy='188' r='7'/%3E%3Ccircle cx='820' cy='254' r='7'/%3E%3C/g%3E%3C/svg%3E"),
           radial-gradient(ellipse 85% 65% at 28% 45%, ${C.coral}12 0%, transparent 52%),
           radial-gradient(ellipse 75% 60% at 78% 52%, ${C.violet}10 0%, transparent 55%)
         `,
-        backgroundPosition: "center, center, center",
-        backgroundRepeat: "no-repeat, no-repeat, no-repeat",
-        backgroundSize: "min(940px, 112vw) auto, auto, auto",
-        pointerEvents: "none",
-      }} />
+          backgroundPosition: "center, center, center",
+          backgroundRepeat: "no-repeat, no-repeat, no-repeat",
+          backgroundSize: "min(940px, 112vw) auto, auto, auto",
+          pointerEvents: "none",
+        }}
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
@@ -940,29 +1072,31 @@ function FinalCta({ user }) {
         style={{ position: "relative", zIndex: 2, maxWidth: 720, margin: "0 auto" }}
       >
         <SectionLabel>Begin</SectionLabel>
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: "clamp(2rem, 4.4vw, 2.85rem)",
-          fontWeight: 600,
-          color: "white",
-          lineHeight: 1.18,
-          letterSpacing: "-0.02em",
-          margin: "0 auto 24px",
-          maxWidth: 720,
-        }}>
+        <h2
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(2rem, 4.4vw, 2.85rem)",
+            fontWeight: 600,
+            color: "white",
+            lineHeight: 1.18,
+            letterSpacing: "-0.02em",
+            margin: "0 auto 24px",
+            maxWidth: 720,
+          }}
+        >
           Walk into the next round{" "}
-          <span style={{ fontStyle: "italic", color: C.coral }}>
-            already calibrated.
-          </span>
+          <span style={{ fontStyle: "italic", color: C.coral }}>already calibrated.</span>
         </h2>
-        <p style={{
-          fontFamily: BODY_FONT_STACK,
-          fontSize: 15.5,
-          color: C.muted,
-          lineHeight: 1.75,
-          maxWidth: 520,
-          margin: "0 auto 40px",
-        }}>
+        <p
+          style={{
+            fontFamily: BODY_FONT_STACK,
+            fontSize: 15.5,
+            color: C.muted,
+            lineHeight: 1.75,
+            maxWidth: 520,
+            margin: "0 auto 40px",
+          }}
+        >
           One session takes about twelve minutes. The signal compounds.
         </p>
         <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
@@ -972,15 +1106,16 @@ function FinalCta({ user }) {
           <GhostButton to="/pricing">View pricing</GhostButton>
         </div>
 
-        <p style={{
-          marginTop: 28,
-          fontFamily: BODY_FONT_STACK,
-          fontSize: 12.5,
-          color: C.marqueeText,
-        }}>
+        <p
+          style={{
+            marginTop: 28,
+            fontFamily: BODY_FONT_STACK,
+            fontSize: 12.5,
+            color: C.marqueeText,
+          }}
+        >
           Free plan, no card, cancel any time.
         </p>
-
       </motion.div>
     </section>
   );

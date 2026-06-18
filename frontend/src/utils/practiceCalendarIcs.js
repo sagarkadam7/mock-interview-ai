@@ -3,7 +3,10 @@
  * @param {{ title?: string, minutes?: number, hoursFromNow?: number }} [opts]
  */
 export function downloadPracticeBlockIcs(opts = {}) {
-  const title = (opts.title || "InterviewAI — practice block").replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/;/g, "\\;");
+  const title = (opts.title || "InterviewAI — practice block")
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/;/g, "\\;");
   const minutes = Math.max(15, Math.min(180, Number(opts.minutes) || 45));
   const hoursFromNow = Math.max(0.25, Math.min(168, Number(opts.hoursFromNow) || 2));
 
@@ -13,7 +16,10 @@ export function downloadPracticeBlockIcs(opts = {}) {
   const stamp = (d) =>
     `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}${String(d.getUTCDate()).padStart(2, "0")}T${String(
       d.getUTCHours()
-    ).padStart(2, "0")}${String(d.getUTCMinutes()).padStart(2, "0")}${String(d.getUTCSeconds()).padStart(2, "0")}Z`;
+    ).padStart(
+      2,
+      "0"
+    )}${String(d.getUTCMinutes()).padStart(2, "0")}${String(d.getUTCSeconds()).padStart(2, "0")}Z`;
 
   const uid = `interviewai-${Date.now()}@local`;
   const ics = [

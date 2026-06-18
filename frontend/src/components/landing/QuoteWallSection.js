@@ -3,22 +3,26 @@ import { motion } from "framer-motion";
 
 const QUOTES = [
   {
-    quote: "The transcript + filler highlighting made my answers instantly cleaner. I fixed more in 2 sessions than in 2 weeks of random prep.",
+    quote:
+      "The transcript + filler highlighting made my answers instantly cleaner. I fixed more in 2 sessions than in 2 weeks of random prep.",
     name: "SWE candidate",
     meta: "Campus + internship loops",
   },
   {
-    quote: "It’s the first tool that feels like a real debrief: what I said, how I said it, and what to change next.",
+    quote:
+      "It’s the first tool that feels like a real debrief: what I said, how I said it, and what to change next.",
     name: "PM candidate",
     meta: "Case + behavioral rounds",
   },
   {
-    quote: "The scorecard is addictive in the best way. You can see momentum instead of guessing if you improved.",
+    quote:
+      "The scorecard is addictive in the best way. You can see momentum instead of guessing if you improved.",
     name: "Experienced hire",
     meta: "Senior IC interviews",
   },
   {
-    quote: "I rehearsed the exact story I wanted to tell, then tightened pacing. My real interview felt familiar.",
+    quote:
+      "I rehearsed the exact story I wanted to tell, then tightened pacing. My real interview felt familiar.",
     name: "Career switcher",
     meta: "Role transition",
   },
@@ -34,7 +38,11 @@ const METRIC_ACCENTS = ["bg-aura-coral", "bg-aura-violet", "bg-emerald-500", "bg
 
 export default function QuoteWallSection() {
   return (
-    <section id="outcomes" aria-labelledby="outcomes-heading" className="relative scroll-mt-24 py-24 md:py-28">
+    <section
+      id="outcomes"
+      aria-labelledby="outcomes-heading"
+      className="relative scroll-mt-24 py-24 md:py-28"
+    >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-1/2 h-[min(80%,520px)] -translate-y-1/2 bg-gradient-to-r from-orange-50/45 via-transparent to-violet-50/40 blur-3xl dark:from-orange-950/20 dark:to-violet-950/25"
@@ -53,7 +61,10 @@ export default function QuoteWallSection() {
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mb-14 text-center md:mb-16">
           <div className="section-eyebrow mx-auto mb-4">Outcomes</div>
-          <h2 id="outcomes-heading" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+          <h2
+            id="outcomes-heading"
+            className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl"
+          >
             Proof that feels like <span className="italic text-gradient">signal</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
@@ -72,7 +83,10 @@ export default function QuoteWallSection() {
                 transition={{ duration: 0.45, delay: i * 0.06 }}
                 className="glass-panel-lg group rounded-3xl p-7 transition-shadow duration-300 hover:shadow-lg hover:shadow-violet-500/10 md:p-8"
               >
-                <span className="font-display text-4xl leading-none text-violet-400/30 transition-colors group-hover:text-violet-500/50 dark:text-violet-400/25" aria-hidden>
+                <span
+                  className="font-display text-4xl leading-none text-violet-400/30 transition-colors group-hover:text-violet-500/50 dark:text-violet-400/25"
+                  aria-hidden
+                >
                   &ldquo;
                 </span>
                 <blockquote className="-mt-2 text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
@@ -97,14 +111,23 @@ export default function QuoteWallSection() {
                 Built to show improvement.
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                InterviewAI focuses on the metrics that actually change outcomes: clarity, pacing, fillers, and delivery consistency.
+                InterviewAI focuses on the metrics that actually change outcomes: clarity, pacing, fillers,
+                and delivery consistency.
               </p>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
                 {OUTCOMES.map((m, i) => (
-                  <div key={m.k} className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-200/80 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/55 dark:hover:border-violet-500/40">
-                    <span className={`absolute inset-x-0 top-0 h-1 ${METRIC_ACCENTS[i % METRIC_ACCENTS.length]}`} aria-hidden />
-                    <div className="font-display text-2xl font-bold text-aura-ink dark:text-slate-100">{m.v}</div>
+                  <div
+                    key={m.k}
+                    className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-200/80 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/55 dark:hover:border-violet-500/40"
+                  >
+                    <span
+                      className={`absolute inset-x-0 top-0 h-1 ${METRIC_ACCENTS[i % METRIC_ACCENTS.length]}`}
+                      aria-hidden
+                    />
+                    <div className="font-display text-2xl font-bold text-aura-ink dark:text-slate-100">
+                      {m.v}
+                    </div>
                     <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                       {m.k}
                     </div>
@@ -113,7 +136,8 @@ export default function QuoteWallSection() {
               </div>
 
               <div className="mt-8 rounded-2xl border border-slate-200/80 bg-white/70 p-5 text-sm text-slate-600 dark:border-slate-700/70 dark:bg-slate-900/55 dark:text-slate-300">
-                <span className="font-semibold text-aura-ink dark:text-slate-100">Best practice:</span> do 3 reps, export the PDF, then rehearse the “top 2 fixes” until your score stabilizes.
+                <span className="font-semibold text-aura-ink dark:text-slate-100">Best practice:</span> do 3
+                reps, export the PDF, then rehearse the “top 2 fixes” until your score stabilizes.
               </div>
             </div>
           </div>
@@ -122,4 +146,3 @@ export default function QuoteWallSection() {
     </section>
   );
 }
-

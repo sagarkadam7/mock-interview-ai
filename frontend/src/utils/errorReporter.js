@@ -54,4 +54,3 @@ export function installClientErrorReporter({ sampleRate = 1 } = {}) {
     window.removeEventListener("unhandledrejection", onRejection);
   };
 }
-

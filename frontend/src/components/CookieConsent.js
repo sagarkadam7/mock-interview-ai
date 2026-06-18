@@ -49,7 +49,8 @@ export default function CookieConsent() {
           We use cookies to improve your experience
         </p>
         <p id="cookie-desc" className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-          We use essential cookies to keep you signed in and anonymous analytics to improve InterviewAI. Read our{" "}
+          We use essential cookies to keep you signed in and anonymous analytics to improve InterviewAI. Read
+          our{" "}
           <Link
             to="/privacy"
             className="font-semibold text-aura-violet underline decoration-aura-violet/40 underline-offset-4 hover:text-aura-ink dark:text-aura-violet dark:hover:text-slate-100"

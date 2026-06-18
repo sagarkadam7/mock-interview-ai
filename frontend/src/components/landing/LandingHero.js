@@ -98,7 +98,10 @@ export default function LandingHero({ user }) {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_55%_at_50%_108%,rgba(255,255,255,0.97),transparent_58%)] dark:bg-[radial-gradient(ellipse_90%_55%_at_50%_108%,rgba(10,11,16,0.55),transparent_58%)]"
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-aura-page via-aura-page/80 to-transparent dark:from-[#0a0b10] dark:via-[#0a0b10]/80" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-aura-page via-aura-page/80 to-transparent dark:from-[#0a0b10] dark:via-[#0a0b10]/80"
+        aria-hidden
+      />
 
       <div className="relative z-10 mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-10 sm:gap-12 md:grid-cols-2 md:gap-x-8 md:gap-y-10 md:items-start lg:gap-x-10 xl:gap-x-14 2xl:gap-x-16">
         <motion.div
@@ -139,7 +142,10 @@ export default function LandingHero({ user }) {
             className="mx-auto mt-6 w-full max-w-xl text-pretty text-[15px] leading-[1.72] text-slate-600 dark:text-slate-400 sm:mt-7 sm:max-w-2xl sm:text-[17px] sm:leading-[1.68] lg:mx-0 lg:max-w-none xl:max-w-2xl"
           >
             A complete mock loop — questions grounded in your résumé and JD, deterministic scoring, and{" "}
-            <span className="font-medium text-slate-800 dark:text-slate-200">camera-aware presence coaching</span> — so you walk into the real room already calibrated.
+            <span className="font-medium text-slate-800 dark:text-slate-200">
+              camera-aware presence coaching
+            </span>{" "}
+            — so you walk into the real room already calibrated.
           </motion.p>
 
           <motion.ul
@@ -152,7 +158,10 @@ export default function LandingHero({ user }) {
                 key={c.label}
                 className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/85 bg-white/60 px-3 py-1.5 text-[12px] font-medium text-slate-700 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_8px_24px_-16px_rgba(15,23,42,0.12)] backdrop-blur-sm dark:border-slate-600/60 dark:bg-slate-900/45 dark:text-slate-200"
               >
-                <span className="select-none text-[10px] text-aura-violet/80 dark:text-violet-300/90" aria-hidden>
+                <span
+                  className="select-none text-[10px] text-aura-violet/80 dark:text-violet-300/90"
+                  aria-hidden
+                >
                   {c.icon}
                 </span>
                 {c.label}
@@ -170,19 +179,26 @@ export default function LandingHero({ user }) {
                   <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet opacity-100 transition-opacity duration-300 group-hover:opacity-100" />
                   <span className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent opacity-40" />
                   <span className="relative">{user ? "Open dashboard" : "Start free — no card"}</span>
-                  <span className="relative transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5" aria-hidden>
+                  <span
+                    className="relative transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5"
+                    aria-hidden
+                  >
                     →
                   </span>
                 </span>
               </Link>
               {!user && (
                 <Link to="/login" className="w-full no-underline sm:w-auto">
-                  <span className="btn-secondary inline-flex w-full justify-center py-3.5 sm:inline-flex sm:w-auto sm:px-8">Sign in</span>
+                  <span className="btn-secondary inline-flex w-full justify-center py-3.5 sm:inline-flex sm:w-auto sm:px-8">
+                    Sign in
+                  </span>
                 </Link>
               )}
               {user && (
                 <Link to="/interview/new" className="w-full no-underline sm:w-auto">
-                  <span className="btn-outline inline-flex w-full justify-center py-3.5 font-semibold sm:w-auto sm:px-8">New interview</span>
+                  <span className="btn-outline inline-flex w-full justify-center py-3.5 font-semibold sm:w-auto sm:px-8">
+                    New interview
+                  </span>
                 </Link>
               )}
             </div>
@@ -194,7 +210,10 @@ export default function LandingHero({ user }) {
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition-[color,box-shadow,border-color] hover:border-slate-300 hover:text-aura-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:border-slate-600/70 dark:bg-slate-900/50 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-white sm:inline-flex sm:border-0 sm:bg-transparent sm:px-1 sm:py-1 sm:shadow-none sm:underline sm:decoration-slate-300 sm:decoration-2 sm:underline-offset-4 sm:backdrop-blur-none dark:sm:decoration-slate-600"
                 >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-aura-violet dark:from-aura-coral/25 dark:to-aura-violet/25 sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent" aria-hidden>
+                  <span
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-aura-violet dark:from-aura-coral/25 dark:to-aura-violet/25 sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent"
+                    aria-hidden
+                  >
                     ▶
                   </span>
                   Watch demo
@@ -204,7 +223,10 @@ export default function LandingHero({ user }) {
                   href="#how-it-works"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition-[color,box-shadow,border-color] hover:border-slate-300 hover:text-aura-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:border-slate-600/70 dark:bg-slate-900/50 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:text-white sm:inline-flex sm:border-0 sm:bg-transparent sm:px-1 sm:py-1 sm:shadow-none sm:underline sm:decoration-slate-300 sm:decoration-2 sm:underline-offset-4 sm:backdrop-blur-none dark:sm:decoration-slate-600"
                 >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-aura-violet dark:from-aura-coral/25 dark:to-aura-violet/25 sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent" aria-hidden>
+                  <span
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aura-coral/15 to-aura-violet/15 text-aura-violet dark:from-aura-coral/25 dark:to-aura-violet/25 sm:h-auto sm:w-auto sm:rounded-none sm:bg-transparent"
+                    aria-hidden
+                  >
                     ▶
                   </span>
                   See how it works
@@ -215,14 +237,20 @@ export default function LandingHero({ user }) {
                 className="group inline-flex items-center justify-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-white sm:justify-start"
               >
                 See the full loop
-                <span className="transition-transform duration-300 ease-out-expo group-hover:translate-x-1" aria-hidden>
+                <span
+                  className="transition-transform duration-300 ease-out-expo group-hover:translate-x-1"
+                  aria-hidden
+                >
                   →
                 </span>
               </a>
             </div>
           </motion.div>
 
-          <motion.div variants={item} className="mt-12 flex flex-col items-center gap-6 border-t border-slate-200/80 pt-10 dark:border-slate-700/60 lg:items-start">
+          <motion.div
+            variants={item}
+            className="mt-12 flex flex-col items-center gap-6 border-t border-slate-200/80 pt-10 dark:border-slate-700/60 lg:items-start"
+          >
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <div className="flex -space-x-2" aria-hidden>
                 {proofAvatars.slice(0, 4).map((a) => (
@@ -235,8 +263,12 @@ export default function LandingHero({ user }) {
                 ))}
               </div>
               <div className="text-center sm:text-left">
-                <p className="text-[13px] font-medium text-slate-700 dark:text-slate-300">Used by candidates rehearsing real loops</p>
-                <p className="mt-0.5 text-[12px] text-slate-500 dark:text-slate-500">Not generic question banks — calibrated to your story.</p>
+                <p className="text-[13px] font-medium text-slate-700 dark:text-slate-300">
+                  Used by candidates rehearsing real loops
+                </p>
+                <p className="mt-0.5 text-[12px] text-slate-500 dark:text-slate-500">
+                  Not generic question banks — calibrated to your story.
+                </p>
               </div>
             </div>
 
@@ -253,7 +285,9 @@ export default function LandingHero({ user }) {
                     className="absolute left-0 top-2 bottom-2 w-[3px] rounded-full bg-gradient-to-b from-aura-coral to-aura-violet"
                     aria-hidden
                   />
-                  <span className="font-display text-[1.85rem] font-medium italic tabular-nums tracking-tight text-aura-ink md:text-[2rem]">{row.v}</span>
+                  <span className="font-display text-[1.85rem] font-medium italic tabular-nums tracking-tight text-aura-ink md:text-[2rem]">
+                    {row.v}
+                  </span>
                   <span className="text-[12px] leading-snug text-slate-500 dark:text-slate-400">{row.l}</span>
                 </li>
               ))}
@@ -276,7 +310,6 @@ export default function LandingHero({ user }) {
           </motion.div>
         </div>
       </div>
-
     </section>
   );
 }

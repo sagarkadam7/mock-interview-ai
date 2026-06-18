@@ -10,8 +10,12 @@ const TRACK_LABELS = {
 };
 
 export function captureSignupAttribution(searchParams) {
-  const track = String(searchParams.get("track") || "").trim().toLowerCase();
-  const plan = String(searchParams.get("plan") || "").trim().toLowerCase();
+  const track = String(searchParams.get("track") || "")
+    .trim()
+    .toLowerCase();
+  const plan = String(searchParams.get("plan") || "")
+    .trim()
+    .toLowerCase();
   if (!track && !plan) return null;
 
   const payload = {

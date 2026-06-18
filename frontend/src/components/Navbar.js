@@ -88,7 +88,9 @@ export default function Navbar() {
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-aura-coral to-aura-violet text-xs font-black text-white shadow-lg shadow-aura-violet/25 ring-2 ring-white/50 transition-transform duration-300 group-hover:scale-[1.03]">
               IA
             </span>
-            <span className="truncate text-[13px] font-bold tracking-tight text-aura-ink sm:text-sm dark:text-slate-100">InterviewAI</span>
+            <span className="truncate text-[13px] font-bold tracking-tight text-aura-ink sm:text-sm dark:text-slate-100">
+              InterviewAI
+            </span>
             <span className="absolute -bottom-1 left-11 h-px w-0 bg-gradient-to-r from-aura-coral to-aura-violet transition-[width] duration-350 ease-out-expo group-hover:w-[calc(100%-2.75rem)]" />
           </NavLink>
 
@@ -103,11 +105,18 @@ export default function Navbar() {
             </NavLink>
             <NavLink
               to="/pricing"
-              className={({ isActive }) => `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink dark:bg-slate-800 dark:text-slate-100" : ""}`}
+              className={({ isActive }) =>
+                `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink dark:bg-slate-800 dark:text-slate-100" : ""}`
+              }
             >
               Pricing
             </NavLink>
-            <NavLink to="/faq" className={({ isActive }) => `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink dark:bg-slate-800 dark:text-slate-100" : ""}`}>
+            <NavLink
+              to="/faq"
+              className={({ isActive }) =>
+                `${navMutedLink}${isActive ? " bg-slate-100 text-aura-ink dark:bg-slate-800 dark:text-slate-100" : ""}`
+              }
+            >
               FAQ
             </NavLink>
           </div>
@@ -144,19 +153,33 @@ export default function Navbar() {
                   </span>
                 )}
               </div>
-              <NavLink to="/dashboard" className={({ isActive }) => `${navGhostBtn} hidden sm:inline-flex ${isActive ? navGhostActive : ""}`}>
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  `${navGhostBtn} hidden sm:inline-flex ${isActive ? navGhostActive : ""}`
+                }
+              >
                 Dashboard
               </NavLink>
               <NavLink to="/interview/new" className={`${navCtaBtn} hidden sm:inline-flex`}>
                 New interview
               </NavLink>
-              <button type="button" className={`${navGhostBtn} hidden px-3 text-xs sm:inline-flex sm:px-4 sm:text-[13px]`} onClick={handleLogout}>
+              <button
+                type="button"
+                className={`${navGhostBtn} hidden px-3 text-xs sm:inline-flex sm:px-4 sm:text-[13px]`}
+                onClick={handleLogout}
+              >
                 Log out
               </button>
             </>
           ) : (
             <>
-              <NavLink to="/login" className={({ isActive }) => `${navGhostBtn} hidden sm:inline-flex ${isActive ? navGhostActive : ""}`}>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `${navGhostBtn} hidden sm:inline-flex ${isActive ? navGhostActive : ""}`
+                }
+              >
                 Sign in
               </NavLink>
               <NavLink to="/register" className={`${navCtaBtn} hidden sm:inline-flex`}>
@@ -196,14 +219,20 @@ export default function Navbar() {
             >
               <div className="mx-auto flex max-w-7xl flex-col gap-1">
                 <div className="flex items-center justify-between px-4 pb-2 pt-1 sm:hidden">
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Theme</span>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                    Theme
+                  </span>
                   <ThemeToggle />
                 </div>
                 <div className="mx-4 mb-2 h-px bg-slate-200/90 dark:bg-slate-700/80 sm:hidden" />
                 <NavLink to="/pricing" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   Pricing
                 </NavLink>
-                <NavLink to="/#how-it-works" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                <NavLink
+                  to="/#how-it-works"
+                  className={mobileNavLinkClass}
+                  onClick={() => setMenuOpen(false)}
+                >
                   How it works
                 </NavLink>
                 <NavLink to="/faq" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
@@ -218,13 +247,25 @@ export default function Navbar() {
                 <div className="my-2 h-px bg-slate-200/90 dark:bg-slate-700/80" />
                 {user ? (
                   <>
-                    <NavLink to="/dashboard" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                    <NavLink
+                      to="/dashboard"
+                      className={mobileNavLinkClass}
+                      onClick={() => setMenuOpen(false)}
+                    >
                       Dashboard
                     </NavLink>
-                    <NavLink to="/interview/new" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                    <NavLink
+                      to="/interview/new"
+                      className={mobileNavLinkClass}
+                      onClick={() => setMenuOpen(false)}
+                    >
                       New interview
                     </NavLink>
-                    <button type="button" className={`${mobileNavLinkClass} w-full text-left text-rose-700 dark:text-rose-300`} onClick={handleLogout}>
+                    <button
+                      type="button"
+                      className={`${mobileNavLinkClass} w-full text-left text-rose-700 dark:text-rose-300`}
+                      onClick={handleLogout}
+                    >
                       Log out
                     </button>
                   </>
@@ -233,7 +274,11 @@ export default function Navbar() {
                     <NavLink to="/login" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                       Sign in
                     </NavLink>
-                    <NavLink to="/register" className={`${mobileNavLinkClass} justify-center rounded-xl bg-aura-ink text-white hover:bg-zinc-800 hover:text-white`} onClick={() => setMenuOpen(false)}>
+                    <NavLink
+                      to="/register"
+                      className={`${mobileNavLinkClass} justify-center rounded-xl bg-aura-ink text-white hover:bg-zinc-800 hover:text-white`}
+                      onClick={() => setMenuOpen(false)}
+                    >
                       Get started
                     </NavLink>
                   </>

@@ -15,7 +15,9 @@ function Item({ item, open, onToggle, idx }) {
   return (
     <div
       className={`border-b border-slate-200/90 transition-[border-color,background-color] duration-200 last:border-0 dark:border-slate-700/80 ${
-        open ? "border-l-[3px] border-l-violet-500 bg-violet-50/40 pl-4 dark:border-l-violet-400 dark:bg-violet-950/20" : "border-l-[3px] border-l-transparent pl-4"
+        open
+          ? "border-l-[3px] border-l-violet-500 bg-violet-50/40 pl-4 dark:border-l-violet-400 dark:bg-violet-950/20"
+          : "border-l-[3px] border-l-transparent pl-4"
       }`}
     >
       <button
@@ -33,7 +35,10 @@ function Item({ item, open, onToggle, idx }) {
         className="flex w-full items-start justify-between gap-4 rounded-xl py-5 text-left transition-colors hover:text-violet-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:text-violet-300 dark:focus-visible:ring-violet-500/50 dark:focus-visible:ring-offset-slate-950"
       >
         <span className="text-[15px] font-semibold text-aura-ink">{item.q}</span>
-        <span className={`mt-0.5 shrink-0 text-slate-400 transition-transform duration-200 dark:text-slate-500 ${open ? "rotate-180" : ""}`} aria-hidden>
+        <span
+          className={`mt-0.5 shrink-0 text-slate-400 transition-transform duration-200 dark:text-slate-500 ${open ? "rotate-180" : ""}`}
+          aria-hidden
+        >
           ▼
         </span>
       </button>
@@ -75,15 +80,26 @@ export default function FAQSection({ limit = null }) {
   }, [baseItems, query, topic]);
 
   return (
-    <section id="faq" className="scroll-mt-24 border-t border-slate-200/80 bg-white py-24 dark:border-slate-800/80 dark:bg-slate-950 md:py-28">
+    <section
+      id="faq"
+      className="scroll-mt-24 border-t border-slate-200/80 bg-white py-24 dark:border-slate-800/80 dark:bg-slate-950 md:py-28"
+    >
       <div className="mx-auto max-w-3xl px-6">
         <div className="mb-12 text-center">
           <div className="section-eyebrow mx-auto mb-4">FAQ</div>
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">Answers before you sign up</h2>
-          <p className="mx-auto mt-4 max-w-lg text-[15px] text-slate-600 dark:text-slate-400">Security, browsers, and how AI fits into real prep.</p>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+            Answers before you sign up
+          </h2>
+          <p className="mx-auto mt-4 max-w-lg text-[15px] text-slate-600 dark:text-slate-400">
+            Security, browsers, and how AI fits into real prep.
+          </p>
         </div>
 
-        <div className="mb-4 flex flex-wrap justify-center gap-2" role="group" aria-label="Filter FAQ by topic">
+        <div
+          className="mb-4 flex flex-wrap justify-center gap-2"
+          role="group"
+          aria-label="Filter FAQ by topic"
+        >
           {FAQ_TOPICS.map((t) => (
             <button
               key={t.id}
@@ -109,7 +125,10 @@ export default function FAQSection({ limit = null }) {
             Search questions
           </label>
           <div className="relative">
-            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden>
+            <span
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              aria-hidden
+            >
               ⌕
             </span>
             <input
@@ -142,12 +161,14 @@ export default function FAQSection({ limit = null }) {
           <p className="mt-2 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">
             {query.trim() ? (
               <>
-                Showing <span className="font-semibold">{items.length}</span> result{items.length === 1 ? "" : "s"} for{" "}
+                Showing <span className="font-semibold">{items.length}</span> result
+                {items.length === 1 ? "" : "s"} for{" "}
                 <span className="font-semibold text-slate-700 dark:text-slate-200">“{query.trim()}”</span>.
               </>
             ) : (
               <>
-                Tip: use search to find answers fast. <span className="hidden sm:inline">Try “privacy” or “browser”.</span>
+                Tip: use search to find answers fast.{" "}
+                <span className="hidden sm:inline">Try “privacy” or “browser”.</span>
               </>
             )}
           </p>
@@ -156,38 +177,40 @@ export default function FAQSection({ limit = null }) {
         <div className="glass-panel-lg overflow-hidden rounded-2xl">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 bg-slate-50/70 px-6 py-4 dark:border-slate-700/80 dark:bg-slate-900/45 md:px-10">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-              {topic === "all" ? "All questions" : `${FAQ_TOPICS.find((t) => t.id === topic)?.label} questions`}
+              {topic === "all"
+                ? "All questions"
+                : `${FAQ_TOPICS.find((t) => t.id === topic)?.label} questions`}
             </span>
             <span className="rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-700/80 dark:bg-slate-950/45 dark:text-slate-300">
               {items.length} result{items.length === 1 ? "" : "s"}
             </span>
           </div>
           <div className="px-6 md:px-10">
-          {items.length ? (
-            items.map((item, i) => (
-              <Item
-                key={item.q}
-                idx={i}
-                item={item}
-                open={openIdx === i}
-                onToggle={() => setOpenIdx((prev) => (prev === i ? -1 : i))}
-              />
-            ))
-          ) : (
-            <div className="py-10 text-center">
-              <p className="text-sm font-semibold text-aura-ink dark:text-slate-100">No matches found.</p>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                Try a different search, or read our{" "}
-                <Link
-                  to="/privacy"
-                  className="font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 hover:text-violet-900 dark:text-violet-300"
-                >
-                  Privacy Policy
-                </Link>
-                .
-              </p>
-            </div>
-          )}
+            {items.length ? (
+              items.map((item, i) => (
+                <Item
+                  key={item.q}
+                  idx={i}
+                  item={item}
+                  open={openIdx === i}
+                  onToggle={() => setOpenIdx((prev) => (prev === i ? -1 : i))}
+                />
+              ))
+            ) : (
+              <div className="py-10 text-center">
+                <p className="text-sm font-semibold text-aura-ink dark:text-slate-100">No matches found.</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  Try a different search, or read our{" "}
+                  <Link
+                    to="/privacy"
+                    className="font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 hover:text-violet-900 dark:text-violet-300"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

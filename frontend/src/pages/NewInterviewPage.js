@@ -42,7 +42,11 @@ export default function NewInterviewPage() {
     if (!jobRole.trim()) return setError("Job role is required.");
     const hasResume = inputMode === "upload" ? !!file : resumeText.trim().length >= 50;
     if (!hasResume) {
-      return setError(inputMode === "upload" ? "Please upload your resume PDF." : "Resume text must be at least 50 characters.");
+      return setError(
+        inputMode === "upload"
+          ? "Please upload your resume PDF."
+          : "Resume text must be at least 50 characters."
+      );
     }
     setLoading(true);
     try {
@@ -70,13 +74,19 @@ export default function NewInterviewPage() {
     <div className="page-shell min-h-screen max-w-6xl">
       <div className="mb-10 flex flex-wrap items-start justify-between gap-4 border-b border-slate-200/80 pb-8 dark:border-slate-800/80">
         <div>
-          <Link to="/dashboard" className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-slate-100">
+          <Link
+            to="/dashboard"
+            className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-slate-500 no-underline transition-colors hover:text-aura-ink dark:text-slate-400 dark:hover:text-slate-100"
+          >
             ← Back to dashboard
           </Link>
           <span className="section-eyebrow mb-3 block w-fit">New session</span>
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">Configure your interview</h1>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+            Configure your interview
+          </h1>
           <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-            AI generates seven tailored questions from your resume and role. Add a job description for sharper targeting.
+            AI generates seven tailored questions from your resume and role. Add a job description for sharper
+            targeting.
           </p>
         </div>
       </div>
@@ -108,7 +118,9 @@ export default function NewInterviewPage() {
             </div>
             <div>
               <h2 className="text-lg font-bold tracking-tight text-aura-ink">Session style</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Tune the interviewer for your target level and loop.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Tune the interviewer for your target level and loop.
+              </p>
             </div>
           </div>
 
@@ -126,7 +138,11 @@ export default function NewInterviewPage() {
 
             <div>
               <label className="label-field">Mode</label>
-              <select className="input-field" value={interviewMode} onChange={(e) => setInterviewMode(e.target.value)}>
+              <select
+                className="input-field"
+                value={interviewMode}
+                onChange={(e) => setInterviewMode(e.target.value)}
+              >
                 <option value="mixed">Mixed (recommended)</option>
                 <option value="behavioral">Behavioral (STAR)</option>
                 <option value="technical">Technical</option>
@@ -159,7 +175,9 @@ export default function NewInterviewPage() {
             </div>
             <div>
               <h2 className="text-lg font-bold tracking-tight text-aura-ink">Role & job context</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">What position are you interviewing for?</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                What position are you interviewing for?
+              </p>
             </div>
           </div>
           <div className="flex flex-col gap-5">
@@ -176,7 +194,9 @@ export default function NewInterviewPage() {
             <div>
               <label className="label-field">
                 Target company or team{" "}
-                <span className="normal-case font-normal tracking-normal text-slate-500 dark:text-slate-400">(optional)</span>
+                <span className="normal-case font-normal tracking-normal text-slate-500 dark:text-slate-400">
+                  (optional)
+                </span>
               </label>
               <input
                 className="input-field"
@@ -193,9 +213,14 @@ export default function NewInterviewPage() {
               <div className="mb-2 flex flex-wrap items-end justify-between gap-2">
                 <label className="label-field mb-0">
                   Job description{" "}
-                  <span className="normal-case font-normal tracking-normal text-slate-500 dark:text-slate-400">(optional — improves relevance)</span>
+                  <span className="normal-case font-normal tracking-normal text-slate-500 dark:text-slate-400">
+                    (optional — improves relevance)
+                  </span>
                 </label>
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500" aria-live="polite">
+                <span
+                  className="font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500"
+                  aria-live="polite"
+                >
                   {jdText.length.toLocaleString()} chars
                 </span>
               </div>
@@ -216,7 +241,9 @@ export default function NewInterviewPage() {
             </div>
             <div>
               <h2 className="text-lg font-bold tracking-tight text-aura-ink">Resume source</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Paste text or upload a PDF — we never store your file after parsing.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Paste text or upload a PDF — we never store your file after parsing.
+              </p>
             </div>
           </div>
 
@@ -248,7 +275,9 @@ export default function NewInterviewPage() {
                 <label className="label-field mb-0">Resume content *</label>
                 <span
                   className={`font-mono text-[10px] font-semibold uppercase tracking-wider ${
-                    resumeText.length >= 50 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
+                    resumeText.length >= 50
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-amber-600 dark:text-amber-400"
                   }`}
                   aria-live="polite"
                 >
@@ -261,7 +290,9 @@ export default function NewInterviewPage() {
                 value={resumeText}
                 onChange={(e) => setResumeText(e.target.value)}
               />
-              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Minimum 50 characters so the model has enough context.</p>
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                Minimum 50 characters so the model has enough context.
+              </p>
             </div>
           ) : (
             <div>
@@ -285,7 +316,9 @@ export default function NewInterviewPage() {
                   <div>
                     <div className="mb-3 text-4xl">✓</div>
                     <p className="font-semibold text-emerald-700 dark:text-emerald-400">{file.name}</p>
-                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{(file.size / 1024).toFixed(0)} KB — click to replace</p>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                      {(file.size / 1024).toFixed(0)} KB — click to replace
+                    </p>
                   </div>
                 ) : (
                   <div>
@@ -302,7 +335,8 @@ export default function NewInterviewPage() {
         <button type="submit" className="btn-cta w-full py-4 text-[15px]" disabled={loading}>
           {loading ? (
             <>
-              <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" /> Generating questions… (10–20s)
+              <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" />{" "}
+              Generating questions… (10–20s)
             </>
           ) : (
             "Generate interview questions →"

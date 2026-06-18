@@ -7,7 +7,11 @@ export default function FounderLetterSection() {
 
   const fadeUp = {
     hidden: { opacity: 0, y: reduceMotion ? 0 : 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: reduceMotion ? 0.01 : 0.5, ease: [0.16, 1, 0.3, 1] } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: reduceMotion ? 0.01 : 0.5, ease: [0.16, 1, 0.3, 1] },
+    },
   };
 
   const accent = "signal";
@@ -39,12 +43,20 @@ export default function FounderLetterSection() {
         }}
         aria-hidden
       />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-200/80 to-transparent dark:via-slate-700/80" aria-hidden />
+      <div
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-200/80 to-transparent dark:via-slate-700/80"
+        aria-hidden
+      />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="grid items-start gap-14 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={fadeUp}>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={fadeUp}
+            >
               <div className="section-eyebrow mb-6">{FOUNDER_LETTER.eyebrow}</div>
               <h2
                 id="founder-heading"
@@ -107,13 +119,20 @@ export default function FounderLetterSection() {
                 >
                   SK
                 </div>
-                <span className="font-display text-5xl leading-none text-violet-400/25" aria-hidden>&ldquo;</span>
+                <span className="font-display text-5xl leading-none text-violet-400/25" aria-hidden>
+                  &ldquo;
+                </span>
                 <blockquote className="-mt-4 text-lg font-medium leading-loose text-slate-700 dark:text-slate-300 md:text-xl">
                   {FOUNDER_LETTER.asideQuote}
                 </blockquote>
-                <div className="mt-10 h-px w-12 bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" aria-hidden />
+                <div
+                  className="mt-10 h-px w-12 bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600"
+                  aria-hidden
+                />
                 <p className="mt-8 font-semibold tracking-tight text-aura-ink">{FOUNDER_LETTER.name}</p>
-                <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{FOUNDER_LETTER.role}</p>
+                <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                  {FOUNDER_LETTER.role}
+                </p>
               </div>
             </div>
           </motion.aside>

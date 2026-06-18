@@ -5,22 +5,22 @@
 @layer base {
   :root {
     color-scheme: light;
-    --accent: #4F46E5;
-    --accent2: #F43F5E;
-    --indigo2: #4F46E5;
+    --accent: #4f46e5;
+    --accent2: #f43f5e;
+    --indigo2: #4f46e5;
     --green: #34d399;
     --amber: #fbbf24;
     --red: #f87171;
     --text2: #64748b;
     --text3: #94a3b8;
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-    --aura-page: #F7F8FC;
-    --aura-page-deep: #EEF1F7;
-    --aura-ink: #0B1220;
+    --aura-page: #f7f8fc;
+    --aura-page-deep: #eef1f7;
+    --aura-ink: #0b1220;
     --aura-card: #ffffff;
-    --aura-line: #E6E8F0;
-    --aura-muted: #5B667A;
-    --aura-cta: #0B1220;
+    --aura-line: #e6e8f0;
+    --aura-muted: #5b667a;
+    --aura-cta: #0b1220;
     --aura-frame: rgba(11, 18, 32, 0.06);
   }
 
@@ -88,18 +88,24 @@
     inset: 0;
     z-index: 0;
     opacity: 1;
-    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(244,63,94, 0.08) 0%, transparent 55%),
-      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(79,70,229, 0.07) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(79,70,229, 0.05) 0%, transparent 45%),
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(244, 63, 94, 0.08) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(79, 70, 229, 0.07) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(79, 70, 229, 0.05) 0%, transparent 45%),
       radial-gradient(rgba(11, 18, 32, 0.05) 1px, transparent 1px);
-    background-size: auto, auto, auto, 40px 40px;
+    background-size:
+      auto,
+      auto,
+      auto,
+      40px 40px;
     background-repeat: no-repeat, no-repeat, no-repeat, repeat;
   }
 
   html.dark #root::before {
-    background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,85,71, 0.07) 0%, transparent 55%),
-      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(91,33,182, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(91,33,182, 0.08) 0%, transparent 45%),
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232, 85, 71, 0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 45% at 100% 20%, rgba(91, 33, 182, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(91, 33, 182, 0.08) 0%, transparent 45%),
       radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   }
 
@@ -111,7 +117,9 @@
   select:focus-visible,
   summary:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(79,70,229, 0.42);
+    box-shadow:
+      0 0 0 2px var(--aura-page),
+      0 0 0 4px rgba(79, 70, 229, 0.42);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -202,8 +210,11 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   .glass-panel:hover,
   .glass-panel-lg:hover {
     @apply border-slate-300/90 bg-white;
-    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.95) inset, 0 1px 3px rgba(15, 23, 42, 0.06),
-      0 24px 48px -12px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(91, 33, 182, 0.07);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.95) inset,
+      0 1px 3px rgba(15, 23, 42, 0.06),
+      0 24px 48px -12px rgba(15, 23, 42, 0.14),
+      0 0 0 1px rgba(91, 33, 182, 0.07);
   }
 
   .page-shell {
@@ -237,12 +248,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      105deg,
-      transparent 40%,
-      rgba(255, 255, 255, 0.2) 50%,
-      transparent 60%
-    );
+    background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.2) 50%, transparent 60%);
     background-size: 200% 100%;
     opacity: 0;
     transition: opacity 0.35s ease;
@@ -316,7 +322,7 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   }
   .progress-fill-bar {
     @apply h-full rounded-full bg-gradient-progress transition-[width] duration-500 ease-out-expo;
-    box-shadow: 0 0 12px rgba(79,70,229, 0.22);
+    box-shadow: 0 0 12px rgba(79, 70, 229, 0.22);
   }
 
   .spinner {
@@ -378,7 +384,9 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   }
   .interactive-lift:hover {
     transform: translateY(-2px);
-    box-shadow: 0 16px 40px -14px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.04);
+    box-shadow:
+      0 16px 40px -14px rgba(15, 23, 42, 0.12),
+      0 0 0 1px rgba(15, 23, 42, 0.04);
   }
   .interactive-lift:active {
     transform: translateY(0);
@@ -411,7 +419,9 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     transform: translate(-50%, -160%);
     opacity: 0;
     pointer-events: none;
-    transition: transform 0.28s var(--ease-out-expo), opacity 0.2s ease;
+    transition:
+      transform 0.28s var(--ease-out-expo),
+      opacity 0.2s ease;
   }
   .skip-link:focus,
   .skip-link:focus-visible {
@@ -419,7 +429,10 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     opacity: 1;
     pointer-events: auto;
     outline: none;
-    box-shadow: 0 0 0 2px var(--aura-page), 0 0 0 4px rgba(79,70,229, 0.42), 0 12px 32px -8px rgba(15, 23, 42, 0.25);
+    box-shadow:
+      0 0 0 2px var(--aura-page),
+      0 0 0 4px rgba(79, 70, 229, 0.42),
+      0 12px 32px -8px rgba(15, 23, 42, 0.25);
   }
   @media (forced-colors: active) {
     .skip-link {
@@ -435,7 +448,12 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   }
   .skeleton-line {
     @apply h-4 rounded-md bg-slate-200/90;
-    background: linear-gradient(90deg, rgba(226, 232, 240, 0.9) 0%, rgba(241, 245, 249, 0.95) 45%, rgba(226, 232, 240, 0.9) 90%);
+    background: linear-gradient(
+      90deg,
+      rgba(226, 232, 240, 0.9) 0%,
+      rgba(241, 245, 249, 0.95) 45%,
+      rgba(226, 232, 240, 0.9) 90%
+    );
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.35s ease-in-out infinite;
   }
@@ -456,16 +474,24 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 
   html.dark .glass-panel {
     @apply border-slate-700/55 bg-slate-900/50 ring-slate-800/30;
-    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset, 0 1px 2px rgba(0, 0, 0, 0.2), 0 20px 40px -16px rgba(0, 0, 0, 0.45);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 20px 40px -16px rgba(0, 0, 0, 0.45);
   }
   html.dark .glass-panel-lg {
     @apply border-slate-700/55 bg-slate-900/55 ring-slate-800/35;
-    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.05) inset, 0 4px 12px rgba(0, 0, 0, 0.25), 0 32px 64px -20px rgba(0, 0, 0, 0.55);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+      0 4px 12px rgba(0, 0, 0, 0.25),
+      0 32px 64px -20px rgba(0, 0, 0, 0.55);
   }
   html.dark .glass-panel:hover,
   html.dark .glass-panel-lg:hover {
     @apply border-slate-600/70 bg-slate-900/70;
-    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset, 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+      0 24px 48px -12px rgba(0, 0, 0, 0.5);
   }
 
   html.dark .btn-primary {
@@ -516,14 +542,21 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     @apply border-emerald-500/35 bg-emerald-950/35 text-emerald-100;
   }
   html.dark .interactive-lift:hover {
-    box-shadow: 0 16px 40px -14px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    box-shadow:
+      0 16px 40px -14px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
   }
   html.dark .skeleton-row {
     @apply border-slate-700/60 bg-slate-900/40;
   }
   html.dark .skeleton-line {
     @apply bg-slate-700/80;
-    background: linear-gradient(90deg, rgba(51, 65, 85, 0.9) 0%, rgba(71, 85, 105, 0.5) 45%, rgba(51, 65, 85, 0.9) 90%);
+    background: linear-gradient(
+      90deg,
+      rgba(51, 65, 85, 0.9) 0%,
+      rgba(71, 85, 105, 0.5) 45%,
+      rgba(51, 65, 85, 0.9) 90%
+    );
     background-size: 200% 100%;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -532,4 +565,3 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     }
   }
 }
-

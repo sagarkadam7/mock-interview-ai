@@ -25,9 +25,20 @@ function MatchScoreRing({ score }) {
   const ringClass = matchScoreRingClass(score);
 
   return (
-    <div className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center" aria-label={`Resume match score ${score} percent`}>
+    <div
+      className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center"
+      aria-label={`Resume match score ${score} percent`}
+    >
       <svg width="72" height="72" viewBox="0 0 72 72" className="-rotate-90" aria-hidden>
-        <circle cx="36" cy="36" r={r} fill="none" stroke="currentColor" strokeWidth="5" className="text-slate-200/90 dark:text-slate-700/80" />
+        <circle
+          cx="36"
+          cy="36"
+          r={r}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="5"
+          className="text-slate-200/90 dark:text-slate-700/80"
+        />
         <circle
           cx="36"
           cy="36"
@@ -41,7 +52,9 @@ function MatchScoreRing({ score }) {
           className="transition-[stroke-dashoffset] duration-700 ease-out"
         />
       </svg>
-      <div className={`absolute inset-2 flex flex-col items-center justify-center rounded-full bg-gradient-to-br ${ringClass} text-white shadow-inner`}>
+      <div
+        className={`absolute inset-2 flex flex-col items-center justify-center rounded-full bg-gradient-to-br ${ringClass} text-white shadow-inner`}
+      >
         <span className="font-display text-xl font-bold tabular-nums leading-none">{score}</span>
         <span className="text-[8px] font-bold uppercase tracking-wider opacity-90">match</span>
       </div>
@@ -56,7 +69,13 @@ function severityBadge(severity) {
   return "bg-amber-500/15 text-amber-900 dark:text-amber-100";
 }
 
-export default function PrepBriefPanel({ interviewId, prepBrief, onBriefUpdate, readOnly = false, defaultOpen = true }) {
+export default function PrepBriefPanel({
+  interviewId,
+  prepBrief,
+  onBriefUpdate,
+  readOnly = false,
+  defaultOpen = true,
+}) {
   const { user } = useAuth();
   const plan = (user?.plan || "free").toLowerCase();
   const isPro = plan === "pro" || plan === "team";
@@ -110,7 +129,13 @@ export default function PrepBriefPanel({ interviewId, prepBrief, onBriefUpdate, 
           aria-hidden
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M2.5 4.5L6 8L9.5 4.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </span>
       </button>
@@ -135,7 +160,9 @@ export default function PrepBriefPanel({ interviewId, prepBrief, onBriefUpdate, 
 function PrepBriefHeader({ isReady, brief }) {
   return (
     <div className="min-w-0">
-      <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-300">Pro · AI Prep Brief</p>
+      <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-300">
+        Pro · AI Prep Brief
+      </p>
       <p className="mt-0.5 text-sm font-semibold text-aura-ink dark:text-slate-100">
         {isReady ? `Resume fit · ${brief.matchScore}%` : "Resume vs job description"}
       </p>
@@ -143,7 +170,17 @@ function PrepBriefHeader({ isReady, brief }) {
   );
 }
 
-function PrepBriefBody({ id, labelledBy, isReady, brief, readOnly, isPro, loading, onGenerate, onRegenerate }) {
+function PrepBriefBody({
+  id,
+  labelledBy,
+  isReady,
+  brief,
+  readOnly,
+  isPro,
+  loading,
+  onGenerate,
+  onRegenerate,
+}) {
   return (
     <div
       id={id}
@@ -154,7 +191,13 @@ function PrepBriefBody({ id, labelledBy, isReady, brief, readOnly, isPro, loadin
       {!isReady ? (
         <PrepBriefEmpty readOnly={readOnly} isPro={isPro} loading={loading} onGenerate={onGenerate} />
       ) : (
-        <PrepBriefContent brief={brief} readOnly={readOnly} isPro={isPro} loading={loading} onRegenerate={onRegenerate} />
+        <PrepBriefContent
+          brief={brief}
+          readOnly={readOnly}
+          isPro={isPro}
+          loading={loading}
+          onRegenerate={onRegenerate}
+        />
       )}
     </div>
   );
@@ -164,19 +207,26 @@ function PrepBriefEmpty({ readOnly, isPro, loading, onGenerate }) {
   return (
     <div className="space-y-3">
       <p className="text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
-        Get a match score, gap analysis, and STAR stories to rehearse — tailored to this role and JD before you hit record.
+        Get a match score, gap analysis, and STAR stories to rehearse — tailored to this role and JD before
+        you hit record.
       </p>
       <ul className="grid gap-2 text-[12px] text-slate-500 dark:text-slate-400 sm:grid-cols-2">
         <li className="flex items-center gap-2 rounded-lg border border-violet-100/80 bg-violet-50/40 px-2.5 py-2 dark:border-violet-500/15 dark:bg-violet-950/20">
-          <span className="text-violet-500" aria-hidden>◎</span>
+          <span className="text-violet-500" aria-hidden>
+            ◎
+          </span>
           Fit score
         </li>
         <li className="flex items-center gap-2 rounded-lg border border-violet-100/80 bg-violet-50/40 px-2.5 py-2 dark:border-violet-500/15 dark:bg-violet-950/20">
-          <span className="text-violet-500" aria-hidden>◎</span>
+          <span className="text-violet-500" aria-hidden>
+            ◎
+          </span>
           Gap tips
         </li>
         <li className="flex items-center gap-2 rounded-lg border border-violet-100/80 bg-violet-50/40 px-2.5 py-2 dark:border-violet-500/15 dark:bg-violet-950/20 sm:col-span-2">
-          <span className="text-violet-500" aria-hidden>◎</span>
+          <span className="text-violet-500" aria-hidden>
+            ◎
+          </span>
           STAR stories from your resume
         </li>
       </ul>
@@ -189,15 +239,26 @@ function PrepBriefEmpty({ readOnly, isPro, loading, onGenerate }) {
           <div className="skeleton-line h-3 w-full rounded-md" />
           <div className="skeleton-line h-3 w-[88%] rounded-md" />
           <div className="skeleton-line mx-auto h-16 w-16 rounded-full" />
-          <p className="text-center text-xs font-medium text-violet-700 dark:text-violet-300">Analyzing resume vs job description…</p>
+          <p className="text-center text-xs font-medium text-violet-700 dark:text-violet-300">
+            Analyzing resume vs job description…
+          </p>
         </div>
       ) : null}
       {!readOnly &&
         (isPro ? (
-          <button type="button" className="btn-cta w-full justify-center gap-2 py-2.5 text-sm" onClick={onGenerate} disabled={loading} aria-busy={loading}>
+          <button
+            type="button"
+            className="btn-cta w-full justify-center gap-2 py-2.5 text-sm"
+            onClick={onGenerate}
+            disabled={loading}
+            aria-busy={loading}
+          >
             {loading ? (
               <>
-                <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden />
+                <span
+                  className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
+                  aria-hidden
+                />
                 Analyzing resume…
               </>
             ) : (
@@ -214,8 +275,13 @@ function PrepBriefEmpty({ readOnly, isPro, loading, onGenerate }) {
 function PrepBriefUpgrade() {
   return (
     <div className="rounded-xl border border-violet-200/70 bg-white/80 p-3 dark:border-violet-500/20 dark:bg-slate-900/50">
-      <p className="text-[13px] text-slate-600 dark:text-slate-400">Unlock resume–JD fit analysis with Pro.</p>
-      <Link to="/pricing" className="mt-2 inline-flex text-sm font-semibold text-violet-700 no-underline hover:text-violet-900 dark:text-violet-300">
+      <p className="text-[13px] text-slate-600 dark:text-slate-400">
+        Unlock resume–JD fit analysis with Pro.
+      </p>
+      <Link
+        to="/pricing"
+        className="mt-2 inline-flex text-sm font-semibold text-violet-700 no-underline hover:text-violet-900 dark:text-violet-300"
+      >
         View Pro plans →
       </Link>
     </div>
@@ -229,12 +295,16 @@ function PrepBriefContent({ brief, readOnly, isPro, loading, onRegenerate }) {
     <div className="space-y-4">
       <div className="flex items-start gap-4">
         <MatchScoreRing score={score} />
-        <p className="flex-1 text-[13px] leading-relaxed text-slate-700 dark:text-slate-300">{brief.summary}</p>
+        <p className="flex-1 text-[13px] leading-relaxed text-slate-700 dark:text-slate-300">
+          {brief.summary}
+        </p>
       </div>
 
       {brief.strengths?.length > 0 && (
         <section>
-          <h4 className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">Aligned</h4>
+          <h4 className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+            Aligned
+          </h4>
           <ul className="space-y-1.5">
             {brief.strengths.map((s) => (
               <li key={s} className="flex gap-2 text-[13px] text-slate-700 dark:text-slate-300">
@@ -250,17 +320,26 @@ function PrepBriefContent({ brief, readOnly, isPro, loading, onRegenerate }) {
 
       {brief.gaps?.length > 0 && (
         <section>
-          <h4 className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-amber-800 dark:text-amber-200">Gaps to address</h4>
+          <h4 className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-amber-800 dark:text-amber-200">
+            Gaps to address
+          </h4>
           <ul className="space-y-2">
             {brief.gaps.map((g) => (
-              <li key={`${g.area}-${g.tip}`} className="rounded-xl border border-slate-200/80 bg-white/70 p-3 dark:border-slate-700/80 dark:bg-slate-900/40">
+              <li
+                key={`${g.area}-${g.tip}`}
+                className="rounded-xl border border-slate-200/80 bg-white/70 p-3 dark:border-slate-700/80 dark:bg-slate-900/40"
+              >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-semibold text-aura-ink dark:text-slate-100">{g.area}</span>
-                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${severityBadge(g.severity)}`}>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${severityBadge(g.severity)}`}
+                  >
                     {g.severity}
                   </span>
                 </div>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">{g.tip}</p>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
+                  {g.tip}
+                </p>
               </li>
             ))}
           </ul>
@@ -269,12 +348,19 @@ function PrepBriefContent({ brief, readOnly, isPro, loading, onRegenerate }) {
 
       {brief.starStories?.length > 0 && (
         <section>
-          <h4 className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">Stories to rehearse</h4>
+          <h4 className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
+            Stories to rehearse
+          </h4>
           <ul className="space-y-2">
             {brief.starStories.map((s) => (
-              <li key={s.title} className="rounded-xl border border-violet-200/50 bg-violet-50/30 p-3 dark:border-violet-500/20 dark:bg-violet-950/20">
+              <li
+                key={s.title}
+                className="rounded-xl border border-violet-200/50 bg-violet-50/30 p-3 dark:border-violet-500/20 dark:bg-violet-950/20"
+              >
                 <p className="text-sm font-semibold text-aura-ink dark:text-slate-100">{s.title}</p>
-                <p className="mt-1 text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">{s.prompt}</p>
+                <p className="mt-1 text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
+                  {s.prompt}
+                </p>
               </li>
             ))}
           </ul>
@@ -283,7 +369,9 @@ function PrepBriefContent({ brief, readOnly, isPro, loading, onRegenerate }) {
 
       {brief.focusTips?.length > 0 && (
         <section>
-          <h4 className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">Interview day</h4>
+          <h4 className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            Interview day
+          </h4>
           <ul className="list-disc space-y-1 pl-4 text-[13px] text-slate-600 dark:text-slate-400">
             {brief.focusTips.map((t) => (
               <li key={t}>{t}</li>
@@ -293,7 +381,12 @@ function PrepBriefContent({ brief, readOnly, isPro, loading, onRegenerate }) {
       )}
 
       {!readOnly && isPro && (
-        <button type="button" className="btn-outline w-full py-2 text-xs" onClick={onRegenerate} disabled={loading}>
+        <button
+          type="button"
+          className="btn-outline w-full py-2 text-xs"
+          onClick={onRegenerate}
+          disabled={loading}
+        >
           {loading ? "Refreshing…" : "Regenerate brief"}
         </button>
       )}

@@ -33,13 +33,19 @@ const technicalControls = [
 export default function SecuritySection() {
   return (
     <section id="trust-privacy" className="relative scroll-mt-24 py-24 md:py-28">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-transparent dark:via-slate-900/40" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-transparent dark:via-slate-900/40"
+        aria-hidden
+      />
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mb-14 text-center md:mb-16">
           <div className="section-eyebrow mx-auto mb-4">Trust & privacy</div>
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">Enterprise-Grade Privacy</h2>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+            Enterprise-Grade Privacy
+          </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-            Candidate interview prep data is sensitive. InterviewAI is designed to protect it with clear controls, transparent policies, and secure defaults.
+            Candidate interview prep data is sensitive. InterviewAI is designed to protect it with clear
+            controls, transparent policies, and secure defaults.
           </p>
           <p className="mx-auto mt-3 max-w-2xl text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
             Full policy details are available in our{" "}
@@ -80,7 +86,12 @@ export default function SecuritySection() {
           <details className="group">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg text-sm font-semibold text-aura-ink outline-none transition-colors hover:text-violet-800 focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:text-violet-200 dark:focus-visible:ring-violet-500/50 dark:focus-visible:ring-offset-slate-900">
               <span>View security controls</span>
-              <span className="text-slate-400 transition-transform duration-200 group-open:rotate-180" aria-hidden>▼</span>
+              <span
+                className="text-slate-400 transition-transform duration-200 group-open:rotate-180"
+                aria-hidden
+              >
+                ▼
+              </span>
             </summary>
             <ul className="mt-4 grid gap-2 sm:grid-cols-2">
               {technicalControls.map((control) => (
@@ -88,7 +99,10 @@ export default function SecuritySection() {
                   key={control}
                   className="flex items-start gap-2.5 rounded-xl border border-slate-200/70 bg-white/60 px-3 py-2.5 text-sm leading-relaxed text-slate-600 dark:border-slate-700/70 dark:bg-slate-900/40 dark:text-slate-400"
                 >
-                  <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-[10px] text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300" aria-hidden>
+                  <span
+                    className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-[10px] text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
+                    aria-hidden
+                  >
                     ✓
                   </span>
                   {control}

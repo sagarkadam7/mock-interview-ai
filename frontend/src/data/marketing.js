@@ -90,8 +90,7 @@ export const PERSONAS = [
 export const FOUNDER_LETTER = {
   eyebrow: "Founder's note",
   headline: "Practice with signal, not scripts",
-  lead:
-    "The strongest candidates I know do not cram answers — they learn how they sound and look when the stakes are real.",
+  lead: "The strongest candidates I know do not cram answers — they learn how they sound and look when the stakes are real.",
   paragraphs: [
     "Mock Interview AI came from watching friends grind random question lists while their real stories sat untouched on the page. I wanted a tool that respects your résumé and the job description you paste in: something that feels closer to a sharp mock than a skim through a chatbot.",
     "We paired Gemini with live speech and gaze cues so you get specificity and self-awareness in one sitting — where you ramble, where you look away, and where your answers land on a scorecard you can iterate on, not vague encouragement.",

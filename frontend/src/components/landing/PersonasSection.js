@@ -7,8 +7,16 @@ import { PERSONAS } from "../../data/marketing";
 // that carries a tracking query param so later analytics can segment by track.
 const ACCENTS = [
   { ring: "hover:ring-aura-coral/40", badge: "bg-aura-coral/10 text-aura-coral", glow: "from-aura-coral/25" },
-  { ring: "hover:ring-aura-violet/40", badge: "bg-aura-violet/10 text-aura-violet", glow: "from-aura-violet/25" },
-  { ring: "hover:ring-sky-500/40", badge: "bg-sky-500/10 text-sky-600 dark:text-sky-300", glow: "from-sky-500/25" },
+  {
+    ring: "hover:ring-aura-violet/40",
+    badge: "bg-aura-violet/10 text-aura-violet",
+    glow: "from-aura-violet/25",
+  },
+  {
+    ring: "hover:ring-sky-500/40",
+    badge: "bg-sky-500/10 text-sky-600 dark:text-sky-300",
+    glow: "from-sky-500/25",
+  },
 ];
 
 export default function PersonasSection() {
@@ -43,8 +51,8 @@ export default function PersonasSection() {
             Built for serious loops
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-            Same product surface — different stories. The model adapts to the role you paste, so each track feels
-            like the real panel.
+            Same product surface — different stories. The model adapts to the role you paste, so each track
+            feels like the real panel.
           </p>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
@@ -68,7 +76,9 @@ export default function PersonasSection() {
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200/90 bg-slate-50 text-xl text-aura-ink shadow-inner dark:border-slate-700 dark:bg-slate-800/80">
                     {p.icon}
                   </div>
-                  <h3 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">{p.title}</h3>
+                  <h3 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+                    {p.title}
+                  </h3>
                   <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{p.desc}</p>
 
                   {p.outcomes?.length ? (

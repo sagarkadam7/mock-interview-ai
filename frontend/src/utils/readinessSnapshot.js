@@ -28,14 +28,20 @@ export function getReadinessSnapshot(interviews) {
   if (avgScore >= 7) {
     bullets.push("Content scores are competitive — invest the next reps in delivery (pace, fillers, gaze).");
   } else {
-    bullets.push("Lead with metrics, ownership, and tradeoffs in every primary answer — that’s what moves scores.");
+    bullets.push(
+      "Lead with metrics, ownership, and tradeoffs in every primary answer — that’s what moves scores."
+    );
   }
 
   if (avgEye != null) {
     if (avgEye < 55) {
-      bullets.push("Camera presence is dragging overall signal — rehearse looking at the lens, not the preview.");
+      bullets.push(
+        "Camera presence is dragging overall signal — rehearse looking at the lens, not the preview."
+      );
     } else if (avgEye < 72) {
-      bullets.push("Eye contact is workable — one focused rep on “lens-first” answers usually unlocks the next band.");
+      bullets.push(
+        "Eye contact is workable — one focused rep on “lens-first” answers usually unlocks the next band."
+      );
     } else {
       bullets.push("Gaze is reading confident on average — maintain it when questions get harder.");
     }
@@ -45,7 +51,9 @@ export function getReadinessSnapshot(interviews) {
 
   if (avgPace != null) {
     if (avgPace < 115) {
-      bullets.push("Pace skews slow — aim for crisp beats and fewer long pauses (target ~130–170 wpm when speaking).");
+      bullets.push(
+        "Pace skews slow — aim for crisp beats and fewer long pauses (target ~130–170 wpm when speaking)."
+      );
     } else if (avgPace > 185) {
       bullets.push("Pace skews fast — add intentional pauses after key claims so reviewers can absorb them.");
     } else {

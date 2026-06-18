@@ -14,7 +14,16 @@ export function Sparkline({
   const values = (data || []).filter((v) => typeof v === "number" && !Number.isNaN(v));
   if (values.length < 2) {
     return (
-      <div style={{ height, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text3)", fontSize: 12 }}>
+      <div
+        style={{
+          height,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "var(--text3)",
+          fontSize: 12,
+        }}
+      >
         Not enough data
       </div>
     );
@@ -48,7 +57,14 @@ export function Sparkline({
   return (
     <svg width="100%" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Score trend sparkline">
       <path d={area} fill={fill} />
-      <polyline points={poly} fill="none" stroke={stroke} strokeWidth="2.25" strokeLinejoin="round" strokeLinecap="round" />
+      <polyline
+        points={poly}
+        fill="none"
+        stroke={stroke}
+        strokeWidth="2.25"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
       <circle cx={last.x} cy={last.y} r="4.2" fill={stroke} />
     </svg>
   );
@@ -100,7 +116,17 @@ export function RadarChart({
 
       {axes.map((m, i) => {
         const p = pointFor(i, 1);
-        return <line key={m.label} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="rgba(15,23,42,0.06)" strokeWidth="1" />;
+        return (
+          <line
+            key={m.label}
+            x1={cx}
+            y1={cy}
+            x2={p.x}
+            y2={p.y}
+            stroke="rgba(15,23,42,0.06)"
+            strokeWidth="1"
+          />
+        );
       })}
 
       <polygon points={valuePoly} fill={fill} stroke={stroke} strokeWidth="2.1" />

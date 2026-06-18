@@ -33,13 +33,19 @@ export default function AuthBrandPanel() {
       </Link>
 
       <div className="relative z-10 flex flex-1 flex-col justify-center py-16">
-        <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.35em] text-aura-coral/90">Candidate-grade practice</p>
+        <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.35em] text-aura-coral/90">
+          Candidate-grade practice
+        </p>
         <h2 className="font-display text-4xl font-semibold leading-[1.15] tracking-tight text-white xl:text-[2.75rem]">
           Turn every answer into{" "}
-          <span className="bg-gradient-to-r from-aura-coral to-violet-300 bg-clip-text text-transparent">signal</span>, not noise.
+          <span className="bg-gradient-to-r from-aura-coral to-violet-300 bg-clip-text text-transparent">
+            signal
+          </span>
+          , not noise.
         </h2>
         <p className="mt-6 max-w-md text-[15px] leading-relaxed text-slate-400">
-          Structured scoring, camera-aware coaching, and questions grounded in your real experience — the stack serious candidates use before the real loop.
+          Structured scoring, camera-aware coaching, and questions grounded in your real experience — the
+          stack serious candidates use before the real loop.
         </p>
         <ul className="mt-12 space-y-4 border-t border-white/10 pt-10">
           {highlights.map((h) => (

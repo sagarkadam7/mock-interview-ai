@@ -75,8 +75,12 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-8 text-center lg:text-left">
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink sm:text-[2rem]">Create your workspace</h1>
-            <p className="mt-3 text-[15px] leading-relaxed text-aura-muted">Free account · no card required · start practicing in minutes.</p>
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink sm:text-[2rem]">
+              Create your workspace
+            </h1>
+            <p className="mt-3 text-[15px] leading-relaxed text-aura-muted">
+              Free account · no card required · start practicing in minutes.
+            </p>
             {attributionLabel ? (
               <p className="mt-4 inline-flex rounded-full border border-violet-200/80 bg-violet-50/90 px-3 py-1.5 text-xs font-semibold text-violet-800 dark:border-violet-500/35 dark:bg-violet-950/40 dark:text-violet-200">
                 {attributionLabel}
@@ -168,7 +172,8 @@ export default function RegisterPage() {
               <button type="submit" className="btn-cta mt-2 w-full" disabled={loading}>
                 {loading ? (
                   <>
-                    <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" /> Creating account…
+                    <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" />{" "}
+                    Creating account…
                   </>
                 ) : (
                   "Create account →"
@@ -179,7 +184,10 @@ export default function RegisterPage() {
             <div className="my-8 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
             <p className="text-center text-sm text-aura-muted">
               Already have an account?{" "}
-              <Link to="/login" className="font-semibold text-aura-ink underline decoration-slate-300 underline-offset-4 transition-colors hover:text-aura-violet hover:decoration-aura-violet/40">
+              <Link
+                to="/login"
+                className="font-semibold text-aura-ink underline decoration-slate-300 underline-offset-4 transition-colors hover:text-aura-violet hover:decoration-aura-violet/40"
+              >
                 Sign in
               </Link>
             </p>

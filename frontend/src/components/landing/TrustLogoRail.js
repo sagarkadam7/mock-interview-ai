@@ -23,9 +23,38 @@ const LOGOS = [
     svg: (
       <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
         <rect x="4" y="4" width="56" height="56" rx="6" stroke="currentColor" strokeWidth="1.5" />
-        <line x1="32" y1="4" x2="32" y2="60" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
-        <line x1="4" y1="32" x2="60" y2="32" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
-        <text x="32" y="38" textAnchor="middle" fontFamily="'Georgia', serif" fontWeight="700" fontSize="18" fill="currentColor" letterSpacing="2">IIT</text>
+        <line
+          x1="32"
+          y1="4"
+          x2="32"
+          y2="60"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeDasharray="3 3"
+          opacity="0.4"
+        />
+        <line
+          x1="4"
+          y1="32"
+          x2="60"
+          y2="32"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeDasharray="3 3"
+          opacity="0.4"
+        />
+        <text
+          x="32"
+          y="38"
+          textAnchor="middle"
+          fontFamily="'Georgia', serif"
+          fontWeight="700"
+          fontSize="18"
+          fill="currentColor"
+          letterSpacing="2"
+        >
+          IIT
+        </text>
         <circle cx="32" cy="32" r="6" fill="none" stroke={ACCENT} strokeWidth="1" opacity="0.6" />
       </svg>
     ),
@@ -37,8 +66,25 @@ const LOGOS = [
     svg: (
       <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
         <polygon points="32,6 58,54 6,54" stroke="currentColor" strokeWidth="1.5" fill="none" />
-        <polygon points="32,18 48,48 16,48" stroke="currentColor" strokeWidth="0.75" fill="none" opacity="0.4" />
-        <text x="32" y="44" textAnchor="middle" fontFamily="'Georgia', serif" fontWeight="700" fontSize="14" fill="currentColor" letterSpacing="2">NIT</text>
+        <polygon
+          points="32,18 48,48 16,48"
+          stroke="currentColor"
+          strokeWidth="0.75"
+          fill="none"
+          opacity="0.4"
+        />
+        <text
+          x="32"
+          y="44"
+          textAnchor="middle"
+          fontFamily="'Georgia', serif"
+          fontWeight="700"
+          fontSize="14"
+          fill="currentColor"
+          letterSpacing="2"
+        >
+          NIT
+        </text>
       </svg>
     ),
   },
@@ -51,7 +97,18 @@ const LOGOS = [
         <circle cx="32" cy="32" r="26" stroke="currentColor" strokeWidth="1.5" />
         <circle cx="32" cy="32" r="18" stroke="currentColor" strokeWidth="0.75" opacity="0.4" />
         <circle cx="32" cy="32" r="4" fill="currentColor" opacity="0.7" />
-        <text x="32" y="55" textAnchor="middle" fontFamily="'Georgia', serif" fontWeight="700" fontSize="10" fill="currentColor" letterSpacing="1">SPPU</text>
+        <text
+          x="32"
+          y="55"
+          textAnchor="middle"
+          fontFamily="'Georgia', serif"
+          fontWeight="700"
+          fontSize="10"
+          fill="currentColor"
+          letterSpacing="1"
+        >
+          SPPU
+        </text>
         <line x1="6" y1="32" x2="58" y2="32" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
         <line x1="32" y1="6" x2="32" y2="58" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
       </svg>
@@ -63,10 +120,36 @@ const LOGOS = [
     tier: "Deemed",
     svg: (
       <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-        <path d="M8 12 L32 52 L56 12" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M18 12 L32 38 L46 12" stroke="currentColor" strokeWidth="0.75" fill="none" opacity="0.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M8 12 L32 52 L56 12"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M18 12 L32 38 L46 12"
+          stroke="currentColor"
+          strokeWidth="0.75"
+          fill="none"
+          opacity="0.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
         <rect x="20" y="8" width="24" height="4" rx="1" fill="currentColor" opacity="0.15" />
-        <text x="32" y="10" textAnchor="middle" fontFamily="'Georgia', serif" fontWeight="700" fontSize="9" fill="currentColor" letterSpacing="1">VIT</text>
+        <text
+          x="32"
+          y="10"
+          textAnchor="middle"
+          fontFamily="'Georgia', serif"
+          fontWeight="700"
+          fontSize="9"
+          fill="currentColor"
+          letterSpacing="1"
+        >
+          VIT
+        </text>
       </svg>
     ),
   },
@@ -77,9 +160,29 @@ const LOGOS = [
     svg: (
       <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
         <rect x="8" y="8" width="48" height="48" rx="4" stroke="currentColor" strokeWidth="1.5" />
-        <rect x="16" y="16" width="32" height="32" rx="2" stroke="currentColor" strokeWidth="0.75" opacity="0.4" />
+        <rect
+          x="16"
+          y="16"
+          width="32"
+          height="32"
+          rx="2"
+          stroke="currentColor"
+          strokeWidth="0.75"
+          opacity="0.4"
+        />
         <path d="M24 24 L40 40 M40 24 L24 40" stroke={ACCENT} strokeWidth="1" opacity="0.5" />
-        <text x="32" y="36" textAnchor="middle" fontFamily="'Georgia', serif" fontWeight="700" fontSize="12" fill="currentColor" letterSpacing="1">BITS</text>
+        <text
+          x="32"
+          y="36"
+          textAnchor="middle"
+          fontFamily="'Georgia', serif"
+          fontWeight="700"
+          fontSize="12"
+          fill="currentColor"
+          letterSpacing="1"
+        >
+          BITS
+        </text>
       </svg>
     ),
   },
@@ -90,8 +193,28 @@ const LOGOS = [
     svg: (
       <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
         <rect x="6" y="6" width="52" height="52" rx="26" stroke="currentColor" strokeWidth="1.5" />
-        <rect x="14" y="14" width="36" height="36" rx="18" stroke="currentColor" strokeWidth="0.75" opacity="0.4" />
-        <text x="32" y="37" textAnchor="middle" fontFamily="'Georgia', serif" fontWeight="700" fontSize="13" fill="currentColor" letterSpacing="1">IIIT</text>
+        <rect
+          x="14"
+          y="14"
+          width="36"
+          height="36"
+          rx="18"
+          stroke="currentColor"
+          strokeWidth="0.75"
+          opacity="0.4"
+        />
+        <text
+          x="32"
+          y="37"
+          textAnchor="middle"
+          fontFamily="'Georgia', serif"
+          fontWeight="700"
+          fontSize="13"
+          fill="currentColor"
+          letterSpacing="1"
+        >
+          IIIT
+        </text>
       </svg>
     ),
   },
@@ -101,9 +224,31 @@ const LOGOS = [
     tier: "State",
     svg: (
       <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-        <path d="M10 54 L10 10 L38 10 Q54 10 54 32 Q54 54 38 54 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
-        <path d="M18 46 L18 18 L36 18 Q46 18 46 32 Q46 46 36 46 Z" stroke="currentColor" strokeWidth="0.75" fill="none" opacity="0.4" />
-        <text x="29" y="37" textAnchor="middle" fontFamily="'Georgia', serif" fontWeight="700" fontSize="11" fill="currentColor" letterSpacing="1">DTU</text>
+        <path
+          d="M10 54 L10 10 L38 10 Q54 10 54 32 Q54 54 38 54 Z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          fill="none"
+        />
+        <path
+          d="M18 46 L18 18 L36 18 Q46 18 46 32 Q46 46 36 46 Z"
+          stroke="currentColor"
+          strokeWidth="0.75"
+          fill="none"
+          opacity="0.4"
+        />
+        <text
+          x="29"
+          y="37"
+          textAnchor="middle"
+          fontFamily="'Georgia', serif"
+          fontWeight="700"
+          fontSize="11"
+          fill="currentColor"
+          letterSpacing="1"
+        >
+          DTU
+        </text>
       </svg>
     ),
   },
@@ -114,9 +259,35 @@ const LOGOS = [
     svg: (
       <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
         <path d="M32 8 L56 24 L56 56 L8 56 L8 24 Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
-        <path d="M32 18 L48 28 L48 50 L16 50 L16 28 Z" stroke="currentColor" strokeWidth="0.75" fill="none" opacity="0.4" />
-        <rect x="26" y="44" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="0.75" opacity="0.5" />
-        <text x="32" y="40" textAnchor="middle" fontFamily="'Georgia', serif" fontWeight="700" fontSize="10" fill="currentColor" letterSpacing="1">COEP</text>
+        <path
+          d="M32 18 L48 28 L48 50 L16 50 L16 28 Z"
+          stroke="currentColor"
+          strokeWidth="0.75"
+          fill="none"
+          opacity="0.4"
+        />
+        <rect
+          x="26"
+          y="44"
+          width="12"
+          height="12"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.75"
+          opacity="0.5"
+        />
+        <text
+          x="32"
+          y="40"
+          textAnchor="middle"
+          fontFamily="'Georgia', serif"
+          fontWeight="700"
+          fontSize="10"
+          fill="currentColor"
+          letterSpacing="1"
+        >
+          COEP
+        </text>
       </svg>
     ),
   },
@@ -132,9 +303,7 @@ const TIER_COLORS = {
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(() =>
-    typeof window !== "undefined"
-      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      : false
+    typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false
   );
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -171,12 +340,8 @@ function LogoCard({ logo, palette, theme, style = {}, tabIndex = -1 }) {
         gap: "10px",
         padding: "18px 20px 14px",
         borderRadius: "12px",
-        border: hovered
-          ? `1px solid ${tier.border}`
-          : `1px solid ${idleBorder}`,
-        background: hovered
-          ? `${tier.bg}`
-          : idleSurface,
+        border: hovered ? `1px solid ${tier.border}` : `1px solid ${idleBorder}`,
+        background: hovered ? `${tier.bg}` : idleSurface,
         cursor: "default",
         transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
         transform: hovered ? "translateY(-4px)" : "translateY(0)",
@@ -289,7 +454,9 @@ export default function TrustLogoRail() {
       }
     `;
     document.head.appendChild(el);
-    return () => { /* keep styles alive */ };
+    return () => {
+      /* keep styles alive */
+    };
   }, []);
 
   /* ── Section wrapper ── */
@@ -328,7 +495,10 @@ export default function TrustLogoRail() {
   /* ── Rail ── */
   if (reduced) {
     return (
-      <section style={sectionStyle} aria-label="Candidates from these engineering programs practice with InterviewAI">
+      <section
+        style={sectionStyle}
+        aria-label="Candidates from these engineering programs practice with InterviewAI"
+      >
         {labelEl}
         <div
           role="list"
@@ -359,7 +529,10 @@ export default function TrustLogoRail() {
   }
 
   return (
-    <section style={sectionStyle} aria-label="Candidates from these engineering programs practice with InterviewAI">
+    <section
+      style={sectionStyle}
+      aria-label="Candidates from these engineering programs practice with InterviewAI"
+    >
       {labelEl}
 
       {/* Marquee */}
@@ -370,8 +543,7 @@ export default function TrustLogoRail() {
           position: "relative",
           overflow: "hidden",
           /* Fade edges */
-          maskImage:
-            "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+          maskImage: "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
           WebkitMaskImage:
             "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
           opacity: mounted ? 1 : 0,
@@ -380,7 +552,10 @@ export default function TrustLogoRail() {
         }}
       >
         {/* Screen-reader accessible list hidden visually */}
-        <ul aria-label="Partner universities" style={{ position: "absolute", opacity: 0, pointerEvents: "none", margin: 0, padding: 0 }}>
+        <ul
+          aria-label="Partner universities"
+          style={{ position: "absolute", opacity: 0, pointerEvents: "none", margin: 0, padding: 0 }}
+        >
           {LOGOS.map((l) => (
             <li key={l.name}>{l.full}</li>
           ))}

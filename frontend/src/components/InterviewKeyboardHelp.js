@@ -31,7 +31,12 @@ export default function InterviewKeyboardHelp({ open, onClose }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <button type="button" className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px]" aria-label="Close" onClick={onClose} />
+          <button
+            type="button"
+            className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px]"
+            aria-label="Close"
+            onClick={onClose}
+          />
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -39,7 +44,10 @@ export default function InterviewKeyboardHelp({ open, onClose }) {
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/90 bg-white/98 p-6 shadow-lux-lg dark:border-slate-700 dark:bg-slate-900/95"
           >
-            <h2 id="kbd-help-title" className="font-display text-lg font-semibold tracking-tight text-aura-ink dark:text-slate-100">
+            <h2
+              id="kbd-help-title"
+              className="font-display text-lg font-semibold tracking-tight text-aura-ink dark:text-slate-100"
+            >
               Session shortcuts
             </h2>
             <p id="kbd-help-desc" className="mt-2 text-sm text-slate-600 dark:text-slate-400">
@@ -47,8 +55,13 @@ export default function InterviewKeyboardHelp({ open, onClose }) {
             </p>
             <ul className="mt-5 space-y-3">
               {rows.map((r) => (
-                <li key={r.keys} className="flex flex-col gap-1 rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-300">{r.keys}</span>
+                <li
+                  key={r.keys}
+                  className="flex flex-col gap-1 rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60"
+                >
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-300">
+                    {r.keys}
+                  </span>
                   <span className="text-sm text-slate-700 dark:text-slate-300">{r.desc}</span>
                 </li>
               ))}

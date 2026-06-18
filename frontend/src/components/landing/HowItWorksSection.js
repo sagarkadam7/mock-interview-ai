@@ -25,11 +25,15 @@ export default function HowItWorksSection() {
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mb-16 text-center md:mb-20">
           <div className="section-eyebrow mx-auto mb-4">How it works</div>
-          <h2 id="how-it-works-heading" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+          <h2
+            id="how-it-works-heading"
+            className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl"
+          >
             From resume to <span className="text-gradient italic">report</span> in one flow
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-            No downloads. No question banks. A single pipeline built for depth — the same pattern top candidates use to debrief after every round.
+            No downloads. No question banks. A single pipeline built for depth — the same pattern top
+            candidates use to debrief after every round.
           </p>
         </div>
 
@@ -64,8 +68,12 @@ export default function HowItWorksSection() {
                       Step {i + 1}
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{step.desc}</p>
+                  <h3 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                    {step.desc}
+                  </p>
                   <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/75 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/55 dark:text-slate-400">
                     <span className="h-1.5 w-1.5 rounded-full bg-aura-coral" aria-hidden />
                     {STEP_OUTPUTS[i]}

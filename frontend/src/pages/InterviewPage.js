@@ -17,16 +17,33 @@ function MetricTile({ label, children, className = "" }) {
     <div
       className={`rounded-xl border border-slate-200/85 bg-gradient-to-b from-white/95 to-slate-50/80 p-3.5 shadow-sm ring-1 ring-white/60 backdrop-blur-sm dark:border-slate-600/50 dark:from-slate-800/90 dark:to-slate-900/70 dark:ring-slate-700/40 ${className}`}
     >
-      <div className="mb-1 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{label}</div>
+      <div className="mb-1 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+        {label}
+      </div>
       <div className="tabular-nums">{children}</div>
     </div>
   );
 }
 
 const COACH_CARDS = [
-  { title: "Structure", k: "STAR", body: "Situation → task → action → result. Keep the arc tight and end on impact.", accent: "from-violet-500/12 to-transparent" },
-  { title: "Presence", k: "Lens", body: "Look at the camera lens, not the preview. Steady gaze reads as confidence on video.", accent: "from-aura-coral/12 to-transparent" },
-  { title: "Pace", k: "WPM", body: "Cut fillers (“um”, “like”). Aim for roughly 130–170 words per minute.", accent: "from-emerald-500/10 to-transparent" },
+  {
+    title: "Structure",
+    k: "STAR",
+    body: "Situation → task → action → result. Keep the arc tight and end on impact.",
+    accent: "from-violet-500/12 to-transparent",
+  },
+  {
+    title: "Presence",
+    k: "Lens",
+    body: "Look at the camera lens, not the preview. Steady gaze reads as confidence on video.",
+    accent: "from-aura-coral/12 to-transparent",
+  },
+  {
+    title: "Pace",
+    k: "WPM",
+    body: "Cut fillers (“um”, “like”). Aim for roughly 130–170 words per minute.",
+    accent: "from-emerald-500/10 to-transparent",
+  },
 ];
 
 function SessionProgressRing({ answered, total }) {
@@ -40,7 +57,14 @@ function SessionProgressRing({ answered, total }) {
   return (
     <div className="relative flex h-[76px] w-[76px] shrink-0 items-center justify-center">
       <svg width="76" height="76" viewBox="0 0 76 76" className="-rotate-90" aria-hidden>
-        <circle cx="38" cy="38" r={r} className="stroke-slate-200 dark:stroke-slate-700" strokeWidth="7" fill="none" />
+        <circle
+          cx="38"
+          cy="38"
+          r={r}
+          className="stroke-slate-200 dark:stroke-slate-700"
+          strokeWidth="7"
+          fill="none"
+        />
         <circle
           cx="38"
           cy="38"
@@ -61,8 +85,12 @@ function SessionProgressRing({ answered, total }) {
         </defs>
       </svg>
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="font-display text-xl font-semibold tabular-nums leading-none text-aura-ink">{answered}</span>
-        <span className="mt-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">of {total}</span>
+        <span className="font-display text-xl font-semibold tabular-nums leading-none text-aura-ink">
+          {answered}
+        </span>
+        <span className="mt-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+          of {total}
+        </span>
       </div>
     </div>
   );
@@ -70,7 +98,11 @@ function SessionProgressRing({ answered, total }) {
 
 function InterviewLoadingSkeleton() {
   return (
-    <div className="page-shell relative max-w-7xl overflow-hidden py-12 md:py-14" aria-busy="true" aria-label="Loading interview">
+    <div
+      className="page-shell relative max-w-7xl overflow-hidden py-12 md:py-14"
+      aria-busy="true"
+      aria-label="Loading interview"
+    >
       <div className="pointer-events-none absolute inset-0 opacity-[0.35]" aria-hidden>
         <div
           className="absolute inset-0"
@@ -102,7 +134,9 @@ function InterviewLoadingSkeleton() {
           <div className="skeleton-line min-h-[320px] w-full rounded-2xl xl:min-h-[380px]" />
         </div>
       </div>
-      <p className="relative mt-10 text-center text-sm font-medium text-slate-500 dark:text-slate-400">Loading your session…</p>
+      <p className="relative mt-10 text-center text-sm font-medium text-slate-500 dark:text-slate-400">
+        Loading your session…
+      </p>
     </div>
   );
 }
@@ -412,12 +446,18 @@ export default function InterviewPage() {
         />
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
-            <button type="button" className="btn-outline shrink-0 py-2.5 text-xs font-semibold" onClick={() => navigate("/dashboard")}>
+            <button
+              type="button"
+              className="btn-outline shrink-0 py-2.5 text-xs font-semibold"
+              onClick={() => navigate("/dashboard")}
+            >
               ← Exit
             </button>
             <div className="hidden h-10 w-px shrink-0 bg-slate-200 dark:bg-slate-700 sm:block" aria-hidden />
             <div className="min-w-0">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">Active session</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
+                Active session
+              </p>
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <span className="inline-flex max-w-full items-center truncate rounded-full border border-slate-200/90 bg-white/95 px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-aura-ink shadow-sm ring-1 ring-white/80 dark:border-slate-600/80 dark:bg-slate-800/90 dark:text-slate-100 dark:ring-slate-700/50">
                   {interview.jobRole}
@@ -436,18 +476,26 @@ export default function InterviewPage() {
                 </span>
               </div>
               {interview.targetCompany ? (
-                <p className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">{interview.targetCompany}</p>
+                <p className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">
+                  {interview.targetCompany}
+                </p>
               ) : null}
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-6 lg:justify-end">
             <div className="text-left sm:text-right">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Progress</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                Progress
+              </p>
               <p className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">
-                <span className="text-2xl font-bold tabular-nums text-aura-ink dark:text-slate-100">{primaryAnswered}</span>
+                <span className="text-2xl font-bold tabular-nums text-aura-ink dark:text-slate-100">
+                  {primaryAnswered}
+                </span>
                 <span className="mx-1 text-slate-300 dark:text-slate-600">/</span>
-                <span className="font-semibold tabular-nums text-slate-600 dark:text-slate-300">{primaryQuestions.length}</span>
+                <span className="font-semibold tabular-nums text-slate-600 dark:text-slate-300">
+                  {primaryQuestions.length}
+                </span>
                 <span className="ml-2 text-slate-400 dark:text-slate-500">primary</span>
               </p>
             </div>
@@ -473,7 +521,9 @@ export default function InterviewPage() {
           >
             <span>
               Private prep notes
-              {prepNotes.trim() ? <span className="ml-2 font-normal text-slate-500 dark:text-slate-400">· autosaved</span> : null}
+              {prepNotes.trim() ? (
+                <span className="ml-2 font-normal text-slate-500 dark:text-slate-400">· autosaved</span>
+              ) : null}
             </span>
             <span className="shrink-0 text-slate-400" aria-hidden>
               {prepNotesOpen ? "▲" : "▼"}
@@ -501,7 +551,13 @@ export default function InterviewPage() {
             <div
               key={q._id}
               role="listitem"
-              title={q.score !== null ? `Scored ${q.score}/10` : i === currentIndex ? "Current question" : "Upcoming"}
+              title={
+                q.score !== null
+                  ? `Scored ${q.score}/10`
+                  : i === currentIndex
+                    ? "Current question"
+                    : "Upcoming"
+              }
               className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-xl text-[11px] font-bold tabular-nums transition-all duration-300 sm:text-xs ${
                 q.score !== null
                   ? q.score >= 7
@@ -566,7 +622,9 @@ export default function InterviewPage() {
                     </span>
                   </div>
                 </div>
-                <p className="font-display text-xl font-medium leading-[1.45] tracking-tight text-aura-ink md:text-2xl md:leading-[1.5]">{currentQ.text}</p>
+                <p className="font-display text-xl font-medium leading-[1.45] tracking-tight text-aura-ink md:text-2xl md:leading-[1.5]">
+                  {currentQ.text}
+                </p>
               </div>
             </div>
           </div>
@@ -575,7 +633,10 @@ export default function InterviewPage() {
             <div>
               <div className="mb-4 flex items-center gap-3">
                 <span className="section-eyebrow">Coaching brief</span>
-                <span className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent dark:from-slate-700" aria-hidden />
+                <span
+                  className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent dark:from-slate-700"
+                  aria-hidden
+                />
               </div>
               <div className="grid gap-4 sm:grid-cols-3">
                 {COACH_CARDS.map((c) => (
@@ -583,9 +644,13 @@ export default function InterviewPage() {
                     key={c.title}
                     className={`relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b ${c.accent} to-white/90 p-5 shadow-sm ring-1 ring-white/70 dark:border-slate-700/80 dark:to-slate-900/85 dark:ring-slate-800/40`}
                   >
-                    <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{c.k}</p>
+                    <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                      {c.k}
+                    </p>
                     <h3 className="mt-1.5 text-sm font-bold tracking-tight text-aura-ink">{c.title}</h3>
-                    <p className="mt-2 text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">{c.body}</p>
+                    <p className="mt-2 text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
+                      {c.body}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -600,11 +665,19 @@ export default function InterviewPage() {
               />
               <div className="relative mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-slate-200/70 pb-5 dark:border-slate-700/70">
                 <div>
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Model feedback</p>
-                  <h3 className="mt-1 text-xl font-bold tracking-tight text-aura-ink md:text-2xl">Answer score</h3>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                    Model feedback
+                  </p>
+                  <h3 className="mt-1 text-xl font-bold tracking-tight text-aura-ink md:text-2xl">
+                    Answer score
+                  </h3>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className={`font-display text-4xl font-semibold tabular-nums md:text-5xl ${scoreColor(feedback.score)}`}>{feedback.score}</span>
+                  <span
+                    className={`font-display text-4xl font-semibold tabular-nums md:text-5xl ${scoreColor(feedback.score)}`}
+                  >
+                    {feedback.score}
+                  </span>
                   <span className="text-base font-medium text-slate-400 dark:text-slate-500">/10</span>
                 </div>
               </div>
@@ -616,19 +689,27 @@ export default function InterviewPage() {
               </div>
               {feedback.aiFallback ? (
                 <div className="mb-6 rounded-2xl border border-amber-300/50 bg-amber-50/80 p-4 text-amber-950 ring-1 ring-amber-200/70 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-50 dark:ring-amber-500/20">
-                  <div className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em]">Fallback coaching mode</div>
+                  <div className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em]">
+                    Fallback coaching mode
+                  </div>
                   <p className="text-sm leading-relaxed opacity-[0.92]">
-                    The AI response was temporarily unreliable, so we generated safe default coaching. You can tap Submit again to retry.
+                    The AI response was temporarily unreliable, so we generated safe default coaching. You can
+                    tap Submit again to retry.
                   </p>
                 </div>
               ) : null}
-              <p className="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-[15px]">{feedback.feedback}</p>
+              <p className="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-300 md:text-[15px]">
+                {feedback.feedback}
+              </p>
 
               {feedback.followUpInserted && (
                 <div className="mb-6 rounded-2xl border border-aura-violet/20 bg-gradient-to-br from-aura-violet/[0.07] to-white/90 p-4 ring-1 ring-aura-violet/10 dark:to-slate-900/90">
-                  <div className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-aura-violet">Adaptive interviewer</div>
+                  <div className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-aura-violet">
+                    Adaptive interviewer
+                  </div>
                   <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                    Based on your answer, the session added a targeted follow-up question next. Continue to drill deeper, then move on when you are ready.
+                    Based on your answer, the session added a targeted follow-up question next. Continue to
+                    drill deeper, then move on when you are ready.
                   </p>
                   {feedback.followUpQuestion?.text ? (
                     <div className="mt-4 rounded-xl border border-slate-200/80 bg-white/80 p-4 text-left shadow-sm ring-1 ring-white/60 dark:border-slate-700/80 dark:bg-slate-950/40 dark:ring-slate-800/40">
@@ -650,19 +731,27 @@ export default function InterviewPage() {
 
               {feedback.mlData && (
                 <div className="mb-6">
-                  <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Signal breakdown</p>
+                  <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                    Signal breakdown
+                  </p>
                   <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-2">
                     {feedback.mlData.eyeContactPct !== null && (
                       <MetricTile label="Eye contact">
-                        <div className={`text-lg font-bold ${eyeColor(feedback.mlData.eyeContactPct)}`}>{feedback.mlData.eyeContactPct}%</div>
+                        <div className={`text-lg font-bold ${eyeColor(feedback.mlData.eyeContactPct)}`}>
+                          {feedback.mlData.eyeContactPct}%
+                        </div>
                       </MetricTile>
                     )}
                     {feedback.mlData.wordsPerMinute > 0 && (
                       <MetricTile label="Pace">
                         <div className={`text-base font-bold ${paceColor(feedback.mlData.paceLabel)}`}>
                           {feedback.mlData.wordsPerMinute}{" "}
-                          <span className="text-xs font-semibold normal-case text-slate-500 dark:text-slate-400">wpm</span>
-                          <span className="mt-0.5 block text-[11px] font-medium capitalize text-slate-500 dark:text-slate-400">{feedback.mlData.paceLabel}</span>
+                          <span className="text-xs font-semibold normal-case text-slate-500 dark:text-slate-400">
+                            wpm
+                          </span>
+                          <span className="mt-0.5 block text-[11px] font-medium capitalize text-slate-500 dark:text-slate-400">
+                            {feedback.mlData.paceLabel}
+                          </span>
                         </div>
                       </MetricTile>
                     )}
@@ -683,12 +772,19 @@ export default function InterviewPage() {
                     )}
                     {feedback.mlData.dominantEmotion && (
                       <MetricTile label="Tone">
-                        <div className="text-base font-semibold capitalize text-aura-ink">{feedback.mlData.dominantEmotion}</div>
+                        <div className="text-base font-semibold capitalize text-aura-ink">
+                          {feedback.mlData.dominantEmotion}
+                        </div>
                       </MetricTile>
                     )}
                     {feedback.mlData.confidenceScore !== null && (
-                      <MetricTile label="Confidence (ML)" className="col-span-2 border-aura-violet/25 bg-gradient-to-br from-aura-violet/[0.07] to-white/90 dark:to-slate-900/90">
-                        <div className="text-2xl font-bold text-aura-ink">{feedback.mlData.confidenceScore}/10</div>
+                      <MetricTile
+                        label="Confidence (ML)"
+                        className="col-span-2 border-aura-violet/25 bg-gradient-to-br from-aura-violet/[0.07] to-white/90 dark:to-slate-900/90"
+                      >
+                        <div className="text-2xl font-bold text-aura-ink">
+                          {feedback.mlData.confidenceScore}/10
+                        </div>
                       </MetricTile>
                     )}
                   </div>
@@ -697,16 +793,28 @@ export default function InterviewPage() {
 
               <div className="mb-6 flex flex-col gap-3">
                 <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4 ring-1 ring-emerald-500/10">
-                  <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">Strengths</div>
-                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{feedback.strengths}</p>
+                  <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">
+                    Strengths
+                  </div>
+                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                    {feedback.strengths}
+                  </p>
                 </div>
                 <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.06] p-4 ring-1 ring-amber-500/10">
-                  <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-amber-800">Improvements</div>
-                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{feedback.improvements}</p>
+                  <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-amber-800">
+                    Improvements
+                  </div>
+                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                    {feedback.improvements}
+                  </p>
                 </div>
               </div>
 
-              <button type="button" className="btn-cta w-full justify-center py-3.5 text-[15px]" onClick={handleNext}>
+              <button
+                type="button"
+                className="btn-cta w-full justify-center py-3.5 text-[15px]"
+                onClick={handleNext}
+              >
                 {isLastQ ? "View full report" : `Next question (${currentIndex + 2}/${totalQ})`}
                 <span aria-hidden>→</span>
               </button>
@@ -728,10 +836,15 @@ export default function InterviewPage() {
                 className="max-h-48 min-h-[120px] overflow-y-auto rounded-xl border border-slate-200/90 bg-gradient-to-b from-slate-50/95 to-white/80 p-4 font-mono text-[13px] leading-relaxed text-slate-700 shadow-inner ring-1 ring-white/60 dark:border-slate-600/80 dark:from-slate-900/80 dark:to-slate-950/60 dark:text-slate-200 dark:ring-slate-800/50 md:max-h-64"
               >
                 {transcript ? (
-                  <div className="italic text-slate-800 dark:text-slate-100">{renderTranscriptWithFillerHighlights(transcript)}</div>
+                  <div className="italic text-slate-800 dark:text-slate-100">
+                    {renderTranscriptWithFillerHighlights(transcript)}
+                  </div>
                 ) : (
                   <span className="text-slate-400 dark:text-slate-500">
-                    <span className="font-semibold not-italic text-slate-500 dark:text-slate-400">Waiting for audio.</span> Hit{" "}
+                    <span className="font-semibold not-italic text-slate-500 dark:text-slate-400">
+                      Waiting for audio.
+                    </span>{" "}
+                    Hit{" "}
                     <span className="rounded border border-slate-200/80 bg-white px-1.5 py-0.5 text-[11px] font-bold not-italic text-aura-ink dark:border-slate-600 dark:bg-slate-800">
                       Start recording
                     </span>{" "}
@@ -757,19 +870,37 @@ export default function InterviewPage() {
 
           {!feedback && (
             <div className="rounded-2xl border border-slate-200/90 bg-white/90 p-4 text-sm leading-snug text-slate-600 shadow-sm ring-1 ring-white/80 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:ring-slate-800/50">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">How this works</p>
+              <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                How this works
+              </p>
               <ol className="mt-2 list-decimal space-y-1.5 pl-4 text-[13px]">
-                <li className={isRecording ? "font-semibold text-aura-ink dark:text-white" : ""}>Start recording and answer out loud.</li>
+                <li className={isRecording ? "font-semibold text-aura-ink dark:text-white" : ""}>
+                  Start recording and answer out loud.
+                </li>
                 <li>Watch your transcript and live metrics.</li>
                 <li>
-                  Tap <span className="font-semibold">Submit answer</span> when you are done — we stop the mic for you and send everything in one step.
+                  Tap <span className="font-semibold">Submit answer</span> when you are done — we stop the mic
+                  for you and send everything in one step.
                 </li>
               </ol>
               <p className="mt-3 border-t border-slate-100 pt-3 text-[11px] text-slate-500 dark:border-slate-700 dark:text-slate-400">
-                Shortcut: <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">Ctrl</kbd>{" "}
-                + <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">Enter</kbd>{" "}
-                ( <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">⌘</kbd>{" "}
-                + <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">Enter</kbd> on Mac ) to submit.
+                Shortcut:{" "}
+                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">
+                  Ctrl
+                </kbd>{" "}
+                +{" "}
+                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">
+                  Enter
+                </kbd>{" "}
+                ({" "}
+                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">
+                  ⌘
+                </kbd>{" "}
+                +{" "}
+                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">
+                  Enter
+                </kbd>{" "}
+                on Mac ) to submit.
               </p>
             </div>
           )}
@@ -777,8 +908,12 @@ export default function InterviewPage() {
           <div className="relative rounded-[1.25rem] bg-gradient-to-br from-aura-coral/50 via-white/30 to-aura-violet/50 p-[1px] shadow-lux-lg dark:from-aura-coral/25 dark:via-slate-800/30 dark:to-aura-violet/35">
             <div className="overflow-hidden rounded-[1.2rem] border border-slate-200/80 bg-white/95 shadow-inner ring-1 ring-white/90 backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-950/90 dark:ring-slate-800/50">
               <div className="border-b border-slate-200/80 bg-gradient-to-r from-slate-50/95 via-white to-slate-50/95 px-4 py-3 text-center dark:border-slate-700/80 dark:from-slate-900/90 dark:via-slate-950 dark:to-slate-900/90">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Camera & coaching</p>
-                <p className="mt-1 text-xs font-medium text-slate-600 dark:text-slate-400">Presence metrics update while you speak</p>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                  Camera & coaching
+                </p>
+                <p className="mt-1 text-xs font-medium text-slate-600 dark:text-slate-400">
+                  Presence metrics update while you speak
+                </p>
               </div>
               <div className="p-3 sm:p-4">
                 <CameraRecorder
@@ -818,7 +953,10 @@ export default function InterviewPage() {
                   ) : (
                     <>
                       Submit answer
-                      <span aria-hidden className="transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5">
+                      <span
+                        aria-hidden
+                        className="transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5"
+                      >
                         →
                       </span>
                     </>

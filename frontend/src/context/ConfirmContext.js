@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const ConfirmContext = createContext(null);
@@ -86,11 +94,19 @@ export function ConfirmProvider({ children }) {
                   {state.title}
                 </h2>
               </div>
-              <p id="confirm-dialog-message" className="px-6 py-5 text-[15px] leading-relaxed text-aura-muted">
+              <p
+                id="confirm-dialog-message"
+                className="px-6 py-5 text-[15px] leading-relaxed text-aura-muted"
+              >
                 {state.message}
               </p>
               <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/80 px-5 py-4 dark:border-slate-800/90 dark:bg-slate-950/80 sm:flex-row sm:justify-end sm:gap-3">
-                <button ref={cancelButtonRef} type="button" onClick={() => close(false)} className="btn-outline w-full px-6 py-3 text-sm sm:w-auto">
+                <button
+                  ref={cancelButtonRef}
+                  type="button"
+                  onClick={() => close(false)}
+                  className="btn-outline w-full px-6 py-3 text-sm sm:w-auto"
+                >
                   {state.cancelLabel}
                 </button>
                 <button

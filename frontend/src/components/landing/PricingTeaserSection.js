@@ -41,7 +41,9 @@ function PlanCard({ plan, index }) {
     >
       <span
         className={`absolute inset-x-0 top-0 h-1 ${
-          isPro ? "bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet" : "bg-gradient-to-r from-slate-300 to-slate-100 dark:from-slate-600 dark:to-slate-800"
+          isPro
+            ? "bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet"
+            : "bg-gradient-to-r from-slate-300 to-slate-100 dark:from-slate-600 dark:to-slate-800"
         }`}
         aria-hidden
       />
@@ -67,15 +69,22 @@ function PlanCard({ plan, index }) {
           {plan.name}
         </p>
         <div className="mt-3 flex items-baseline gap-2">
-          <span className="font-display text-5xl font-bold tracking-tight text-aura-ink dark:text-slate-100">{plan.price}</span>
+          <span className="font-display text-5xl font-bold tracking-tight text-aura-ink dark:text-slate-100">
+            {plan.price}
+          </span>
           <span className="text-slate-500 dark:text-slate-400">{plan.cadence}</span>
         </div>
-        <p className="mt-3 max-w-sm text-sm leading-relaxed text-slate-600 dark:text-slate-400">{plan.tagline}</p>
+        <p className="mt-3 max-w-sm text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+          {plan.tagline}
+        </p>
       </div>
 
       <ul className="relative mt-8 flex-1 space-y-3">
         {plan.perks.map((perk) => (
-          <li key={perk} className="flex items-start gap-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          <li
+            key={perk}
+            className="flex items-start gap-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300"
+          >
             <CheckIcon />
             <span>{perk}</span>
           </li>
@@ -120,7 +129,8 @@ export default function PricingTeaserSection() {
             Start free. Upgrade when you&apos;re interviewing for real.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-            Starter includes the full core loop. Pro adds unlimited sessions, prep briefs, and shareable reports when you&apos;re in active loops.
+            Starter includes the full core loop. Pro adds unlimited sessions, prep briefs, and shareable
+            reports when you&apos;re in active loops.
           </p>
         </div>
 
@@ -130,7 +140,10 @@ export default function PricingTeaserSection() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-3" aria-label="Pricing guarantees">
+        <div
+          className="mt-12 flex flex-wrap items-center justify-center gap-3"
+          aria-label="Pricing guarantees"
+        >
           {PRICING_GUARANTEES.map((pill) => (
             <span
               key={pill}

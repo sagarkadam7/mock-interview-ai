@@ -9,7 +9,12 @@ import { RadarChart, Sparkline } from "../components/Charts";
 
 function ReportPageSkeleton() {
   return (
-    <div className="page-shell min-h-screen max-w-6xl" aria-busy="true" aria-live="polite" aria-label="Loading shared report">
+    <div
+      className="page-shell min-h-screen max-w-6xl"
+      aria-busy="true"
+      aria-live="polite"
+      aria-label="Loading shared report"
+    >
       <div className="glass-panel-lg mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
         <div className="mb-10 flex flex-wrap items-start justify-between gap-8">
           <div className="min-w-0 flex-1 space-y-4">
@@ -54,12 +59,22 @@ const scoreColor = (s) =>
   s >= 7 ? "text-emerald-600" : s >= 4 ? "text-amber-600" : s !== null ? "text-rose-600" : "text-slate-400";
 const eyeColor = (p) => (p > 70 ? "text-emerald-600" : p > 40 ? "text-amber-600" : "text-rose-600");
 const paceColor = (l) => (l === "good" ? "text-emerald-600" : "text-amber-600");
-const emotionEmoji = { happy: "😊", neutral: "😐", sad: "😔", fearful: "😰", angry: "😠", disgusted: "🤢", surprised: "😲" };
+const emotionEmoji = {
+  happy: "😊",
+  neutral: "😐",
+  sad: "😔",
+  fearful: "😰",
+  angry: "😠",
+  disgusted: "🤢",
+  surprised: "😲",
+};
 
 function StatCard({ label, value, sub, colorClass }) {
   return (
     <div className="glass-panel rounded-2xl p-6 text-center ring-1 ring-white/40 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-slate-200/80 hover:shadow-md dark:hover:border-slate-600/50 dark:hover:shadow-lg dark:hover:shadow-black/25">
-      <div className={`mb-1 font-sans text-3xl font-bold tracking-tight ${colorClass || "text-violet-600"}`}>{value ?? "—"}</div>
+      <div className={`mb-1 font-sans text-3xl font-bold tracking-tight ${colorClass || "text-violet-600"}`}>
+        {value ?? "—"}
+      </div>
       <div className="text-xs font-medium text-slate-500 dark:text-slate-400">{label}</div>
       {sub && <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{sub}</div>}
     </div>
@@ -78,7 +93,10 @@ function MiniBar({ value, max, barClass, label }) {
       aria-valuenow={valuenow}
       aria-label={label || "Progress"}
     >
-      <div className={`h-full rounded-full transition-all duration-500 ${barClass || "bg-aura-violet"}`} style={{ width: `${pct}%` }} />
+      <div
+        className={`h-full rounded-full transition-all duration-500 ${barClass || "bg-aura-violet"}`}
+        style={{ width: `${pct}%` }}
+      />
     </div>
   );
 }
@@ -138,7 +156,9 @@ function QuestionCard({ question, index }) {
                 Adaptive follow-up
               </span>
             )}
-            <p className="text-[15px] font-medium leading-snug tracking-tight text-aura-ink">{question.text}</p>
+            <p className="text-[15px] font-medium leading-snug tracking-tight text-aura-ink">
+              {question.text}
+            </p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-4">
@@ -149,7 +169,9 @@ function QuestionCard({ question, index }) {
             </span>
           )}
           {question.eyeContactPct !== null && (
-            <span className={`text-xs font-medium ${eyeColor(question.eyeContactPct)}`}>👁 {question.eyeContactPct}%</span>
+            <span className={`text-xs font-medium ${eyeColor(question.eyeContactPct)}`}>
+              👁 {question.eyeContactPct}%
+            </span>
           )}
           <span className="text-aura-muted" aria-hidden>
             {open ? "▲" : "▼"}
@@ -172,13 +194,17 @@ function QuestionCard({ question, index }) {
               {question.eyeContactPct !== null && (
                 <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-800/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">👁 Eye</div>
-                  <div className={`text-lg font-bold ${eyeColor(question.eyeContactPct)}`}>{question.eyeContactPct}%</div>
+                  <div className={`text-lg font-bold ${eyeColor(question.eyeContactPct)}`}>
+                    {question.eyeContactPct}%
+                  </div>
                 </div>
               )}
               {question.wordsPerMinute > 0 && (
                 <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-800/70">
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">📊 Pace</div>
-                  <div className={`text-sm font-bold ${paceColor(question.paceLabel)}`}>{question.wordsPerMinute} wpm</div>
+                  <div className={`text-sm font-bold ${paceColor(question.paceLabel)}`}>
+                    {question.wordsPerMinute} wpm
+                  </div>
                   <div className="text-[10px] capitalize text-aura-muted">{question.paceLabel}</div>
                 </div>
               )}
@@ -187,7 +213,11 @@ function QuestionCard({ question, index }) {
                   <div className="mb-1 text-[10px] uppercase tracking-wide text-aura-muted">🗣 Fillers</div>
                   <div
                     className={`text-lg font-bold ${
-                      question.fillerWordCount > 5 ? "text-rose-600" : question.fillerWordCount > 2 ? "text-amber-600" : "text-emerald-600"
+                      question.fillerWordCount > 5
+                        ? "text-rose-600"
+                        : question.fillerWordCount > 2
+                          ? "text-amber-600"
+                          : "text-emerald-600"
                     }`}
                   >
                     {question.fillerWordCount}
@@ -205,15 +235,21 @@ function QuestionCard({ question, index }) {
 
           {question.dominantEmotion && (
             <div>
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Expression analysis</div>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+                Expression analysis
+              </div>
               <EmotionBar emotions={question.emotionScores} />
             </div>
           )}
 
           {question.answer ? (
             <div>
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Candidate answer</div>
-              <p className="text-sm italic leading-relaxed text-slate-700 dark:text-slate-300">&quot;{question.answer}&quot;</p>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+                Candidate answer
+              </div>
+              <p className="text-sm italic leading-relaxed text-slate-700 dark:text-slate-300">
+                &quot;{question.answer}&quot;
+              </p>
             </div>
           ) : (
             <p className="text-sm italic text-aura-muted">No answer recorded.</p>
@@ -223,22 +259,34 @@ function QuestionCard({ question, index }) {
 
           {question.feedback && (
             <div>
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-coral">AI Feedback</div>
-              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.feedback}</p>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-coral">
+                AI Feedback
+              </div>
+              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                {question.feedback}
+              </p>
             </div>
           )}
 
           <div className="grid gap-3 sm:grid-cols-2">
             {question.strengths && (
               <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-4">
-                <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-400">✓ Strengths</div>
-                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.strengths}</p>
+                <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-400">
+                  ✓ Strengths
+                </div>
+                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                  {question.strengths}
+                </p>
               </div>
             )}
             {question.improvements && (
               <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4">
-                <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-400">↑ Improvements</div>
-                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">{question.improvements}</p>
+                <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-400">
+                  ↑ Improvements
+                </div>
+                <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                  {question.improvements}
+                </p>
               </div>
             )}
           </div>
@@ -289,8 +337,12 @@ export default function SharedReportPage() {
     return (
       <div className="page-shell min-h-screen max-w-3xl py-16 md:py-20">
         <div className="glass-panel-lg overflow-hidden p-6 sm:p-8">
-          <div className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Share link</div>
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">This shared report isn’t available</h1>
+          <div className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+            Share link
+          </div>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+            This shared report isn’t available
+          </h1>
           <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{error}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/" className="no-underline">
@@ -325,7 +377,9 @@ export default function SharedReportPage() {
   ];
 
   const questionScores = (interview.questions || []).map((q) => q.score).filter((s) => typeof s === "number");
-  const eyeTrend = (interview.questions || []).map((q) => q.eyeContactPct).filter((p) => typeof p === "number");
+  const eyeTrend = (interview.questions || [])
+    .map((q) => q.eyeContactPct)
+    .filter((p) => typeof p === "number");
   const nextRepsBullets = buildNextRepsFromInterview(interview);
   const totalQuestions = interview.questions?.length || 0;
   const answeredPct = totalQuestions > 0 ? Math.round((answered.length / totalQuestions) * 100) : 0;
@@ -333,14 +387,28 @@ export default function SharedReportPage() {
   return (
     <div className="page-shell min-h-screen max-w-6xl">
       <div className="glass-panel-lg relative mb-10 overflow-hidden p-6 sm:p-8 md:p-10">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/50 via-transparent to-orange-50/30 opacity-90" aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-50/50 via-transparent to-orange-50/30 opacity-90"
+          aria-hidden
+        />
         <div className="relative mb-10 flex flex-wrap items-start justify-between gap-8">
           <div>
-            <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">Shared report</div>
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">{interview.jobRole}</h1>
+            <div className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+              Shared report
+            </div>
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+              {interview.jobRole}
+            </h1>
             <p className="mt-1 text-sm text-aura-muted">
-              {new Date(interview.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-              <span className="text-slate-400 dark:text-slate-500"> · {formatRelativeTime(interview.createdAt)}</span>
+              {new Date(interview.createdAt).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+              <span className="text-slate-400 dark:text-slate-500">
+                {" "}
+                · {formatRelativeTime(interview.createdAt)}
+              </span>
             </p>
             <p className="mt-1 text-sm text-aura-muted">
               {answered.length}/{interview.questions?.length || 0} questions answered
@@ -366,7 +434,9 @@ export default function SharedReportPage() {
           {overall !== null && (
             <div className="text-center">
               <div className="mx-auto flex h-24 w-24 flex-col items-center justify-center rounded-full border-[3px] border-slate-200 bg-white/80 dark:border-slate-600 dark:bg-slate-900/70">
-                <span className={`font-sans text-3xl font-bold leading-none ${scoreColor(overall)}`}>{overall}</span>
+                <span className={`font-sans text-3xl font-bold leading-none ${scoreColor(overall)}`}>
+                  {overall}
+                </span>
                 <span className="text-[10px] text-aura-muted">/10</span>
               </div>
               <p className="mt-2 text-[11px] text-aura-muted">AI content score</p>
@@ -378,19 +448,43 @@ export default function SharedReportPage() {
           <StatCard
             label="Avg eye contact"
             value={interview.avgEyeContact !== null ? `${interview.avgEyeContact}%` : null}
-            colorClass={interview.avgEyeContact > 70 ? "text-emerald-600" : interview.avgEyeContact > 40 ? "text-amber-600" : "text-rose-600"}
+            colorClass={
+              interview.avgEyeContact > 70
+                ? "text-emerald-600"
+                : interview.avgEyeContact > 40
+                  ? "text-amber-600"
+                  : "text-rose-600"
+            }
           />
-          <StatCard label="Avg confidence (ML)" value={interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : null} colorClass="text-violet-600" />
+          <StatCard
+            label="Avg confidence (ML)"
+            value={interview.avgConfidence !== null ? `${interview.avgConfidence}/10` : null}
+            colorClass="text-violet-600"
+          />
           <StatCard
             label="Avg speech pace"
             value={interview.avgPace ? `${interview.avgPace} wpm` : null}
-            sub={interview.avgPace ? (interview.avgPace >= 100 && interview.avgPace <= 180 ? "good pace" : "needs adjustment") : null}
-            colorClass={interview.avgPace >= 100 && interview.avgPace <= 180 ? "text-emerald-600" : "text-amber-600"}
+            sub={
+              interview.avgPace
+                ? interview.avgPace >= 100 && interview.avgPace <= 180
+                  ? "good pace"
+                  : "needs adjustment"
+                : null
+            }
+            colorClass={
+              interview.avgPace >= 100 && interview.avgPace <= 180 ? "text-emerald-600" : "text-amber-600"
+            }
           />
           <StatCard
             label="Avg filler words / Q"
             value={interview.avgFillerWords !== null ? interview.avgFillerWords : null}
-            colorClass={interview.avgFillerWords <= 2 ? "text-emerald-600" : interview.avgFillerWords <= 5 ? "text-amber-600" : "text-rose-600"}
+            colorClass={
+              interview.avgFillerWords <= 2
+                ? "text-emerald-600"
+                : interview.avgFillerWords <= 5
+                  ? "text-amber-600"
+                  : "text-rose-600"
+            }
           />
         </div>
 
@@ -401,25 +495,34 @@ export default function SharedReportPage() {
                 Metric radar
               </span>
               <h2 className="text-xl font-bold tracking-tight text-aura-ink">Coaching snapshot</h2>
-              <p className="mt-1 text-sm text-aura-muted">Larger shape = better performance for that dimension.</p>
+              <p className="mt-1 text-sm text-aura-muted">
+                Larger shape = better performance for that dimension.
+              </p>
             </div>
             <div className="max-w-[min(100%,260px)] rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 text-left dark:border-slate-600/60 dark:bg-slate-800/50">
-              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">How to read</div>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+                How to read
+              </div>
               <ul className="space-y-2 text-xs leading-snug text-slate-600 dark:text-slate-400">
                 <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Eye</span> — higher is better
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Eye</span> — higher is
+                  better
                 </li>
                 <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Conf</span> — confidence (ML), higher is better
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Conf</span> — confidence
+                  (ML), higher is better
                 </li>
                 <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Pace</span> — aim near 130–170 wpm
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Pace</span> — aim near
+                  130–170 wpm
                 </li>
                 <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Fill</span> — filler words; lower is better
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Fill</span> — filler
+                  words; lower is better
                 </li>
                 <li>
-                  <span className="font-semibold text-aura-ink dark:text-slate-200">Overall</span> — blended content score
+                  <span className="font-semibold text-aura-ink dark:text-slate-200">Overall</span> — blended
+                  content score
                 </li>
               </ul>
             </div>
@@ -429,28 +532,48 @@ export default function SharedReportPage() {
 
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
           <div className="glass-panel rounded-2xl p-6">
-            <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
+            <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+              Trends
+            </span>
             <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Question score</h3>
-            {questionScores.length >= 2 ? <Sparkline data={questionScores} stroke="#5B21B6" fill="rgba(91,33,182,0.12)" /> : <p className="text-sm text-aura-muted">Not enough scores yet.</p>}
+            {questionScores.length >= 2 ? (
+              <Sparkline data={questionScores} stroke="#5B21B6" fill="rgba(91,33,182,0.12)" />
+            ) : (
+              <p className="text-sm text-aura-muted">Not enough scores yet.</p>
+            )}
           </div>
           <div className="glass-panel rounded-2xl p-6">
-            <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">Trends</span>
+            <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-wider text-aura-muted">
+              Trends
+            </span>
             <h3 className="mb-3 text-lg font-bold tracking-tight text-aura-ink">Eye contact</h3>
-            {eyeTrend.length >= 2 ? <Sparkline data={eyeTrend} stroke="#34d399" fill="rgba(16,185,129,0.10)" /> : <p className="text-sm text-aura-muted">No eye contact data yet.</p>}
+            {eyeTrend.length >= 2 ? (
+              <Sparkline data={eyeTrend} stroke="#34d399" fill="rgba(16,185,129,0.10)" />
+            ) : (
+              <p className="text-sm text-aura-muted">No eye contact data yet.</p>
+            )}
           </div>
         </div>
 
         <div className="mb-8 rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-violet-50/40 to-orange-50/30 p-6 shadow-inner dark:border-slate-700 dark:from-slate-900/90 dark:via-slate-950 dark:to-violet-950/25 md:p-8">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Shared takeaway</p>
-          <h2 className="mt-1 font-brand text-xl font-semibold tracking-tight text-aura-ink dark:text-white md:text-2xl">Next reps</h2>
-          <p className="mt-1 max-w-xl text-sm text-aura-muted">What to rehearse next — same playbook as the full report.</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
+            Shared takeaway
+          </p>
+          <h2 className="mt-1 font-brand text-xl font-semibold tracking-tight text-aura-ink dark:text-white md:text-2xl">
+            Next reps
+          </h2>
+          <p className="mt-1 max-w-xl text-sm text-aura-muted">
+            What to rehearse next — same playbook as the full report.
+          </p>
           <ol className="mt-4 list-none space-y-3 p-0">
             {nextRepsBullets.map((line, idx) => (
               <li
                 key={idx}
                 className="flex gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3.5 text-[15px] leading-snug text-slate-800 dark:border-slate-700/80 dark:bg-slate-900/50 dark:text-slate-100"
               >
-                <span className="font-mono text-xs font-bold tabular-nums text-aura-violet dark:text-violet-300">{String(idx + 1).padStart(2, "0")}</span>
+                <span className="font-mono text-xs font-bold tabular-nums text-aura-violet dark:text-violet-300">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
                 <span className="min-w-0 flex-1">{line}</span>
               </li>
             ))}
@@ -461,23 +584,32 @@ export default function SharedReportPage() {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="font-semibold text-aura-ink dark:text-slate-100">Shared link</span>
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
-              Generated {new Date(interview.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+              Generated{" "}
+              {new Date(interview.createdAt).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
             </span>
           </div>
           <p className="mt-2 leading-relaxed">
-            This page is read‑only. If you received it from a candidate, you’re seeing their scorecard and coaching signals — not their account data.
+            This page is read‑only. If you received it from a candidate, you’re seeing their scorecard and
+            coaching signals — not their account data.
           </p>
         </div>
 
         <div className="mt-8 rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white via-slate-50/50 to-violet-50/30 p-6 shadow-sm dark:border-slate-700/70 dark:from-slate-900/70 dark:via-slate-950 dark:to-violet-950/25 md:p-8">
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="min-w-0">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Try InterviewAI</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                Try InterviewAI
+              </p>
               <p className="mt-2 text-lg font-semibold tracking-tight text-aura-ink dark:text-slate-100">
                 Want your own sessions, reports, and practice history?
               </p>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                Create a free account and run your first rep in minutes. You’ll get the same transcript, filler detection, and scorecard.
+                Create a free account and run your first rep in minutes. You’ll get the same transcript,
+                filler detection, and scorecard.
               </p>
             </div>
             <div className="flex w-full flex-col gap-2 sm:w-auto">
@@ -505,4 +637,3 @@ export default function SharedReportPage() {
     </div>
   );
 }
-

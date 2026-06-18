@@ -11,13 +11,7 @@ const VARIANTS = {
  * Unified button/link component for consistent CTAs across the app.
  * Keeps existing Tailwind utility classes (btn-cta, btn-outline, etc.) as the source of truth.
  */
-export default function Button({
-  as = "button",
-  variant = "cta",
-  className = "",
-  children,
-  ...props
-}) {
+export default function Button({ as = "button", variant = "cta", className = "", children, ...props }) {
   const Comp = as;
   const base = VARIANTS[variant] || VARIANTS.cta;
   return (
@@ -26,4 +20,3 @@ export default function Button({
     </Comp>
   );
 }
-

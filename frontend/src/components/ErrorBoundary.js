@@ -29,9 +29,12 @@ export default class ErrorBoundary extends React.Component {
           aria-live="assertive"
           aria-busy="false"
         >
-          <p className="font-display text-2xl font-semibold tracking-tight text-aura-ink">Something went wrong</p>
+          <p className="font-display text-2xl font-semibold tracking-tight text-aura-ink">
+            Something went wrong
+          </p>
           <p className="max-w-md text-[15px] leading-relaxed text-aura-muted dark:text-slate-400">
-            Try refreshing the page. If this keeps happening, clear site data for this origin and sign in again.
+            Try refreshing the page. If this keeps happening, clear site data for this origin and sign in
+            again.
           </p>
           {this.state.copyHint ? (
             <p

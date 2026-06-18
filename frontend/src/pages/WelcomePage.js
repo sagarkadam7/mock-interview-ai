@@ -55,14 +55,16 @@ export default function WelcomePage() {
             Glad you’re here, <span className="italic text-gradient">{firstName}</span>.
           </h1>
           <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-            Your fastest path to results is simple: do one real rep today, fix one delivery habit, and repeat tomorrow.
-            InterviewAI will keep the feedback structured so improvement is obvious.
+            Your fastest path to results is simple: do one real rep today, fix one delivery habit, and repeat
+            tomorrow. InterviewAI will keep the feedback structured so improvement is obvious.
           </p>
 
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {steps.map((s) => (
               <div key={s.title} className="glass-panel-lg rounded-2xl p-6 md:p-7">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-300">{s.step}</span>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-300">
+                  {s.step}
+                </span>
                 <p className="mt-2 text-sm font-bold text-aura-ink dark:text-slate-100">{s.title}</p>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{s.desc}</p>
                 <Link
@@ -77,7 +79,8 @@ export default function WelcomePage() {
 
           <div className="mt-10 flex flex-col items-center justify-between gap-4 rounded-2xl border border-slate-200/80 bg-white/70 px-6 py-5 text-sm text-slate-600 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/45 dark:text-slate-300 sm:flex-row">
             <span>
-              Pro tip: aim for <span className="font-semibold text-aura-ink dark:text-slate-100">3 reps</span> before your next round.
+              Pro tip: aim for <span className="font-semibold text-aura-ink dark:text-slate-100">3 reps</span>{" "}
+              before your next round.
             </span>
             <Link to="/interview/new" className="no-underline">
               <span className="btn-cta px-7 py-3.5 text-sm">Start first rep →</span>
@@ -88,4 +91,3 @@ export default function WelcomePage() {
     </div>
   );
 }
-

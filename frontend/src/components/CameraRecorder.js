@@ -3,18 +3,30 @@ import { FaceMesh } from "@mediapipe/face_mesh";
 import { Camera } from "@mediapipe/camera_utils";
 
 const FILLER_WORDS = [
-  "um","uh","like","basically","literally","actually",
-  "you know","i mean","so","right","okay","hmm","er","ah"
+  "um",
+  "uh",
+  "like",
+  "basically",
+  "literally",
+  "actually",
+  "you know",
+  "i mean",
+  "so",
+  "right",
+  "okay",
+  "hmm",
+  "er",
+  "ah",
 ];
 
 const FILLER_WORD_SET = new Set(FILLER_WORDS.map((w) => w.toLowerCase()));
 const FILLER_WORD_REGEX = new RegExp(`\\b(${FILLER_WORDS.join("|")})\\b`, "gi");
 
-const LEFT_IRIS  = [474, 475, 476, 477];
+const LEFT_IRIS = [474, 475, 476, 477];
 const RIGHT_IRIS = [469, 470, 471, 472];
-const LEFT_EYE   = [33, 133];
-const RIGHT_EYE  = [362, 263];
-const NOSE_TIP   = 1;
+const LEFT_EYE = [33, 133];
+const RIGHT_EYE = [362, 263];
+const NOSE_TIP = 1;
 
 function getPaceLabel(wpm) {
   if (!wpm || wpm === 0) return "—";
@@ -36,16 +48,16 @@ function calcConfidenceScore({ eyeContactPct, fillerCount, wpm, dominantEmotion 
 
 function isLookingAtCamera(landmarks) {
   try {
-    const lx = (landmarks[LEFT_EYE[0]].x  + landmarks[LEFT_EYE[1]].x)  / 2;
+    const lx = (landmarks[LEFT_EYE[0]].x + landmarks[LEFT_EYE[1]].x) / 2;
     const rx = (landmarks[RIGHT_EYE[0]].x + landmarks[RIGHT_EYE[1]].x) / 2;
-    const eyeCenterX  = (lx + rx) / 2;
-    const lirisX      = landmarks[LEFT_IRIS[0]].x;
-    const ririsX      = landmarks[RIGHT_IRIS[0]].x;
+    const eyeCenterX = (lx + rx) / 2;
+    const lirisX = landmarks[LEFT_IRIS[0]].x;
+    const ririsX = landmarks[RIGHT_IRIS[0]].x;
     const irisCenterX = (lirisX + ririsX) / 2;
-    const noseTipX    = landmarks[NOSE_TIP].x;
-    const faceWidth   = Math.abs(landmarks[LEFT_EYE[0]].x - landmarks[RIGHT_EYE[1]].x);
+    const noseTipX = landmarks[NOSE_TIP].x;
+    const faceWidth = Math.abs(landmarks[LEFT_EYE[0]].x - landmarks[RIGHT_EYE[1]].x);
     const irisDeviation = Math.abs(irisCenterX - eyeCenterX) / (faceWidth + 0.001);
-    const headYaw       = Math.abs(noseTipX - eyeCenterX)   / (faceWidth + 0.001);
+    const headYaw = Math.abs(noseTipX - eyeCenterX) / (faceWidth + 0.001);
     return irisDeviation < 0.15 && headYaw < 0.25;
   } catch {
     return true;
@@ -64,9 +76,26 @@ function Dial({ label, value, pct, color }) {
   const dashOffset = c * (1 - progress);
 
   return (
-    <div className="text-aura-ink dark:text-slate-100" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <svg width={size} height={size} viewBox="0 0 56 56" role="img" aria-label={`${label} gauge`} className="text-aura-ink dark:text-slate-100">
-        <circle cx="28" cy="28" r={r} className="stroke-slate-200 dark:stroke-slate-600" strokeWidth="5" fill="none" />
+    <div
+      className="text-aura-ink dark:text-slate-100"
+      style={{ display: "flex", alignItems: "center", gap: 10 }}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 56 56"
+        role="img"
+        aria-label={`${label} gauge`}
+        className="text-aura-ink dark:text-slate-100"
+      >
+        <circle
+          cx="28"
+          cy="28"
+          r={r}
+          className="stroke-slate-200 dark:stroke-slate-600"
+          strokeWidth="5"
+          fill="none"
+        />
         <circle
           cx="28"
           cy="28"
@@ -84,8 +113,12 @@ function Dial({ label, value, pct, color }) {
         </text>
       </svg>
       <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 74 }}>
-        <span style={{ fontSize: 11, color: "#64748b", letterSpacing: "0.04em", textTransform: "uppercase" }}>{label}</span>
-        <span style={{ fontSize: 12, fontWeight: 700, color: color }}>{typeof value === "number" && !Number.isNaN(value) ? value : value}</span>
+        <span style={{ fontSize: 11, color: "#64748b", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+          {label}
+        </span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: color }}>
+          {typeof value === "number" && !Number.isNaN(value) ? value : value}
+        </span>
       </div>
     </div>
   );
@@ -135,39 +168,39 @@ const CameraRecorder = forwardRef(function CameraRecorder(
   },
   ref
 ) {
-  const videoRef      = useRef(null);
-  const canvasRef     = useRef(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
   const mediaRecorder = useRef(null);
   const stopRequestedRef = useRef(false);
-  const chunks        = useRef([]);
-  const recognitionRef= useRef(null);
-  const faceMeshRef   = useRef(null);
-  const cameraRef     = useRef(null);
-  const streamRef     = useRef(null);
-  const recordingRef  = useRef(false);
+  const chunks = useRef([]);
+  const recognitionRef = useRef(null);
+  const faceMeshRef = useRef(null);
+  const cameraRef = useRef(null);
+  const streamRef = useRef(null);
+  const recordingRef = useRef(false);
   const lastMlPayloadRef = useRef(null);
 
-  const [recording,   setRecording]   = useState(false);
-  const [transcript,  setTranscript]  = useState("");
+  const [recording, setRecording] = useState(false);
+  const [transcript, setTranscript] = useState("");
   const [cameraReady, setCameraReady] = useState(false);
-  const [mpReady,     setMpReady]     = useState(false);
-  const [error,       setError]       = useState("");
-  const [timer,       setTimer]       = useState(0);
+  const [mpReady, setMpReady] = useState(false);
+  const [error, setError] = useState("");
+  const [timer, setTimer] = useState(0);
   const timerRef = useRef(null);
 
-  const [eyePct,      setEyePct]      = useState(null);
+  const [eyePct, setEyePct] = useState(null);
   const [fillerCount, setFillerCount] = useState(0);
-  const [wpm,         setWpm]         = useState(0);
-  const [faceFound,   setFaceFound]   = useState(false);
+  const [wpm, setWpm] = useState(0);
+  const [faceFound, setFaceFound] = useState(false);
 
-  const eyeFrames    = useRef([]);
+  const eyeFrames = useRef([]);
   const startTimeRef = useRef(null);
-  const transcriptRef= useRef("");
+  const transcriptRef = useRef("");
 
   // ── Init camera ─────────────────────────────────────────────
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: { width:640, height:480, facingMode:"user" }, audio:true })
+      .getUserMedia({ video: { width: 640, height: 480, facingMode: "user" }, audio: true })
       .then((stream) => {
         streamRef.current = stream;
         if (videoRef.current) videoRef.current.srcObject = stream;
@@ -186,24 +219,23 @@ const CameraRecorder = forwardRef(function CameraRecorder(
     if (!cameraReady || !videoRef.current) return;
 
     const faceMesh = new FaceMesh({
-      locateFile: (file) =>
-        `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
     });
 
     faceMesh.setOptions({
-      maxNumFaces:            1,
-      refineLandmarks:        true,
+      maxNumFaces: 1,
+      refineLandmarks: true,
       minDetectionConfidence: 0.5,
-      minTrackingConfidence:  0.5,
+      minTrackingConfidence: 0.5,
     });
 
     faceMesh.onResults((results) => {
       const canvas = canvasRef.current;
-      const video  = videoRef.current;
+      const video = videoRef.current;
       if (!canvas || !video) return;
 
       const ctx = canvas.getContext("2d");
-      canvas.width  = video.videoWidth  || 640;
+      canvas.width = video.videoWidth || 640;
       canvas.height = video.videoHeight || 480;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -213,14 +245,14 @@ const CameraRecorder = forwardRef(function CameraRecorder(
 
         // Draw nose dot
         ctx.beginPath();
-        ctx.arc(lm[NOSE_TIP].x * canvas.width, lm[NOSE_TIP].y * canvas.height, 3, 0, 2*Math.PI);
+        ctx.arc(lm[NOSE_TIP].x * canvas.width, lm[NOSE_TIP].y * canvas.height, 3, 0, 2 * Math.PI);
         ctx.fillStyle = "rgba(108,99,255,0.8)";
         ctx.fill();
 
         // Draw iris dots
         [...LEFT_IRIS, ...RIGHT_IRIS].forEach((idx) => {
           ctx.beginPath();
-          ctx.arc(lm[idx].x * canvas.width, lm[idx].y * canvas.height, 2, 0, 2*Math.PI);
+          ctx.arc(lm[idx].x * canvas.width, lm[idx].y * canvas.height, 2, 0, 2 * Math.PI);
           ctx.fillStyle = "rgba(34,197,94,0.9)";
           ctx.fill();
         });
@@ -228,9 +260,7 @@ const CameraRecorder = forwardRef(function CameraRecorder(
         if (recordingRef.current) {
           const looking = isLookingAtCamera(lm);
           eyeFrames.current.push(looking ? 1 : 0);
-          const pct = Math.round(
-            (eyeFrames.current.filter(Boolean).length / eyeFrames.current.length) * 100
-          );
+          const pct = Math.round((eyeFrames.current.filter(Boolean).length / eyeFrames.current.length) * 100);
           setEyePct(pct);
         }
       } else {
@@ -247,27 +277,37 @@ const CameraRecorder = forwardRef(function CameraRecorder(
           await faceMeshRef.current.send({ image: videoRef.current });
         }
       },
-      width: 640, height: 480,
+      width: 640,
+      height: 480,
     });
 
-    mpCam.start()
-      .then(() => { setMpReady(true); console.log("✅ MediaPipe ready"); })
-      .catch((e) => { console.warn("MediaPipe error:", e); setMpReady(true); });
+    mpCam
+      .start()
+      .then(() => {
+        setMpReady(true);
+        console.log("✅ MediaPipe ready");
+      })
+      .catch((e) => {
+        console.warn("MediaPipe error:", e);
+        setMpReady(true);
+      });
 
     cameraRef.current = mpCam;
 
-    return () => { mpCam.stop(); faceMesh.close(); };
+    return () => {
+      mpCam.stop();
+      faceMesh.close();
+    };
   }, [cameraReady]);
 
   // ── Timer ────────────────────────────────────────────────────
   useEffect(() => {
-    if (recording) timerRef.current = setInterval(() => setTimer((t) => t+1), 1000);
+    if (recording) timerRef.current = setInterval(() => setTimer((t) => t + 1), 1000);
     else clearInterval(timerRef.current);
     return () => clearInterval(timerRef.current);
   }, [recording]);
 
-  const fmt = (s) =>
-    `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+  const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
   // ── Filler + WPM from transcript ─────────────────────────────
   useEffect(() => {
@@ -275,7 +315,7 @@ const CameraRecorder = forwardRef(function CameraRecorder(
     const lower = transcript.toLowerCase();
     let count = 0;
     FILLER_WORDS.forEach((w) => {
-      const m = lower.match(new RegExp(`\\b${w}\\b`,"gi"));
+      const m = lower.match(new RegExp(`\\b${w}\\b`, "gi"));
       if (m) count += m.length;
     });
     setFillerCount(count);
@@ -300,9 +340,10 @@ const CameraRecorder = forwardRef(function CameraRecorder(
     recognitionRef.current?.stop();
     setRecording(false);
 
-    const eyeContactPct = eyeFrames.current.length > 0
-      ? Math.round((eyeFrames.current.filter(Boolean).length / eyeFrames.current.length) * 100)
-      : null;
+    const eyeContactPct =
+      eyeFrames.current.length > 0
+        ? Math.round((eyeFrames.current.filter(Boolean).length / eyeFrames.current.length) * 100)
+        : null;
 
     const lower = transcriptRef.current.toLowerCase();
     let fillerTotal = 0;
@@ -367,18 +408,21 @@ const CameraRecorder = forwardRef(function CameraRecorder(
     if (!cameraReady || !streamRef.current) return;
     stopRequestedRef.current = false;
     lastMlPayloadRef.current = null;
-    chunks.current       = [];
-    eyeFrames.current    = [];
+    chunks.current = [];
+    eyeFrames.current = [];
     startTimeRef.current = Date.now();
     recordingRef.current = true;
 
     const recorder = new MediaRecorder(streamRef.current, {
       mimeType: MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
-        ? "video/webm;codecs=vp9" : "video/webm",
+        ? "video/webm;codecs=vp9"
+        : "video/webm",
     });
-    recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.current.push(e.data); };
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) chunks.current.push(e.data);
+    };
     recorder.onstop = () => {
-      const blob = new Blob(chunks.current, { type:"video/webm" });
+      const blob = new Blob(chunks.current, { type: "video/webm" });
       onRecordingComplete?.(blob);
     };
     recorder.start(200);
@@ -387,7 +431,9 @@ const CameraRecorder = forwardRef(function CameraRecorder(
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SR) {
       const r = new SR();
-      r.continuous = true; r.interimResults = true; r.lang = "en-US";
+      r.continuous = true;
+      r.interimResults = true;
+      r.lang = "en-US";
       let final = "";
       r.onresult = (e) => {
         let interim = "";
@@ -399,7 +445,9 @@ const CameraRecorder = forwardRef(function CameraRecorder(
         setTranscript(full);
         onTranscriptChange?.(full);
       };
-      r.onerror = (e) => { if (e.error !== "no-speech") console.warn("Speech:", e.error); };
+      r.onerror = (e) => {
+        if (e.error !== "no-speech") console.warn("Speech:", e.error);
+      };
       r.start();
       recognitionRef.current = r;
     }
@@ -413,21 +461,39 @@ const CameraRecorder = forwardRef(function CameraRecorder(
     performStopRecording();
   };
 
-  const eyeColor    = eyePct === null ? "#888" : eyePct > 70 ? "#22c55e" : eyePct > 40 ? "#f59e0b" : "#ef4444";
+  const eyeColor = eyePct === null ? "#888" : eyePct > 70 ? "#22c55e" : eyePct > 40 ? "#f59e0b" : "#ef4444";
   const fillerColor = fillerCount > 5 ? "#ef4444" : fillerCount > 2 ? "#f59e0b" : "#22c55e";
-  const wpmColor    = wpm === 0 ? "#888" : wpm >= 100 && wpm <= 180 ? "#22c55e" : "#f59e0b";
+  const wpmColor = wpm === 0 ? "#888" : wpm >= 100 && wpm <= 180 ? "#22c55e" : "#f59e0b";
 
   const pacePct = wpm > 0 ? clamp01(1 - Math.abs(wpm - 150) / 120) : null;
   const fillerPct = fillerCount > 0 ? clamp01(1 - fillerCount / 10) : 1;
-  const confidencePreview = transcript.trim() ? calcConfidenceScore({ eyeContactPct: eyePct, fillerCount, wpm, dominantEmotion: "neutral" }) : null;
+  const confidencePreview = transcript.trim()
+    ? calcConfidenceScore({ eyeContactPct: eyePct, fillerCount, wpm, dominantEmotion: "neutral" })
+    : null;
   const confidencePct = confidencePreview !== null ? clamp01(confidencePreview / 10) : null;
-  const confidenceColor = confidencePreview === null ? "#888" : confidencePreview >= 7 ? "#22c55e" : confidencePreview >= 4 ? "#f59e0b" : "#ef4444";
+  const confidenceColor =
+    confidencePreview === null
+      ? "#888"
+      : confidencePreview >= 7
+        ? "#22c55e"
+        : confidencePreview >= 4
+          ? "#f59e0b"
+          : "#ef4444";
 
   return (
     <div className="flex flex-col gap-4">
       <div className="relative aspect-video overflow-hidden rounded-2xl border border-slate-200/90 bg-zinc-950 shadow-[0_24px_48px_-16px_rgba(15,23,42,0.35),inset_0_0_0_1px_rgba(255,255,255,0.06)] ring-1 ring-black/5 dark:border-slate-700/90 dark:shadow-[0_28px_56px_-18px_rgba(0,0,0,0.65)]">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/[0.04]" aria-hidden />
-        <video ref={videoRef} autoPlay muted playsInline className="relative z-0 block h-full w-full object-cover" />
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/[0.04]"
+          aria-hidden
+        />
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          className="relative z-0 block h-full w-full object-cover"
+        />
         <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-[1] h-full w-full" />
 
         {/* Face status */}
@@ -470,7 +536,9 @@ const CameraRecorder = forwardRef(function CameraRecorder(
         {/* Live ML overlay (default) — hidden in sidebar "below" layout */}
         {recording && metricsLayout === "overlay" && (
           <div className="absolute right-3 top-3 min-w-[248px] rounded-xl border border-white/10 bg-black/80 p-3 backdrop-blur-md">
-            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-aura-muted">Live coaching</div>
+            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-aura-muted">
+              Live coaching
+            </div>
             <div className="grid grid-cols-2 gap-2.5">
               <div>
                 <Dial
@@ -481,20 +549,10 @@ const CameraRecorder = forwardRef(function CameraRecorder(
                 />
               </div>
               <div>
-                <Dial
-                  label="Fillers"
-                  value={String(fillerCount)}
-                  pct={fillerPct}
-                  color={fillerColor}
-                />
+                <Dial label="Fillers" value={String(fillerCount)} pct={fillerPct} color={fillerColor} />
               </div>
               <div className="col-span-2">
-                <Dial
-                  label="Pace"
-                  value={wpm > 0 ? `${wpm}` : "—"}
-                  pct={pacePct}
-                  color={wpmColor}
-                />
+                <Dial label="Pace" value={wpm > 0 ? `${wpm}` : "—"} pct={pacePct} color={wpmColor} />
               </div>
               <div className="col-span-2">
                 <Dial
@@ -510,7 +568,10 @@ const CameraRecorder = forwardRef(function CameraRecorder(
 
         {!cameraReady && !error && (
           <div className="absolute inset-0 z-[2] flex flex-col items-center justify-center gap-2 bg-zinc-950/90 text-sm font-medium text-slate-400">
-            <span className="inline-block h-8 w-8 animate-pulse rounded-full border-2 border-slate-600 border-t-violet-400" aria-hidden />
+            <span
+              className="inline-block h-8 w-8 animate-pulse rounded-full border-2 border-slate-600 border-t-violet-400"
+              aria-hidden
+            />
             Starting camera…
           </div>
         )}
@@ -520,7 +581,9 @@ const CameraRecorder = forwardRef(function CameraRecorder(
       {recording && metricsLayout === "below" && (
         <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white/95 to-slate-50/90 p-4 shadow-lux ring-1 ring-white/70 dark:border-slate-700/80 dark:from-slate-900/90 dark:to-slate-950/90 dark:ring-slate-800/50">
           <div className="mb-3 flex items-center justify-between gap-2">
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Live signal</span>
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+              Live signal
+            </span>
             <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
               Streaming
             </span>
@@ -532,19 +595,9 @@ const CameraRecorder = forwardRef(function CameraRecorder(
               pct={eyePct !== null ? eyePct / 100 : 0}
               color={eyeColor}
             />
-            <Dial
-              label="Fillers"
-              value={String(fillerCount)}
-              pct={fillerPct}
-              color={fillerColor}
-            />
+            <Dial label="Fillers" value={String(fillerCount)} pct={fillerPct} color={fillerColor} />
             <div className="sm:col-span-2">
-              <Dial
-                label="Pace"
-                value={wpm > 0 ? `${wpm}` : "—"}
-                pct={pacePct}
-                color={wpmColor}
-              />
+              <Dial label="Pace" value={wpm > 0 ? `${wpm}` : "—"} pct={pacePct} color={wpmColor} />
             </div>
             <div className="sm:col-span-2">
               <Dial
@@ -568,7 +621,9 @@ const CameraRecorder = forwardRef(function CameraRecorder(
         <div>
           <label className="label-field">Live transcript</label>
           <div className="min-h-[72px] rounded-xl border border-slate-200 bg-slate-50/90 p-4 text-sm italic leading-relaxed text-aura-muted">
-            {transcript ? renderTranscriptWithFillerHighlights(transcript) : "Start recording and speak — your words will appear here in real time…"}
+            {transcript
+              ? renderTranscriptWithFillerHighlights(transcript)
+              : "Start recording and speak — your words will appear here in real time…"}
           </div>
         </div>
       )}
@@ -592,7 +647,14 @@ const CameraRecorder = forwardRef(function CameraRecorder(
           )}
           <span className="relative inline-flex items-center justify-center gap-2.5">
             {cameraReady && !disabled && (
-              <svg className="h-5 w-5 shrink-0 opacity-95" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <svg
+                className="h-5 w-5 shrink-0 opacity-95"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden
+              >
                 <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" />
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                 <line x1="12" x2="12" y1="19" y2="23" />
@@ -614,7 +676,9 @@ const CameraRecorder = forwardRef(function CameraRecorder(
 
       {recording && (
         <p className="m-0 text-center text-[11px] font-medium leading-relaxed text-slate-500 dark:text-slate-400">
-          Gaze and pace update live. You can tap <span className="font-semibold text-slate-600 dark:text-slate-300">Submit answer</span> anytime — we stop the recorder for you and send this take.
+          Gaze and pace update live. You can tap{" "}
+          <span className="font-semibold text-slate-600 dark:text-slate-300">Submit answer</span> anytime — we
+          stop the recorder for you and send this take.
         </p>
       )}
     </div>
@@ -627,9 +691,9 @@ export default CameraRecorder;
 
 function Row({ label, value, color }) {
   return (
-    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:10 }}>
-      <span style={{ fontSize:11, color:"#888888" }}>{label}</span>
-      <span style={{ fontSize:12, fontWeight:600, color: color||"#0f172a" }}>{value}</span>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+      <span style={{ fontSize: 11, color: "#888888" }}>{label}</span>
+      <span style={{ fontSize: 12, fontWeight: 600, color: color || "#0f172a" }}>{value}</span>
     </div>
   );
 }

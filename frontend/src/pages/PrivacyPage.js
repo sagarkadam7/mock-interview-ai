@@ -21,7 +21,8 @@ const timeline = [
   },
   {
     step: "5) You control retention",
-    detail: "Delete interviews from your dashboard anytime. You can also request account deletion for your instance.",
+    detail:
+      "Delete interviews from your dashboard anytime. You can also request account deletion for your instance.",
   },
 ];
 
@@ -43,21 +44,32 @@ export default function PrivacyPage() {
           />
 
           <div className="relative">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-violet-700 dark:text-violet-300">Privacy</p>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-violet-700 dark:text-violet-300">
+              Privacy
+            </p>
             <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-aura-ink md:text-5xl">
               Enterprise-Grade Privacy
             </h1>
             <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-              Interview data is sensitive. This page explains what we collect, how it’s processed, and how you control retention.
-              We aim for clear language and minimal data handling.
+              Interview data is sensitive. This page explains what we collect, how it’s processed, and how you
+              control retention. We aim for clear language and minimal data handling.
             </p>
-            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">Last updated: {new Date().getFullYear()}</p>
+            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+              Last updated: {new Date().getFullYear()}
+            </p>
 
             <div className="mt-10 grid gap-4 md:grid-cols-5">
               {timeline.map((t) => (
-                <div key={t.step} className="rounded-2xl border border-slate-200/80 bg-white/70 p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/55">
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{t.step}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{t.detail}</p>
+                <div
+                  key={t.step}
+                  className="rounded-2xl border border-slate-200/80 bg-white/70 p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/55"
+                >
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                    {t.step}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                    {t.detail}
+                  </p>
                 </div>
               ))}
             </div>
@@ -66,33 +78,42 @@ export default function PrivacyPage() {
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           <section className="glass-panel-lg rounded-3xl p-8 md:p-10">
-            <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">What we collect</h2>
+            <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+              What we collect
+            </h2>
             <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              Account information (name, email, password hash), interview content you submit (job descriptions, resume text, answers, and derived scores),
-              and technical metadata needed to run the service (timestamps, identifiers).
+              Account information (name, email, password hash), interview content you submit (job
+              descriptions, resume text, answers, and derived scores), and technical metadata needed to run
+              the service (timestamps, identifiers).
             </p>
           </section>
 
           <section className="glass-panel-lg rounded-3xl p-8 md:p-10">
-            <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Resume files</h2>
+            <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+              Resume files
+            </h2>
             <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              If you upload a PDF, it’s processed to extract text and is not intended to be retained as a long-term attachment after parsing completes.
-              Extracted resume text may be stored with your interview record so you can review sessions.
+              If you upload a PDF, it’s processed to extract text and is not intended to be retained as a
+              long-term attachment after parsing completes. Extracted resume text may be stored with your
+              interview record so you can review sessions.
             </p>
           </section>
 
           <section className="glass-panel-lg rounded-3xl p-8 md:p-10">
-            <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">AI processing</h2>
+            <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+              AI processing
+            </h2>
             <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              We use third‑party AI providers to generate questions and feedback. Don’t paste secrets, government IDs,
-              or highly sensitive personal data into free‑form fields.
+              We use third‑party AI providers to generate questions and feedback. Don’t paste secrets,
+              government IDs, or highly sensitive personal data into free‑form fields.
             </p>
           </section>
 
           <section className="glass-panel-lg rounded-3xl p-8 md:p-10">
             <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Security</h2>
             <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              Passwords are hashed. APIs use signed tokens (JWT). Deploy over HTTPS in production so data in transit is encrypted.
+              Passwords are hashed. APIs use signed tokens (JWT). Deploy over HTTPS in production so data in
+              transit is encrypted.
             </p>
           </section>
         </div>
@@ -100,11 +121,15 @@ export default function PrivacyPage() {
         <div className="mt-10 rounded-3xl border border-slate-200/80 bg-white/70 p-8 text-sm leading-relaxed text-slate-600 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/45 dark:text-slate-300 md:p-10">
           <h2 className="text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Your choices</h2>
           <p className="mt-3">
-            Delete interviews from your dashboard when you no longer need them. For full account deletion, contact the administrator of your instance.
+            Delete interviews from your dashboard when you no longer need them. For full account deletion,
+            contact the administrator of your instance.
           </p>
           <p className="mt-4">
             Questions? Email{" "}
-            <a href="mailto:hello@interviewai.app" className="font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 hover:text-violet-900 dark:text-violet-300">
+            <a
+              href="mailto:hello@interviewai.app"
+              className="font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 hover:text-violet-900 dark:text-violet-300"
+            >
               hello@interviewai.app
             </a>
             .

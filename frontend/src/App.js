@@ -34,7 +34,11 @@ const PricingPage = lazy(() => import("./pages/PricingPage"));
 
 function RouteFallback() {
   return (
-    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3" aria-busy="true" aria-label="Loading page">
+    <div
+      className="flex min-h-[50vh] flex-col items-center justify-center gap-3"
+      aria-busy="true"
+      aria-label="Loading page"
+    >
       <span className="spinner h-8 w-8" />
       <p className="text-sm text-aura-muted dark:text-slate-400">Loading…</p>
     </div>
@@ -64,14 +68,22 @@ function PrivateRoute({ children }) {
     );
   }
 
-  return user ? children : <Navigate to={`/login?next=${encodeURIComponent(location.pathname + location.search)}`} replace />;
+  return user ? (
+    children
+  ) : (
+    <Navigate to={`/login?next=${encodeURIComponent(location.pathname + location.search)}`} replace />
+  );
 }
 
 function PublicRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3" aria-busy="true" aria-label="Loading">
+      <div
+        className="flex min-h-[50vh] flex-col items-center justify-center gap-3"
+        aria-busy="true"
+        aria-label="Loading"
+      >
         <span className="spinner h-8 w-8" />
         <span className="sr-only">Loading</span>
       </div>

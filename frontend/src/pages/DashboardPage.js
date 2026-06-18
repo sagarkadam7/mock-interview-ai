@@ -18,13 +18,24 @@ const DASH_VIEW_KEY = "ia.dashboard.view.v1";
 
 function StatusBadge({ status }) {
   const map = {
-    pending: ["Not started", "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-500/35 dark:bg-amber-950/45 dark:text-amber-200"],
-    in_progress: ["In progress", "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-500/35 dark:bg-violet-950/50 dark:text-violet-200"],
-    completed: ["Completed", "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/35 dark:bg-emerald-950/45 dark:text-emerald-200"],
+    pending: [
+      "Not started",
+      "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-500/35 dark:bg-amber-950/45 dark:text-amber-200",
+    ],
+    in_progress: [
+      "In progress",
+      "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-500/35 dark:bg-violet-950/50 dark:text-violet-200",
+    ],
+    completed: [
+      "Completed",
+      "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/35 dark:bg-emerald-950/45 dark:text-emerald-200",
+    ],
   };
   const [label, cls] = map[status] || map.pending;
   return (
-    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold tracking-wide ${cls}`}>
+    <span
+      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold tracking-wide ${cls}`}
+    >
       {label}
     </span>
   );
@@ -35,7 +46,11 @@ function ScoreDisplay({ score }) {
     return <span className="text-sm font-medium text-slate-400 dark:text-slate-500">—</span>;
   }
   const color =
-    score >= 7 ? "text-emerald-600 dark:text-emerald-400" : score >= 4 ? "text-amber-600 dark:text-amber-400" : "text-rose-600 dark:text-rose-400";
+    score >= 7
+      ? "text-emerald-600 dark:text-emerald-400"
+      : score >= 4
+        ? "text-amber-600 dark:text-amber-400"
+        : "text-rose-600 dark:text-rose-400";
   const ringColor = score >= 7 ? "#10b981" : score >= 4 ? "#f59e0b" : "#e11d48";
   const pct = Math.max(0, Math.min(100, score * 10));
   return (
@@ -47,7 +62,9 @@ function ScoreDisplay({ score }) {
       <div className="absolute inset-[3px] rounded-[0.85rem] bg-white dark:bg-slate-900" aria-hidden />
       <div className="relative text-center">
         <div className={`font-sans text-xl font-extrabold leading-none tracking-tight ${color}`}>{score}</div>
-        <div className="mt-0.5 text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">/10</div>
+        <div className="mt-0.5 text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          /10
+        </div>
       </div>
     </div>
   );
@@ -56,11 +73,23 @@ function ScoreDisplay({ score }) {
 function TrendPlaceholder() {
   return (
     <div className="relative flex min-h-[88px] w-full items-end justify-center rounded-xl border border-dashed border-slate-200/90 bg-slate-50/40 px-4 py-5 dark:border-slate-600/60 dark:bg-slate-900/40">
-      <svg className="absolute inset-x-4 bottom-8 h-12 w-[calc(100%-2rem)] text-slate-300/80 dark:text-slate-600" viewBox="0 0 280 48" fill="none" aria-hidden>
-        <path d="M4 38 Q70 8 140 28 T276 34" stroke="currentColor" strokeWidth="1.5" strokeDasharray="6 6" vectorEffect="non-scaling-stroke" />
+      <svg
+        className="absolute inset-x-4 bottom-8 h-12 w-[calc(100%-2rem)] text-slate-300/80 dark:text-slate-600"
+        viewBox="0 0 280 48"
+        fill="none"
+        aria-hidden
+      >
+        <path
+          d="M4 38 Q70 8 140 28 T276 34"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeDasharray="6 6"
+          vectorEffect="non-scaling-stroke"
+        />
       </svg>
       <p className="relative z-[1] text-center text-[13px] font-medium leading-snug text-slate-500 dark:text-slate-400">
-        Complete <span className="text-aura-ink dark:text-slate-200">two scored sessions</span> to unlock your trend line
+        Complete <span className="text-aura-ink dark:text-slate-200">two scored sessions</span> to unlock your
+        trend line
       </p>
     </div>
   );
@@ -71,7 +100,9 @@ function SectionHeader({ eyebrow, title, subtitle, right }) {
     <div className="mb-5 flex min-w-0 flex-wrap items-start justify-between gap-4">
       <div className="min-w-0">
         {eyebrow ? <span className="section-eyebrow mb-3">{eyebrow}</span> : null}
-        {title ? <h2 className="text-xl font-bold tracking-tight text-aura-ink dark:text-slate-100">{title}</h2> : null}
+        {title ? (
+          <h2 className="text-xl font-bold tracking-tight text-aura-ink dark:text-slate-100">{title}</h2>
+        ) : null}
         {subtitle ? <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{subtitle}</p> : null}
       </div>
       {right ? <div className="shrink-0">{right}</div> : null}
@@ -83,8 +114,14 @@ function DashboardSkeleton() {
   return (
     <div className="flex flex-col gap-4 lg:col-span-2" aria-busy="true" aria-label="Loading interviews">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="skeleton-row relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/45">
-          <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral/40 via-violet-400/40 to-aura-violet/40" aria-hidden />
+        <div
+          key={i}
+          className="skeleton-row relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/45"
+        >
+          <span
+            className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral/40 via-violet-400/40 to-aura-violet/40"
+            aria-hidden
+          />
           <div className="flex flex-wrap items-center gap-5 md:flex-nowrap md:gap-6">
             <div className="h-14 w-14 shrink-0 rounded-2xl skeleton-line md:w-16" />
             <div className="min-w-0 flex-1 space-y-3 py-1">
@@ -104,16 +141,56 @@ function DashboardSkeleton() {
 }
 
 const statMeta = [
-  { label: "Sessions", key: "total", hint: "All time", accent: "text-violet-600 dark:text-violet-400", icon: "◇", help: "Total interviews you've created — drafts, live, and scored." },
-  { label: "Completed", key: "done", hint: "Scored & closed", accent: "text-emerald-600 dark:text-emerald-400", icon: "✓", help: "Sessions you finished and that received a final score." },
-  { label: "In flight", key: "active", hint: "Draft or live", accent: "text-amber-600 dark:text-amber-400", icon: "◆", help: "Sessions you started but haven't completed yet." },
-  { label: "Avg score", key: "avg", hint: "Completed only", accent: "text-rose-600 dark:text-rose-400", icon: "◎", help: "Mean overall score across your completed sessions." },
+  {
+    label: "Sessions",
+    key: "total",
+    hint: "All time",
+    accent: "text-violet-600 dark:text-violet-400",
+    icon: "◇",
+    help: "Total interviews you've created — drafts, live, and scored.",
+  },
+  {
+    label: "Completed",
+    key: "done",
+    hint: "Scored & closed",
+    accent: "text-emerald-600 dark:text-emerald-400",
+    icon: "✓",
+    help: "Sessions you finished and that received a final score.",
+  },
+  {
+    label: "In flight",
+    key: "active",
+    hint: "Draft or live",
+    accent: "text-amber-600 dark:text-amber-400",
+    icon: "◆",
+    help: "Sessions you started but haven't completed yet.",
+  },
+  {
+    label: "Avg score",
+    key: "avg",
+    hint: "Completed only",
+    accent: "text-rose-600 dark:text-rose-400",
+    icon: "◎",
+    help: "Mean overall score across your completed sessions.",
+  },
 ];
 
 const RUNWAY_STEPS = [
-  { n: "01", title: "Resume + role", body: "Upload a PDF and paste the JD so every question maps to your story." },
-  { n: "02", title: "Live mock", body: "Speech, pace, and gaze are measured while you answer — like the real loop." },
-  { n: "03", title: "Scorecard + PDF", body: "Export structured feedback you can rehearse against before the next round." },
+  {
+    n: "01",
+    title: "Resume + role",
+    body: "Upload a PDF and paste the JD so every question maps to your story.",
+  },
+  {
+    n: "02",
+    title: "Live mock",
+    body: "Speech, pace, and gaze are measured while you answer — like the real loop.",
+  },
+  {
+    n: "03",
+    title: "Scorecard + PDF",
+    body: "Export structured feedback you can rehearse against before the next round.",
+  },
 ];
 
 const SIDEBAR_LINKS = [
@@ -261,7 +338,9 @@ export default function DashboardPage() {
   const { completed, inProgress, scoreLast, eyeLast, paceLast, confLast } = useMemo(() => {
     const completedSessions = interviews.filter((i) => i.status === "completed");
     const inFlight = interviews.filter((i) => i.status === "in_progress");
-    const completedSorted = [...completedSessions].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    const completedSorted = [...completedSessions].sort(
+      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+    );
 
     const scoreTrend = completedSorted.map((i) => i.overallScore).filter((v) => typeof v === "number");
     const eyeTrend = completedSorted.map((i) => i.avgEyeContact).filter((v) => typeof v === "number");
@@ -291,9 +370,36 @@ export default function DashboardPage() {
   const greeting = greetingForNow();
 
   const stats = [
-    { label: statMeta[0].label, value: interviews.length, hint: statMeta[0].hint, accent: statMeta[0].accent, icon: statMeta[0].icon, filter: "all", help: statMeta[0].help, bar: "from-violet-500 to-fuchsia-500" },
-    { label: statMeta[1].label, value: completed.length, hint: statMeta[1].hint, accent: statMeta[1].accent, icon: statMeta[1].icon, filter: "completed", help: statMeta[1].help, bar: "from-emerald-500 to-teal-400" },
-    { label: statMeta[2].label, value: inProgress.length, hint: statMeta[2].hint, accent: statMeta[2].accent, icon: statMeta[2].icon, filter: "in_progress", help: statMeta[2].help, bar: "from-amber-500 to-orange-400" },
+    {
+      label: statMeta[0].label,
+      value: interviews.length,
+      hint: statMeta[0].hint,
+      accent: statMeta[0].accent,
+      icon: statMeta[0].icon,
+      filter: "all",
+      help: statMeta[0].help,
+      bar: "from-violet-500 to-fuchsia-500",
+    },
+    {
+      label: statMeta[1].label,
+      value: completed.length,
+      hint: statMeta[1].hint,
+      accent: statMeta[1].accent,
+      icon: statMeta[1].icon,
+      filter: "completed",
+      help: statMeta[1].help,
+      bar: "from-emerald-500 to-teal-400",
+    },
+    {
+      label: statMeta[2].label,
+      value: inProgress.length,
+      hint: statMeta[2].hint,
+      accent: statMeta[2].accent,
+      icon: statMeta[2].icon,
+      filter: "in_progress",
+      help: statMeta[2].help,
+      bar: "from-amber-500 to-orange-400",
+    },
     {
       label: statMeta[3].label,
       value: avgScore ?? "—",
@@ -329,7 +435,9 @@ export default function DashboardPage() {
       case "score_low":
         return list.sort((a, b) => (a.overallScore ?? 999) - (b.overallScore ?? 999));
       case "role":
-        return list.sort((a, b) => (a.jobRole || "").localeCompare(b.jobRole || "", undefined, { sensitivity: "base" }));
+        return list.sort((a, b) =>
+          (a.jobRole || "").localeCompare(b.jobRole || "", undefined, { sensitivity: "base" })
+        );
       case "starred_first":
         return list.sort((a, b) => {
           const sb = b.starred ? 1 : 0;
@@ -365,8 +473,14 @@ export default function DashboardPage() {
         }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute -left-32 top-10 -z-10 h-72 w-72 rounded-full bg-aura-coral/[0.05] blur-3xl dark:bg-aura-coral/[0.04]" aria-hidden />
-      <div className="pointer-events-none absolute -right-28 top-80 -z-10 h-80 w-80 rounded-full bg-aura-violet/[0.05] blur-3xl dark:bg-aura-violet/[0.04]" aria-hidden />
+      <div
+        className="pointer-events-none absolute -left-32 top-10 -z-10 h-72 w-72 rounded-full bg-aura-coral/[0.05] blur-3xl dark:bg-aura-coral/[0.04]"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -right-28 top-80 -z-10 h-80 w-80 rounded-full bg-aura-violet/[0.05] blur-3xl dark:bg-aura-violet/[0.04]"
+        aria-hidden
+      />
       {/* Hero */}
       <div className="relative mb-7 overflow-hidden rounded-2xl border border-slate-200/90 bg-white/95 p-6 shadow-[0_16px_40px_-28px_rgba(15,23,42,0.25)] ring-1 ring-white/80 dark:border-slate-700/80 dark:bg-slate-900/80 dark:shadow-none dark:ring-slate-800/50 sm:p-7">
         <div
@@ -379,20 +493,30 @@ export default function DashboardPage() {
         />
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
-            <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">Workspace</p>
+            <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500 dark:text-slate-400">
+              Workspace
+            </p>
             <h1 className="font-display text-3xl font-semibold italic tracking-tight text-aura-ink sm:text-[2.15rem] sm:leading-tight md:text-[2.35rem]">
               {greeting},{" "}
-              <span className="not-italic bg-gradient-to-r from-aura-coral to-aura-violet bg-clip-text text-transparent">{firstName}</span>
+              <span className="not-italic bg-gradient-to-r from-aura-coral to-aura-violet bg-clip-text text-transparent">
+                {firstName}
+              </span>
             </h1>
             {user?.email && (
-              <p className="mt-2 max-w-lg truncate text-sm text-slate-500 dark:text-slate-400">{user.email}</p>
+              <p className="mt-2 max-w-lg truncate text-sm text-slate-500 dark:text-slate-400">
+                {user.email}
+              </p>
             )}
             <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
-              One place for every mock round — scores, presence metrics, and exports so you rehearse with intent, not hope.
+              One place for every mock round — scores, presence metrics, and exports so you rehearse with
+              intent, not hope.
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-2" aria-label="Dashboard status">
               <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-slate-300">
-                <span className={`h-2 w-2 rounded-full ${isPro ? "bg-emerald-500" : "bg-amber-500"}`} aria-hidden />
+                <span
+                  className={`h-2 w-2 rounded-full ${isPro ? "bg-emerald-500" : "bg-amber-500"}`}
+                  aria-hidden
+                />
                 {isPro ? "Pro workspace" : `${plan.toUpperCase()} plan`}
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/60 dark:text-slate-300">
@@ -407,19 +531,28 @@ export default function DashboardPage() {
                 <span className="absolute inset-0 bg-gradient-to-br from-aura-coral via-fuchsia-500/90 to-aura-violet" />
                 <span className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-50" />
                 <span className="relative">New interview</span>
-                <span className="relative transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5" aria-hidden>
+                <span
+                  className="relative transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5"
+                  aria-hidden
+                >
                   →
                 </span>
               </span>
             </Link>
             <Link to="/pricing" className="no-underline">
-              <span className="btn-secondary inline-flex w-full justify-center py-3 text-sm sm:w-auto sm:px-5">View plans</span>
+              <span className="btn-secondary inline-flex w-full justify-center py-3 text-sm sm:w-auto sm:px-5">
+                View plans
+              </span>
             </Link>
             <button
               type="button"
               className="btn-outline inline-flex w-full justify-center py-3 text-sm sm:w-auto sm:px-5"
               onClick={() => {
-                downloadPracticeBlockIcs({ title: "InterviewAI — practice block", minutes: 45, hoursFromNow: 2 });
+                downloadPracticeBlockIcs({
+                  title: "InterviewAI — practice block",
+                  minutes: 45,
+                  hoursFromNow: 2,
+                });
                 toast.success("Calendar file downloaded — open it to add to your calendar app.");
               }}
             >
@@ -466,7 +599,10 @@ export default function DashboardPage() {
         >
           <span className="absolute inset-y-0 left-0 w-1 bg-rose-500" aria-hidden />
           <div className="flex items-start gap-3">
-            <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-sm font-black text-rose-700 dark:bg-rose-500/15 dark:text-rose-200" aria-hidden>
+            <span
+              className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-sm font-black text-rose-700 dark:bg-rose-500/15 dark:text-rose-200"
+              aria-hidden
+            >
               !
             </span>
             <div>
@@ -482,7 +618,10 @@ export default function DashboardPage() {
 
       {dashView === "insights" && !loading && !loadError && readiness && (
         <div className="glass-panel-lg relative mb-10 overflow-hidden rounded-3xl p-6 sm:p-8">
-          <div className="pointer-events-none absolute -right-16 top-0 h-40 w-40 rounded-full bg-aura-violet/10 blur-2xl dark:bg-aura-violet/15" aria-hidden />
+          <div
+            className="pointer-events-none absolute -right-16 top-0 h-40 w-40 rounded-full bg-aura-violet/10 blur-2xl dark:bg-aura-violet/15"
+            aria-hidden
+          />
           <SectionHeader
             eyebrow="Readiness snapshot"
             title={readiness.headline}
@@ -494,7 +633,10 @@ export default function DashboardPage() {
                 key={i}
                 className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/75 p-4 text-sm leading-relaxed text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/45 dark:text-slate-300 dark:hover:border-violet-500/35"
               >
-                <span className="absolute -right-1 -top-3 font-display text-5xl font-bold text-slate-100 transition-colors group-hover:text-violet-100 dark:text-slate-800/80 dark:group-hover:text-violet-950/50" aria-hidden>
+                <span
+                  className="absolute -right-1 -top-3 font-display text-5xl font-bold text-slate-100 transition-colors group-hover:text-violet-100 dark:text-slate-800/80 dark:group-hover:text-violet-950/50"
+                  aria-hidden
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="relative block font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-aura-violet dark:text-violet-300">
@@ -510,40 +652,51 @@ export default function DashboardPage() {
       {/* KPI strip — always visible */}
       {dashView === "insights" && (
         <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((s) => {
-          const clickable = s.filter !== null;
-          const Tag = clickable ? "button" : "div";
-          const onActivate = clickable
-            ? () => {
-                setStatusFilter(s.filter);
-                setDashView("sessions");
-              }
-            : undefined;
-          return (
-            <Tag
-              key={s.label}
-              type={clickable ? "button" : undefined}
-              onClick={onActivate}
-              title={`${s.help}${clickable ? " Click to filter the sessions list." : ""}`}
-              className={`glass-panel interactive-lift group relative flex flex-col overflow-hidden rounded-2xl p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/10 sm:p-7 ${
-                clickable ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page" : ""
-              }`}
-            >
-              <span className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${s.bar}`} aria-hidden />
-              <span className="absolute right-4 top-4 text-2xl opacity-[0.1] dark:opacity-[0.15]" aria-hidden>
-                {s.icon}
-              </span>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">{s.label}</p>
-              <div className={`mt-2 font-sans text-3xl font-extrabold tabular-nums tracking-tight ${s.accent}`}>{s.value}</div>
-              <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">{s.hint}</p>
-              {clickable ? (
-                <span className="mt-4 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400 transition-colors group-hover:text-violet-600 dark:group-hover:text-violet-300">
-                  Filter sessions →
+          {stats.map((s) => {
+            const clickable = s.filter !== null;
+            const Tag = clickable ? "button" : "div";
+            const onActivate = clickable
+              ? () => {
+                  setStatusFilter(s.filter);
+                  setDashView("sessions");
+                }
+              : undefined;
+            return (
+              <Tag
+                key={s.label}
+                type={clickable ? "button" : undefined}
+                onClick={onActivate}
+                title={`${s.help}${clickable ? " Click to filter the sessions list." : ""}`}
+                className={`glass-panel interactive-lift group relative flex flex-col overflow-hidden rounded-2xl p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/10 sm:p-7 ${
+                  clickable
+                    ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/45 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page"
+                    : ""
+                }`}
+              >
+                <span className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${s.bar}`} aria-hidden />
+                <span
+                  className="absolute right-4 top-4 text-2xl opacity-[0.1] dark:opacity-[0.15]"
+                  aria-hidden
+                >
+                  {s.icon}
                 </span>
-              ) : null}
-            </Tag>
-          );
-        })}
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+                  {s.label}
+                </p>
+                <div
+                  className={`mt-2 font-sans text-3xl font-extrabold tabular-nums tracking-tight ${s.accent}`}
+                >
+                  {s.value}
+                </div>
+                <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">{s.hint}</p>
+                {clickable ? (
+                  <span className="mt-4 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400 transition-colors group-hover:text-violet-600 dark:group-hover:text-violet-300">
+                    Filter sessions →
+                  </span>
+                ) : null}
+              </Tag>
+            );
+          })}
         </div>
       )}
 
@@ -552,29 +705,48 @@ export default function DashboardPage() {
         <div className="mb-10 grid gap-4 md:grid-cols-2">
           {!isPro ? (
             <div className="glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet-500/10 sm:p-7 md:col-span-2">
-              <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral to-aura-violet" aria-hidden />
-              <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-gradient-to-br from-aura-violet/20 to-aura-coral/10 blur-3xl" aria-hidden />
+              <span
+                className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral to-aura-violet"
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-gradient-to-br from-aura-violet/20 to-aura-coral/10 blur-3xl"
+                aria-hidden
+              />
               <span className="absolute right-5 top-5 rounded-full border border-violet-200/80 bg-violet-50 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-500/35 dark:bg-violet-950/45 dark:text-violet-200">
                 Pro
               </span>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Practice rhythm</p>
-              <h3 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">Streaks + weekly goals</h3>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                Practice rhythm
+              </p>
+              <h3 className="mt-2 text-lg font-bold tracking-tight text-aura-ink dark:text-slate-100">
+                Streaks + weekly goals
+              </h3>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                Stay consistent with streak tracking and a weekly session bar. Upgrade to Pro to unlock this panel.
+                Stay consistent with streak tracking and a weekly session bar. Upgrade to Pro to unlock this
+                panel.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <Link to="/pricing" className="no-underline">
-                  <span className="btn-cta inline-flex items-center justify-center px-6 py-3 text-sm">Upgrade to Pro →</span>
+                  <span className="btn-cta inline-flex items-center justify-center px-6 py-3 text-sm">
+                    Upgrade to Pro →
+                  </span>
                 </Link>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Already Pro? Refresh your session.</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">
+                  Already Pro? Refresh your session.
+                </span>
               </div>
               <div className="mt-6 grid gap-4 md:grid-cols-2">
                 <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-5 text-sm text-slate-500 blur-[2px] dark:border-slate-700/70 dark:bg-slate-900/40 dark:text-slate-400">
-                  <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.22em]">Streak</div>
+                  <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.22em]">
+                    Streak
+                  </div>
                   <div className="text-3xl font-black">—</div>
                 </div>
                 <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-5 text-sm text-slate-500 blur-[2px] dark:border-slate-700/70 dark:bg-slate-900/40 dark:text-slate-400">
-                  <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.22em]">Weekly goal</div>
+                  <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.22em]">
+                    Weekly goal
+                  </div>
                   <div className="text-3xl font-black">—</div>
                 </div>
               </div>
@@ -582,10 +754,18 @@ export default function DashboardPage() {
           ) : (
             <>
               <div className="glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-aura-coral/10 sm:p-7">
-                <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral to-amber-400" aria-hidden />
-                <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-aura-coral/15 blur-2xl dark:bg-aura-coral/10" aria-hidden />
+                <span
+                  className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral to-amber-400"
+                  aria-hidden
+                />
+                <div
+                  className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-aura-coral/15 blur-2xl dark:bg-aura-coral/10"
+                  aria-hidden
+                />
                 <div className="flex items-center justify-between">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Streak</p>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                    Streak
+                  </p>
                   {!loading && practiceStreak >= 3 ? (
                     <span
                       className="inline-flex items-center gap-1 rounded-full border border-amber-300/70 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-900 dark:border-amber-500/35 dark:bg-amber-950/45 dark:text-amber-100"
@@ -614,15 +794,25 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-aura-violet/10 sm:p-7">
-                <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-violet to-fuchsia-500" aria-hidden />
-                <div className="pointer-events-none absolute -bottom-10 -right-6 h-36 w-36 rounded-full bg-aura-violet/15 blur-2xl dark:bg-aura-violet/10" aria-hidden />
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Weekly goal</p>
+                <span
+                  className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-violet to-fuchsia-500"
+                  aria-hidden
+                />
+                <div
+                  className="pointer-events-none absolute -bottom-10 -right-6 h-36 w-36 rounded-full bg-aura-violet/15 blur-2xl dark:bg-aura-violet/10"
+                  aria-hidden
+                />
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                  Weekly goal
+                </p>
                 <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
                   <div>
                     <span className="font-brand text-4xl font-semibold tabular-nums tracking-tight text-aura-ink dark:text-white">
                       {loading ? "—" : `${weekCount}/${WEEKLY_SESSION_GOAL}`}
                     </span>
-                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Completed sessions this week (Mon–Sun)</p>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                      Completed sessions this week (Mon–Sun)
+                    </p>
                   </div>
                   {!loading && weekCount >= WEEKLY_SESSION_GOAL && (
                     <span className="mb-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950/50 dark:text-emerald-200">
@@ -657,70 +847,88 @@ export default function DashboardPage() {
       {/* Momentum — always show panel (avoids layout jump while loading) */}
       {dashView === "insights" && (
         <div className="glass-panel-lg relative mb-10 min-w-0 overflow-hidden p-6 md:p-8">
-        <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-aura-violet/10 blur-3xl dark:bg-aura-violet/15" aria-hidden />
-        <SectionHeader
-          eyebrow="Momentum"
-          title="Overall score trend"
-          subtitle={
-            loading
-              ? "Loading session history…"
-              : scoreLast.length >= 2
-                ? `Last ${scoreLast.length} completed sessions`
-                : "Your line chart unlocks after two completed sessions"
-          }
-        />
-        {loading ? (
-          <div className="h-[88px] w-full animate-pulse rounded-xl bg-slate-100/90 dark:bg-slate-800/60" aria-hidden />
-        ) : scoreLast.length >= 2 ? (
-          <div className="min-w-0 rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-inner dark:border-slate-700/70 dark:bg-slate-900/35">
-            <Sparkline data={scoreLast} stroke="#5B21B6" fill="rgba(91,33,182,0.14)" />
-          </div>
-        ) : (
-          <TrendPlaceholder />
-        )}
-
-        {!loading && scoreLast.length >= 2 && (
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40 dark:hover:border-emerald-500/35">
-              <span className="absolute inset-x-0 top-0 h-0.5 bg-emerald-500/80" aria-hidden />
-              <div className="mb-2 flex items-center justify-between">
-                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Eye contact</div>
-                <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{eyeLast.at(-1) != null ? `${eyeLast.at(-1)}%` : "—"}</div>
-              </div>
-              {eyeLast.length >= 2 ? (
-                <Sparkline data={eyeLast} stroke="#10b981" fill="rgba(16,185,129,0.10)" />
-              ) : (
-                <div className="h-[44px] rounded-xl bg-slate-100/80 dark:bg-slate-800/50" aria-hidden />
-              )}
+          <div
+            className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-aura-violet/10 blur-3xl dark:bg-aura-violet/15"
+            aria-hidden
+          />
+          <SectionHeader
+            eyebrow="Momentum"
+            title="Overall score trend"
+            subtitle={
+              loading
+                ? "Loading session history…"
+                : scoreLast.length >= 2
+                  ? `Last ${scoreLast.length} completed sessions`
+                  : "Your line chart unlocks after two completed sessions"
+            }
+          />
+          {loading ? (
+            <div
+              className="h-[88px] w-full animate-pulse rounded-xl bg-slate-100/90 dark:bg-slate-800/60"
+              aria-hidden
+            />
+          ) : scoreLast.length >= 2 ? (
+            <div className="min-w-0 rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-inner dark:border-slate-700/70 dark:bg-slate-900/35">
+              <Sparkline data={scoreLast} stroke="#5B21B6" fill="rgba(91,33,182,0.14)" />
             </div>
+          ) : (
+            <TrendPlaceholder />
+          )}
 
-            <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40 dark:hover:border-amber-500/35">
-              <span className="absolute inset-x-0 top-0 h-0.5 bg-amber-500/80" aria-hidden />
-              <div className="mb-2 flex items-center justify-between">
-                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Pace</div>
-                <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{paceLast.at(-1) != null ? `${paceLast.at(-1)} wpm` : "—"}</div>
+          {!loading && scoreLast.length >= 2 && (
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40 dark:hover:border-emerald-500/35">
+                <span className="absolute inset-x-0 top-0 h-0.5 bg-emerald-500/80" aria-hidden />
+                <div className="mb-2 flex items-center justify-between">
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                    Eye contact
+                  </div>
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    {eyeLast.at(-1) != null ? `${eyeLast.at(-1)}%` : "—"}
+                  </div>
+                </div>
+                {eyeLast.length >= 2 ? (
+                  <Sparkline data={eyeLast} stroke="#10b981" fill="rgba(16,185,129,0.10)" />
+                ) : (
+                  <div className="h-[44px] rounded-xl bg-slate-100/80 dark:bg-slate-800/50" aria-hidden />
+                )}
               </div>
-              {paceLast.length >= 2 ? (
-                <Sparkline data={paceLast} stroke="#f59e0b" fill="rgba(245,158,11,0.12)" />
-              ) : (
-                <div className="h-[44px] rounded-xl bg-slate-100/80 dark:bg-slate-800/50" aria-hidden />
-              )}
-            </div>
 
-            <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-pink-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40 dark:hover:border-pink-500/35">
-              <span className="absolute inset-x-0 top-0 h-0.5 bg-pink-500/80" aria-hidden />
-              <div className="mb-2 flex items-center justify-between">
-                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Confidence</div>
-                <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{confLast.at(-1) != null ? `${confLast.at(-1)}/10` : "—"}</div>
+              <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40 dark:hover:border-amber-500/35">
+                <span className="absolute inset-x-0 top-0 h-0.5 bg-amber-500/80" aria-hidden />
+                <div className="mb-2 flex items-center justify-between">
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                    Pace
+                  </div>
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    {paceLast.at(-1) != null ? `${paceLast.at(-1)} wpm` : "—"}
+                  </div>
+                </div>
+                {paceLast.length >= 2 ? (
+                  <Sparkline data={paceLast} stroke="#f59e0b" fill="rgba(245,158,11,0.12)" />
+                ) : (
+                  <div className="h-[44px] rounded-xl bg-slate-100/80 dark:bg-slate-800/50" aria-hidden />
+                )}
               </div>
-              {confLast.length >= 2 ? (
-                <Sparkline data={confLast} stroke="#ec4899" fill="rgba(236,72,153,0.10)" />
-              ) : (
-                <div className="h-[44px] rounded-xl bg-slate-100/80 dark:bg-slate-800/50" aria-hidden />
-              )}
+
+              <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 p-4 ring-1 ring-white/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-pink-200 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/40 dark:ring-slate-800/40 dark:hover:border-pink-500/35">
+                <span className="absolute inset-x-0 top-0 h-0.5 bg-pink-500/80" aria-hidden />
+                <div className="mb-2 flex items-center justify-between">
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                    Confidence
+                  </div>
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    {confLast.at(-1) != null ? `${confLast.at(-1)}/10` : "—"}
+                  </div>
+                </div>
+                {confLast.length >= 2 ? (
+                  <Sparkline data={confLast} stroke="#ec4899" fill="rgba(236,72,153,0.10)" />
+                ) : (
+                  <div className="h-[44px] rounded-xl bg-slate-100/80 dark:bg-slate-800/50" aria-hidden />
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
         </div>
       )}
 
@@ -732,13 +940,19 @@ export default function DashboardPage() {
           ) : !hasInterviews ? (
             <div className="space-y-8">
               <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-br from-slate-50/95 via-white to-violet-50/30 p-8 shadow-lux dark:border-slate-700/80 dark:from-slate-900/80 dark:via-slate-950 dark:to-violet-950/20 dark:shadow-none sm:p-10">
-                <div className="pointer-events-none absolute right-0 top-0 h-40 w-40 rounded-full bg-aura-violet/10 blur-2xl" aria-hidden />
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-aura-violet">Runway</p>
+                <div
+                  className="pointer-events-none absolute right-0 top-0 h-40 w-40 rounded-full bg-aura-violet/10 blur-2xl"
+                  aria-hidden
+                />
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-aura-violet">
+                  Runway
+                </p>
                 <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-aura-ink sm:text-3xl">
                   Your first session defines the <span className="italic text-gradient">baseline</span>
                 </h2>
                 <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-                  Questions tailored to your résumé, deterministic scoring, and live coaching for gaze and pace — so every rep sharpens the same skills you need with a real hiring manager.
+                  Questions tailored to your résumé, deterministic scoring, and live coaching for gaze and
+                  pace — so every rep sharpens the same skills you need with a real hiring manager.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-2">
                   {["Resume-aware", "Live gaze coaching", "PDF scorecard"].map((chip) => (
@@ -757,7 +971,9 @@ export default function DashboardPage() {
                       Start your first interview <span aria-hidden>→</span>
                     </span>
                   </Link>
-                  <span className="text-xs text-slate-500 dark:text-slate-500">~12 minutes · no card required</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-500">
+                    ~12 minutes · no card required
+                  </span>
                 </div>
               </div>
 
@@ -765,9 +981,12 @@ export default function DashboardPage() {
                 <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <span className="section-eyebrow mb-3">Quick start</span>
-                    <h3 className="text-xl font-bold tracking-tight text-aura-ink">Do these once. Score higher every rep.</h3>
+                    <h3 className="text-xl font-bold tracking-tight text-aura-ink">
+                      Do these once. Score higher every rep.
+                    </h3>
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                      This isn’t busywork — it improves transcript quality, pacing, and gaze coaching accuracy.
+                      This isn’t busywork — it improves transcript quality, pacing, and gaze coaching
+                      accuracy.
                     </p>
                     <div className="mt-4 max-w-sm">
                       <div className="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
@@ -825,12 +1044,17 @@ export default function DashboardPage() {
                     key={step.n}
                     className="glass-panel group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-violet-200/80 hover:shadow-lg hover:shadow-violet-500/10 dark:hover:border-violet-500/35"
                   >
-                    <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral/70 to-aura-violet/70" aria-hidden />
+                    <span
+                      className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-aura-coral/70 to-aura-violet/70"
+                      aria-hidden
+                    />
                     <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl border border-violet-200/80 bg-violet-50 font-mono text-[10px] font-bold text-violet-700 transition-transform group-hover:scale-105 dark:border-violet-500/35 dark:bg-violet-950/45 dark:text-violet-200">
                       {step.n}
                     </div>
                     <h3 className="mt-2 text-base font-bold tracking-tight text-aura-ink">{step.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{step.body}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                      {step.body}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -839,23 +1063,41 @@ export default function DashboardPage() {
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
                   <span>
                     <span className="section-eyebrow mb-3">Before you start</span>
-                    <h3 className="text-xl font-bold tracking-tight text-aura-ink">A 60-second setup that boosts your score</h3>
+                    <h3 className="text-xl font-bold tracking-tight text-aura-ink">
+                      A 60-second setup that boosts your score
+                    </h3>
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                      Candidates who do these basics get cleaner transcripts, better pacing, and more accurate gaze coaching.
+                      Candidates who do these basics get cleaner transcripts, better pacing, and more accurate
+                      gaze coaching.
                     </p>
                   </span>
-                  <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-transform group-open:rotate-180 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400" aria-hidden>
+                  <span
+                    className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-transform group-open:rotate-180 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+                    aria-hidden
+                  >
                     ↓
                   </span>
                 </summary>
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
                   {[
                     { t: "Use desktop Chrome/Edge", s: "Best speech recognition + camera APIs." },
-                    { t: "Face a window or soft light", s: "Eye contact estimation improves when your face is lit." },
-                    { t: "Position the camera at eye level", s: "You’ll look confident and avoid looking down." },
-                    { t: "Answer in 60–120 seconds", s: "Short, structured answers score higher than rambling." },
+                    {
+                      t: "Face a window or soft light",
+                      s: "Eye contact estimation improves when your face is lit.",
+                    },
+                    {
+                      t: "Position the camera at eye level",
+                      s: "You’ll look confident and avoid looking down.",
+                    },
+                    {
+                      t: "Answer in 60–120 seconds",
+                      s: "Short, structured answers score higher than rambling.",
+                    },
                   ].map((x) => (
-                    <div key={x.t} className="rounded-2xl border border-slate-200/80 bg-white/80 p-4 dark:border-slate-700/70 dark:bg-slate-900/45">
+                    <div
+                      key={x.t}
+                      className="rounded-2xl border border-slate-200/80 bg-white/80 p-4 dark:border-slate-700/70 dark:bg-slate-900/45"
+                    >
                       <div className="flex items-start gap-3">
                         <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-bold text-violet-700 ring-1 ring-violet-200/70 dark:bg-violet-950/55 dark:text-violet-200 dark:ring-violet-800/50">
                           ✓
@@ -901,7 +1143,11 @@ export default function DashboardPage() {
                     </button>
                   ) : null}
                 </div>
-                <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter sessions by status">
+                <div
+                  className="flex flex-wrap items-center gap-1.5"
+                  role="group"
+                  aria-label="Filter sessions by status"
+                >
                   {[
                     { id: "all", label: "All", count: interviews.length },
                     { id: "completed", label: "Done", count: completed.length },
@@ -919,7 +1165,9 @@ export default function DashboardPage() {
                       aria-pressed={statusFilter === filter.id}
                     >
                       {filter.label}
-                      <span className={`rounded-full px-1.5 py-0.5 font-mono text-[10px] ${statusFilter === filter.id ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}>
+                      <span
+                        className={`rounded-full px-1.5 py-0.5 font-mono text-[10px] ${statusFilter === filter.id ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}
+                      >
                         {filter.count}
                       </span>
                     </button>
@@ -979,16 +1227,28 @@ export default function DashboardPage() {
               </div>
               {filteredSessions.length === 0 && starredOnly && !q ? (
                 <div className="rounded-2xl border border-dashed border-slate-200/90 bg-slate-50/60 px-6 py-10 text-center dark:border-slate-600/60 dark:bg-slate-900/40">
-                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">No starred sessions yet. Star a report from the scorecard to pin it here.</p>
-                  <button type="button" className="btn-outline mt-4 px-5 py-2 text-xs" onClick={() => setStarredOnly(false)}>
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    No starred sessions yet. Star a report from the scorecard to pin it here.
+                  </p>
+                  <button
+                    type="button"
+                    className="btn-outline mt-4 px-5 py-2 text-xs"
+                    onClick={() => setStarredOnly(false)}
+                  >
                     Show all sessions
                   </button>
                 </div>
               ) : null}
               {filteredSessions.length === 0 && q ? (
                 <div className="rounded-2xl border border-dashed border-slate-200/90 bg-slate-50/60 px-6 py-10 text-center dark:border-slate-600/60 dark:bg-slate-900/40">
-                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">No sessions match “{sessionQuery.trim()}”.</p>
-                  <button type="button" className="btn-outline mt-4 px-5 py-2 text-xs" onClick={() => setSessionQuery("")}>
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    No sessions match “{sessionQuery.trim()}”.
+                  </p>
+                  <button
+                    type="button"
+                    className="btn-outline mt-4 px-5 py-2 text-xs"
+                    onClick={() => setSessionQuery("")}
+                  >
                     Clear filter
                   </button>
                 </div>
@@ -1020,9 +1280,7 @@ export default function DashboardPage() {
                       }`}
                       aria-hidden
                     />
-                    <div
-                      className="flex flex-col rounded-[0.9rem] bg-gradient-to-br from-white/80 to-slate-50/30 p-5 dark:from-slate-900/60 dark:to-slate-950/40 md:flex-row md:items-stretch md:gap-0 md:p-6"
-                    >
+                    <div className="flex flex-col rounded-[0.9rem] bg-gradient-to-br from-white/80 to-slate-50/30 p-5 dark:from-slate-900/60 dark:to-slate-950/40 md:flex-row md:items-stretch md:gap-0 md:p-6">
                       <Link
                         to={to}
                         className="group flex min-w-0 flex-1 flex-wrap items-center gap-5 text-inherit no-underline md:flex-nowrap md:gap-6"
@@ -1044,19 +1302,31 @@ export default function DashboardPage() {
                             ) : null}
                           </div>
                           {iv.targetCompany ? (
-                            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">{iv.targetCompany}</p>
+                            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">
+                              {iv.targetCompany}
+                            </p>
                           ) : null}
                           <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">
                             <span title={new Date(iv.createdAt).toISOString()}>
-                              {new Date(iv.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                              {new Date(iv.createdAt).toLocaleDateString("en-IN", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              })}
                             </span>
-                            <span className="text-slate-400 dark:text-slate-500"> · {formatRelativeTime(iv.createdAt)}</span>
+                            <span className="text-slate-400 dark:text-slate-500">
+                              {" "}
+                              · {formatRelativeTime(iv.createdAt)}
+                            </span>
                             {" · "}
                             {answered}/{total} scored
                             {formatSessionWallDuration(iv.firstAnsweredAt, iv.completedAt) ? (
                               <>
                                 {" · "}
-                                <span className="text-slate-400 dark:text-slate-500" title="First answer → session complete">
+                                <span
+                                  className="text-slate-400 dark:text-slate-500"
+                                  title="First answer → session complete"
+                                >
                                   {formatSessionWallDuration(iv.firstAnsweredAt, iv.completedAt)} session
                                 </span>
                               </>
@@ -1082,7 +1352,9 @@ export default function DashboardPage() {
                           <div className="flex min-w-[4.75rem] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border border-slate-200/70 bg-white/60 px-3 py-2 text-center dark:border-slate-600/60 dark:bg-slate-900/50">
                             <span
                               className={`text-lg font-bold tabular-nums leading-none ${
-                                iv.avgEyeContact > 70 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
+                                iv.avgEyeContact > 70
+                                  ? "text-emerald-600 dark:text-emerald-400"
+                                  : "text-amber-600 dark:text-amber-400"
                               }`}
                             >
                               {iv.avgEyeContact}
@@ -1097,7 +1369,9 @@ export default function DashboardPage() {
                         <div className="hidden shrink-0 items-center pr-2 md:flex" aria-hidden>
                           <span className="rounded-full border border-slate-200/90 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm transition-colors group-hover:border-violet-200 group-hover:text-violet-800 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:border-violet-500/40 dark:group-hover:text-violet-200">
                             {iv.status === "completed" ? "Open report" : "Continue"}
-                            <span className="ml-1 inline-block transition-transform group-hover:translate-x-0.5">→</span>
+                            <span className="ml-1 inline-block transition-transform group-hover:translate-x-0.5">
+                              →
+                            </span>
                           </span>
                         </div>
                       </Link>
@@ -1122,7 +1396,9 @@ export default function DashboardPage() {
                           onClick={(e) => handleDelete(iv._id, e)}
                           disabled={deleting === iv._id}
                           aria-busy={deleting === iv._id}
-                          aria-label={deleting === iv._id ? "Deleting interview" : `Delete interview for ${iv.jobRole}`}
+                          aria-label={
+                            deleting === iv._id ? "Deleting interview" : `Delete interview for ${iv.jobRole}`
+                          }
                           title="Delete session"
                         >
                           {deleting === iv._id ? <span className="spinner h-4 w-4" /> : "Delete"}
@@ -1135,8 +1411,12 @@ export default function DashboardPage() {
             </motion.div>
           ) : (
             <div className="glass-panel-lg rounded-3xl p-8 text-center text-sm text-slate-600 dark:text-slate-400">
-              <p className="font-semibold text-aura-ink dark:text-slate-200">Your session list is on the Sessions tab</p>
-              <p className="mt-2">Use Insights for trends and readiness. Switch to Sessions to browse and manage interviews.</p>
+              <p className="font-semibold text-aura-ink dark:text-slate-200">
+                Your session list is on the Sessions tab
+              </p>
+              <p className="mt-2">
+                Use Insights for trends and readiness. Switch to Sessions to browse and manage interviews.
+              </p>
               <button type="button" className="btn-primary mt-5" onClick={() => setDashView("sessions")}>
                 Open Sessions →
               </button>
@@ -1165,10 +1445,17 @@ export default function DashboardPage() {
                       </span>
                       <span className="min-w-0">
                         <span className="block truncate">{item.label}</span>
-                        <span className="block text-[11px] font-normal text-slate-400 dark:text-slate-500">{item.sub}</span>
+                        <span className="block text-[11px] font-normal text-slate-400 dark:text-slate-500">
+                          {item.sub}
+                        </span>
                       </span>
                     </span>
-                    <span className="text-slate-300 transition-transform group-hover:translate-x-0.5 dark:text-slate-600" aria-hidden>→</span>
+                    <span
+                      className="text-slate-300 transition-transform group-hover:translate-x-0.5 dark:text-slate-600"
+                      aria-hidden
+                    >
+                      →
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -1176,16 +1463,25 @@ export default function DashboardPage() {
           </div>
 
           <details className="group glass-panel relative overflow-hidden rounded-2xl p-6">
-            <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-violet-500" aria-hidden />
+            <span
+              className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-violet-500"
+              aria-hidden
+            />
             <summary className="cursor-pointer list-none">
               <div className="flex items-center justify-between gap-3">
                 <span className="flex items-center gap-2">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:ring-emerald-500/30" aria-hidden>
+                  <span
+                    className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:ring-emerald-500/30"
+                    aria-hidden
+                  >
                     ✓
                   </span>
                   <h3 className="text-sm font-bold tracking-tight text-aura-ink">Practice signal</h3>
                 </span>
-                <span className="text-xs font-semibold text-slate-500 transition-transform group-open:rotate-180 dark:text-slate-400" aria-hidden>
+                <span
+                  className="text-xs font-semibold text-slate-500 transition-transform group-open:rotate-180 dark:text-slate-400"
+                  aria-hidden
+                >
                   ↓
                 </span>
               </div>
@@ -1241,17 +1537,31 @@ export default function DashboardPage() {
                     >
                       <span
                         className={`h-2.5 w-2.5 shrink-0 rounded-full ${
-                          iv.status === "completed" ? "bg-emerald-500" : iv.status === "in_progress" ? "bg-violet-500" : "bg-amber-500"
+                          iv.status === "completed"
+                            ? "bg-emerald-500"
+                            : iv.status === "in_progress"
+                              ? "bg-violet-500"
+                              : "bg-amber-500"
                         }`}
                         aria-hidden
                       />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-aura-ink transition-colors group-hover:text-violet-700 dark:group-hover:text-violet-300">{iv.jobRole}</span>
-                        <span className="text-[11px] text-slate-500 dark:text-slate-500" title={new Date(iv.createdAt).toISOString()}>
+                        <span className="block truncate text-sm font-semibold text-aura-ink transition-colors group-hover:text-violet-700 dark:group-hover:text-violet-300">
+                          {iv.jobRole}
+                        </span>
+                        <span
+                          className="text-[11px] text-slate-500 dark:text-slate-500"
+                          title={new Date(iv.createdAt).toISOString()}
+                        >
                           {formatRelativeTime(iv.createdAt)}
                         </span>
                       </span>
-                      <span className="text-slate-300 transition-transform group-hover:translate-x-0.5 dark:text-slate-600" aria-hidden>→</span>
+                      <span
+                        className="text-slate-300 transition-transform group-hover:translate-x-0.5 dark:text-slate-600"
+                        aria-hidden
+                      >
+                        →
+                      </span>
                     </Link>
                   </li>
                 ))}
@@ -1264,9 +1574,12 @@ export default function DashboardPage() {
       <div className="mt-12 rounded-3xl border border-slate-200/80 bg-white/70 p-5 shadow-sm backdrop-blur-sm dark:border-slate-700/70 dark:bg-slate-900/45">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Workspace summary</p>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+              Workspace summary
+            </p>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              {completed.length} completed · {inProgress.length} in flight · {avgScore ? `${avgScore}/10 average` : "average unlocks after scoring"}
+              {completed.length} completed · {inProgress.length} in flight ·{" "}
+              {avgScore ? `${avgScore}/10 average` : "average unlocks after scoring"}
             </p>
           </div>
           <Link to="/interview/new" className="no-underline">

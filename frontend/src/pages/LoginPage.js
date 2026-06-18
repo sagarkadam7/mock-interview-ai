@@ -63,8 +63,12 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-8 text-center lg:text-left">
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink sm:text-[2rem]">Welcome back</h1>
-            <p className="mt-3 text-[15px] leading-relaxed text-aura-muted">Sign in to continue to your practice workspace.</p>
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-aura-ink sm:text-[2rem]">
+              Welcome back
+            </h1>
+            <p className="mt-3 text-[15px] leading-relaxed text-aura-muted">
+              Sign in to continue to your practice workspace.
+            </p>
           </div>
 
           <div className="glass-panel-lg p-8 sm:p-10">
@@ -135,7 +139,9 @@ export default function LoginPage() {
                 <button
                   type="button"
                   className="font-semibold text-slate-500 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-aura-violet dark:text-slate-400 dark:hover:text-violet-300"
-                  onClick={() => toast("Password reset is coming soon. Contact support if you're locked out.")}
+                  onClick={() =>
+                    toast("Password reset is coming soon. Contact support if you're locked out.")
+                  }
                 >
                   Forgot password?
                 </button>
@@ -144,7 +150,8 @@ export default function LoginPage() {
               <button type="submit" className="btn-cta mt-2 w-full" disabled={loading}>
                 {loading ? (
                   <>
-                    <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" /> Signing in…
+                    <span className="spinner h-5 w-5 !border-white/25 !border-t-white dark:!border-slate-900/20 dark:!border-t-slate-900" />{" "}
+                    Signing in…
                   </>
                 ) : (
                   "Sign in →"
@@ -155,7 +162,10 @@ export default function LoginPage() {
             <div className="my-8 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
             <p className="text-center text-sm text-aura-muted">
               No account?{" "}
-              <Link to="/register" className="font-semibold text-aura-ink underline decoration-slate-300 underline-offset-4 transition-colors hover:text-aura-violet hover:decoration-aura-violet/40">
+              <Link
+                to="/register"
+                className="font-semibold text-aura-ink underline decoration-slate-300 underline-offset-4 transition-colors hover:text-aura-violet hover:decoration-aura-violet/40"
+              >
                 Create one free
               </Link>
             </p>

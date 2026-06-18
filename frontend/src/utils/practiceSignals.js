@@ -16,16 +16,45 @@ function clamp01(n) {
  * @returns {{ key: string, value: number, accentClass: string, msg: string }[]}
  */
 export function getSessionCoachingDimensions(interview) {
-  const eyeN = interview.avgEyeContact !== null && interview.avgEyeContact !== undefined ? clamp01(interview.avgEyeContact / 100) : 0;
-  const confN = interview.avgConfidence !== null && interview.avgConfidence !== undefined ? clamp01(interview.avgConfidence / 10) : 0;
+  const eyeN =
+    interview.avgEyeContact !== null && interview.avgEyeContact !== undefined
+      ? clamp01(interview.avgEyeContact / 100)
+      : 0;
+  const confN =
+    interview.avgConfidence !== null && interview.avgConfidence !== undefined
+      ? clamp01(interview.avgConfidence / 10)
+      : 0;
   const paceN = interview.avgPace ? clamp01(1 - Math.abs(interview.avgPace - 150) / 100) : 0;
-  const fillerN = interview.avgFillerWords !== null && interview.avgFillerWords !== undefined ? clamp01(1 - interview.avgFillerWords / 10) : 0;
+  const fillerN =
+    interview.avgFillerWords !== null && interview.avgFillerWords !== undefined
+      ? clamp01(1 - interview.avgFillerWords / 10)
+      : 0;
 
   return [
-    { key: "Eye", value: eyeN, accentClass: "text-emerald-600", msg: "Focus on steady eye contact. Try pausing and resetting your gaze to the lens." },
-    { key: "Conf", value: confN, accentClass: "text-violet-600", msg: "Build confidence by structuring answers (STAR). Aim for clear, complete sentences." },
-    { key: "Pace", value: paceN, accentClass: "text-emerald-600", msg: "Dial in your pace. Aiming for ~130–170 wpm often boosts clarity and confidence." },
-    { key: "Fill", value: fillerN, accentClass: "text-amber-600", msg: "Reduce filler words. If you feel stuck, pause for 1 second before continuing." },
+    {
+      key: "Eye",
+      value: eyeN,
+      accentClass: "text-emerald-600",
+      msg: "Focus on steady eye contact. Try pausing and resetting your gaze to the lens.",
+    },
+    {
+      key: "Conf",
+      value: confN,
+      accentClass: "text-violet-600",
+      msg: "Build confidence by structuring answers (STAR). Aim for clear, complete sentences.",
+    },
+    {
+      key: "Pace",
+      value: paceN,
+      accentClass: "text-emerald-600",
+      msg: "Dial in your pace. Aiming for ~130–170 wpm often boosts clarity and confidence.",
+    },
+    {
+      key: "Fill",
+      value: fillerN,
+      accentClass: "text-amber-600",
+      msg: "Reduce filler words. If you feel stuck, pause for 1 second before continuing.",
+    },
   ];
 }
 
@@ -131,7 +160,9 @@ export function buildNextRepsBullets(interview, focusDim) {
     if (tip && !bullets.some((b) => b.includes(tip.slice(0, 40))))
       bullets.push(`Lowest-scoring answer (${weakest.score}/10): ${tip}`);
     else if (!bullets.some((b) => /weakest|lowest/i.test(b)))
-      bullets.push(`Re-run your weakest prompt (${weakest.score}/10) in 90 seconds — STAR structure, no notes.`);
+      bullets.push(
+        `Re-run your weakest prompt (${weakest.score}/10) in 90 seconds — STAR structure, no notes.`
+      );
   }
 
   const defaults = [

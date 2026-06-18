@@ -54,8 +54,8 @@ export default function VideoModal({ open, onClose }) {
                   </p>
                   <p className="mt-3 text-lg font-semibold text-white">Add your walkthrough video URL</p>
                   <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-300/80">
-                    Replace this panel with an embed or hosted MP4 when you’re ready. This keeps the UI/flow in place
-                    without relying on third-party links.
+                    Replace this panel with an embed or hosted MP4 when you’re ready. This keeps the UI/flow
+                    in place without relying on third-party links.
                   </p>
                   <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold text-white ring-1 ring-white/15">
                     <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden />
@@ -70,4 +70,3 @@ export default function VideoModal({ open, onClose }) {
     </AnimatePresence>
   );
 }
-

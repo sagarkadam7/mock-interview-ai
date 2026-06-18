@@ -42,13 +42,10 @@ export default function TestimonialsSection() {
   const timerRef = useRef(0);
   const progressRef = useRef(0);
 
-  const go = useCallback(
-    (next) => {
-      const total = TESTIMONIALS.length;
-      setIdx(((next % total) + total) % total);
-    },
-    []
-  );
+  const go = useCallback((next) => {
+    const total = TESTIMONIALS.length;
+    setIdx(((next % total) + total) % total);
+  }, []);
 
   const next = useCallback(() => go(idx + 1), [go, idx]);
   const prev = useCallback(() => go(idx - 1), [go, idx]);
@@ -97,7 +94,10 @@ export default function TestimonialsSection() {
       <div className="mx-auto max-w-5xl px-6">
         <div className="mb-12 text-center">
           <div className="section-eyebrow mx-auto mb-4">Proof</div>
-          <h2 id="testimonials-heading" className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl">
+          <h2
+            id="testimonials-heading"
+            className="font-display text-3xl font-semibold tracking-tight text-aura-ink md:text-4xl"
+          >
             What candidates say
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
@@ -138,7 +138,10 @@ export default function TestimonialsSection() {
                 className="flex flex-col gap-6 md:flex-row md:items-start"
               >
                 <div className="flex shrink-0 items-center gap-3 md:flex-col md:items-start md:gap-4">
-                  <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${tone} text-base font-black text-white shadow-lg`} aria-hidden>
+                  <div
+                    className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${tone} text-base font-black text-white shadow-lg`}
+                    aria-hidden
+                  >
                     {initials(current.name)}
                   </div>
                   <div className="md:mt-2">
@@ -146,13 +149,19 @@ export default function TestimonialsSection() {
                     <p className="mt-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
                       {current.role}
                     </p>
-                    <div className="mt-2"><StarRating value={5} /></div>
+                    <div className="mt-2">
+                      <StarRating value={5} />
+                    </div>
                   </div>
                 </div>
                 <blockquote className="font-display text-xl font-medium italic leading-snug text-aura-ink dark:text-slate-100 md:text-2xl">
-                  <span aria-hidden className="mr-1 text-3xl text-aura-violet/40">&ldquo;</span>
+                  <span aria-hidden className="mr-1 text-3xl text-aura-violet/40">
+                    &ldquo;
+                  </span>
                   {current.quote}
-                  <span aria-hidden className="ml-1 text-3xl text-aura-violet/40">&rdquo;</span>
+                  <span aria-hidden className="ml-1 text-3xl text-aura-violet/40">
+                    &rdquo;
+                  </span>
                 </blockquote>
               </motion.figure>
             </AnimatePresence>
@@ -160,7 +169,10 @@ export default function TestimonialsSection() {
 
           {/* Auto-advance progress */}
           {!reduceMotion && (
-            <div className="relative mt-6 h-0.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-700/80" aria-hidden>
+            <div
+              className="relative mt-6 h-0.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-700/80"
+              aria-hidden
+            >
               <motion.div
                 className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-aura-coral to-aura-violet"
                 style={{ width: `${Math.min(progress, 1) * 100}%` }}
@@ -172,7 +184,10 @@ export default function TestimonialsSection() {
           {/* Controls */}
           <div className="mt-8 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400" aria-live="polite">
+              <span
+                className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400"
+                aria-live="polite"
+              >
                 {idx + 1} / {TESTIMONIALS.length}
               </span>
               <span className="hidden rounded-full border border-slate-200/80 bg-white/70 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-slate-500 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50 dark:text-slate-400 sm:inline-flex">
@@ -188,7 +203,9 @@ export default function TestimonialsSection() {
                     aria-label={`Testimonial ${i + 1} of ${TESTIMONIALS.length}`}
                     onClick={() => go(i)}
                     className={`h-2 rounded-full transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 ${
-                      i === idx ? "w-8 bg-aura-violet" : "w-2 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400"
+                      i === idx
+                        ? "w-8 bg-aura-violet"
+                        : "w-2 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400"
                     }`}
                   />
                 ))}
@@ -201,7 +218,16 @@ export default function TestimonialsSection() {
                 aria-label="Previous testimonial"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:border-violet-300 hover:text-violet-700 dark:border-slate-700/70 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:text-violet-300"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4"
+                  aria-hidden
+                >
                   <path d="m15 18-6-6 6-6" />
                 </svg>
               </button>
@@ -211,7 +237,16 @@ export default function TestimonialsSection() {
                 aria-label="Next testimonial"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:border-violet-300 hover:text-violet-700 dark:border-slate-700/70 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:text-violet-300"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4"
+                  aria-hidden
+                >
                   <path d="m9 18 6-6-6-6" />
                 </svg>
               </button>

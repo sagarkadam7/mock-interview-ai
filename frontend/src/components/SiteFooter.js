@@ -114,8 +114,8 @@ export default function SiteFooter() {
               Interview prep tactics, one email a week.
             </h3>
             <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              Concrete frameworks, teardown stories, and the practice patterns our most successful candidates use.
-              No fluff. Unsubscribe in one click.
+              Concrete frameworks, teardown stories, and the practice patterns our most successful candidates
+              use. No fluff. Unsubscribe in one click.
             </p>
           </div>
           <form className="flex flex-col gap-3" onSubmit={onSubscribe} noValidate>
@@ -148,7 +148,11 @@ export default function SiteFooter() {
               </button>
             </div>
             {error && (
-              <p id="footer-email-error" role="alert" className="text-xs font-medium text-rose-600 dark:text-rose-400">
+              <p
+                id="footer-email-error"
+                role="alert"
+                className="text-xs font-medium text-rose-600 dark:text-rose-400"
+              >
                 {error}
               </p>
             )}
@@ -173,8 +177,8 @@ export default function SiteFooter() {
               InterviewAI
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              Mock interviews with resume-aware AI, live delivery analytics, and exportable reports — built for
-              candidates who care about signal.
+              Mock interviews with resume-aware AI, live delivery analytics, and exportable reports — built
+              for candidates who care about signal.
             </p>
             <div className="mt-6 flex items-center gap-3">
               {socials.map((s) => (
@@ -225,7 +229,9 @@ export default function SiteFooter() {
           <p className="text-[11px] font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
             © {new Date().getFullYear()} InterviewAI · All rights reserved
           </p>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500">Crafted for serious interview practice.</p>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500">
+            Crafted for serious interview practice.
+          </p>
         </div>
       </div>
     </footer>

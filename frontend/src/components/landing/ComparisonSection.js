@@ -73,8 +73,8 @@ export default function ComparisonSection() {
             The only tool built for the <span className="italic text-gradient">whole loop</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-            Generic chatbots answer questions. Human coaches cost $120/hr and can't see your delivery. InterviewAI
-            combines both — resume-aware questions, live analytics, and 24/7 availability.
+            Generic chatbots answer questions. Human coaches cost $120/hr and can't see your delivery.
+            InterviewAI combines both — resume-aware questions, live analytics, and 24/7 availability.
           </p>
         </div>
 
@@ -88,7 +88,8 @@ export default function ComparisonSection() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] border-collapse text-sm">
               <caption className="visually-hidden">
-                Comparison of InterviewAI versus a generic AI chatbot and a human interview coach across product capabilities.
+                Comparison of InterviewAI versus a generic AI chatbot and a human interview coach across
+                product capabilities.
               </caption>
               <thead className="sticky top-0 z-10">
                 <tr className="border-b border-slate-200 bg-slate-50/95 text-left shadow-sm backdrop-blur-md dark:border-slate-700 dark:bg-slate-800/90">
@@ -103,7 +104,10 @@ export default function ComparisonSection() {
                     <span className="mt-1.5 inline-flex rounded-full bg-violet-100 px-2 py-0.5 text-[8px] tracking-[0.18em] text-violet-700 dark:bg-violet-500/15 dark:text-violet-200">
                       Full loop
                     </span>
-                    <span className="pointer-events-none absolute inset-x-3 -bottom-px h-[2px] bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet" aria-hidden />
+                    <span
+                      className="pointer-events-none absolute inset-x-3 -bottom-px h-[2px] bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet"
+                      aria-hidden
+                    />
                   </th>
                   <th className="px-3 py-4 text-center font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:px-5">
                     Generic AI chatbot
@@ -121,10 +125,15 @@ export default function ComparisonSection() {
                       idx % 2 === 0 ? "bg-white dark:bg-slate-950/40" : "bg-slate-50/60 dark:bg-slate-900/40"
                     }`}
                   >
-                    <td className="px-4 py-4 font-medium text-aura-ink dark:text-slate-100 sm:px-6">{row.label}</td>
+                    <td className="px-4 py-4 font-medium text-aura-ink dark:text-slate-100 sm:px-6">
+                      {row.label}
+                    </td>
                     <td className="relative px-3 py-3 sm:px-5">
                       {/* Subtle column tint to emphasise our column */}
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-violet-50/40 to-transparent dark:from-violet-950/20" aria-hidden />
+                      <div
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-violet-50/40 to-transparent dark:from-violet-950/20"
+                        aria-hidden
+                      />
                       <div className="relative">
                         <Cell value={row.us} tone="primary" />
                       </div>
