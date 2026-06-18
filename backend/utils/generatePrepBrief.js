@@ -1,13 +1,6 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { parseJsonFromAi } = require("./parseAiJson");
 const { normalizePrepBrief } = require("./aiSchemas");
-
-function getGeminiModel() {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error("GEMINI_API_KEY is not configured.");
-  const genAI = new GoogleGenerativeAI(key);
-  return genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || "gemini-2.0-flash" });
-}
+const { generateText } = require("./geminiClient");
 
 function describeSettings({ level, interviewMode, persona }) {
   const lvl = String(level || "mid").trim();
@@ -62,9 +55,7 @@ Rules:
 - focusTips: 3-4 items for interview day
 - matchScore should reflect real fit, not always high`;
 
-  const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  const raw = result?.response?.text?.() || "";
+  const raw = await generateText(prompt, { label: "generatePrepBrief" });
   const parsed = parseJsonFromAi(raw);
   const normalized = normalizePrepBrief(parsed);
   if (!normalized) throw new Error("AI returned an invalid prep brief.");

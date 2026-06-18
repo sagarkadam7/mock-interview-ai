@@ -6,13 +6,13 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const pdfParse = require("pdf-parse");
 const rateLimit = require("express-rate-limit");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Interview = require("../models/Interview");
 const { protect } = require("../middleware/auth");
 const { validateMongoId } = require("../middleware/validateMongoId");
 const { assertCanCreateInterview, bumpMonthlyInterviewUsage } = require("../middleware/planLimits");
 const { parseJsonFromAi } = require("../utils/parseAiJson");
 const { normalizeFeedback, normalizeQuestions } = require("../utils/aiSchemas");
+const { generateText } = require("../utils/geminiClient");
 const { generatePrepBrief } = require("../utils/generatePrepBrief");
 const { logAction } = require("../utils/logger");
 
@@ -41,13 +41,6 @@ const prepBriefLimiter = rateLimit({
   legacyHeaders: false,
   message: { message: "Too many prep brief requests. Try again later." },
 });
-
-function getGeminiModel() {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error("GEMINI_API_KEY is not configured.");
-  const genAI = new GoogleGenerativeAI(key);
-  return genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || "gemini-2.0-flash" });
-}
 
 // ─── Multer config (PDF uploads) ─────────────────────────────
 const storage = multer.diskStorage({
@@ -117,9 +110,7 @@ Return ONLY a valid JSON array. No markdown, no explanation, no backticks, just 
   }
 ]`;
 
-  const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  const raw = result.response.text();
+  const raw = await generateText(prompt, { label: "generateQuestions" });
   const parsed = parseJsonFromAi(raw);
   const normalized = normalizeQuestions(parsed);
   if (!normalized) throw new Error("AI did not return a valid question list.");
@@ -144,9 +135,7 @@ Return ONLY valid JSON with no markdown or backticks:
 }`;
 
   try {
-    const model = getGeminiModel();
-    const result = await model.generateContent(prompt);
-    const raw = result.response.text();
+    const raw = await generateText(prompt, { label: "getAIFeedback" });
     const parsed = parseJsonFromAi(raw);
     const normalized = normalizeFeedback(parsed);
     if (!normalized) throw new Error("AI did not return valid feedback.");
@@ -229,9 +218,7 @@ Return ONLY valid JSON with no markdown or backticks:
 }`;
 
   try {
-    const model = getGeminiModel();
-    const result = await model.generateContent(prompt);
-    const raw = result.response.text();
+    const raw = await generateText(prompt, { label: "getAIFeedbackWithOptionalFollowUp" });
     const parsed = parseJsonFromAi(raw);
     const normalized = normalizeFeedback(parsed);
     if (!normalized) throw new Error("AI did not return valid feedback.");
@@ -346,7 +333,13 @@ router.post(
       res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
     } catch (err) {
       console.error("Create interview error:", err.message);
-      res.status(err.status || 500).json({ message: err.message, code: err.code });
+      const status = err.status || 500;
+      if (err.retryAfterSec) res.setHeader("Retry-After", String(err.retryAfterSec));
+      res.status(status).json({
+        message: err.message,
+        code: err.code,
+        ...(err.retryAfterSec ? { retryAfterSec: err.retryAfterSec } : {}),
+      });
     }
   }
 );
