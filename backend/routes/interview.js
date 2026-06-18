@@ -12,7 +12,7 @@ const { validateMongoId } = require("../middleware/validateMongoId");
 const { assertCanCreateInterview, bumpMonthlyInterviewUsage } = require("../middleware/planLimits");
 const { parseJsonFromAi } = require("../utils/parseAiJson");
 const { normalizeFeedback, normalizeQuestions } = require("../utils/aiSchemas");
-const { generateText } = require("../utils/geminiClient");
+const { generateText, formatRouteError } = require("../utils/geminiClient");
 const { generatePrepBrief } = require("../utils/generatePrepBrief");
 const { logAction } = require("../utils/logger");
 
@@ -332,13 +332,14 @@ router.post(
       );
       res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
     } catch (err) {
-      console.error("Create interview error:", err.message);
-      const status = err.status || 500;
-      if (err.retryAfterSec) res.setHeader("Retry-After", String(err.retryAfterSec));
-      res.status(status).json({
-        message: err.message,
-        code: err.code,
-        ...(err.retryAfterSec ? { retryAfterSec: err.retryAfterSec } : {}),
+      const formatted = formatRouteError(err);
+      console.error("Create interview error:", formatted.message);
+      if (formatted.retryAfterSec) res.setHeader("Retry-After", String(formatted.retryAfterSec));
+      res.status(formatted.status || 500).json({
+        message: formatted.message,
+        code: formatted.code,
+        ...(formatted.retryAfterSec ? { retryAfterSec: formatted.retryAfterSec } : {}),
+        requestId: req.requestId,
       });
     }
   }
@@ -489,7 +490,8 @@ router.post(
       } catch {
         /* ignore */
       }
-      res.status(err.status || 500).json({ message: err.message || "Failed to generate prep brief." });
+      const formatted = formatRouteError(err);
+      res.status(formatted.status || 500).json({ message: formatted.message || "Failed to generate prep brief.", code: formatted.code });
     }
   }
 );
@@ -562,7 +564,8 @@ router.post(
       res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
     } catch (err) {
       console.error("Duplicate interview error:", err.message);
-      res.status(err.status || 500).json({ message: err.message, code: err.code });
+      const formatted = formatRouteError(err);
+      res.status(formatted.status || 500).json({ message: formatted.message, code: formatted.code });
     }
   }
 );

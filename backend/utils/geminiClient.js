@@ -1,18 +1,25 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const DEFAULT_PRIMARY_MODEL = "gemini-2.0-flash";
-const DEFAULT_FALLBACK_MODELS = ["gemini-2.0-flash-lite", "gemini-1.5-flash"];
+const DEFAULT_PRIMARY_MODEL = "gemini-2.0-flash-lite";
+const DEFAULT_FALLBACK_MODELS = ["gemini-1.5-flash", "gemini-2.0-flash"];
 
-function parseModelList(raw) {
+function parseList(raw) {
   return String(raw || "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
 }
 
+function getApiKeys() {
+  const fromList = parseList(process.env.GEMINI_API_KEYS);
+  if (fromList.length) return fromList;
+  const single = String(process.env.GEMINI_API_KEY || "").trim();
+  return single ? [single] : [];
+}
+
 function getModelChain() {
   const primary = process.env.GEMINI_MODEL?.trim() || DEFAULT_PRIMARY_MODEL;
-  const fallbacks = parseModelList(process.env.GEMINI_MODEL_FALLBACKS);
+  const fallbacks = parseList(process.env.GEMINI_MODEL_FALLBACKS);
   const chain = [primary, ...fallbacks];
   for (const model of DEFAULT_FALLBACK_MODELS) {
     if (!chain.includes(model)) chain.push(model);
@@ -20,26 +27,32 @@ function getModelChain() {
   return [...new Set(chain)];
 }
 
-function getGenAI() {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) {
-    const err = new Error("GEMINI_API_KEY is not configured on the server.");
-    err.status = 503;
-    err.code = "GEMINI_NOT_CONFIGURED";
-    throw err;
-  }
-  return new GoogleGenerativeAI(key);
+function errorText(err) {
+  if (!err) return "";
+  const parts = [
+    err.message,
+    err.statusText,
+    err.response?.data?.error?.message,
+    typeof err.errorDetails === "string" ? err.errorDetails : "",
+    Array.isArray(err.errorDetails) ? JSON.stringify(err.errorDetails) : "",
+  ];
+  return parts.filter(Boolean).join(" ");
 }
 
 function isQuotaError(err) {
-  const raw = String(err?.message || err || "");
-  return err?.status === 429 || raw.includes("[429]") || /quota exceeded/i.test(raw);
+  const raw = errorText(err);
+  return err?.status === 429 || /\b429\b/.test(raw) || /quota exceeded/i.test(raw) || /exceeded your current quota/i.test(raw);
+}
+
+function isGeminiSdkError(err) {
+  const raw = errorText(err);
+  return /GoogleGenerativeAI Error/i.test(raw) || /generativelanguage\.googleapis\.com/i.test(raw);
 }
 
 function parseGeminiError(err) {
-  const raw = String(err?.message || err || "");
+  const raw = errorText(err);
 
-  if (!process.env.GEMINI_API_KEY) {
+  if (!getApiKeys().length) {
     return {
       status: 503,
       code: "GEMINI_NOT_CONFIGURED",
@@ -53,7 +66,7 @@ function parseGeminiError(err) {
     return {
       status: 429,
       code: "GEMINI_QUOTA_EXCEEDED",
-      message: `AI quota is temporarily exceeded (Google free-tier limits). Wait about ${retryAfterSec} seconds and try again. If this persists, enable billing in Google AI Studio (https://aistudio.google.com/apikey) or set GEMINI_MODEL=gemini-2.0-flash-lite in backend/.env.`,
+      message: `AI quota is temporarily exceeded (Google free-tier limits). Wait about ${retryAfterSec} seconds and try again. Try GEMINI_MODEL=gemini-2.0-flash-lite in backend/.env, add GEMINI_API_KEYS from another Google account, or enable billing in Google AI Studio.`,
       retryAfterSec,
     };
   }
@@ -66,11 +79,11 @@ function parseGeminiError(err) {
     };
   }
 
-  if (/GEMINI_API_KEY is not configured/i.test(raw)) {
+  if (isGeminiSdkError(err)) {
     return {
       status: 503,
-      code: "GEMINI_NOT_CONFIGURED",
-      message: "AI is not configured on the server. Add GEMINI_API_KEY to backend/.env.",
+      code: "GEMINI_ERROR",
+      message: "AI request failed. Please try again in a moment.",
     };
   }
 
@@ -90,33 +103,67 @@ function toHttpError(err) {
   return httpErr;
 }
 
+function formatRouteError(err) {
+  if (err?.code && err?.status && err?.message && !isGeminiSdkError(err) && !isQuotaError(err)) {
+    return {
+      status: err.status,
+      code: err.code,
+      message: err.message,
+      retryAfterSec: err.retryAfterSec,
+    };
+  }
+  return parseGeminiError(err);
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function generateText(prompt, { label = "Gemini" } = {}) {
-  const genAI = getGenAI();
+  const keys = getApiKeys();
+  if (!keys.length) throw toHttpError(new Error("GEMINI_API_KEY is not configured on the server."));
+
   const models = getModelChain();
   let lastErr;
 
-  for (let i = 0; i < models.length; i += 1) {
-    const modelName = models[i];
-    try {
-      const model = genAI.getGenerativeModel({ model: modelName });
-      const result = await model.generateContent(prompt);
-      const text = result?.response?.text?.();
-      if (!text) throw new Error("Empty AI response.");
-      if (i > 0) {
-        // eslint-disable-next-line no-console
-        console.warn(`${label}: used fallback model ${modelName}`);
+  for (let keyIndex = 0; keyIndex < keys.length; keyIndex += 1) {
+    const genAI = new GoogleGenerativeAI(keys[keyIndex]);
+
+    for (let modelIndex = 0; modelIndex < models.length; modelIndex += 1) {
+      const modelName = models[modelIndex];
+
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName });
+          const result = await model.generateContent(prompt);
+          const text = result?.response?.text?.();
+          if (!text) throw new Error("Empty AI response.");
+          if (keyIndex > 0 || modelIndex > 0) {
+            // eslint-disable-next-line no-console
+            console.warn(`${label}: used fallback key#${keyIndex + 1} model ${modelName}`);
+          }
+          return text;
+        } catch (err) {
+          lastErr = err;
+          if (!isQuotaError(err)) throw toHttpError(err);
+
+          const raw = errorText(err);
+          const retryMatch = raw.match(/retry in ([\d.]+)s/i);
+          const retryAfterSec = retryMatch ? Math.ceil(parseFloat(retryMatch[1])) : 0;
+
+          if (attempt === 0 && retryAfterSec > 0 && retryAfterSec <= 20) {
+            // eslint-disable-next-line no-console
+            console.warn(`${label}: quota on ${modelName}, retrying in ${retryAfterSec}s…`);
+            await sleep(retryAfterSec * 1000);
+            continue;
+          }
+
+          // Try next model or API key after quota exhaustion for this model.
+          // eslint-disable-next-line no-console
+          console.warn(`${label}: quota hit on ${modelName} (key#${keyIndex + 1}), trying next option…`);
+          break;
+        }
       }
-      return text;
-    } catch (err) {
-      lastErr = err;
-      const quota = isQuotaError(err);
-      const hasMore = i < models.length - 1;
-      if (quota && hasMore) {
-        // eslint-disable-next-line no-console
-        console.warn(`${label}: quota hit on ${modelName}, trying next model…`);
-        continue;
-      }
-      throw toHttpError(err);
     }
   }
 
@@ -126,8 +173,12 @@ async function generateText(prompt, { label = "Gemini" } = {}) {
 module.exports = {
   DEFAULT_PRIMARY_MODEL,
   DEFAULT_FALLBACK_MODELS,
+  errorText,
+  formatRouteError,
   generateText,
+  getApiKeys,
   getModelChain,
+  isGeminiSdkError,
   isQuotaError,
   parseGeminiError,
   toHttpError,

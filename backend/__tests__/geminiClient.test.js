@@ -23,4 +23,14 @@ describe("geminiClient", () => {
     const parsed = parseGeminiError(new Error("quota exceeded Please retry in 53.92s"));
     expect(parsed.retryAfterSec).toBe(54);
   });
+
+  test("sanitizes full GoogleGenerativeAI SDK error text", () => {
+    process.env.GEMINI_API_KEY = "test-key";
+    const raw =
+      "[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent: [429 ] You exceeded your current quota Please retry in 9.24s";
+    const parsed = parseGeminiError(new Error(raw));
+    expect(parsed.code).toBe("GEMINI_QUOTA_EXCEEDED");
+    expect(parsed.message).not.toMatch(/GoogleGenerativeAI Error/i);
+    expect(parsed.retryAfterSec).toBe(10);
+  });
 });
