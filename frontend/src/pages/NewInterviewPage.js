@@ -346,9 +346,9 @@ export default function NewInterviewPage() {
         >
           {loading ? "Preparing your session…" : "Generate interview questions →"}
         </button>
-
-        <AnimatePresence>{showLoader && <InterviewGenerationLoader active={loading} />}</AnimatePresence>
       </form>
+
+      <AnimatePresence>{showLoader && <InterviewGenerationLoader active={loading} />}</AnimatePresence>
     </div>
   );
 }
