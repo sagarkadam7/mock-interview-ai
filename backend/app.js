@@ -10,24 +10,32 @@ const rateLimit = require("express-rate-limit");
 function parseOrigins(rawOrigins) {
   return String(rawOrigins || "")
     .split(",")
-    .map((s) => s.trim())
+    .map((s) => s.trim().replace(/\/$/, ""))
     .filter(Boolean);
+}
+
+/** Render static sites use https://<service-name>.onrender.com */
+function isRenderHostedOrigin(origin) {
+  return /^https:\/\/[a-z0-9-]+\.onrender\.com$/i.test(String(origin || "").trim());
 }
 
 function buildCspConnectSrc(allowedOrigins) {
   const defaults = ["'self'"];
   const extra = allowedOrigins.filter((origin) => /^https?:\/\//i.test(origin));
-  return [...new Set([...defaults, ...extra])];
+  const renderWildcard = "https://*.onrender.com";
+  return [...new Set([...defaults, ...extra, renderWildcard])];
 }
 
 function createCorsOriginChecker(allowedOrigins, { isProduction = false } = {}) {
-  const allowed = new Set(allowedOrigins);
+  const allowed = new Set(allowedOrigins.map((o) => String(o).trim().replace(/\/$/, "")));
   return (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowed.has(origin)) return callback(null, true);
+    const normalized = String(origin).trim().replace(/\/$/, "");
+    if (allowed.has(normalized)) return callback(null, true);
+    if (isProduction && isRenderHostedOrigin(normalized)) return callback(null, true);
     if (
       !isProduction &&
-      (/^http:\/\/localhost:\d+$/i.test(origin) || /^http:\/\/127\.0\.0\.1:\d+$/i.test(origin))
+      (/^http:\/\/localhost:\d+$/i.test(normalized) || /^http:\/\/127\.0\.0\.1:\d+$/i.test(normalized))
     ) {
       return callback(null, true);
     }
@@ -180,4 +188,5 @@ module.exports = {
   buildCspConnectSrc,
   createCorsOriginChecker,
   defaultMongoHealth,
+  isRenderHostedOrigin,
 };

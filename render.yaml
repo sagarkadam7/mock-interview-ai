@@ -24,11 +24,11 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: FRONTEND_ORIGINS
-        sync: false
+        value: https://interviewai-web-h2ht.onrender.com
       - key: GROQ_API_KEY
         sync: false
       - key: AI_PROVIDER
-        value: auto
+        value: groq
 
   - type: web
     name: interviewai-web
