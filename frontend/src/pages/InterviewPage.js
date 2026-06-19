@@ -410,7 +410,7 @@ export default function InterviewPage() {
   };
 
   return (
-    <div className="relative mx-auto min-h-screen w-full max-w-7xl overflow-x-hidden px-5 py-8 sm:px-8 sm:py-10 md:px-10 md:py-12">
+    <div className="relative mx-auto min-h-screen w-full max-w-7xl overflow-x-hidden px-4 py-5 sm:px-8 sm:py-8 md:px-10 md:py-10">
       <InterviewKeyboardHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
       <button
         type="button"
@@ -439,12 +439,12 @@ export default function InterviewPage() {
         aria-hidden
       />
 
-      <header className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white/95 via-white to-slate-50/80 p-6 shadow-lux-lg ring-1 ring-white/90 dark:border-slate-700/80 dark:from-slate-900/95 dark:via-slate-950 dark:to-slate-900/80 dark:shadow-none dark:ring-slate-800/50 md:p-8">
+      <header className="relative mb-6 overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white/95 via-white to-slate-50/80 p-4 shadow-lux-lg ring-1 ring-white/90 dark:border-slate-700/80 dark:from-slate-900/95 dark:via-slate-950 dark:to-slate-900/80 dark:shadow-none dark:ring-slate-800/50 sm:mb-8 sm:rounded-3xl sm:p-6 md:p-8">
         <div
           className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-gradient-to-br from-aura-coral/20 to-aura-violet/10 blur-3xl"
           aria-hidden
         />
-        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="relative flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
             <button
               type="button"
@@ -499,12 +499,14 @@ export default function InterviewPage() {
                 <span className="ml-2 text-slate-400 dark:text-slate-500">primary</span>
               </p>
             </div>
-            <SessionProgressRing answered={primaryAnswered} total={primaryQuestions.length || 1} />
+            <div className="hidden sm:block">
+              <SessionProgressRing answered={primaryAnswered} total={primaryQuestions.length || 1} />
+            </div>
           </div>
         </div>
 
-        <div className="relative mt-8">
-          <div className="progress-track h-2.5 overflow-hidden rounded-full shadow-inner ring-1 ring-slate-900/[0.04] dark:ring-white/[0.06]">
+        <div className="relative mt-5 sm:mt-8">
+          <div className="progress-track h-2 overflow-hidden rounded-full shadow-inner ring-1 ring-slate-900/[0.04] dark:ring-white/[0.06] sm:h-2.5">
             <div
               className="h-full rounded-full bg-gradient-to-r from-aura-coral to-aura-violet transition-[width] duration-700 ease-out-expo"
               style={{ width: `${progress}%`, boxShadow: "0 0 20px rgba(91,33,182, 0.25)" }}
@@ -585,13 +587,13 @@ export default function InterviewPage() {
         </div>
       )}
 
-      <div className="relative z-10 flex flex-col gap-8 xl:flex-row xl:items-start xl:gap-12">
-        <div className="min-w-0 flex-1 space-y-6">
-          <div
-            ref={questionAnchorRef}
-            className="relative max-xl:sticky max-xl:top-20 max-xl:z-20 rounded-[1.35rem] bg-gradient-to-br from-aura-coral/70 via-white/40 to-aura-violet/70 p-[1px] shadow-[0_28px_64px_-24px_rgba(15,23,42,0.18)] dark:from-aura-coral/35 dark:via-slate-700/25 dark:to-aura-violet/45 dark:shadow-[0_32px_70px_-24px_rgba(0,0,0,0.55)]"
-          >
-            <div className="relative overflow-hidden rounded-[1.3rem] bg-white/95 p-6 shadow-lux-lg dark:bg-slate-950/95 md:p-8">
+      <div className="relative z-10 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-8 xl:grid-cols-[minmax(0,1fr)_400px]">
+        {/* Question — always first */}
+        <div
+          ref={questionAnchorRef}
+          className="relative min-w-0 rounded-[1.35rem] bg-gradient-to-br from-aura-coral/70 via-white/40 to-aura-violet/70 p-[1px] shadow-[0_28px_64px_-24px_rgba(15,23,42,0.18)] dark:from-aura-coral/35 dark:via-slate-700/25 dark:to-aura-violet/45 dark:shadow-[0_32px_70px_-24px_rgba(0,0,0,0.55)] lg:col-start-1 lg:row-start-1"
+        >
+          <div className="relative overflow-hidden rounded-[1.3rem] bg-white/95 p-5 shadow-lux-lg dark:bg-slate-950/95 sm:p-6 md:p-8">
               <div
                 className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-aura-coral/18 to-aura-violet/12 blur-3xl"
                 aria-hidden
@@ -622,23 +624,148 @@ export default function InterviewPage() {
                     </span>
                   </div>
                 </div>
-                <p className="font-display text-xl font-medium leading-[1.45] tracking-tight text-aura-ink md:text-2xl md:leading-[1.5]">
+                <p className="font-display text-lg font-medium leading-[1.45] tracking-tight text-aura-ink sm:text-xl md:text-2xl md:leading-[1.5]">
                   {currentQ.text}
                 </p>
               </div>
             </div>
           </div>
 
+        {/* Camera + actions — right after question on mobile; sticky sidebar on desktop */}
+        <aside className="min-w-0 max-lg:sticky max-lg:top-[4.75rem] max-lg:z-30 lg:col-start-2 lg:row-start-1 lg:row-span-6 lg:sticky lg:top-24 lg:self-start">
+          <div className="space-y-4">
+            <div className="relative rounded-[1.25rem] bg-gradient-to-br from-aura-coral/50 via-white/30 to-aura-violet/50 p-[1px] shadow-lux-lg dark:from-aura-coral/25 dark:via-slate-800/30 dark:to-aura-violet/35">
+              <div className="overflow-hidden rounded-[1.2rem] border border-slate-200/80 bg-white/95 shadow-inner ring-1 ring-white/90 backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-950/90 dark:ring-slate-800/50">
+                <div className="border-b border-slate-200/80 bg-gradient-to-r from-slate-50/95 via-white to-slate-50/95 px-4 py-2.5 text-center dark:border-slate-700/80 dark:from-slate-900/90 dark:via-slate-950 dark:to-slate-900/90 sm:py-3">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                    Camera & coaching
+                  </p>
+                  <p className="mt-0.5 hidden text-xs font-medium text-slate-600 dark:text-slate-400 sm:block">
+                    Presence metrics update while you speak
+                  </p>
+                </div>
+                <div className="p-3 sm:p-4">
+                  <CameraRecorder
+                    ref={cameraRecorderRef}
+                    key={currentIndex}
+                    onTranscriptChange={setTranscript}
+                    onRecordingChange={setIsRecording}
+                    onMLData={setMlData}
+                    disabled={!!feedback}
+                    showTranscript={false}
+                    metricsLayout="below"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {!feedback && (
+              <div className="flex flex-col gap-3">
+                <button
+                  type="button"
+                  className="group relative w-full overflow-hidden rounded-full py-3.5 text-[15px] font-bold tracking-tight text-white shadow-[0_16px_40px_-10px_rgba(15,23,42,0.45)] transition-transform duration-250 ease-out-expo enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-100 disabled:shadow-none dark:shadow-[0_16px_40px_-10px_rgba(0,0,0,0.5)] sm:py-4"
+                  onClick={handleSubmitAnswer}
+                  disabled={submitting || !canSubmitAnswer}
+                  aria-busy={submitting}
+                >
+                  <span className="absolute inset-0 bg-aura-ink dark:bg-slate-100 group-disabled:bg-slate-700 dark:group-disabled:bg-slate-200" />
+                  <span className="absolute inset-0 bg-gradient-to-r from-white/12 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-slate-900/20" />
+                  <span className="relative flex items-center justify-center gap-2 dark:text-aura-ink group-disabled:text-slate-200 dark:group-disabled:text-slate-900">
+                    {submitting ? (
+                      <>
+                        <span
+                          className="inline-block h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/25 border-t-white dark:border-slate-400/30 dark:border-t-slate-900"
+                          aria-hidden
+                        />
+                        Scoring answer…
+                      </>
+                    ) : (
+                      <>
+                        Submit answer
+                        <span
+                          aria-hidden
+                          className="transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5"
+                        >
+                          →
+                        </span>
+                      </>
+                    )}
+                  </span>
+                </button>
+                <p className="text-center text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
+                  {canSubmitAnswer
+                    ? "Submit locks in this take and runs the scorer."
+                    : "Start recording — Submit unlocks once the mic is on or text appears."}
+                </p>
+                <button
+                  type="button"
+                  className="w-full rounded-full border border-slate-200/90 bg-white/80 py-3 text-sm font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-aura-ink disabled:cursor-not-allowed disabled:opacity-100 disabled:border-slate-200/70 disabled:bg-slate-100/70 disabled:text-slate-400 dark:border-slate-600/80 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800/80 dark:hover:text-white dark:disabled:border-slate-700/80 dark:disabled:bg-slate-900/35 dark:disabled:text-slate-500 sm:py-3.5"
+                  onClick={handleSkip}
+                  disabled={submitting}
+                >
+                  Skip this question
+                </button>
+              </div>
+            )}
+
+            <div className="relative rounded-[1.15rem] bg-gradient-to-br from-violet-400/45 via-white/20 to-aura-coral/35 p-[1px] shadow-md dark:from-violet-500/30 dark:via-slate-800/20 dark:to-aura-coral/25">
+              <div className="overflow-hidden rounded-[1.1rem]">
+                <PrepBriefPanel
+                  interviewId={id}
+                  prepBrief={interview.prepBrief}
+                  onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
+                  defaultOpen={false}
+                />
+              </div>
+            </div>
+
+            {!feedback && (
+              <div className="hidden rounded-2xl border border-slate-200/90 bg-white/90 p-4 text-sm leading-snug text-slate-600 shadow-sm ring-1 ring-white/80 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:ring-slate-800/50 lg:block">
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                  How this works
+                </p>
+                <ol className="mt-2 list-decimal space-y-1.5 pl-4 text-[13px]">
+                  <li className={isRecording ? "font-semibold text-aura-ink dark:text-white" : ""}>
+                    Start recording and answer out loud.
+                  </li>
+                  <li>Watch your transcript and live metrics.</li>
+                  <li>
+                    Tap <span className="font-semibold">Submit answer</span> when you are done.
+                  </li>
+                </ol>
+              </div>
+            )}
+          </div>
+        </aside>
+
+        {/* Coaching, feedback, transcript — below camera on mobile */}
+        <div className="min-w-0 space-y-6 lg:col-start-1 lg:row-start-2">
           {!feedback && (
             <div>
-              <div className="mb-4 flex items-center gap-3">
+              <div className="mb-3 flex items-center gap-3 sm:mb-4">
                 <span className="section-eyebrow">Coaching brief</span>
                 <span
                   className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent dark:from-slate-700"
                   aria-hidden
                 />
               </div>
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 sm:hidden">
+                {COACH_CARDS.map((c) => (
+                  <div
+                    key={c.title}
+                    className={`relative min-w-[78%] shrink-0 snap-start overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b ${c.accent} to-white/90 p-4 shadow-sm ring-1 ring-white/70 dark:border-slate-700/80 dark:to-slate-900/85 dark:ring-slate-800/40`}
+                  >
+                    <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                      {c.k}
+                    </p>
+                    <h3 className="mt-1 text-sm font-bold tracking-tight text-aura-ink">{c.title}</h3>
+                    <p className="mt-1.5 text-[12px] leading-relaxed text-slate-600 dark:text-slate-400">
+                      {c.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="hidden gap-4 sm:grid sm:grid-cols-3">
                 {COACH_CARDS.map((c) => (
                   <div
                     key={c.title}
@@ -855,130 +982,6 @@ export default function InterviewPage() {
             </div>
           )}
         </div>
-
-        <aside className="w-full shrink-0 space-y-4 xl:sticky xl:top-24 xl:w-[420px] xl:self-start">
-          <div className="relative rounded-[1.15rem] bg-gradient-to-br from-violet-400/45 via-white/20 to-aura-coral/35 p-[1px] shadow-md dark:from-violet-500/30 dark:via-slate-800/20 dark:to-aura-coral/25">
-            <div className="overflow-hidden rounded-[1.1rem]">
-              <PrepBriefPanel
-                interviewId={id}
-                prepBrief={interview.prepBrief}
-                onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
-                defaultOpen={!interview.prepBrief || interview.prepBrief.status !== "ready"}
-              />
-            </div>
-          </div>
-
-          {!feedback && (
-            <div className="rounded-2xl border border-slate-200/90 bg-white/90 p-4 text-sm leading-snug text-slate-600 shadow-sm ring-1 ring-white/80 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:ring-slate-800/50">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
-                How this works
-              </p>
-              <ol className="mt-2 list-decimal space-y-1.5 pl-4 text-[13px]">
-                <li className={isRecording ? "font-semibold text-aura-ink dark:text-white" : ""}>
-                  Start recording and answer out loud.
-                </li>
-                <li>Watch your transcript and live metrics.</li>
-                <li>
-                  Tap <span className="font-semibold">Submit answer</span> when you are done — we stop the mic
-                  for you and send everything in one step.
-                </li>
-              </ol>
-              <p className="mt-3 border-t border-slate-100 pt-3 text-[11px] text-slate-500 dark:border-slate-700 dark:text-slate-400">
-                Shortcut:{" "}
-                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">
-                  Ctrl
-                </kbd>{" "}
-                +{" "}
-                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">
-                  Enter
-                </kbd>{" "}
-                ({" "}
-                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">
-                  ⌘
-                </kbd>{" "}
-                +{" "}
-                <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-600 dark:bg-slate-800">
-                  Enter
-                </kbd>{" "}
-                on Mac ) to submit.
-              </p>
-            </div>
-          )}
-
-          <div className="relative rounded-[1.25rem] bg-gradient-to-br from-aura-coral/50 via-white/30 to-aura-violet/50 p-[1px] shadow-lux-lg dark:from-aura-coral/25 dark:via-slate-800/30 dark:to-aura-violet/35">
-            <div className="overflow-hidden rounded-[1.2rem] border border-slate-200/80 bg-white/95 shadow-inner ring-1 ring-white/90 backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-950/90 dark:ring-slate-800/50">
-              <div className="border-b border-slate-200/80 bg-gradient-to-r from-slate-50/95 via-white to-slate-50/95 px-4 py-3 text-center dark:border-slate-700/80 dark:from-slate-900/90 dark:via-slate-950 dark:to-slate-900/90">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
-                  Camera & coaching
-                </p>
-                <p className="mt-1 text-xs font-medium text-slate-600 dark:text-slate-400">
-                  Presence metrics update while you speak
-                </p>
-              </div>
-              <div className="p-3 sm:p-4">
-                <CameraRecorder
-                  ref={cameraRecorderRef}
-                  key={currentIndex}
-                  onTranscriptChange={setTranscript}
-                  onRecordingChange={setIsRecording}
-                  onMLData={setMlData}
-                  disabled={!!feedback}
-                  showTranscript={false}
-                  metricsLayout="below"
-                />
-              </div>
-            </div>
-          </div>
-
-          {!feedback && (
-            <div className="flex flex-col gap-3">
-              <button
-                type="button"
-                className="group relative w-full overflow-hidden rounded-full py-4 text-[15px] font-bold tracking-tight text-white shadow-[0_16px_40px_-10px_rgba(15,23,42,0.45)] transition-transform duration-250 ease-out-expo enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-100 disabled:shadow-none dark:shadow-[0_16px_40px_-10px_rgba(0,0,0,0.5)]"
-                onClick={handleSubmitAnswer}
-                disabled={submitting || !canSubmitAnswer}
-                aria-busy={submitting}
-              >
-                <span className="absolute inset-0 bg-aura-ink dark:bg-slate-100 group-disabled:bg-slate-700 dark:group-disabled:bg-slate-200" />
-                <span className="absolute inset-0 bg-gradient-to-r from-white/12 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-slate-900/20" />
-                <span className="relative flex items-center justify-center gap-2 dark:text-aura-ink group-disabled:text-slate-200 dark:group-disabled:text-slate-900">
-                  {submitting ? (
-                    <>
-                      <span
-                        className="inline-block h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/25 border-t-white dark:border-slate-400/30 dark:border-t-slate-900"
-                        aria-hidden
-                      />
-                      Scoring answer…
-                    </>
-                  ) : (
-                    <>
-                      Submit answer
-                      <span
-                        aria-hidden
-                        className="transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5"
-                      >
-                        →
-                      </span>
-                    </>
-                  )}
-                </span>
-              </button>
-              <p className="text-center text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
-                {canSubmitAnswer
-                  ? "Submit locks in this take and runs the scorer. Stop recording first only if you want to review metrics on screen."
-                  : "Start recording and speak — Submit unlocks once the mic is on or text appears in your transcript."}
-              </p>
-              <button
-                type="button"
-                className="w-full rounded-full border border-slate-200/90 bg-white/80 py-3.5 text-sm font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-aura-ink disabled:cursor-not-allowed disabled:opacity-100 disabled:border-slate-200/70 disabled:bg-slate-100/70 disabled:text-slate-400 dark:border-slate-600/80 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800/80 dark:hover:text-white dark:disabled:border-slate-700/80 dark:disabled:bg-slate-900/35 dark:disabled:text-slate-500"
-                onClick={handleSkip}
-                disabled={submitting}
-              >
-                Skip this question
-              </button>
-            </div>
-          )}
-        </aside>
       </div>
     </div>
   );
