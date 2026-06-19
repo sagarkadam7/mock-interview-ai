@@ -1,7 +1,9 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { generateTextGroq, getGroqApiKey } = require("./groqClient");
 
 const DEFAULT_PRIMARY_MODEL = "gemini-2.0-flash-lite";
 const DEFAULT_FALLBACK_MODELS = ["gemini-1.5-flash", "gemini-2.0-flash"];
+const MAX_QUOTA_RETRY_SEC = 65;
 
 function parseList(raw) {
   return String(raw || "")
@@ -49,24 +51,34 @@ function isGeminiSdkError(err) {
   return /GoogleGenerativeAI Error/i.test(raw) || /generativelanguage\.googleapis\.com/i.test(raw);
 }
 
+function getAiProvider() {
+  const p = String(process.env.AI_PROVIDER || "auto").trim().toLowerCase();
+  if (p === "gemini" || p === "groq" || p === "auto") return p;
+  return "auto";
+}
+
 function parseGeminiError(err) {
   const raw = errorText(err);
 
-  if (!getApiKeys().length) {
+  if (!getApiKeys().length && !getGroqApiKey()) {
     return {
       status: 503,
-      code: "GEMINI_NOT_CONFIGURED",
-      message: "AI is not configured on the server. Add GEMINI_API_KEY to backend/.env.",
+      code: "AI_NOT_CONFIGURED",
+      message:
+        "AI is not configured. Add GEMINI_API_KEY and/or a free GROQ_API_KEY (console.groq.com) to backend/.env.",
     };
   }
 
   if (isQuotaError(err)) {
     const retryMatch = raw.match(/retry in ([\d.]+)s/i);
     const retryAfterSec = retryMatch ? Math.ceil(parseFloat(retryMatch[1])) : 60;
+    const groqHint = getGroqApiKey()
+      ? " Groq fallback is configured and will be tried automatically."
+      : " Add a free GROQ_API_KEY from console.groq.com as a backup.";
     return {
       status: 429,
       code: "GEMINI_QUOTA_EXCEEDED",
-      message: `AI quota is temporarily exceeded (Google free-tier limits). Wait about ${retryAfterSec} seconds and try again. Try GEMINI_MODEL=gemini-2.0-flash-lite in backend/.env, add GEMINI_API_KEYS from another Google account, or enable billing in Google AI Studio.`,
+      message: `Google AI free-tier quota exceeded. Wait about ${retryAfterSec} seconds and try again.${groqHint} Or enable billing in Google AI Studio.`,
       retryAfterSec,
     };
   }
@@ -112,6 +124,13 @@ function formatRouteError(err) {
       retryAfterSec: err.retryAfterSec,
     };
   }
+  if (err?.code?.startsWith("GROQ_")) {
+    return {
+      status: err.status || 503,
+      code: err.code,
+      message: err.message,
+    };
+  }
   return parseGeminiError(err);
 }
 
@@ -119,9 +138,13 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function generateText(prompt, { label = "Gemini" } = {}) {
+async function generateTextGemini(prompt, { label = "Gemini" } = {}) {
   const keys = getApiKeys();
-  if (!keys.length) throw toHttpError(new Error("GEMINI_API_KEY is not configured on the server."));
+  if (!keys.length) {
+    const err = new Error("GEMINI_API_KEY is not configured.");
+    err.code = "GEMINI_NOT_CONFIGURED";
+    throw err;
+  }
 
   const models = getModelChain();
   let lastErr;
@@ -151,14 +174,13 @@ async function generateText(prompt, { label = "Gemini" } = {}) {
           const retryMatch = raw.match(/retry in ([\d.]+)s/i);
           const retryAfterSec = retryMatch ? Math.ceil(parseFloat(retryMatch[1])) : 0;
 
-          if (attempt === 0 && retryAfterSec > 0 && retryAfterSec <= 20) {
+          if (attempt === 0 && retryAfterSec > 0 && retryAfterSec <= MAX_QUOTA_RETRY_SEC) {
             // eslint-disable-next-line no-console
             console.warn(`${label}: quota on ${modelName}, retrying in ${retryAfterSec}s…`);
             await sleep(retryAfterSec * 1000);
             continue;
           }
 
-          // Try next model or API key after quota exhaustion for this model.
           // eslint-disable-next-line no-console
           console.warn(`${label}: quota hit on ${modelName} (key#${keyIndex + 1}), trying next option…`);
           break;
@@ -167,15 +189,60 @@ async function generateText(prompt, { label = "Gemini" } = {}) {
     }
   }
 
-  throw toHttpError(lastErr || new Error("AI request failed."));
+  const httpErr = toHttpError(lastErr || new Error("AI request failed."));
+  httpErr.isGeminiQuotaExhausted = true;
+  throw httpErr;
+}
+
+async function generateText(prompt, { label = "AI" } = {}) {
+  const provider = getAiProvider();
+  const hasGemini = getApiKeys().length > 0;
+  const hasGroq = Boolean(getGroqApiKey());
+
+  if (provider === "groq") {
+    if (!hasGroq) throw toHttpError(new Error("GROQ_API_KEY is not configured."));
+    try {
+      return await generateTextGroq(prompt, { label });
+    } catch (err) {
+      if (err.code) throw err;
+      throw toHttpError(err);
+    }
+  }
+
+  if (provider === "gemini" || (provider === "auto" && hasGemini)) {
+    try {
+      return await generateTextGemini(prompt, { label });
+    } catch (err) {
+      if (hasGroq && provider === "auto") {
+        // eslint-disable-next-line no-console
+        console.warn(`${label}: Gemini unavailable, falling back to Groq…`);
+        try {
+          return await generateTextGroq(prompt, { label });
+        } catch (groqErr) {
+          if (groqErr.code) throw groqErr;
+          throw toHttpError(groqErr);
+        }
+      }
+      throw err;
+    }
+  }
+
+  if (hasGroq) {
+    return generateTextGroq(prompt, { label });
+  }
+
+  throw toHttpError(new Error("No AI provider configured."));
 }
 
 module.exports = {
   DEFAULT_PRIMARY_MODEL,
   DEFAULT_FALLBACK_MODELS,
+  MAX_QUOTA_RETRY_SEC,
   errorText,
   formatRouteError,
   generateText,
+  generateTextGemini,
+  getAiProvider,
   getApiKeys,
   getModelChain,
   isGeminiSdkError,
