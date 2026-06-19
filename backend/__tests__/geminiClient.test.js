@@ -1,4 +1,4 @@
-const { parseGeminiError, isQuotaError } = require("../utils/geminiClient");
+const { parseGeminiError, isQuotaError, formatRouteError } = require("../utils/geminiClient");
 
 describe("geminiClient", () => {
   const originalKey = process.env.GEMINI_API_KEY;
@@ -32,5 +32,24 @@ describe("geminiClient", () => {
     expect(parsed.code).toBe("GEMINI_QUOTA_EXCEEDED");
     expect(parsed.message).not.toMatch(/GoogleGenerativeAI Error/i);
     expect(parsed.retryAfterSec).toBe(10);
+  });
+
+  test("formatRouteError handles Groq quota without throwing", () => {
+    const err = new Error("Groq rate limit reached. Wait about 60 seconds.");
+    err.status = 429;
+    err.code = "GROQ_QUOTA_EXCEEDED";
+    const formatted = formatRouteError(err);
+    expect(formatted.code).toBe("GROQ_QUOTA_EXCEEDED");
+    expect(formatted.status).toBe(429);
+    expect(formatted.message).toMatch(/Groq rate limit/i);
+  });
+
+  test("formatRouteError handles numeric err.code (e.g. MongoDB) without throwing", () => {
+    const err = new Error("duplicate key");
+    err.status = 500;
+    err.code = 11000;
+    expect(() => formatRouteError(err)).not.toThrow();
+    const formatted = formatRouteError(err);
+    expect(formatted.message).toBeTruthy();
   });
 });

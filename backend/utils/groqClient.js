@@ -1,9 +1,13 @@
+const GROQ_MODEL_FALLBACKS = ["llama-3.1-8b-instant", "llama-3.3-70b-versatile"];
+
 function getGroqApiKey() {
   return String(process.env.GROQ_API_KEY || "").trim();
 }
 
-function getGroqModel() {
-  return process.env.GROQ_MODEL?.trim() || "llama-3.1-8b-instant";
+function getGroqModelChain() {
+  const primary = process.env.GROQ_MODEL?.trim() || GROQ_MODEL_FALLBACKS[0];
+  const chain = [primary, ...GROQ_MODEL_FALLBACKS];
+  return [...new Set(chain)];
 }
 
 function parseGroqError(status, body) {
@@ -13,7 +17,8 @@ function parseGroqError(status, body) {
       status: 429,
       code: "GROQ_QUOTA_EXCEEDED",
       message:
-        "Groq free-tier rate limit hit. Wait a minute and try again, or add GEMINI_API_KEY as a fallback in backend/.env.",
+        "Groq rate limit reached. Wait about 60 seconds and try again. Free tier allows limited requests per minute.",
+      retryAfterSec: 60,
     };
   }
   if (status === 401 || status === 403) {
@@ -26,15 +31,11 @@ function parseGroqError(status, body) {
   return { status: 503, code: "GROQ_ERROR", message: msg.slice(0, 200) };
 }
 
-async function generateTextGroq(prompt, { label = "Groq", model } = {}) {
-  const key = getGroqApiKey();
-  if (!key) {
-    const err = new Error("GROQ_API_KEY is not configured.");
-    err.code = "GROQ_NOT_CONFIGURED";
-    throw err;
-  }
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-  const modelName = model || getGroqModel();
+async function callGroqOnce(prompt, { model, key }) {
   const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -42,10 +43,10 @@ async function generateTextGroq(prompt, { label = "Groq", model } = {}) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: modelName,
+      model,
       messages: [{ role: "user", content: prompt }],
       temperature: 0.35,
-      max_tokens: 4096,
+      max_tokens: 2048,
     }),
   });
 
@@ -61,6 +62,7 @@ async function generateTextGroq(prompt, { label = "Groq", model } = {}) {
     const err = new Error(parsed.message);
     err.status = parsed.status;
     err.code = parsed.code;
+    if (parsed.retryAfterSec) err.retryAfterSec = parsed.retryAfterSec;
     throw err;
   }
 
@@ -69,14 +71,59 @@ async function generateTextGroq(prompt, { label = "Groq", model } = {}) {
     throw new Error("Empty Groq response.");
   }
 
-  // eslint-disable-next-line no-console
-  console.log(`${label}: Groq model ${modelName} OK`);
   return String(text).trim();
+}
+
+async function generateTextGroq(prompt, { label = "Groq", model } = {}) {
+  const key = getGroqApiKey();
+  if (!key) {
+    const err = new Error("GROQ_API_KEY is not configured.");
+    err.code = "GROQ_NOT_CONFIGURED";
+    throw err;
+  }
+
+  const models = model ? [model] : getGroqModelChain();
+  let lastErr;
+
+  for (let i = 0; i < models.length; i += 1) {
+    const modelName = models[i];
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const text = await callGroqOnce(prompt, { model: modelName, key });
+        if (i > 0 || attempt > 0) {
+          // eslint-disable-next-line no-console
+          console.warn(`${label}: Groq succeeded with model ${modelName} (attempt ${attempt + 1})`);
+        } else {
+          // eslint-disable-next-line no-console
+          console.log(`${label}: Groq model ${modelName} OK`);
+        }
+        return text;
+      } catch (err) {
+        lastErr = err;
+        const isRateLimit = err?.code === "GROQ_QUOTA_EXCEEDED" || err?.status === 429;
+        if (isRateLimit && attempt === 0) {
+          const waitSec = err.retryAfterSec || 3;
+          // eslint-disable-next-line no-console
+          console.warn(`${label}: Groq rate limit on ${modelName}, retrying in ${waitSec}s…`);
+          await sleep(waitSec * 1000);
+          continue;
+        }
+        if (isRateLimit && i < models.length - 1) {
+          // eslint-disable-next-line no-console
+          console.warn(`${label}: Groq rate limit on ${modelName}, trying next model…`);
+          break;
+        }
+        throw err;
+      }
+    }
+  }
+
+  throw lastErr || new Error("Groq request failed.");
 }
 
 module.exports = {
   generateTextGroq,
   getGroqApiKey,
-  getGroqModel,
+  getGroqModelChain,
   parseGroqError,
 };

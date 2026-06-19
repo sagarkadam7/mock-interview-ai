@@ -28,7 +28,7 @@ services:
       - key: GROQ_API_KEY
         sync: false
       - key: AI_PROVIDER
-        value: groq
+        value: auto
 
   - type: web
     name: interviewai-web

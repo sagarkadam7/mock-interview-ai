@@ -124,23 +124,48 @@ function toHttpError(err) {
   return httpErr;
 }
 
+function errorCodeString(err) {
+  if (err?.code == null) return "";
+  return typeof err.code === "string" ? err.code : String(err.code);
+}
+
+function isGroqError(err) {
+  const code = errorCodeString(err);
+  return code.startsWith("GROQ_");
+}
+
 function formatRouteError(err) {
-  if (err?.code && err?.status && err?.message && !isGeminiSdkError(err) && !isQuotaError(err)) {
+  try {
+    const code = errorCodeString(err);
+
+    if (isGroqError(err) && err?.message) {
+      return {
+        status: err.status || 503,
+        code: code || "GROQ_ERROR",
+        message: err.message,
+        retryAfterSec: err.retryAfterSec,
+      };
+    }
+
+    if (code && err?.status && err?.message && !isGeminiSdkError(err) && !isQuotaError(err)) {
+      return {
+        status: err.status,
+        code,
+        message: err.message,
+        retryAfterSec: err.retryAfterSec,
+      };
+    }
+
+    return parseGeminiError(err);
+  } catch (formatErr) {
+    // eslint-disable-next-line no-console
+    console.error("formatRouteError internal failure:", formatErr?.message);
     return {
-      status: err.status,
-      code: err.code,
-      message: err.message,
-      retryAfterSec: err.retryAfterSec,
+      status: 500,
+      code: "SERVER_ERROR",
+      message: typeof err?.message === "string" && err.message.trim() ? err.message : "Something went wrong. Please try again.",
     };
   }
-  if (err?.code?.startsWith("GROQ_")) {
-    return {
-      status: err.status || 503,
-      code: err.code,
-      message: err.message,
-    };
-  }
-  return parseGeminiError(err);
 }
 
 function sleep(ms) {
@@ -226,9 +251,21 @@ async function generateText(prompt, { label = "AI" } = {}) {
     if (!hasGroq) throw toHttpError(new Error("GROQ_API_KEY is not configured."));
     try {
       return await generateTextGroq(prompt, { label });
-    } catch (err) {
-      if (err.code) throw err;
-      throw toHttpError(err);
+    } catch (groqErr) {
+      const groqRateLimited =
+        groqErr?.code === "GROQ_QUOTA_EXCEEDED" || groqErr?.status === 429;
+      if (groqRateLimited && hasGemini) {
+        // eslint-disable-next-line no-console
+        console.warn(`${label}: Groq rate limited, trying Gemini…`);
+        try {
+          return await generateTextGemini(prompt, { label });
+        } catch (geminiErr) {
+          if (groqErr?.message) throw groqErr;
+          throw geminiErr;
+        }
+      }
+      if (groqErr?.code != null && groqErr?.message) throw groqErr;
+      throw toHttpError(groqErr);
     }
   }
 
@@ -262,6 +299,7 @@ module.exports = {
   DEFAULT_FALLBACK_MODELS,
   MAX_QUOTA_RETRY_SEC,
   errorText,
+  isGroqError,
   formatRouteError,
   generateText,
   generateTextGemini,
