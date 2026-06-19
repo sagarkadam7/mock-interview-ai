@@ -315,23 +315,29 @@ router.post(
       });
 
       console.log(`✅ Interview created: ${interview._id}`);
+
       try {
         await bumpMonthlyInterviewUsage(req.user._id);
-      } catch (err) {
-        if (err?.status === 402) {
+      } catch (bumpErr) {
+        if (bumpErr?.status === 402 || bumpErr?.code === "PLAN_LIMIT_REACHED") {
           await interview.deleteOne().catch(() => {});
+          throw bumpErr;
         }
-        throw err;
+        // Session already saved — don't fail the user for a non-fatal usage sync error.
+        console.warn("Create interview: usage bump failed (session kept):", bumpErr?.message);
       }
 
-      logAction(
+      await logAction(
         req.user._id,
         "INTERVIEW_STARTED",
         { interviewId: interview._id, jobRole, targetCompany, interviewMode, level, persona, timeboxMin: Number(timeboxMin || 0) },
         req
       );
-      res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
+
+      if (res.headersSent) return;
+      return res.status(201).json({ interviewId: interview._id, questionCount: interview.questions.length });
     } catch (err) {
+      if (res.headersSent) return;
       const formatted = formatRouteError(err);
       console.error("Create interview error:", formatted.message);
       if (formatted.retryAfterSec) res.setHeader("Retry-After", String(formatted.retryAfterSec));

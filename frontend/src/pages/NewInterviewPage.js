@@ -40,6 +40,7 @@ export default function NewInterviewPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError("");
     if (!jobRole.trim()) return setError("Job role is required.");
     const hasResume = inputMode === "upload" ? !!file : resumeText.trim().length >= 50;

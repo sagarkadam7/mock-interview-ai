@@ -66,6 +66,11 @@ function getAiProvider() {
   return "auto";
 }
 
+function errorCodeString(err) {
+  if (err?.code == null) return "";
+  return typeof err.code === "string" ? err.code : String(err.code);
+}
+
 function parseGeminiError(err) {
   const raw = errorText(err);
 
@@ -110,8 +115,11 @@ function parseGeminiError(err) {
 
   return {
     status: err?.status && err.status >= 400 && err.status < 600 ? err.status : 500,
-    code: err?.code || "GEMINI_ERROR",
-    message: "AI request failed. Please try again in a moment.",
+    code: errorCodeString(err) || "SERVER_ERROR",
+    message:
+      typeof err?.message === "string" && err.message.trim() && !isGeminiSdkError(err)
+        ? err.message.trim().slice(0, 500)
+        : "Something went wrong. Please try again in a moment.",
   };
 }
 
@@ -122,11 +130,6 @@ function toHttpError(err) {
   httpErr.code = parsed.code;
   if (parsed.retryAfterSec) httpErr.retryAfterSec = parsed.retryAfterSec;
   return httpErr;
-}
-
-function errorCodeString(err) {
-  if (err?.code == null) return "";
-  return typeof err.code === "string" ? err.code : String(err.code);
 }
 
 function isGroqError(err) {
