@@ -46,6 +46,15 @@ function isQuotaError(err) {
   return err?.status === 429 || /\b429\b/.test(raw) || /quota exceeded/i.test(raw) || /exceeded your current quota/i.test(raw);
 }
 
+/** Google returns limit: 0 when the free tier is fully exhausted for that model/project. */
+function isHardQuotaZero(err) {
+  return /limit:\s*0/i.test(errorText(err));
+}
+
+function shouldFastFailGeminiForGroq() {
+  return getAiProvider() === "auto" && Boolean(getGroqApiKey());
+}
+
 function isGeminiSdkError(err) {
   const raw = errorText(err);
   return /GoogleGenerativeAI Error/i.test(raw) || /generativelanguage\.googleapis\.com/i.test(raw);
@@ -146,6 +155,7 @@ async function generateTextGemini(prompt, { label = "Gemini" } = {}) {
     throw err;
   }
 
+  const fastFail = shouldFastFailGeminiForGroq();
   const models = getModelChain();
   let lastErr;
 
@@ -170,11 +180,24 @@ async function generateTextGemini(prompt, { label = "Gemini" } = {}) {
           lastErr = err;
           if (!isQuotaError(err)) throw toHttpError(err);
 
+          if (fastFail && (isHardQuotaZero(err) || modelIndex === 0)) {
+            // eslint-disable-next-line no-console
+            console.warn(`${label}: Gemini quota exhausted, fast-failing to Groq…`);
+            const httpErr = toHttpError(err);
+            httpErr.isGeminiQuotaExhausted = true;
+            throw httpErr;
+          }
+
           const raw = errorText(err);
           const retryMatch = raw.match(/retry in ([\d.]+)s/i);
           const retryAfterSec = retryMatch ? Math.ceil(parseFloat(retryMatch[1])) : 0;
 
-          if (attempt === 0 && retryAfterSec > 0 && retryAfterSec <= MAX_QUOTA_RETRY_SEC) {
+          if (
+            attempt === 0 &&
+            retryAfterSec > 0 &&
+            retryAfterSec <= MAX_QUOTA_RETRY_SEC &&
+            !isHardQuotaZero(err)
+          ) {
             // eslint-disable-next-line no-console
             console.warn(`${label}: quota on ${modelName}, retrying in ${retryAfterSec}s…`);
             await sleep(retryAfterSec * 1000);
