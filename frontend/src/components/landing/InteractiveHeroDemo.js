@@ -123,7 +123,7 @@ export default function InteractiveHeroDemo() {
           {/* Ambient glow + top sheen */}
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-gradient-to-br from-aura-coral/30 to-aura-violet/25 blur-3xl"
+            className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-gradient-to-br from-sarvam-orange/30 to-sarvam-blue/25 blur-3xl"
           />
           <div
             aria-hidden
@@ -151,7 +151,7 @@ export default function InteractiveHeroDemo() {
               aria-hidden
             >
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-aura-coral via-fuchsia-500 to-aura-violet"
+                className="h-full rounded-full bg-gradient-to-r from-sarvam-orange via-sarvam-blue to-sarvam-blue"
                 initial={false}
                 animate={{
                   width:
@@ -185,7 +185,7 @@ export default function InteractiveHeroDemo() {
                 disabled={phase === "recording" || phase === "transcribing"}
                 aria-pressed={phase === "recording"}
                 aria-label={phase === "idle" || phase === "insights" ? "Start microphone demo" : "Reset demo"}
-                className={`group relative inline-flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full transition-transform duration-300 ease-out focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-aura-violet/40 ${
+                className={`group relative inline-flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full transition-transform duration-300 ease-out focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sarvam-blue/40 ${
                   phase === "idle" || phase === "insights" ? "hover:scale-[1.04] active:scale-[0.97]" : ""
                 }`}
               >
@@ -200,7 +200,7 @@ export default function InteractiveHeroDemo() {
                   className={`absolute inset-0 rounded-full bg-gradient-to-br transition-all duration-500 ${
                     phase === "recording"
                       ? "from-rose-500 to-red-600 shadow-[0_20px_56px_-10px_rgba(244,63,94,0.55)]"
-                      : "from-aura-coral to-aura-violet shadow-[0_20px_56px_-10px_rgba(79,70,229,0.42)]"
+                      : "from-sarvam-orange to-sarvam-blue shadow-[0_20px_56px_-10px_rgba(79,70,229,0.42)]"
                   }`}
                 />
                 <span
@@ -238,7 +238,7 @@ export default function InteractiveHeroDemo() {
                 <button
                   type="button"
                   onClick={resetDemo}
-                  className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-violet-700 transition-colors hover:text-violet-900 dark:text-violet-300 dark:hover:text-violet-200"
+                  className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-sarvam-blue transition-colors hover:text-violet-900 dark:text-violet-300 dark:hover:text-violet-200"
                 >
                   Replay
                 </button>
