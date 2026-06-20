@@ -93,7 +93,7 @@ export default function LandingHero({ user }) {
     <section
       id="top"
       ref={heroRef}
-      className="relative flex min-h-[calc(100vh-3.5rem)] scroll-mt-20 flex-col justify-center overflow-hidden px-4 pb-24 pt-14 sm:px-6 sm:pb-32 sm:pt-16 md:px-8 lg:min-h-[calc(100vh-3rem)] lg:px-10 lg:pb-28 lg:pt-16 xl:px-14 2xl:px-20"
+      className="relative flex min-h-[calc(100vh-3.75rem)] scroll-mt-20 flex-col justify-center overflow-hidden px-4 pb-28 pt-12 sm:min-h-[calc(100vh-4rem)] sm:px-6 sm:pb-32 sm:pt-16 md:px-8 lg:min-h-[calc(100vh-3rem)] lg:px-10 lg:pb-28 lg:pt-16 xl:px-14 2xl:px-20"
     >
       {/* Atmosphere */}
       <div
@@ -158,7 +158,7 @@ export default function LandingHero({ user }) {
 
           <motion.h1
             variants={item}
-            className="w-full min-w-0 text-balance font-sans text-[2.85rem] font-semibold leading-[1.02] tracking-[-0.04em] text-aura-ink sm:text-[3.35rem] sm:tracking-[-0.038em] md:text-6xl md:leading-[0.98] lg:text-[3.45rem] lg:leading-[0.97] xl:text-[4.35rem] xl:tracking-[-0.042em]"
+            className="w-full min-w-0 text-balance font-sans text-[2.35rem] font-semibold leading-[1.05] tracking-[-0.04em] text-aura-ink sm:text-[2.85rem] sm:leading-[1.02] sm:tracking-[-0.038em] md:text-6xl md:leading-[0.98] lg:text-[3.45rem] lg:leading-[0.97] xl:text-[4.35rem] xl:tracking-[-0.042em]"
           >
             Turn interview
             <br />
