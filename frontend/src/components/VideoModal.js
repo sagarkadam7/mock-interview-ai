@@ -1,24 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function VideoModal({ open, onClose }) {
+export default function VideoModal({ open, onClose, src, title = "Product walkthrough" }) {
+  const [videoReady, setVideoReady] = useState(false);
+
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      setVideoReady(false);
+      return undefined;
+    }
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const onKey = (e) => {
       if (e.key === "Escape") onClose?.();
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
   }, [open, onClose]);
 
-  return (
+  const modal = (
     <AnimatePresence>
       {open && (
         <>
           <motion.button
             type="button"
             aria-label="Close video"
-            className="fixed inset-0 z-[90] cursor-default bg-slate-900/35 backdrop-blur-[2px] dark:bg-black/55"
+            className="fixed inset-0 z-[90] cursor-default bg-slate-900/45 backdrop-blur-sm dark:bg-black/60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -27,16 +38,17 @@ export default function VideoModal({ open, onClose }) {
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="Product video"
+            aria-label={title}
             className="fixed left-1/2 top-1/2 z-[91] w-[min(92vw,960px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-2xl dark:border-slate-700/70 dark:bg-slate-950"
-            initial={{ opacity: 0, y: 16, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.99 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            onAnimationComplete={() => setVideoReady(true)}
           >
             <div className="flex items-center justify-between border-b border-slate-200/80 px-5 py-4 dark:border-slate-800/80">
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-                Product walkthrough
+                {title}
               </p>
               <button
                 type="button"
@@ -46,27 +58,31 @@ export default function VideoModal({ open, onClose }) {
                 Close
               </button>
             </div>
-            <div className="relative aspect-video bg-gradient-to-br from-slate-950 to-slate-900">
-              <div className="absolute inset-0 grid place-items-center p-10 text-center">
-                <div>
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-slate-400">
-                    Demo video placeholder
-                  </p>
-                  <p className="mt-3 text-lg font-semibold text-white">Add your walkthrough video URL</p>
-                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-300/80">
-                    Replace this panel with an embed or hosted MP4 when you’re ready. This keeps the UI/flow
-                    in place without relying on third-party links.
-                  </p>
-                  <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold text-white ring-1 ring-white/15">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden />
-                    Best practice: keep it under 90 seconds
-                  </div>
+            <div className="relative bg-black" style={{ aspectRatio: "16 / 9" }}>
+              {src && videoReady ? (
+                <video
+                  className="absolute inset-0 h-full w-full object-cover"
+                  src={src}
+                  controls
+                  autoPlay
+                  playsInline
+                  preload="metadata"
+                  onEnded={() => onClose?.()}
+                />
+              ) : (
+                <div className="absolute inset-0 grid place-items-center">
+                  <span
+                    className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-violet-400"
+                    aria-hidden
+                  />
                 </div>
-              </div>
+              )}
             </div>
           </motion.div>
         </>
       )}
     </AnimatePresence>
   );
+
+  return createPortal(modal, document.body);
 }
