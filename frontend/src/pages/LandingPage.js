@@ -3,19 +3,15 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { motion, useReducedMotion } from "framer-motion";
-import { FAQ_ITEMS } from "../data/marketing";
 import LandingHero from "../components/landing/LandingHero";
 import TrustLogoRail from "../components/landing/TrustLogoRail";
 import LandingSectionSkeleton from "../components/landing/LandingSectionSkeleton";
 
 const HowItWorksSection = lazy(() => import("../components/landing/HowItWorksSection"));
 const ComparisonSection = lazy(() => import("../components/landing/ComparisonSection"));
-const PersonasSection = lazy(() => import("../components/landing/PersonasSection"));
 const TestimonialsSection = lazy(() => import("../components/landing/TestimonialsSection"));
-const QuoteWallSection = lazy(() => import("../components/landing/QuoteWallSection"));
 const PricingTeaserSection = lazy(() => import("../components/landing/PricingTeaserSection"));
 const SecuritySection = lazy(() => import("../components/landing/SecuritySection"));
-const FAQSection = lazy(() => import("../components/landing/FAQSection"));
 const FounderLetterSection = lazy(() => import("../components/landing/FounderLetterSection"));
 const UseCasesSection = lazy(() => import("../components/landing/UseCasesSection"));
 const SiteFooter = lazy(() => import("../components/SiteFooter"));
@@ -47,37 +43,6 @@ const FEATURES = [
     accent: "#e85547",
     badge: "New",
   },
-];
-
-const ENGINES = [
-  {
-    label: "Preparation outcome",
-    name: "Role-aware interview strategy",
-    detail: "Practice answers shaped to your resume and target role so every rep stays relevant.",
-  },
-  {
-    label: "Presence outcome",
-    name: "Camera confidence coaching",
-    detail: "Build steadier eye contact and interview posture with instant visibility into habits.",
-  },
-  {
-    label: "Communication outcome",
-    name: "Real-time speech analytics",
-    detail: "Hear how you sound in the moment, then tighten pacing and clarity before the real loop.",
-  },
-  {
-    label: "Execution outcome",
-    name: "Zero-latency behavioral feedback",
-    detail: "Catch filler words and delivery drift instantly so corrections happen while context is fresh.",
-  },
-];
-
-const TRUST_MARKS = ["IIT", "NIT", "SPPU", "VIT", "BITS", "IIIT"];
-
-const STATS = [
-  { value: "7", label: "questions tailored to your résumé and target role" },
-  { value: "30 fps", label: "live gaze + presence telemetry as you speak" },
-  { value: "0–10", label: "deterministic rubric scoring per answer" },
 ];
 
 const BODY_FONT_STACK = "Inter, ui-sans-serif, system-ui, -apple-system, sans-serif";
@@ -180,109 +145,6 @@ function SectionLabel({ children }) {
     >
       {children}
     </span>
-  );
-}
-
-/* ─── MARQUEE ────────────────────────────────────────────────────────── */
-function Marquee({ items, speed = 30 }) {
-  const { palette: C } = useTheme();
-  const doubled = [...items, ...items];
-  return (
-    <div
-      style={{
-        overflow: "hidden",
-        position: "relative",
-        WebkitMaskImage: "linear-gradient(to right,transparent,black 15%,black 85%,transparent)",
-      }}
-    >
-      <motion.div
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ repeat: Infinity, ease: "linear", duration: speed, repeatType: "loop" }}
-        style={{ display: "flex", gap: 64, whiteSpace: "nowrap", width: "max-content" }}
-      >
-        {doubled.map((item, i) => (
-          <span
-            key={i}
-            style={{
-              fontFamily: BODY_FONT_STACK,
-              fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
-              fontWeight: 600,
-              color: C.marqueeText,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              fontStyle: "normal",
-            }}
-          >
-            {item}
-          </span>
-        ))}
-      </motion.div>
-    </div>
-  );
-}
-
-/* ─── STAT CARD ──────────────────────────────────────────────────────── */
-function StatCard({ value, label, delay = 0, accentIndex = 0 }) {
-  const { palette: C } = useTheme();
-  const [ref, visible] = useInView();
-  const [hovered, setHovered] = useState(false);
-  const accent = accentIndex % 2 === 0 ? C.coral : C.violet;
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={visible ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        background: C.card,
-        border: `1px solid ${hovered ? `${accent}44` : C.border}`,
-        borderRadius: 20,
-        padding: "32px 28px",
-        textAlign: "center",
-        boxShadow: hovered
-          ? `0 18px 48px -16px ${accent}28, 0 1px 0 0 rgba(255,255,255,0.06) inset`
-          : C.cardShadow,
-        transform: hovered ? "translateY(-3px)" : "translateY(0)",
-        transition:
-          "transform 0.28s cubic-bezier(0.16,1,0.3,1), box-shadow 0.28s ease, border-color 0.28s ease",
-      }}
-    >
-      <motion.div
-        aria-hidden
-        initial={{ scaleX: 0 }}
-        animate={visible ? { scaleX: 1 } : {}}
-        transition={{ duration: 0.6, delay: delay + 0.15, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 3,
-          transformOrigin: "left center",
-          background: `linear-gradient(90deg, ${accent}, ${accentIndex % 2 === 0 ? C.violet : C.coral})`,
-          opacity: hovered ? 1 : 0.85,
-        }}
-      />
-      <div
-        style={{
-          fontFamily: "'Playfair Display', serif",
-          fontStyle: "italic",
-          fontSize: "clamp(2.25rem, 4vw, 2.85rem)",
-          fontWeight: 600,
-          lineHeight: 1.05,
-          letterSpacing: "-0.02em",
-          marginBottom: 12,
-          color: C.ink,
-        }}
-      >
-        {value}
-      </div>
-      <p style={{ fontSize: 13.5, color: C.muted, lineHeight: 1.7, fontFamily: BODY_FONT_STACK }}>{label}</p>
-    </motion.div>
   );
 }
 
@@ -476,15 +338,6 @@ export default function LandingPage() {
   const { palette: C } = useTheme();
   const reduceMotion = useReducedMotion();
   const location = useLocation();
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ_ITEMS.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
 
   useEffect(() => {
     // Inject fonts
@@ -557,7 +410,6 @@ export default function LandingPage() {
 
   return (
     <div style={{ background: C.paper, color: C.ink, overflowX: "hidden", minHeight: "100vh" }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <Grain />
 
       {/* ── HERO (original component preserved) ── */}
@@ -624,89 +476,6 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* ── STATS BAND ── */}
-      <section
-        style={{
-          maxWidth: 1120,
-          margin: "0 auto",
-          padding: "72px 24px 88px",
-          position: "relative",
-        }}
-      >
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "8%",
-            width: "min(90%, 640px)",
-            height: "55%",
-            transform: "translateX(-50%)",
-            background: `radial-gradient(ellipse at center, ${C.violet}08 0%, transparent 70%)`,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: "18px 0 auto",
-            height: 320,
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='820' height='320' viewBox='0 0 820 320' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%235b21b6' stroke-opacity='.12'%3E%3Ccircle cx='190' cy='160' r='92'/%3E%3Ccircle cx='190' cy='160' r='54'/%3E%3Ccircle cx='620' cy='148' r='106'/%3E%3Ccircle cx='620' cy='148' r='64'/%3E%3Cpath d='M282 160H512' stroke-dasharray='8 10'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.18'%3E%3Ccircle cx='282' cy='160' r='5'/%3E%3Ccircle cx='512' cy='160' r='5'/%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundPosition: "center top",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "min(820px, 96vw) auto",
-            opacity: 0.8,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            textAlign: "center",
-            marginBottom: 56,
-            maxWidth: 560,
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-        >
-          <SectionLabel>The product, in three numbers</SectionLabel>
-          <h2
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(1.5rem, 3.2vw, 2rem)",
-              fontWeight: 600,
-              color: C.ink,
-              letterSpacing: "-0.018em",
-              margin: 0,
-              lineHeight: 1.25,
-            }}
-          >
-            What every session actually gives you.
-          </h2>
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: 20,
-          }}
-        >
-          {STATS.map((s, i) => (
-            <StatCard key={s.value} {...s} delay={i * 0.08} accentIndex={i} />
-          ))}
-        </div>
-        <div className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-3 text-center text-xs font-medium text-slate-600 shadow-sm backdrop-blur-sm dark:border-slate-700/70 dark:bg-slate-900/50 dark:text-slate-300">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
-            Every mock includes
-          </span>
-          <span
-            className="hidden h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600 sm:inline-block"
-            aria-hidden
-          />
-          <span>tailored questions, live delivery signals, and a scorecard you can export.</span>
-        </div>
-      </section>
-
       <EditorialDivider />
 
       {/* ── HOW IT WORKS (original) ── */}
@@ -718,117 +487,6 @@ export default function LandingPage() {
       <Suspense fallback={<LandingSectionSkeleton minHeight={400} />}>
         <UseCasesSection />
       </Suspense>
-
-      {/* ── CORE ARCHITECTURE ── */}
-      <section
-        id="core-architecture"
-        style={{
-          padding: "80px 24px",
-          background: C.band,
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* ambient orbs */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            top: -120,
-            left: "20%",
-            width: 600,
-            height: 600,
-            borderRadius: "50%",
-            background: `radial-gradient(circle, ${C.coral}18, transparent 65%)`,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            bottom: -80,
-            right: "15%",
-            width: 500,
-            height: 500,
-            borderRadius: "50%",
-            background: `radial-gradient(circle, ${C.violet}18, transparent 65%)`,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='960' height='520' viewBox='0 0 960 520' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='1'%3E%3Cpath d='M96 100H256V180H420V92H640V164H844'/%3E%3Cpath d='M96 356H248V292H420V420H664V332H844'/%3E%3Cpath d='M480 90V430M320 140V384M716 164V332' stroke-dasharray='10 14'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.18'%3E%3Ccircle cx='256' cy='180' r='5'/%3E%3Ccircle cx='420' cy='292' r='5'/%3E%3Ccircle cx='640' cy='164' r='5'/%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "min(960px, 118vw) auto",
-            opacity: 0.85,
-            pointerEvents: "none",
-          }}
-        />
-
-        <div style={{ maxWidth: 1120, margin: "0 auto", position: "relative", zIndex: 2 }}>
-          <div style={{ marginBottom: 56, maxWidth: 720 }}>
-            <SectionLabel>Outcome engine</SectionLabel>
-            <h2
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "clamp(1.85rem, 3.6vw, 2.65rem)",
-                fontWeight: 600,
-                color: "white",
-                lineHeight: 1.18,
-                letterSpacing: "-0.018em",
-                margin: 0,
-              }}
-            >
-              Four signals every loop runs through, before you walk into the real one.
-            </h2>
-          </div>
-
-          {/* table */}
-          <div
-            style={{
-              border: `1px solid rgba(255,255,255,0.08)`,
-              borderRadius: 20,
-              overflow: "hidden",
-              background: "rgba(255,255,255,0.03)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            {/* header row — desktop table only; mobile uses stacked row labels */}
-            <div
-              className="hidden border-b border-white/[0.06] px-8 py-4 md:grid"
-              style={{
-                gridTemplateColumns: "auto minmax(0, 0.9fr) minmax(0, 1.45fr) minmax(0, 1fr)",
-                gap: 24,
-              }}
-            >
-              <span aria-hidden style={{ width: 28 }} />
-              {["Candidate outcome", "Experience layer", "What improves"].map((h) => (
-                <span
-                  key={h}
-                  style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: 10,
-                    fontWeight: 600,
-                    letterSpacing: "0.3em",
-                    textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.3)",
-                  }}
-                >
-                  {h}
-                </span>
-              ))}
-            </div>
-            {ENGINES.map((e, i) => (
-              <EngineRowDark key={e.label} e={e} idx={i} isLast={i === ENGINES.length - 1} />
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── FEATURES GRID ── */}
       <section
@@ -908,16 +566,6 @@ export default function LandingPage() {
         <FounderLetterSection />
       </Suspense>
 
-      {/* ── PERSONAS (original) ── */}
-      <Suspense fallback={<LandingSectionSkeleton />}>
-        <PersonasSection />
-      </Suspense>
-
-      {/* ── QUOTE WALL + OUTCOMES ── */}
-      <Suspense fallback={<LandingSectionSkeleton />}>
-        <QuoteWallSection />
-      </Suspense>
-
       {/* ── TESTIMONIALS (original) ── */}
       <Suspense fallback={<LandingSectionSkeleton />}>
         <TestimonialsSection />
@@ -933,11 +581,6 @@ export default function LandingPage() {
         <SecuritySection />
       </Suspense>
 
-      {/* ── FAQ (original) ── */}
-      <Suspense fallback={<LandingSectionSkeleton />}>
-        <FAQSection limit={4} />
-      </Suspense>
-
       {/* ── FINAL CTA ── */}
       <FinalCta user={user} />
 
@@ -945,90 +588,6 @@ export default function LandingPage() {
         <SiteFooter />
       </Suspense>
     </div>
-  );
-}
-
-/* ─── ENGINE ROW DARK (inside dark section) ───────────────────────────── */
-function EngineRowDark({ e, idx, isLast }) {
-  const { palette: C } = useTheme();
-  const [ref, visible] = useInView();
-  const [hovered, setHovered] = useState(false);
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x: -24 }}
-      animate={visible ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.5, delay: idx * 0.09 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className={[
-        "grid grid-cols-1 gap-3 px-5 py-6 md:grid-cols-[auto_minmax(0,0.9fr)_minmax(0,1.45fr)_minmax(0,1fr)] md:items-center md:gap-6 md:px-8 md:py-7",
-        !isLast && "border-b border-white/[0.05]",
-        hovered && "bg-white/[0.04]",
-        "transition-[background-color] duration-200",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      <span
-        className="hidden md:inline-flex"
-        style={{
-          fontFamily: "'DM Mono', monospace",
-          fontSize: 10,
-          fontWeight: 700,
-          letterSpacing: "0.12em",
-          color: hovered ? "white" : "rgba(255,255,255,0.35)",
-          width: 28,
-          height: 28,
-          borderRadius: 8,
-          border: `1px solid ${hovered ? `${C.coral}55` : "rgba(255,255,255,0.12)"}`,
-          background: hovered ? `${C.coral}18` : "rgba(255,255,255,0.04)",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "all 0.25s ease",
-        }}
-        aria-hidden
-      >
-        {String(idx + 1).padStart(2, "0")}
-      </span>
-      <span
-        style={{
-          fontFamily: "'DM Mono', monospace",
-          fontSize: 10,
-          letterSpacing: "0.25em",
-          textTransform: "uppercase",
-          color: hovered ? C.coral : `${C.coral}cc`,
-          fontWeight: 600,
-          transition: "color 0.25s ease",
-        }}
-      >
-        {e.label}
-      </span>
-      <span
-        style={{
-          fontFamily: BODY_FONT_STACK,
-          fontSize: "clamp(1rem, 2vw, 1.2rem)",
-          fontWeight: 600,
-          color: "white",
-          fontStyle: "normal",
-          textShadow: hovered ? `0 0 24px ${C.violet}55` : "none",
-          transition: "text-shadow 0.3s ease",
-        }}
-      >
-        {e.name}
-      </span>
-      <span
-        className="text-left md:text-right"
-        style={{
-          fontSize: 13,
-          color: C.muted,
-          fontFamily: BODY_FONT_STACK,
-          lineHeight: 1.7,
-        }}
-      >
-        {e.detail}
-      </span>
-    </motion.div>
   );
 }
 
