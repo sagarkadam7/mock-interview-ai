@@ -162,16 +162,7 @@ export function renderTranscriptWithFillerHighlights(text) {
       return (
         <span
           key={idx}
-          style={{
-            background: "rgba(244,63,94,0.16)",
-            border: "1px solid rgba(244,63,94,0.28)",
-            color: "#fca5a5",
-            padding: "1px 6px",
-            borderRadius: 999,
-            fontStyle: "normal",
-            fontWeight: 700,
-            margin: "0 1px",
-          }}
+          className="mx-0.5 inline rounded-full border border-rose-400/35 bg-rose-500/15 px-1.5 py-px font-semibold not-italic text-rose-700 dark:border-rose-400/40 dark:bg-rose-500/25 dark:text-rose-200"
         >
           {part}
         </span>
@@ -179,6 +170,84 @@ export function renderTranscriptWithFillerHighlights(text) {
     }
     return <span key={idx}>{part}</span>;
   });
+}
+
+function MetricChip({ label, value, pct, color }) {
+  const r = 14;
+  const c = 2 * Math.PI * r;
+  const progress = clamp01(pct ?? 0);
+
+  return (
+    <div className="flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl bg-white/80 px-1.5 py-2 ring-1 ring-slate-200/70 dark:bg-slate-800/55 dark:ring-slate-700/55">
+      <div className="relative flex h-9 w-9 items-center justify-center">
+        <svg className="absolute inset-0 h-9 w-9 -rotate-90" viewBox="0 0 36 36" aria-hidden>
+          <circle cx="18" cy="18" r={r} fill="none" className="stroke-slate-200 dark:stroke-slate-600" strokeWidth="3" />
+          <circle
+            cx="18"
+            cy="18"
+            r={r}
+            fill="none"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray={c}
+            strokeDashoffset={c * (1 - progress)}
+            style={{ transition: "stroke-dashoffset 0.35s ease" }}
+          />
+        </svg>
+        <span className="relative max-w-[2rem] truncate text-[9px] font-bold tabular-nums text-aura-ink dark:text-slate-100">
+          {value ?? "—"}
+        </span>
+      </div>
+      <span className="truncate text-[8px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function LiveMetricsBar({
+  eyePct,
+  fillerCount,
+  wpm,
+  confidencePreview,
+  eyeColor,
+  fillerColor,
+  wpmColor,
+  confidenceColor,
+  fillerPct,
+  pacePct,
+  confidencePct,
+}) {
+  return (
+    <div className="rounded-xl border border-slate-200/80 bg-gradient-to-b from-slate-50/90 to-white/80 p-2.5 dark:border-slate-700/70 dark:from-slate-900/80 dark:to-slate-950/80">
+      <div className="mb-2 flex items-center justify-between gap-2 px-0.5">
+        <span className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+          Live signals
+        </span>
+        <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+          Active
+        </span>
+      </div>
+      <div className="flex gap-1.5">
+        <MetricChip
+          label="Eye"
+          value={eyePct !== null ? `${eyePct}%` : "—"}
+          pct={eyePct !== null ? eyePct / 100 : 0}
+          color={eyeColor}
+        />
+        <MetricChip label="Fillers" value={String(fillerCount)} pct={fillerPct} color={fillerColor} />
+        <MetricChip label="Pace" value={wpm > 0 ? `${wpm}` : "—"} pct={pacePct} color={wpmColor} />
+        <MetricChip
+          label="Conf."
+          value={confidencePreview !== null ? `${confidencePreview.toFixed(1)}` : "—"}
+          pct={confidencePct}
+          color={confidenceColor}
+        />
+      </div>
+    </div>
+  );
 }
 
 function LiveMetricsPanel({
@@ -240,7 +309,7 @@ const CameraRecorder = forwardRef(function CameraRecorder(
     disabled,
     /** Hide built-in transcript (e.g. when parent shows it in a main column) */
     showTranscript = true,
-    /** "overlay" = on video; "below" = under video; "side" = panel beside video (below on xs) */
+    /** "overlay" = on video; "below" = under video; "side" = panel beside video; "bar" = horizontal strip under video */
     metricsLayout = "overlay",
   },
   ref
@@ -571,6 +640,7 @@ const CameraRecorder = forwardRef(function CameraRecorder(
     confidencePct,
   };
 
+  const showBarMetrics = recording && metricsLayout === "bar";
   const showSideMetrics = recording && metricsLayout === "side";
   const showBelowMetrics = recording && metricsLayout === "below";
 
@@ -582,7 +652,7 @@ const CameraRecorder = forwardRef(function CameraRecorder(
         <div
           className={`relative overflow-hidden rounded-xl border border-slate-200/90 bg-zinc-950 shadow-md ring-1 ring-black/5 dark:border-slate-700/90 ${
             showSideMetrics ? "aspect-video min-w-0 w-full flex-1" : "aspect-video w-full"
-          }`}
+          } ${recording ? "ring-2 ring-rose-500/30" : ""}`}
         >
         <div
           className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/[0.04]"
@@ -691,6 +761,7 @@ const CameraRecorder = forwardRef(function CameraRecorder(
         )}
       </div>
 
+      {showBarMetrics && <LiveMetricsBar {...metricsProps} />}
       {showBelowMetrics && <LiveMetricsPanel {...metricsProps} />}
 
       {error && (
@@ -715,10 +786,10 @@ const CameraRecorder = forwardRef(function CameraRecorder(
           type="button"
           onClick={startRecording}
           disabled={!cameraReady || disabled}
-          className={`group relative w-full overflow-hidden rounded-full py-4 text-[15px] font-bold tracking-tight transition-transform duration-250 ease-out-expo active:scale-[0.98] ${
+          className={`group relative w-full overflow-hidden rounded-xl py-3 text-sm font-bold tracking-tight transition-transform duration-250 ease-out-expo active:scale-[0.98] ${
             !cameraReady || disabled
               ? "cursor-not-allowed bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-              : "text-white shadow-[0_16px_40px_-10px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.1)_inset] hover:shadow-[0_20px_48px_-10px_rgba(91,33,182,0.55)]"
+              : "text-white shadow-[0_12px_32px_-8px_rgba(91,33,182,0.45),0_0_0_1px_rgba(255,255,255,0.1)_inset] hover:shadow-[0_16px_40px_-8px_rgba(91,33,182,0.55)]"
           }`}
         >
           {cameraReady && !disabled && (
@@ -727,10 +798,10 @@ const CameraRecorder = forwardRef(function CameraRecorder(
               <span className="absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent opacity-50" />
             </>
           )}
-          <span className="relative inline-flex items-center justify-center gap-2.5">
+          <span className="relative inline-flex items-center justify-center gap-2">
             {cameraReady && !disabled && (
               <svg
-                className="h-5 w-5 shrink-0 opacity-95"
+                className="h-4 w-4 shrink-0 opacity-95"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -746,20 +817,25 @@ const CameraRecorder = forwardRef(function CameraRecorder(
           </span>
         </button>
       ) : (
-        <button
-          type="button"
-          onClick={stopRecording}
-          disabled={disabled}
-          className="w-full rounded-xl border border-rose-300/80 bg-rose-50 py-3.5 text-sm font-semibold text-rose-800 transition-all active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 dark:border-rose-500/40 dark:bg-rose-950/40 dark:text-rose-100 dark:hover:bg-rose-950/60"
-        >
-          Stop recording (optional)
-        </button>
-      )}
-
-      {recording && (
-        <p className="m-0 hidden text-center text-[11px] font-medium leading-relaxed text-slate-500 dark:text-slate-400 sm:block">
-          Tap <span className="font-semibold text-slate-600 dark:text-slate-300">Submit answer</span> when done — we stop the mic for you.
-        </p>
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-slate-50/90 px-3 py-2.5 dark:border-slate-700/60 dark:bg-slate-900/50">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400/60 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500" />
+            </span>
+            <span className="truncate text-xs font-medium text-slate-600 dark:text-slate-300">
+              Listening — submit when you&apos;re done
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={stopRecording}
+            disabled={disabled}
+            className="shrink-0 text-xs font-semibold text-slate-500 transition-colors hover:text-rose-600 disabled:opacity-45 dark:text-slate-400 dark:hover:text-rose-400"
+          >
+            Stop mic
+          </button>
+        </div>
       )}
     </div>
   );

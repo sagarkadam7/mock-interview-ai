@@ -343,6 +343,31 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     @apply bg-slate-900 font-semibold text-white shadow-sm;
   }
 
+  .interview-workspace {
+    @apply overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm ring-1 ring-slate-900/[0.03];
+    @apply dark:border-slate-700/80 dark:bg-slate-950 dark:ring-white/[0.04];
+  }
+
+  .interview-workspace-recording {
+    @apply border-rose-300/50 ring-rose-500/15 dark:border-rose-500/25 dark:ring-rose-500/10;
+  }
+
+  .interview-workspace-question {
+    @apply bg-gradient-to-br from-white via-white to-slate-50/40 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/30;
+  }
+
+  .interview-transcript-panel {
+    @apply transition-[border-color,box-shadow] duration-300;
+  }
+
+  .interview-workspace-recording .interview-transcript-panel {
+    @apply border-violet-200/60 shadow-[inset_0_0_0_1px_rgba(139,92,246,0.06)] dark:border-violet-500/20;
+  }
+
+  .interview-presence-panel {
+    @apply ring-1 ring-slate-900/[0.03] dark:ring-white/[0.04];
+  }
+
   .progress-track {
     @apply h-1.5 w-full overflow-hidden rounded-full bg-slate-200/90;
   }
@@ -563,6 +588,12 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   }
   html.dark .select-menu-option-selected {
     @apply bg-violet-600 text-white shadow-sm;
+  }
+  html.dark .interview-workspace {
+    @apply border-slate-700/75 bg-slate-950;
+  }
+  html.dark .interview-workspace-recording {
+    @apply border-rose-500/30 ring-rose-500/15;
   }
   html.dark .label-field {
     @apply text-slate-400;
