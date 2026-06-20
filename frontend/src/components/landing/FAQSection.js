@@ -44,12 +44,12 @@ function Item({ item, open, onToggle, idx }) {
           }
         }}
         className={`flex w-full items-start justify-between gap-4 px-5 py-5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-inset dark:focus-visible:ring-violet-500/50 sm:px-6 ${
-          open
-            ? "bg-violet-50/60 dark:bg-violet-950/25"
-            : "hover:bg-slate-50/80 dark:hover:bg-slate-900/40"
+          open ? "bg-violet-50/60 dark:bg-violet-950/25" : "hover:bg-slate-50/80 dark:hover:bg-slate-900/40"
         }`}
       >
-        <span className="text-[15px] font-semibold leading-snug text-aura-ink dark:text-slate-100">{item.q}</span>
+        <span className="text-[15px] font-semibold leading-snug text-aura-ink dark:text-slate-100">
+          {item.q}
+        </span>
         <Chevron open={open} />
       </button>
       <AnimatePresence initial={false}>
@@ -180,8 +180,8 @@ export default function FAQSection({ limit = null, showHeader = true }) {
           ) : (
             <>
               {items.length} question{items.length === 1 ? "" : "s"}
-              {topic !== "all" ? ` in ${FAQ_TOPICS.find((t) => t.id === topic)?.label}` : ""}. Try “privacy” or
-              “browser”.
+              {topic !== "all" ? ` in ${FAQ_TOPICS.find((t) => t.id === topic)?.label}` : ""}. Try “privacy”
+              or “browser”.
             </>
           )}
         </p>
@@ -190,9 +190,7 @@ export default function FAQSection({ limit = null, showHeader = true }) {
       <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm dark:border-slate-700/80 dark:bg-slate-900/50">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 bg-slate-50/80 px-5 py-3.5 dark:border-slate-700/80 dark:bg-slate-900/60 sm:px-6">
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-            {topic === "all"
-              ? "All questions"
-              : `${FAQ_TOPICS.find((t) => t.id === topic)?.label} questions`}
+            {topic === "all" ? "All questions" : `${FAQ_TOPICS.find((t) => t.id === topic)?.label} questions`}
           </span>
           <span className="rounded-full border border-slate-200/80 bg-white px-2.5 py-0.5 text-xs font-semibold tabular-nums text-slate-600 dark:border-slate-700/80 dark:bg-slate-950/45 dark:text-slate-300">
             {items.length}

@@ -46,8 +46,8 @@ export default function FAQPage() {
               Answers before you sign up
             </h1>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-              Security, browsers, and how AI fits into real prep — everything you need to know before your first
-              mock interview.
+              Security, browsers, and how AI fits into real prep — everything you need to know before your
+              first mock interview.
             </p>
             <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
               Data handling details live on our{" "}
@@ -78,10 +78,7 @@ export default function FAQPage() {
             </Link>{" "}
             page or open a support thread from your institution — we’re small but we care about clarity.
           </p>
-          <Link
-            to="/register"
-            className="btn-primary mt-5 inline-flex no-underline"
-          >
+          <Link to="/register" className="btn-primary mt-5 inline-flex no-underline">
             Start free mock interview
           </Link>
         </div>

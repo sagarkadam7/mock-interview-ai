@@ -4,9 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import InteractiveHeroDemo from "./InteractiveHeroDemo";
 import VideoModal from "../VideoModal";
 
-const DEMO_VIDEO_URL = String(
-  process.env.REACT_APP_DEMO_VIDEO_URL || "/videos/demo-broll.mp4"
-).trim();
+const DEMO_VIDEO_URL = String(process.env.REACT_APP_DEMO_VIDEO_URL || "/videos/demo-broll.mp4").trim();
 
 function isInlineVideo(url) {
   if (!url) return false;

@@ -138,7 +138,9 @@ export default function Navbar() {
                     {user.name?.[0]?.toUpperCase()}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-aura-ink dark:text-slate-100">{user.name}</p>
+                    <p className="truncate text-sm font-semibold text-aura-ink dark:text-slate-100">
+                      {user.name}
+                    </p>
                     {user.email ? (
                       <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user.email}</p>
                     ) : null}
@@ -156,12 +158,7 @@ export default function Navbar() {
               </p>
               <nav className="flex flex-col gap-0.5" aria-label="Mobile primary">
                 {MOBILE_LINKS.map((link) => (
-                  <NavLink
-                    key={link.to}
-                    to={link.to}
-                    className={mobileLinkClass}
-                    onClick={closeMenu}
-                  >
+                  <NavLink key={link.to} to={link.to} className={mobileLinkClass} onClick={closeMenu}>
                     {link.label}
                   </NavLink>
                 ))}

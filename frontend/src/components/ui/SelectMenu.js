@@ -67,10 +67,7 @@ export default function SelectMenu({
   useEffect(() => {
     if (!open) return undefined;
     const onDoc = (e) => {
-      if (
-        !triggerRef.current?.contains(e.target) &&
-        !panelRef.current?.contains(e.target)
-      ) {
+      if (!triggerRef.current?.contains(e.target) && !panelRef.current?.contains(e.target)) {
         setOpen(false);
       }
     };

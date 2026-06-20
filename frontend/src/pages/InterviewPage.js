@@ -413,7 +413,9 @@ export default function InterviewPage() {
           <div className="hidden h-8 w-px shrink-0 bg-slate-200 dark:bg-slate-700 sm:block" aria-hidden />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <p className="truncate text-sm font-bold text-aura-ink dark:text-slate-100">{interview.jobRole}</p>
+              <p className="truncate text-sm font-bold text-aura-ink dark:text-slate-100">
+                {interview.jobRole}
+              </p>
               {interview.targetCompany ? (
                 <span className="hidden truncate text-xs font-medium text-violet-600 dark:text-violet-300 sm:inline">
                   · {interview.targetCompany}
@@ -638,9 +640,15 @@ export default function InterviewPage() {
                         key={c.title}
                         className="rounded-xl border border-slate-200/80 bg-white/70 p-3 dark:border-slate-700/70 dark:bg-slate-900/35"
                       >
-                        <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-slate-400">{c.k}</p>
-                        <p className="mt-1 text-xs font-semibold text-aura-ink dark:text-slate-100">{c.title}</p>
-                        <p className="mt-0.5 text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">{c.body}</p>
+                        <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                          {c.k}
+                        </p>
+                        <p className="mt-1 text-xs font-semibold text-aura-ink dark:text-slate-100">
+                          {c.title}
+                        </p>
+                        <p className="mt-0.5 text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+                          {c.body}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -652,74 +660,78 @@ export default function InterviewPage() {
 
         {/* Presence panel — camera + signals + actions */}
         {!feedback && (
-        <aside className="order-2 min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-[4.5rem] lg:self-start">
-          <div className="interview-presence-panel overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm dark:border-slate-700/80 dark:bg-slate-950">
-            <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/40">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-600 dark:text-slate-300">
-                Presence
-              </p>
-              {!isRecording ? (
-                <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">Camera + mic</span>
-              ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  Live
-                </span>
-              )}
+          <aside className="order-2 min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-[4.5rem] lg:self-start">
+            <div className="interview-presence-panel overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm dark:border-slate-700/80 dark:bg-slate-950">
+              <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/40">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-slate-600 dark:text-slate-300">
+                  Presence
+                </p>
+                {!isRecording ? (
+                  <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
+                    Camera + mic
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    Live
+                  </span>
+                )}
+              </div>
+              <div className="p-3 sm:p-4">
+                <CameraRecorder
+                  ref={cameraRecorderRef}
+                  key={currentIndex}
+                  onTranscriptChange={setTranscript}
+                  onRecordingChange={setIsRecording}
+                  onMLData={setMlData}
+                  disabled={!!feedback}
+                  showTranscript={false}
+                  metricsLayout="bar"
+                />
+              </div>
+
+              <div className="hidden border-t border-slate-100 px-4 pb-4 pt-3 dark:border-slate-800 lg:block">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className={`flex-[2] rounded-xl py-3 text-sm font-bold tracking-tight transition-all ${submitBtnClass}`}
+                    onClick={handleSubmitAnswer}
+                    disabled={!submitEnabled}
+                    aria-busy={submitting}
+                  >
+                    {submitting ? "Scoring…" : "Submit answer →"}
+                  </button>
+                  <button
+                    type="button"
+                    className="flex-1 rounded-xl border border-slate-200/90 py-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-600/80 dark:text-slate-300 dark:hover:bg-slate-800/80"
+                    onClick={handleSkip}
+                    disabled={submitting}
+                  >
+                    Skip
+                  </button>
+                </div>
+                <p className="mt-2 text-center text-[10px] text-slate-400 dark:text-slate-500">
+                  {canSubmitAnswer
+                    ? "Ctrl+Enter submits · mic stops automatically"
+                    : "Record to unlock submit"}
+                </p>
+              </div>
             </div>
-            <div className="p-3 sm:p-4">
-              <CameraRecorder
-                ref={cameraRecorderRef}
-                key={currentIndex}
-                onTranscriptChange={setTranscript}
-                onRecordingChange={setIsRecording}
-                onMLData={setMlData}
-                disabled={!!feedback}
-                showTranscript={false}
-                metricsLayout="bar"
+
+            <div className="mt-3">
+              <PrepBriefPanel
+                interviewId={id}
+                prepBrief={interview.prepBrief}
+                onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
+                defaultOpen={false}
               />
             </div>
-
-            <div className="hidden border-t border-slate-100 px-4 pb-4 pt-3 dark:border-slate-800 lg:block">
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className={`flex-[2] rounded-xl py-3 text-sm font-bold tracking-tight transition-all ${submitBtnClass}`}
-                  onClick={handleSubmitAnswer}
-                  disabled={!submitEnabled}
-                  aria-busy={submitting}
-                >
-                  {submitting ? "Scoring…" : "Submit answer →"}
-                </button>
-                <button
-                  type="button"
-                  className="flex-1 rounded-xl border border-slate-200/90 py-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-600/80 dark:text-slate-300 dark:hover:bg-slate-800/80"
-                  onClick={handleSkip}
-                  disabled={submitting}
-                >
-                  Skip
-                </button>
-              </div>
-              <p className="mt-2 text-center text-[10px] text-slate-400 dark:text-slate-500">
-                {canSubmitAnswer ? "Ctrl+Enter submits · mic stops automatically" : "Record to unlock submit"}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-3">
-            <PrepBriefPanel
-              interviewId={id}
-              prepBrief={interview.prepBrief}
-              onBriefUpdate={(prepBrief) => setInterview((prev) => (prev ? { ...prev, prepBrief } : prev))}
-              defaultOpen={false}
-            />
-          </div>
-        </aside>
+          </aside>
         )}
 
         {/* Feedback */}
         {feedback && (
-        <div className="order-3 min-w-0 space-y-4 lg:col-span-2">
+          <div className="order-3 min-w-0 space-y-4 lg:col-span-2">
             <div
               ref={questionAnchorRef}
               className="glass-panel-lg animate-page-in relative overflow-hidden rounded-2xl border border-slate-200/90 p-5 shadow-sm dark:border-slate-700/80 sm:p-6 md:p-8"
@@ -884,7 +896,7 @@ export default function InterviewPage() {
                 <span aria-hidden>→</span>
               </button>
             </div>
-        </div>
+          </div>
         )}
       </div>
 

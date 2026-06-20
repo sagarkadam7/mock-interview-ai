@@ -79,8 +79,21 @@ function Dial({ label, value, pct, color, compact = false }) {
   if (compact) {
     return (
       <div className="flex flex-col items-center gap-0.5 text-center">
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${label} gauge`}>
-          <circle cx={cx} cy={cx} r={r} className="stroke-slate-200 dark:stroke-slate-600" strokeWidth="4" fill="none" />
+        <svg
+          width={size}
+          height={size}
+          viewBox={`0 0 ${size} ${size}`}
+          role="img"
+          aria-label={`${label} gauge`}
+        >
+          <circle
+            cx={cx}
+            cy={cx}
+            r={r}
+            className="stroke-slate-200 dark:stroke-slate-600"
+            strokeWidth="4"
+            fill="none"
+          />
           <circle
             cx={cx}
             cy={cx}
@@ -97,7 +110,9 @@ function Dial({ label, value, pct, color, compact = false }) {
             {value ?? "—"}
           </text>
         </svg>
-        <span className="text-[8px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{label}</span>
+        <span className="text-[8px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          {label}
+        </span>
       </div>
     );
   }
@@ -181,7 +196,14 @@ function MetricChip({ label, value, pct, color }) {
     <div className="flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl bg-white/80 px-1.5 py-2 ring-1 ring-slate-200/70 dark:bg-slate-800/55 dark:ring-slate-700/55">
       <div className="relative flex h-9 w-9 items-center justify-center">
         <svg className="absolute inset-0 h-9 w-9 -rotate-90" viewBox="0 0 36 36" aria-hidden>
-          <circle cx="18" cy="18" r={r} fill="none" className="stroke-slate-200 dark:stroke-slate-600" strokeWidth="3" />
+          <circle
+            cx="18"
+            cy="18"
+            r={r}
+            fill="none"
+            className="stroke-slate-200 dark:stroke-slate-600"
+            strokeWidth="3"
+          />
           <circle
             cx="18"
             cy="18"
@@ -286,8 +308,20 @@ function LiveMetricsPanel({
           color={eyeColor}
           compact={compact}
         />
-        <Dial label="Fillers" value={String(fillerCount)} pct={fillerPct} color={fillerColor} compact={compact} />
-        <Dial label="Pace" value={wpm > 0 ? `${wpm}` : "—"} pct={pacePct} color={wpmColor} compact={compact} />
+        <Dial
+          label="Fillers"
+          value={String(fillerCount)}
+          pct={fillerPct}
+          color={fillerColor}
+          compact={compact}
+        />
+        <Dial
+          label="Pace"
+          value={wpm > 0 ? `${wpm}` : "—"}
+          pct={pacePct}
+          color={wpmColor}
+          compact={compact}
+        />
         <Dial
           label={compact ? "Conf." : "Confidence"}
           value={confidencePreview !== null ? `${confidencePreview.toFixed(1)}` : "—"}
@@ -654,98 +688,100 @@ const CameraRecorder = forwardRef(function CameraRecorder(
             showSideMetrics ? "aspect-video min-w-0 w-full flex-1" : "aspect-video w-full"
           } ${recording ? "ring-2 ring-rose-500/30" : ""}`}
         >
-        <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/[0.04]"
-          aria-hidden
-        />
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          playsInline
-          className="relative z-0 block h-full w-full object-cover"
-        />
-        <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-[1] h-full w-full" />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/[0.04]"
+            aria-hidden
+          />
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            playsInline
+            className="relative z-0 block h-full w-full object-cover"
+          />
+          <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-[1] h-full w-full" />
 
-        {/* Face status */}
-        <div
-          className={`absolute bottom-3 left-3 z-[2] flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold shadow-lg backdrop-blur-xl ${
-            faceFound
-              ? "border-emerald-500/30 bg-emerald-950/70 text-emerald-300"
-              : "border-amber-500/35 bg-black/70 text-amber-200"
-          }`}
-        >
-          <span className={faceFound ? "text-emerald-400" : "text-amber-400"} aria-hidden>
-            {faceFound ? "✓" : "⚠"}
-          </span>
-          {faceFound ? "Face detected" : "No face in frame"}
-        </div>
-
-        {/* MediaPipe status */}
-        {!mpReady && (
-          <div className="absolute bottom-3 right-3 z-[2] rounded-full border border-white/10 bg-black/70 px-3 py-1.5 text-[11px] font-semibold text-amber-200 shadow-lg backdrop-blur-xl">
-            Loading vision…
-          </div>
-        )}
-        {mpReady && !recording && (
-          <div className="absolute bottom-3 right-3 z-[2] flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-950/65 px-3 py-1.5 text-[11px] font-semibold text-emerald-200 shadow-lg backdrop-blur-xl">
-            <span className="text-emerald-400" aria-hidden>
-              ✓
+          {/* Face status */}
+          <div
+            className={`absolute bottom-3 left-3 z-[2] flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold shadow-lg backdrop-blur-xl ${
+              faceFound
+                ? "border-emerald-500/30 bg-emerald-950/70 text-emerald-300"
+                : "border-amber-500/35 bg-black/70 text-amber-200"
+            }`}
+          >
+            <span className={faceFound ? "text-emerald-400" : "text-amber-400"} aria-hidden>
+              {faceFound ? "✓" : "⚠"}
             </span>
-            Vision ready
+            {faceFound ? "Face detected" : "No face in frame"}
           </div>
-        )}
 
-        {/* REC badge */}
-        {recording && (
-          <div className="absolute left-3 top-3 z-[2] flex items-center gap-2 rounded-full border border-rose-500/30 bg-black/80 px-3.5 py-1.5 shadow-lg backdrop-blur-xl">
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]" />
-            <span className="text-xs font-bold tabular-nums tracking-wide text-white">REC {fmt(timer)}</span>
-          </div>
-        )}
-
-        {/* Live ML overlay (default) — hidden in sidebar "below" layout */}
-        {recording && metricsLayout === "overlay" && (
-          <div className="absolute right-2 top-2 z-[2] max-w-[calc(100%-1rem)] rounded-lg border border-white/10 bg-black/75 p-2 backdrop-blur-md sm:right-3 sm:top-3 sm:min-w-[200px] sm:rounded-xl sm:p-2.5">
-            <div className="mb-1.5 text-[9px] font-semibold uppercase tracking-wider text-slate-400">
-              Live coaching
+          {/* MediaPipe status */}
+          {!mpReady && (
+            <div className="absolute bottom-3 right-3 z-[2] rounded-full border border-white/10 bg-black/70 px-3 py-1.5 text-[11px] font-semibold text-amber-200 shadow-lg backdrop-blur-xl">
+              Loading vision…
             </div>
-            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-              <div>
-                <Dial
-                  label="Eye"
-                  value={eyePct !== null ? `${eyePct}%` : "—"}
-                  pct={eyePct !== null ? eyePct / 100 : 0}
-                  color={eyeColor}
-                />
+          )}
+          {mpReady && !recording && (
+            <div className="absolute bottom-3 right-3 z-[2] flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-950/65 px-3 py-1.5 text-[11px] font-semibold text-emerald-200 shadow-lg backdrop-blur-xl">
+              <span className="text-emerald-400" aria-hidden>
+                ✓
+              </span>
+              Vision ready
+            </div>
+          )}
+
+          {/* REC badge */}
+          {recording && (
+            <div className="absolute left-3 top-3 z-[2] flex items-center gap-2 rounded-full border border-rose-500/30 bg-black/80 px-3.5 py-1.5 shadow-lg backdrop-blur-xl">
+              <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]" />
+              <span className="text-xs font-bold tabular-nums tracking-wide text-white">
+                REC {fmt(timer)}
+              </span>
+            </div>
+          )}
+
+          {/* Live ML overlay (default) — hidden in sidebar "below" layout */}
+          {recording && metricsLayout === "overlay" && (
+            <div className="absolute right-2 top-2 z-[2] max-w-[calc(100%-1rem)] rounded-lg border border-white/10 bg-black/75 p-2 backdrop-blur-md sm:right-3 sm:top-3 sm:min-w-[200px] sm:rounded-xl sm:p-2.5">
+              <div className="mb-1.5 text-[9px] font-semibold uppercase tracking-wider text-slate-400">
+                Live coaching
               </div>
-              <div>
-                <Dial label="Fillers" value={String(fillerCount)} pct={fillerPct} color={fillerColor} />
-              </div>
-              <div className="col-span-2">
-                <Dial label="Pace" value={wpm > 0 ? `${wpm}` : "—"} pct={pacePct} color={wpmColor} />
-              </div>
-              <div className="col-span-2">
-                <Dial
-                  label="Confidence"
-                  value={confidencePreview !== null ? `${confidencePreview.toFixed(1)}` : "—"}
-                  pct={confidencePct}
-                  color={confidenceColor}
-                />
+              <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                <div>
+                  <Dial
+                    label="Eye"
+                    value={eyePct !== null ? `${eyePct}%` : "—"}
+                    pct={eyePct !== null ? eyePct / 100 : 0}
+                    color={eyeColor}
+                  />
+                </div>
+                <div>
+                  <Dial label="Fillers" value={String(fillerCount)} pct={fillerPct} color={fillerColor} />
+                </div>
+                <div className="col-span-2">
+                  <Dial label="Pace" value={wpm > 0 ? `${wpm}` : "—"} pct={pacePct} color={wpmColor} />
+                </div>
+                <div className="col-span-2">
+                  <Dial
+                    label="Confidence"
+                    value={confidencePreview !== null ? `${confidencePreview.toFixed(1)}` : "—"}
+                    pct={confidencePct}
+                    color={confidenceColor}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {!cameraReady && !error && (
-          <div className="absolute inset-0 z-[2] flex flex-col items-center justify-center gap-2 bg-zinc-950/90 text-sm font-medium text-slate-400">
-            <span
-              className="inline-block h-8 w-8 animate-pulse rounded-full border-2 border-slate-600 border-t-violet-400"
-              aria-hidden
-            />
-            Starting camera…
-          </div>
-        )}
+          {!cameraReady && !error && (
+            <div className="absolute inset-0 z-[2] flex flex-col items-center justify-center gap-2 bg-zinc-950/90 text-sm font-medium text-slate-400">
+              <span
+                className="inline-block h-8 w-8 animate-pulse rounded-full border-2 border-slate-600 border-t-violet-400"
+                aria-hidden
+              />
+              Starting camera…
+            </div>
+          )}
         </div>
 
         {/* Side metrics — beside video on sm+, never on the feed */}

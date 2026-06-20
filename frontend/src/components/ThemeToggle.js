@@ -73,7 +73,10 @@ export default function ThemeToggle({ className = "" }) {
       />
 
       {/* Static track icons */}
-      <span className="pointer-events-none absolute inset-0 flex items-center justify-between px-2" aria-hidden>
+      <span
+        className="pointer-events-none absolute inset-0 flex items-center justify-between px-2"
+        aria-hidden
+      >
         <SunIcon
           className={`transition-all duration-300 ease-out-expo ${
             isDark ? "scale-75 text-amber-400/35" : "scale-100 text-amber-500"
