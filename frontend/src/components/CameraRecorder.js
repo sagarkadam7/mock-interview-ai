@@ -535,11 +535,11 @@ const CameraRecorder = forwardRef(function CameraRecorder(
 
         {/* Live ML overlay (default) — hidden in sidebar "below" layout */}
         {recording && metricsLayout === "overlay" && (
-          <div className="absolute right-3 top-3 min-w-[248px] rounded-xl border border-white/10 bg-black/80 p-3 backdrop-blur-md">
-            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-aura-muted">
+          <div className="absolute right-2 top-2 z-[2] max-w-[calc(100%-1rem)] rounded-lg border border-white/10 bg-black/75 p-2 backdrop-blur-md sm:right-3 sm:top-3 sm:min-w-[200px] sm:rounded-xl sm:p-2.5">
+            <div className="mb-1.5 text-[9px] font-semibold uppercase tracking-wider text-slate-400">
               Live coaching
             </div>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
               <div>
                 <Dial
                   label="Eye"
@@ -675,10 +675,8 @@ const CameraRecorder = forwardRef(function CameraRecorder(
       )}
 
       {recording && (
-        <p className="m-0 text-center text-[11px] font-medium leading-relaxed text-slate-500 dark:text-slate-400">
-          Gaze and pace update live. You can tap{" "}
-          <span className="font-semibold text-slate-600 dark:text-slate-300">Submit answer</span> anytime — we
-          stop the recorder for you and send this take.
+        <p className="m-0 hidden text-center text-[11px] font-medium leading-relaxed text-slate-500 dark:text-slate-400 sm:block">
+          Tap <span className="font-semibold text-slate-600 dark:text-slate-300">Submit answer</span> when done — we stop the mic for you.
         </p>
       )}
     </div>
