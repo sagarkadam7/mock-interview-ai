@@ -312,6 +312,10 @@ export default function InterviewPage() {
     .join(" · ");
 
   const canSubmitAnswer = Boolean(transcript.trim()) || isRecording;
+  const submitEnabled = canSubmitAnswer && !submitting;
+  const submitBtnClass = submitEnabled
+    ? "bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-700 text-white shadow-[0_8px_28px_-6px_rgba(91,33,182,0.6)] hover:brightness-110 active:scale-[0.98]"
+    : "cursor-not-allowed bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-400";
 
   const handleNext = () => {
     if (isLastQ) navigate(`/interview/${id}/report`);
@@ -513,7 +517,7 @@ export default function InterviewPage() {
         </div>
       )}
 
-      <div className="relative z-10 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="relative z-10 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(300px,400px)] lg:items-start lg:gap-6">
         {/* Question */}
         {!feedback ? (
           <div
@@ -553,8 +557,24 @@ export default function InterviewPage() {
         {/* Camera — between question and transcript on mobile; sticky sidebar on desktop */}
         {!feedback && (
         <aside className="order-2 min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-[4.5rem] lg:self-start">
-          <div className="space-y-3">
-            <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-2 dark:border-slate-700/80 dark:bg-slate-950 sm:p-3">
+          <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm dark:border-slate-700/80 dark:bg-slate-950">
+            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/90 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-900/60 sm:px-4">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                  Your camera
+                </p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                  {isRecording ? "Metrics update on the right while you speak" : "Allow camera access, then record"}
+                </p>
+              </div>
+              {isRecording && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-rose-600 dark:text-rose-400">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-rose-500" />
+                  Rec
+                </span>
+              )}
+            </div>
+            <div className="p-3 sm:p-4">
               <CameraRecorder
                 ref={cameraRecorderRef}
                 key={currentIndex}
@@ -563,23 +583,20 @@ export default function InterviewPage() {
                 onMLData={setMlData}
                 disabled={!!feedback}
                 showTranscript={false}
-                metricsLayout="overlay"
+                metricsLayout="side"
               />
             </div>
 
-            {!feedback && (
-              <div className="hidden flex-col gap-2 lg:flex">
+            <div className="hidden border-t border-slate-100 px-3 pb-3 pt-2 dark:border-slate-800 sm:px-4 lg:block">
+              <div className="flex flex-col gap-2">
                 <button
                   type="button"
-                  className="group relative w-full overflow-hidden rounded-xl py-3.5 text-[15px] font-bold tracking-tight text-white shadow-md transition-transform enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                  className={`w-full rounded-xl py-3.5 text-[15px] font-bold tracking-tight transition-all ${submitBtnClass}`}
                   onClick={handleSubmitAnswer}
-                  disabled={submitting || !canSubmitAnswer}
+                  disabled={!submitEnabled}
                   aria-busy={submitting}
                 >
-                  <span className="absolute inset-0 bg-aura-ink dark:bg-slate-100 group-disabled:bg-slate-600" />
-                  <span className="relative flex items-center justify-center gap-2 dark:text-aura-ink">
-                    {submitting ? "Scoring…" : "Submit answer →"}
-                  </span>
+                  {submitting ? "Scoring answer…" : "Submit answer →"}
                 </button>
                 <button
                   type="button"
@@ -589,9 +606,14 @@ export default function InterviewPage() {
                 >
                   Skip question
                 </button>
+                <p className="text-center text-[10px] leading-relaxed text-slate-400 dark:text-slate-500">
+                  {canSubmitAnswer ? "Ctrl+Enter also submits" : "Start recording to unlock submit"}
+                </p>
               </div>
-            )}
+            </div>
+          </div>
 
+          <div className="mt-3">
             <PrepBriefPanel
               interviewId={id}
               prepBrief={interview.prepBrief}
@@ -606,15 +628,22 @@ export default function InterviewPage() {
         <div className={`order-3 min-w-0 space-y-4 lg:col-start-1 lg:row-start-2 ${feedback ? "lg:col-span-2" : ""}`}>
           {!feedback ? (
             <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm dark:border-slate-700/80 dark:bg-slate-950">
-              <div className="px-4 py-3 sm:px-5 sm:py-4">
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" htmlFor="session-transcript-panel">
+              <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/90 px-4 py-2.5 dark:border-slate-800 dark:bg-slate-900/60 sm:px-5">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
                     Your answer
-                  </label>
-                  <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
-                    {isRecording ? "Listening…" : "Start recording to begin"}
-                  </span>
+                  </p>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                    {isRecording ? "Transcript updates live as you speak" : "Record your response out loud"}
+                  </p>
                 </div>
+                {transcript.trim() ? (
+                  <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold text-violet-700 dark:text-violet-300">
+                    {transcript.trim().split(/\s+/).filter(Boolean).length} words
+                  </span>
+                ) : null}
+              </div>
+              <div className="px-4 py-3 sm:px-5 sm:py-4">
                 <div
                   id="session-transcript-panel"
                   ref={transcriptPanelRef}
@@ -837,7 +866,7 @@ export default function InterviewPage() {
           <div className="mx-auto flex max-w-lg items-center gap-2">
             <button
               type="button"
-              className="flex-1 rounded-xl border border-slate-200/90 py-3 text-sm font-semibold text-slate-600 dark:border-slate-600/80 dark:text-slate-300"
+              className="flex-1 rounded-xl border border-slate-200/90 py-3 text-sm font-semibold text-slate-700 dark:border-slate-600/80 dark:text-slate-200"
               onClick={handleSkip}
               disabled={submitting}
             >
@@ -845,15 +874,12 @@ export default function InterviewPage() {
             </button>
             <button
               type="button"
-              className="group relative flex-[2] overflow-hidden rounded-xl py-3 text-sm font-bold text-white disabled:opacity-60"
+              className={`flex-[2] rounded-xl py-3 text-sm font-bold transition-all ${submitBtnClass}`}
               onClick={handleSubmitAnswer}
-              disabled={submitting || !canSubmitAnswer}
+              disabled={!submitEnabled}
               aria-busy={submitting}
             >
-              <span className="absolute inset-0 bg-aura-ink dark:bg-slate-100 group-disabled:bg-slate-600" />
-              <span className="relative dark:text-aura-ink">
-                {submitting ? "Scoring…" : canSubmitAnswer ? "Submit answer →" : "Record to submit"}
-              </span>
+              {submitting ? "Scoring…" : canSubmitAnswer ? "Submit answer →" : "Record to submit"}
             </button>
           </div>
         </div>

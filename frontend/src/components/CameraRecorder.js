@@ -68,12 +68,39 @@ function clamp01(n) {
   return Math.max(0, Math.min(1, n));
 }
 
-function Dial({ label, value, pct, color }) {
-  const size = 56;
-  const r = 18;
+function Dial({ label, value, pct, color, compact = false }) {
+  const size = compact ? 44 : 56;
+  const r = compact ? 14 : 18;
   const c = 2 * Math.PI * r;
   const progress = clamp01(pct ?? 0);
   const dashOffset = c * (1 - progress);
+  const cx = size / 2;
+
+  if (compact) {
+    return (
+      <div className="flex flex-col items-center gap-0.5 text-center">
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${label} gauge`}>
+          <circle cx={cx} cy={cx} r={r} className="stroke-slate-200 dark:stroke-slate-600" strokeWidth="4" fill="none" />
+          <circle
+            cx={cx}
+            cy={cx}
+            r={r}
+            stroke={color}
+            strokeWidth="4"
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray={c}
+            strokeDashoffset={dashOffset}
+            style={{ transition: "stroke-dashoffset 0.35s ease" }}
+          />
+          <text x={cx} y={cx + 4} textAnchor="middle" fontSize="9" fill="currentColor" fontWeight="800">
+            {value ?? "—"}
+          </text>
+        </svg>
+        <span className="text-[8px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{label}</span>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -154,6 +181,56 @@ export function renderTranscriptWithFillerHighlights(text) {
   });
 }
 
+function LiveMetricsPanel({
+  eyePct,
+  fillerCount,
+  wpm,
+  confidencePreview,
+  eyeColor,
+  fillerColor,
+  wpmColor,
+  confidenceColor,
+  fillerPct,
+  pacePct,
+  confidencePct,
+  compact = false,
+}) {
+  return (
+    <div
+      className={`rounded-xl border border-slate-200/90 bg-gradient-to-b from-slate-50 to-white dark:border-slate-700/80 dark:from-slate-900/90 dark:to-slate-950 ${
+        compact ? "p-2.5" : "p-4"
+      }`}
+    >
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <span className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+          Live signals
+        </span>
+        <span className="rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
+          On
+        </span>
+      </div>
+      <div className={`flex flex-col ${compact ? "gap-2.5" : "gap-3"}`}>
+        <Dial
+          label="Eye"
+          value={eyePct !== null ? `${eyePct}%` : "—"}
+          pct={eyePct !== null ? eyePct / 100 : 0}
+          color={eyeColor}
+          compact={compact}
+        />
+        <Dial label="Fillers" value={String(fillerCount)} pct={fillerPct} color={fillerColor} compact={compact} />
+        <Dial label="Pace" value={wpm > 0 ? `${wpm}` : "—"} pct={pacePct} color={wpmColor} compact={compact} />
+        <Dial
+          label={compact ? "Conf." : "Confidence"}
+          value={confidencePreview !== null ? `${confidencePreview.toFixed(1)}` : "—"}
+          pct={confidencePct}
+          color={confidenceColor}
+          compact={compact}
+        />
+      </div>
+    </div>
+  );
+}
+
 const CameraRecorder = forwardRef(function CameraRecorder(
   {
     onTranscriptChange,
@@ -163,7 +240,7 @@ const CameraRecorder = forwardRef(function CameraRecorder(
     disabled,
     /** Hide built-in transcript (e.g. when parent shows it in a main column) */
     showTranscript = true,
-    /** "overlay" = metrics on video; "below" = metrics stacked under video (sidebar layout) */
+    /** "overlay" = on video; "below" = under video; "side" = panel beside video (below on xs) */
     metricsLayout = "overlay",
   },
   ref
@@ -480,9 +557,33 @@ const CameraRecorder = forwardRef(function CameraRecorder(
           ? "#f59e0b"
           : "#ef4444";
 
+  const metricsProps = {
+    eyePct,
+    fillerCount,
+    wpm,
+    confidencePreview,
+    eyeColor,
+    fillerColor,
+    wpmColor,
+    confidenceColor,
+    fillerPct,
+    pacePct,
+    confidencePct,
+  };
+
+  const showSideMetrics = recording && metricsLayout === "side";
+  const showBelowMetrics = recording && metricsLayout === "below";
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="relative aspect-video overflow-hidden rounded-2xl border border-slate-200/90 bg-zinc-950 shadow-[0_24px_48px_-16px_rgba(15,23,42,0.35),inset_0_0_0_1px_rgba(255,255,255,0.06)] ring-1 ring-black/5 dark:border-slate-700/90 dark:shadow-[0_28px_56px_-18px_rgba(0,0,0,0.65)]">
+    <div className="flex flex-col gap-3">
+      <div
+        className={`${showSideMetrics ? "flex flex-col gap-3 sm:flex-row sm:items-start" : "flex flex-col gap-3"}`}
+      >
+        <div
+          className={`relative overflow-hidden rounded-xl border border-slate-200/90 bg-zinc-950 shadow-md ring-1 ring-black/5 dark:border-slate-700/90 ${
+            showSideMetrics ? "aspect-video min-w-0 w-full flex-1" : "aspect-video w-full"
+          }`}
+        >
         <div
           className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/[0.04]"
           aria-hidden
@@ -575,41 +676,22 @@ const CameraRecorder = forwardRef(function CameraRecorder(
             Starting camera…
           </div>
         )}
+        </div>
+
+        {/* Side metrics — beside video on sm+, never on the feed */}
+        {showSideMetrics && (
+          <>
+            <div className="hidden w-[5.5rem] shrink-0 sm:block">
+              <LiveMetricsPanel {...metricsProps} compact />
+            </div>
+            <div className="sm:hidden">
+              <LiveMetricsPanel {...metricsProps} />
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Live coaching below video (sidebar layout — no overlap on feed) */}
-      {recording && metricsLayout === "below" && (
-        <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white/95 to-slate-50/90 p-4 shadow-lux ring-1 ring-white/70 dark:border-slate-700/80 dark:from-slate-900/90 dark:to-slate-950/90 dark:ring-slate-800/50">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-              Live signal
-            </span>
-            <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
-              Streaming
-            </span>
-          </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <Dial
-              label="Eye"
-              value={eyePct !== null ? `${eyePct}%` : "—"}
-              pct={eyePct !== null ? eyePct / 100 : 0}
-              color={eyeColor}
-            />
-            <Dial label="Fillers" value={String(fillerCount)} pct={fillerPct} color={fillerColor} />
-            <div className="sm:col-span-2">
-              <Dial label="Pace" value={wpm > 0 ? `${wpm}` : "—"} pct={pacePct} color={wpmColor} />
-            </div>
-            <div className="sm:col-span-2">
-              <Dial
-                label="Confidence"
-                value={confidencePreview !== null ? `${confidencePreview.toFixed(1)}` : "—"}
-                pct={confidencePct}
-                color={confidenceColor}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      {showBelowMetrics && <LiveMetricsPanel {...metricsProps} />}
 
       {error && (
         <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900 dark:border-rose-500/35 dark:bg-rose-950/45 dark:text-rose-100">
@@ -668,7 +750,7 @@ const CameraRecorder = forwardRef(function CameraRecorder(
           type="button"
           onClick={stopRecording}
           disabled={disabled}
-          className="w-full rounded-full border border-rose-200/90 bg-rose-50 py-4 text-[15px] font-semibold text-rose-900 transition-all duration-250 ease-out-expo hover:border-rose-300 hover:bg-rose-100 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 dark:border-rose-500/35 dark:bg-rose-950/50 dark:text-rose-100 dark:hover:bg-rose-950/70"
+          className="w-full rounded-xl border border-rose-300/80 bg-rose-50 py-3.5 text-sm font-semibold text-rose-800 transition-all active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 dark:border-rose-500/40 dark:bg-rose-950/40 dark:text-rose-100 dark:hover:bg-rose-950/60"
         >
           Stop recording (optional)
         </button>
