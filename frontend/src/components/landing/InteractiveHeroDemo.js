@@ -200,14 +200,19 @@ export default function InteractiveHeroDemo() {
                   className={`absolute inset-0 rounded-full bg-gradient-to-br transition-all duration-500 ${
                     phase === "recording"
                       ? "from-rose-500 to-red-600 shadow-[0_20px_56px_-10px_rgba(244,63,94,0.55)]"
-                      : "from-sarvam-orange to-sarvam-blue shadow-[0_20px_56px_-10px_rgba(79,70,229,0.42)]"
+                      : "from-sarvam-orange via-indigo-500 to-sarvam-blue shadow-[0_20px_56px_-10px_rgba(79,70,229,0.42)]"
                   }`}
                 />
                 <span
                   aria-hidden
-                  className="absolute inset-[3px] rounded-full bg-gradient-to-br from-white/35 via-transparent to-transparent opacity-50"
+                  className="absolute inset-[3px] rounded-full bg-gradient-to-br from-white/30 via-transparent to-transparent opacity-60 dark:from-white/35 dark:opacity-50"
                 />
-                <svg viewBox="0 0 24 24" fill="none" className="relative h-10 w-10 text-white" aria-hidden>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="relative h-10 w-10 text-white drop-shadow-[0_1px_2px_rgba(15,23,42,0.35)]"
+                  aria-hidden
+                >
                   <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z" fill="currentColor" />
                   <path
                     d="M5 11a1 1 0 0 1 2 0 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11z"

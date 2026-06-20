@@ -12,8 +12,17 @@ import { formatRelativeTime } from "../utils/formatRelativeTime";
 import { getReadinessSnapshot } from "../utils/readinessSnapshot";
 import { formatSessionWallDuration } from "../utils/formatSessionDuration";
 import { downloadPracticeBlockIcs } from "../utils/practiceCalendarIcs";
+import SelectMenu from "../components/ui/SelectMenu";
 
 const DASH_CHECKLIST_KEY = "ia.dashboard.quickstart.v1";
+const SESSION_SORT_OPTIONS = [
+  { value: "newest", label: "Newest first" },
+  { value: "oldest", label: "Oldest first" },
+  { value: "starred_first", label: "Starred first" },
+  { value: "score_high", label: "Score · high to low" },
+  { value: "score_low", label: "Score · low to high" },
+  { value: "role", label: "Role A–Z" },
+];
 const DASH_VIEW_KEY = "ia.dashboard.view.v1";
 
 function StatusBadge({ status }) {
@@ -357,6 +366,7 @@ export default function DashboardPage() {
     };
   }, [interviews]);
   const scoredCompleted = completed.filter((i) => i.overallScore !== null);
+  const pending = useMemo(() => interviews.filter((i) => i.status === "pending"), [interviews]);
   const avgScore =
     scoredCompleted.length > 0
       ? (scoredCompleted.reduce((s, i) => s + i.overallScore, 0) / scoredCompleted.length).toFixed(1)
@@ -1124,56 +1134,47 @@ export default function DashboardPage() {
                 },
               }}
             >
-              <div className="mb-4 flex flex-col gap-3 sm:sticky sm:top-24 sm:z-20 sm:rounded-2xl sm:border sm:border-slate-200/70 sm:bg-aura-page/70 sm:p-3 sm:backdrop-blur-md dark:sm:border-slate-700/60 dark:sm:bg-slate-950/35 sm:flex-row sm:items-end sm:justify-between">
-                <div className="flex items-end justify-between gap-4 sm:block">
-                  <h2 className="text-lg font-bold tracking-tight text-aura-ink">Sessions</h2>
-                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400 sm:mt-1 sm:block">
-                    {interviews.length} total
-                    {q || starredOnly || statusFilter !== "all" ? ` · ${filteredSessions.length} shown` : ""}
-                  </span>
-                  {statusFilter !== "all" ? (
-                    <button
-                      type="button"
-                      onClick={() => setStatusFilter("all")}
-                      className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-2.5 py-0.5 text-[11px] font-semibold text-violet-800 transition-colors hover:bg-violet-100 dark:border-violet-500/30 dark:bg-violet-950/45 dark:text-violet-200 dark:hover:bg-violet-950/70"
-                      title="Clear status filter"
-                    >
-                      {statusFilter === "completed" ? "Completed only" : "In flight only"}
-                      <span aria-hidden>×</span>
-                    </button>
-                  ) : null}
-                </div>
+              <div className="mb-5 flex flex-col gap-3 sm:sticky sm:top-24 sm:z-20 sm:rounded-2xl sm:border sm:border-slate-200/80 sm:bg-white/80 sm:p-3 sm:shadow-sm sm:backdrop-blur-md dark:sm:border-slate-700/60 dark:sm:bg-slate-950/60 lg:flex-row lg:flex-wrap lg:items-center lg:gap-3">
                 <div
-                  className="flex flex-wrap items-center gap-1.5"
+                  className="inline-flex w-full shrink-0 flex-wrap items-center gap-0.5 rounded-full border border-slate-200/90 bg-white p-1 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/80 sm:w-auto"
                   role="group"
                   aria-label="Filter sessions by status"
                 >
                   {[
                     { id: "all", label: "All", count: interviews.length },
-                    { id: "completed", label: "Done", count: completed.length },
-                    { id: "in_progress", label: "Live", count: inProgress.length },
-                  ].map((filter) => (
-                    <button
-                      key={filter.id}
-                      type="button"
-                      onClick={() => setStatusFilter(filter.id)}
-                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all duration-200 ${
-                        statusFilter === filter.id
-                          ? "border-violet-300 bg-violet-600 text-white shadow-md shadow-violet-500/20 dark:border-violet-400/50 dark:bg-violet-500"
-                          : "border-slate-200/90 bg-white/80 text-slate-600 hover:border-violet-200 hover:text-violet-700 dark:border-slate-700/70 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:text-violet-300"
-                      }`}
-                      aria-pressed={statusFilter === filter.id}
-                    >
-                      {filter.label}
-                      <span
-                        className={`rounded-full px-1.5 py-0.5 font-mono text-[10px] ${statusFilter === filter.id ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}
+                    { id: "pending", label: "Pending", count: pending.length },
+                    { id: "in_progress", label: "In-progress", count: inProgress.length },
+                    { id: "completed", label: "Completed", count: completed.length },
+                  ].map((filter) => {
+                    const active = statusFilter === filter.id;
+                    return (
+                      <button
+                        key={filter.id}
+                        type="button"
+                        onClick={() => setStatusFilter(filter.id)}
+                        className={`inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold transition-all duration-200 ${
+                          active
+                            ? "bg-slate-900 text-white shadow-sm dark:bg-slate-100 dark:text-slate-900"
+                            : "text-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800/70 dark:hover:text-slate-200"
+                        }`}
+                        aria-pressed={active}
                       >
-                        {filter.count}
-                      </span>
-                    </button>
-                  ))}
+                        {filter.label}
+                        <span
+                          className={`inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1 font-mono text-[10px] font-bold tabular-nums ${
+                            active
+                              ? "bg-violet-500 text-white dark:bg-violet-600"
+                              : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                          }`}
+                        >
+                          {filter.count}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
-                <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+
+                <label className="flex shrink-0 cursor-pointer items-center gap-2 border-slate-200/80 px-1 text-xs font-medium text-slate-600 dark:border-slate-700/80 dark:text-slate-400 lg:border-l lg:pl-3">
                   <input
                     type="checkbox"
                     className="h-4 w-4 rounded border-slate-300 accent-violet-600 dark:border-slate-600"
@@ -1182,48 +1183,41 @@ export default function DashboardPage() {
                   />
                   Starred only
                 </label>
-                <div className="flex w-full min-w-0 flex-col gap-2 sm:max-w-xl sm:flex-row sm:items-center">
+
+                <div className="relative min-w-0 flex-1 lg:min-w-[220px]">
                   <label className="sr-only" htmlFor="dashboard-session-search">
-                    Search sessions by role or company
+                    Search sessions, roles, candidates
                   </label>
-                  <div className="relative min-w-0 flex-1">
-                    <input
-                      id="dashboard-session-search"
-                      type="search"
-                      value={sessionQuery}
-                      onChange={(e) => setSessionQuery(e.target.value)}
-                      placeholder="Search role or company…"
-                      className="input-field w-full min-w-0 py-2.5 pr-10 text-sm"
-                      autoComplete="off"
-                    />
-                    {sessionQuery.trim() ? (
-                      <button
-                        type="button"
-                        className="absolute inset-y-0 right-2 my-auto inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aura-violet/40 focus-visible:ring-offset-2 focus-visible:ring-offset-aura-page dark:text-slate-400 dark:hover:bg-slate-800/70 dark:hover:text-slate-200 dark:focus-visible:ring-offset-slate-950"
-                        onClick={() => setSessionQuery("")}
-                        aria-label="Clear search"
-                      >
-                        ×
-                      </button>
-                    ) : null}
-                  </div>
-                  <label className="sr-only" htmlFor="dashboard-session-sort">
-                    Sort sessions
-                  </label>
-                  <select
-                    id="dashboard-session-sort"
-                    className="input-field shrink-0 py-2.5 text-sm sm:w-[11.5rem]"
-                    value={sessionSort}
-                    onChange={(e) => setSessionSort(e.target.value)}
-                  >
-                    <option value="newest">Newest first</option>
-                    <option value="oldest">Oldest first</option>
-                    <option value="starred_first">Starred first</option>
-                    <option value="score_high">Score · high to low</option>
-                    <option value="score_low">Score · low to high</option>
-                    <option value="role">Role A–Z</option>
-                  </select>
+                  <input
+                    id="dashboard-session-search"
+                    type="search"
+                    value={sessionQuery}
+                    onChange={(e) => setSessionQuery(e.target.value)}
+                    placeholder="Search sessions, roles, candidates..."
+                    className="input-field w-full rounded-full border-slate-200/90 py-2.5 pl-4 pr-10 text-sm shadow-sm dark:border-slate-700/80"
+                    autoComplete="off"
+                  />
+                  {sessionQuery.trim() ? (
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-2 my-auto inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800/70 dark:hover:text-slate-200"
+                      onClick={() => setSessionQuery("")}
+                      aria-label="Clear search"
+                    >
+                      ×
+                    </button>
+                  ) : null}
                 </div>
+
+                <SelectMenu
+                  id="dashboard-session-sort"
+                  aria-label="Sort sessions"
+                  variant="pill"
+                  className="w-full shrink-0 sm:w-auto"
+                  value={sessionSort}
+                  onChange={setSessionSort}
+                  options={SESSION_SORT_OPTIONS}
+                />
               </div>
               {filteredSessions.length === 0 && starredOnly && !q ? (
                 <div className="rounded-2xl border border-dashed border-slate-200/90 bg-slate-50/60 px-6 py-10 text-center dark:border-slate-600/60 dark:bg-slate-900/40">

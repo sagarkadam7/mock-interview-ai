@@ -17,6 +17,10 @@ module.exports = {
           cta: "var(--aura-cta)",
           frame: "var(--aura-frame)",
         },
+        sarvam: {
+          orange: "#E85547",
+          blue: "#4F46E5",
+        },
       },
       fontFamily: {
         sans: [

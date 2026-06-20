@@ -5,6 +5,31 @@ import toast from "react-hot-toast";
 import { createInterview } from "../utils/api";
 import { getApiErrorMessage } from "../utils/apiError";
 import InterviewGenerationLoader from "../components/InterviewGenerationLoader";
+import SelectMenu from "../components/ui/SelectMenu";
+
+const LEVEL_OPTIONS = [
+  { value: "intern", label: "Intern" },
+  { value: "junior", label: "Junior" },
+  { value: "mid", label: "Mid" },
+  { value: "senior", label: "Senior" },
+  { value: "staff", label: "Staff" },
+];
+
+const MODE_OPTIONS = [
+  { value: "mixed", label: "Mixed (recommended)" },
+  { value: "behavioral", label: "Behavioral (STAR)" },
+  { value: "technical", label: "Technical" },
+  { value: "system_design", label: "System design" },
+  { value: "coding", label: "Coding (DSA)" },
+  { value: "rapid_fire", label: "Rapid-fire" },
+];
+
+const PERSONA_OPTIONS = [
+  { value: "coach", label: "Coach (supportive)" },
+  { value: "friendly", label: "Friendly" },
+  { value: "skeptical", label: "Skeptical" },
+  { value: "bar_raiser", label: "Bar raiser" },
+];
 
 export default function NewInterviewPage() {
   const navigate = useNavigate();
@@ -133,40 +158,39 @@ export default function NewInterviewPage() {
 
           <div className="grid gap-5 md:grid-cols-2">
             <div>
-              <label className="label-field">Level</label>
-              <select className="input-field" value={level} onChange={(e) => setLevel(e.target.value)}>
-                <option value="intern">Intern</option>
-                <option value="junior">Junior</option>
-                <option value="mid">Mid</option>
-                <option value="senior">Senior</option>
-                <option value="staff">Staff</option>
-              </select>
+              <label className="label-field" htmlFor="new-interview-level">
+                Level
+              </label>
+              <SelectMenu
+                id="new-interview-level"
+                value={level}
+                onChange={setLevel}
+                options={LEVEL_OPTIONS}
+              />
             </div>
 
             <div>
-              <label className="label-field">Mode</label>
-              <select
-                className="input-field"
+              <label className="label-field" htmlFor="new-interview-mode">
+                Mode
+              </label>
+              <SelectMenu
+                id="new-interview-mode"
                 value={interviewMode}
-                onChange={(e) => setInterviewMode(e.target.value)}
-              >
-                <option value="mixed">Mixed (recommended)</option>
-                <option value="behavioral">Behavioral (STAR)</option>
-                <option value="technical">Technical</option>
-                <option value="system_design">System design</option>
-                <option value="coding">Coding (DSA)</option>
-                <option value="rapid_fire">Rapid-fire</option>
-              </select>
+                onChange={setInterviewMode}
+                options={MODE_OPTIONS}
+              />
             </div>
 
             <div>
-              <label className="label-field">Interviewer persona</label>
-              <select className="input-field" value={persona} onChange={(e) => setPersona(e.target.value)}>
-                <option value="coach">Coach (supportive)</option>
-                <option value="friendly">Friendly</option>
-                <option value="skeptical">Skeptical</option>
-                <option value="bar_raiser">Bar raiser</option>
-              </select>
+              <label className="label-field" htmlFor="new-interview-persona">
+                Interviewer persona
+              </label>
+              <SelectMenu
+                id="new-interview-persona"
+                value={persona}
+                onChange={setPersona}
+                options={PERSONA_OPTIONS}
+              />
             </div>
           </div>
 
