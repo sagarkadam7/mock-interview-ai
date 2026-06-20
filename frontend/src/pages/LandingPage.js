@@ -13,7 +13,6 @@ const TestimonialsSection = lazy(() => import("../components/landing/Testimonial
 const PricingTeaserSection = lazy(() => import("../components/landing/PricingTeaserSection"));
 const SecuritySection = lazy(() => import("../components/landing/SecuritySection"));
 const FounderLetterSection = lazy(() => import("../components/landing/FounderLetterSection"));
-const UseCasesSection = lazy(() => import("../components/landing/UseCasesSection"));
 const SiteFooter = lazy(() => import("../components/SiteFooter"));
 
 /* ─── DATA ───────────────────────────────────────────────────────────── */
@@ -42,6 +41,29 @@ const FEATURES = [
     body: "When an answer has room to go deeper, Gemini probes metrics, ownership, or tradeoffs — once, sharply.",
     accent: "#e85547",
     badge: "New",
+  },
+];
+
+const ENGINES = [
+  {
+    label: "Preparation outcome",
+    name: "Role-aware interview strategy",
+    detail: "Practice answers shaped to your resume and target role so every rep stays relevant.",
+  },
+  {
+    label: "Presence outcome",
+    name: "Camera confidence coaching",
+    detail: "Build steadier eye contact and interview posture with instant visibility into habits.",
+  },
+  {
+    label: "Communication outcome",
+    name: "Real-time speech analytics",
+    detail: "Hear how you sound in the moment, then tighten pacing and clarity before the real loop.",
+  },
+  {
+    label: "Execution outcome",
+    name: "Zero-latency behavioral feedback",
+    detail: "Catch filler words and delivery drift instantly so corrections happen while context is fresh.",
   },
 ];
 
@@ -483,10 +505,113 @@ export default function LandingPage() {
         <HowItWorksSection />
       </Suspense>
 
-      {/* ── USE CASES ── */}
-      <Suspense fallback={<LandingSectionSkeleton minHeight={400} />}>
-        <UseCasesSection />
-      </Suspense>
+      {/* ── OUTCOME ENGINE ── */}
+      <section
+        id="core-architecture"
+        style={{
+          padding: "80px 24px",
+          background: C.band,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: -120,
+            left: "20%",
+            width: 600,
+            height: 600,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${C.coral}18, transparent 65%)`,
+            pointerEvents: "none",
+          }}
+        />
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            bottom: -80,
+            right: "15%",
+            width: 500,
+            height: 500,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${C.violet}18, transparent 65%)`,
+            pointerEvents: "none",
+          }}
+        />
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='960' height='520' viewBox='0 0 960 520' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='1'%3E%3Cpath d='M96 100H256V180H420V92H640V164H844'/%3E%3Cpath d='M96 356H248V292H420V420H664V332H844'/%3E%3Cpath d='M480 90V430M320 140V384M716 164V332' stroke-dasharray='10 14'/%3E%3C/g%3E%3Cg fill='%23e85547' fill-opacity='.18'%3E%3Ccircle cx='256' cy='180' r='5'/%3E%3Ccircle cx='420' cy='292' r='5'/%3E%3Ccircle cx='640' cy='164' r='5'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "min(960px, 118vw) auto",
+            opacity: 0.85,
+            pointerEvents: "none",
+          }}
+        />
+
+        <div style={{ maxWidth: 1120, margin: "0 auto", position: "relative", zIndex: 2 }}>
+          <div style={{ marginBottom: 56, maxWidth: 720 }}>
+            <SectionLabel>Outcome engine</SectionLabel>
+            <h2
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "clamp(1.85rem, 3.6vw, 2.65rem)",
+                fontWeight: 600,
+                color: "white",
+                lineHeight: 1.18,
+                letterSpacing: "-0.018em",
+                margin: 0,
+              }}
+            >
+              Four signals every loop runs through, before you walk into the real one.
+            </h2>
+          </div>
+
+          <div
+            style={{
+              border: `1px solid rgba(255,255,255,0.08)`,
+              borderRadius: 20,
+              overflow: "hidden",
+              background: "rgba(255,255,255,0.03)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div
+              className="hidden border-b border-white/[0.06] px-8 py-4 md:grid"
+              style={{
+                gridTemplateColumns: "auto minmax(0, 0.9fr) minmax(0, 1.45fr) minmax(0, 1fr)",
+                gap: 24,
+              }}
+            >
+              <span aria-hidden style={{ width: 28 }} />
+              {["Candidate outcome", "Experience layer", "What improves"].map((h) => (
+                <span
+                  key={h}
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 10,
+                    fontWeight: 600,
+                    letterSpacing: "0.3em",
+                    textTransform: "uppercase",
+                    color: "rgba(255,255,255,0.3)",
+                  }}
+                >
+                  {h}
+                </span>
+              ))}
+            </div>
+            {ENGINES.map((e, i) => (
+              <EngineRowDark key={e.label} e={e} idx={i} isLast={i === ENGINES.length - 1} />
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ── FEATURES GRID ── */}
       <section
@@ -588,6 +713,90 @@ export default function LandingPage() {
         <SiteFooter />
       </Suspense>
     </div>
+  );
+}
+
+/* ─── ENGINE ROW DARK (inside dark section) ───────────────────────────── */
+function EngineRowDark({ e, idx, isLast }) {
+  const { palette: C } = useTheme();
+  const [ref, visible] = useInView();
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -24 }}
+      animate={visible ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.5, delay: idx * 0.09 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={[
+        "grid grid-cols-1 gap-3 px-5 py-6 md:grid-cols-[auto_minmax(0,0.9fr)_minmax(0,1.45fr)_minmax(0,1fr)] md:items-center md:gap-6 md:px-8 md:py-7",
+        !isLast && "border-b border-white/[0.05]",
+        hovered && "bg-white/[0.04]",
+        "transition-[background-color] duration-200",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <span
+        className="hidden md:inline-flex"
+        style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 10,
+          fontWeight: 700,
+          letterSpacing: "0.12em",
+          color: hovered ? "white" : "rgba(255,255,255,0.35)",
+          width: 28,
+          height: 28,
+          borderRadius: 8,
+          border: `1px solid ${hovered ? `${C.coral}55` : "rgba(255,255,255,0.12)"}`,
+          background: hovered ? `${C.coral}18` : "rgba(255,255,255,0.04)",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all 0.25s ease",
+        }}
+        aria-hidden
+      >
+        {String(idx + 1).padStart(2, "0")}
+      </span>
+      <span
+        style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 10,
+          letterSpacing: "0.25em",
+          textTransform: "uppercase",
+          color: hovered ? C.coral : `${C.coral}cc`,
+          fontWeight: 600,
+          transition: "color 0.25s ease",
+        }}
+      >
+        {e.label}
+      </span>
+      <span
+        style={{
+          fontFamily: BODY_FONT_STACK,
+          fontSize: "clamp(1rem, 2vw, 1.2rem)",
+          fontWeight: 600,
+          color: "white",
+          fontStyle: "normal",
+          textShadow: hovered ? `0 0 24px ${C.violet}55` : "none",
+          transition: "text-shadow 0.3s ease",
+        }}
+      >
+        {e.name}
+      </span>
+      <span
+        className="text-left md:text-right"
+        style={{
+          fontSize: 13,
+          color: C.muted,
+          fontFamily: BODY_FONT_STACK,
+          lineHeight: 1.7,
+        }}
+      >
+        {e.detail}
+      </span>
+    </motion.div>
   );
 }
 

@@ -15,10 +15,10 @@ const columns = [
   {
     title: "Solutions",
     links: [
-      { label: "Software engineering", to: "/#use-cases" },
-      { label: "Product management", to: "/#use-cases" },
-      { label: "Finance & consulting", to: "/#use-cases" },
-      { label: "New grads", to: "/#use-cases" },
+      { label: "Software engineering", to: "/#core-architecture" },
+      { label: "Product management", to: "/#core-architecture" },
+      { label: "Finance & consulting", to: "/#core-architecture" },
+      { label: "New grads", to: "/#core-architecture" },
     ],
   },
   {
